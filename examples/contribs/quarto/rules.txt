@@ -1,0 +1,38 @@
+	Rules of the game of Quarto
+
+The game:
+ The board is composed of a 4x4 grid where 16 different pieces can be
+ put. A piece is defined by 4 characteristics : small or tall, black or
+ white, circle or square shape and with or without top bump.
+
+Game play:
+ A player selects a piece (right window) and gives it to the other player,
+ who has to place it on the grid (left window). This player then selects a
+ new piece that he gives to the first player, and so on.
+
+End of the game:
+ The first player who aligns (horizontally, vertically or in diagonal)
+ four pieces with a common characteristic wins the game.
+
+
+
+
+	Règles du Jeu de Quarto:
+
+Composants du jeu:
+ Le jeu est composé d'un plateau de quatre cases sur quatre et de 16 pièces.
+ Une pièce est définie par quatres caractéristiques, elle est grande ou
+ petite, noire ou blanche, ronde ou carrée, avec ou sans bosse sur le
+ dessus.
+
+Déroulement du jeu:
+ A tour de rôle, chaque joueur choisit une pièce (fenêtre de droite) qu'il
+ donne au joueur adverse. Le joueur adverse place alors la pièce (fenêtre
+ de gauche) et en choisit une autre pour le premier joueur.
+
+Principe du jeu:
+ Le premier joueur qui aligne quatre pièces avec une caracteristique
+ commune gagne la partie.
+ Les alignements autorisés sont les alignements selon les lignes, les
+ colonnes, et les diagonales, une variante autorise les alignement en
+ carrés.

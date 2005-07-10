@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>QGLViewer features</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link href="qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="images/qglviewer.icon.png" type="image/png" />
+</head>
+<body>
+
+<div class="banner">
+  <a class="qindex highlight" href="index.html">Home</a>
+  <a class="qindex" href="refManual/hierarchy.html">Documentation</a>
+  <a class="qindex" href="download.html">Download</a>
+  <a class="qindex" href="examples/index.html">Examples</a>
+  <a class="qindex" href="developer.html">Developer</a>
+</div>
+
+<h1>QGLViewer features</h1>
+
+Most of the viewer's functionalities are illustrated by an example, that is referenced by the
+<img src="images/sphere.png" width="14" height="14" alt="sphere"/>
+
+<h2>Main features</h2>
+<ul>
+<li>A camera trackball to easily move the camera is the scene (explorer or walk through mode)
+<a href="examples/simpleViewer.html">
+<img src="images/sphere.png" width="14"height="14" alt="simpleViewer example"/></a>
+<a href="examples/callback.html">
+<img src="images/sphere.png" width="14" height="14" alt="callback example"/></a></li>
+
+<li>Definition of a intuitive world coordinates system (the OpenGL modelView matrix made easy)
+ <a href="examples/simpleViewer.html">
+<img src="images/sphere.png" width="14" height="14" alt="simpleViewer example"/></a></li>
+
+<li>Coordinate systems (and hence objects) can easily be moved with the mouse
+<a href="examples/manipulatedFrame.html">
+<img src="images/sphere.png" width="14" height="14" alt="manipulatedFrame example"/></a>
+<a href="examples/luxo.html">
+<img src="images/sphere.png" width="14" height="14" alt="luxo example"/></a></li>
+
+<li>Hierarchical coordinate systems (frames), with functions to convert from a frame to any other
+<a href="examples/luxo.html">
+<img src="images/sphere.png" width="14" height="14" alt="luxo example"/></a>
+<a href="examples/frameTransform.html">
+<img src="images/sphere.png" width="14" height="14" alt="frameTransform example"/></a></li>
+
+<li>KeyFrameInterpolator to animate those frames, and especially the camera
+<a href="examples/keyFrames.html">
+<img src="images/sphere.png" width="14" height="14" alt="keyFrames example"/></a>
+<a href="examples/simpleViewer.html">
+<img src="images/sphere.png" width="14" height="14" alt="simpleViewer example"/></a></li>
+
+<li>Screenshot saving in different file formats (jpg, png, bmp...), including vectorial rendering (eps, ps, xfig)
+<a href="examples/simpleViewer.html">
+<img src="images/sphere.png" width="14" height="14" alt="simpleViewer example"/></a></li>
+
+<li>Complete and entirely customizable <a href="keyboard.html">keyboard accelerators</a> and
+<a href="mouse.html">mouse</a> behavior <a href="examples/keyboardAndMouse.html">
+<img src="images/sphere.png" width="14" height="14" alt="keyboardAndMouse example"/></a></li>
+</ul>
+
+
+<h2>and also...</h2>
+<ul>
+<li>Many simple <a href="examples/index.html">examples</a> illustrating the different functions
+<a href="examples/index.html">
+<img src="images/sphere.png" width="14" height="14" alt="List of examples"/></a></li>
+
+<li>A complete reference <a href="refManual/hierarchy.html">documentation</a>
+<a href="refManual/hierarchy.html">
+<img src="images/sphere.png" width="14" height="14" alt="Reference documentation"/></a></li>
+
+<li>Display of the frame rate, of a world axis, of a 2D grid and of camera paths, full screen display...
+<a href="examples/simpleViewer.html">
+<img src="images/sphere.png" width="14" height="14" alt="simpleViewer example"/></a></li>
+
+<li>Easy drawing of text directly in screen coordinate system (2D overlay) or in 3D
+<a href="examples/screenCoordSystem.html">
+<img src="images/sphere.png" width="14" height="14" alt="screenCoordSystem example"/></a></li>
+
+<li>Extendable displacement constraints that can be applied on those frames
+<a href="examples/constrainedFrame.html">
+<img src="images/sphere.png" width="14" height="14" alt="constrainedFrame example"/></a>
+<a href="examples/constrainedCamera.html">
+<img src="images/sphere.png" width="14" height="14" alt="constrainedCamera example"/></a></li>
+
+<li>Viewer state is saved and can be restored at each new start
+<a href="examples/simpleViewer.html">
+<img src="images/sphere.png" width="14"height="14" alt="simpleViewer example"/></a></li>
+
+<li>A simplified drawing function can be provided to guarantee interactivity, even with large scenes
+<a href="examples/fastDraw.html">
+<img src="images/sphere.png" width="14" height="14" alt="fastDraw example"/></a></li>
+
+<li>The possibility to mix 3D and 2D (with intuitive pixel coordinates) drawing
+<a href="examples/screenCoordSystem.html">
+<img src="images/sphere.png" width="14" height="14" alt="screenCoordSystem example"/></a></li>
+
+<li>Possible animation of the scene at a given frame rate
+<a href="examples/animation.html">
+<img src="images/sphere.png" width="14" height="14" alt="animation example"/></a></li>
+
+<li>Stereo display (provided that your hardware supports it)
+<a href="examples/stereoViewer.html">
+<img src="images/sphere.png" width="14" height="14" alt="stereoViewer example"/></a></li>
+
+<li>Robust implementation of the basic <code>Vec, Quaternion</code> and <code>Frame</code> classes
+<a href="examples/frameTransform.html">
+<img src="images/sphere.png" width="14" height="14" alt="frameTransform example"/></a></li>
+
+<li>Customizable help window
+<a href="examples/keyboardAndMouse.html">
+<img src="images/sphere.png" width="14" height="14" alt="keyboardAndMouse example"/></a></li>
+</ul>
+
+<h2>Philosophy</h2>
+Classical 3D viewer features are directly available, so that you can quickly start the development
+of a new application, focussing on <i>what</i> is drawn instead of <i>how</i> to make the computer
+draw it.
+<br/>
+All these functions are very easy to use in your application code. For instance,
+if you find that you need to move an object of your scene with the mouse, at most 4 lines of code
+need to be added.
+<br/>
+See the different <a href="examples/index.html">examples</a> to get an more precise idea.
+
+
+<a href="mailto:Gilles.Debunne at imag dot fr?Subject=QGLViewer features">Send an email</a> if you think of
+a new feature.
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="images/css.png" alt="Valid CSS!" width="88" height="31"/></a>
+  <i>Last modified on #DATE#.</i>
+</p>
+
+</body></html>

@@ -1,0 +1,116 @@
+#!/bin/sh
+
+if [ $# != 1 ]
+then
+  echo "Usage : $0 name"
+  echo "$0 creates standard files (.h, .cpp, .pro) for an example named name"
+  exit
+fi
+
+if [ ! -d $1 ]
+then
+  echo "Creating directory $1"
+  mkdir $1 || (echo "Error - Unable to create directory $1" ; exit)
+fi
+
+cd $1 || (echo "Error - Unable to enter directory $1" ; exit)
+
+files="$1.h $1.C $1.pro"
+for f in $files
+do
+  if [ -e $f ]
+  then
+    echo "$f allready exists. Remove it first."
+    exit
+  fi
+done
+
+
+echo "Creating $1.pro"
+#¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+echo "# Write the purpose and a brief description of your exemple here." >> $1.pro
+echo >> $1.pro
+echo "# Lines must start with '#', paragraphs are separated by a blank line." >> $1.pro
+echo "# <code>HTML</code> tags can be inserted, and will be used in the html" >> $1.pro
+echo "# page that is automatically created for each exemple." >> $1.pro
+echo >> $1.pro
+echo "TEMPLATE = app" >> $1.pro
+echo "TARGET   = $1" >> $1.pro
+echo "CONFIG  += qt opengl warn_on release thread" >> $1.pro
+echo >> $1.pro
+echo "HEADERS  = $1.h" >> $1.pro
+echo "SOURCES  = $1.cpp main.cpp" >> $1.pro
+echo >> $1.pro
+echo "include( ../examples.pri )" >> $1.pro
+
+echo "Creating $1.h"
+#¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+echo "#include \"QGLViewer/qglviewer.h\"" > $1.h
+echo "" >> $1.h
+echo "class Viewer : public QGLViewer" >> $1.h
+echo "{" >> $1.h
+# echo "public :" >> $1.h
+# echo "  Viewer();" >> $1.h
+# echo "" >> $1.h
+echo "protected :" >> $1.h
+echo "  virtual void draw();" >> $1.h
+echo "  virtual void init();" >> $1.h
+echo "  virtual QString helpString() const;" >> $1.h
+echo "};" >> $1.h
+
+echo "Creating $1.cpp"
+#¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+echo "#include \"$1.h\"" > $1.cpp
+echo "" >> $1.cpp
+echo "using namespace qglviewer;" >> $1.cpp
+echo "using namespace std;" >> $1.cpp
+echo "" >> $1.cpp
+# echo "Viewer::Viewer()" >> $1.cpp
+# echo "  : QGLViewer()" >> $1.cpp
+# echo "{}" >> $1.cpp
+# echo "" >> $1.cpp
+echo "void Viewer::draw()" >> $1.cpp
+echo "{" >> $1.cpp
+echo -e "}\n" >> $1.cpp
+
+echo "void Viewer::init()" >> $1.cpp
+echo "{" >> $1.cpp
+echo "  restoreStateFromFile();" >> $1.cpp
+echo "  help();" >> $1.cpp
+echo -e "}\n" >> $1.cpp
+
+echo "QString Viewer::helpString() const" >> $1.cpp
+echo "{" >> $1.cpp
+echo "  QString text(\"<h2>$1</h2>\");" >> $1.cpp
+echo "  text += \"Description...\";" >> $1.cpp
+echo "  return text;" >> $1.cpp
+echo "}" >> $1.cpp
+
+
+echo "Creating main.cpp"
+#¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+echo "#include \"$1.h\"" > main.cpp
+echo "#include <qapplication.h>" >> main.cpp
+echo "" >> main.cpp
+echo "int main(int argc, char** argv)" >> main.cpp
+echo "{" >> main.cpp
+echo "  // Read command lines arguments." >> main.cpp
+echo "  QApplication application(argc,argv);" >> main.cpp
+echo "" >> main.cpp
+echo "  // Create a viewer, show it on screen." >> main.cpp
+echo "  Viewer viewer;" >> main.cpp
+echo "  viewer.show();" >> main.cpp
+echo "" >> main.cpp
+echo "  // Set the viewer as the application's main widget." >> main.cpp
+echo "  application.setMainWidget(&viewer);" >> main.cpp
+echo "" >> main.cpp
+echo "  // Run main loop." >> main.cpp
+echo "  return application.exec();" >> main.cpp
+echo "}" >> main.cpp
+
+echo " --- N O W   D O ---"
+echo "cvs add $1"
+echo "cd $1"
+echo "cvs add $1.h $1.cpp $1.pro main.cpp"
+echo " Add $1 in examples.pro"
+cd -

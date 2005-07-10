@@ -1,0 +1,236 @@
+body {
+  background: white;
+  color: black;
+  margin: 10px;
+  font-family: trebuchet ms,luxi sans,sans-serif;
+}
+h1 {
+  text-align: center;
+}
+h2 {
+  color: #003;
+  font-size: medium;
+  background-color: #DDF;
+  padding : 0px 0px 1px 30px;
+  border: 1px solid #AAC;
+}
+h3 {
+  color: #003;
+  font-size: medium;
+  margin : 30px 0px 0px 30px;
+  border-bottom:1px solid #BBC;
+}
+
+DIV.qindex {
+  width: 98%;
+  background-color: #EEEEFF;
+  border: 2px solid #AAAACC;
+  text-align: center;
+  padding: 2px;
+  margin: 0px 5px;
+  line-height: 140%;
+}
+A {
+  text-decoration: none;
+  font-weight: normal;
+  color: #44B;
+}
+A.visited {
+  color: #44B;
+}
+A.qindex {
+  font-weight: bold;
+  color: #0000AA;
+  padding: 0px 10px 1px 10px;
+  margin: 1px 2%;
+  border: 1px solid #EEEEFF;
+}
+A.qindexHL {
+  font-weight: bold;
+  color: #FFF;
+  background-color: #9999CC;
+  padding: 0px 10px 1px 10px;
+  margin: 1px 2%;
+  border: 1px solid #000;
+}
+A.qindex:hover {
+  background-color: #BBD;
+  color: #FFF;
+  border: 1px solid #66A
+}
+A.qindexHL:hover {
+  background-color: #BBD;
+  border: 1px solid #004;
+}
+A.el {
+  font-weight: normal;
+  color: #66A;
+}
+A.code {
+  font-weight: normal;
+  color: #1A419D;
+}
+A.alpha {
+  font-weight: bold;
+  color: #0000AA;
+  padding: 0px 10px 1px 10px;
+  border: 1px solid #EEEEFF;
+  margin: 1px 4px;
+}
+A.alphaHL {
+  font-weight: bold;
+  color: #0000AA;
+  padding: 0px 10px 1px 10px;
+  margin: 1px 4px;
+  border: 1px solid #000;
+  background-color: #99C;
+}
+A.alpha:hover {
+  background-color: #BBD;
+  color: #FFF;
+  border: 1px solid #66A
+}
+A:hover {
+  background-color: #F2F2FF;
+}
+
+
+PRE.fragment {
+  border: 1px solid #CCC;
+  border-bottom: 2px solid #888;
+  border-right: 3px solid #888;
+  background-color: #F5F5F5;
+  padding: 4px;
+  margin: 0px 20px 0px 25px;
+}
+pre {
+  margin: 0px;
+  padding: 3px;
+}
+TD.md {
+  font-weight: bold;
+}
+TD.mdname1 {
+  font-weight: bold;
+  color: #622;
+}
+TD.mdname {
+  font-weight: bold;
+  color: #622;
+  width: 600px;
+}
+TD.indexkey {
+  background-color: #EEEEFF;
+  font-weight    : bold;
+  padding        : 2px 10px;
+  margin         : 2px 0px;
+  border: 1px solid #CCC
+}
+TD.indexvalue {
+  background-color: #EEEEFF;
+  font-style: italic;
+  padding        : 2px 10px;
+  margin         : 2px 0px;
+  border: 1px solid #CCC
+}
+TR.memlist {
+  background-color: #FFF;
+}
+SPAN.keyword       { color: #008000 }
+SPAN.keywordtype   { color: #604020 }
+SPAN.keywordflow   { color: #E08000 }
+SPAN.comment       { color: #800000 }
+SPAN.preprocessor  { color: #806020 }
+SPAN.stringliteral { color: #002080 }
+SPAN.charliteral   { color: #008080 }
+.mdTable {
+  padding-top: 10px;
+  width: 100%;
+  border-top: 2px solid #44A;
+}
+.mdRow {
+  padding: 8px 10px;
+}
+.mdescLeft {
+  font-size: smaller;
+  font-style: italic;
+  padding-left: 8px;
+  border: 1px none #E0E0E0;
+  margin: 0px;
+}
+.mdescRight {
+  font-size: smaller;
+  font-style: italic;
+  padding-left: 4px;
+  border: 1px none #E0E0E0;
+  margin: 0px;
+  padding-bottom: 0px;
+  padding-right: 8px;
+}
+.memItemLeft {
+  padding: 1px 0px 0px 8px;
+  margin: 4px;
+  border-bottom: 1px solid #EEE;
+  font-family: Geneva, Arial, Helvetica, sans-serif;
+  font-size: small;
+}
+.memItemRight {
+  padding: 1px 0px 0px 8px;
+  margin: 4px;
+  border-bottom: 1px solid #EEE;
+  font-family: Geneva, Arial, Helvetica, sans-serif;
+  font-size: small;
+}
+.memTemplItemLeft {
+  padding: 1px 0px 0px 8px;
+  margin: 4px;
+  border-bottom: 1px solid #EEE;
+  font-family: Geneva, Arial, Helvetica, sans-serif;
+  font-size: small;
+}
+.memTemplItemRight {
+  padding: 1px 0px 0px 8px;
+  margin: 4px;
+  border-bottom: 1px solid #EEE;
+  font-family: Geneva, Arial, Helvetica, sans-serif;
+  font-size: small;
+}
+.memTemplParams {
+  padding: 1px 0px 0px 8px;
+  margin: 4px;
+  border-bottom: 1px solid #EEE;
+  font-family: Geneva, Arial, Helvetica, sans-serif;
+  font-size: small;
+}
+
+FORM.search {
+  color: #00A;
+  font-weight: bold;
+  margin: 1px;
+}
+span.search {
+  margin: 2px 4%;
+}
+input.search {
+  font-size: 75%;
+  color: #008;
+  font-weight: normal;
+  padding: 2px 4px;
+  margin: 0px 7px;
+  border: 1px solid #BBD;
+  background-color: #FFE;
+}
+TD.tiny {
+  font-size: 75%
+}
+hr {
+  height: 30px;
+  background-color: #FFF;
+  border: none;
+  color: #FFF;
+}
+code {
+  font-family: courier, sans-serif;
+  color: #062;
+  font-size: medium;
+}

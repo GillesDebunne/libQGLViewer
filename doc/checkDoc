@@ -1,0 +1,110 @@
+#!/bin/sh
+
+if [ "$1" == "-h" ]
+then
+  echo "Usage $0 [-v] [class]"
+  echo "1 - Lists the undocumented functions in refManual"
+  echo "2 - Checks every foo() has a link."
+  echo "Those listed in .checkDoc/$class are not reported."
+  echo "Use option -v to validate (overwrite previous file)."
+  exit
+fi
+
+if [ "$1" == "-v" ]
+then
+  validate=1
+  shift
+fi
+
+
+if [ $# = 0 ]
+then
+  files="refManual/class*.html"
+else
+  files="refManual/class*$1.html"
+fi
+
+docFiles=`ls -1 $files | grep -v -- -members.html`
+docFiles=`ls -1 refManual/class*QGLViewer.html`
+
+# Unreferenced xxxx() methods
+for f in $docFiles
+do
+  grep "[^<]()" $f | sed s%"<a[^<]*>\([^<]*\)</a> *()"%"\1{}"%g | sed s%"<a[^<]*>\([^<]*\)()</a>"%"\1{}"%g | sed s%"gl[A-Za-z0-9]*()"%%g | sed s%"begin()"%%g | sed s%"end()"%%g | sed s%"close()"%%g | sed s%"\.matrix()"%%g | sed s%"QFont()"%%g | sed s%"Q[a-zA-Z][^:]*::[^ ]*()"%%g | sed s%"<[^>]*>"%%g | sed s%"()-\&gt;"%"-\&gt;"%g | sed s%"-\&gt;[a-zA-Z]*()"%%g | sed s%"[a-zA-Z)]\.[a-zA-Z]*()"%"X.YY"%g | sed s%"[a-zA-Z)]\.[a-zA-Z]*()"%"A.BBB"%g | grep --color=always "()" > /tmp/checkDoc
+  
+  if [ -s /tmp/checkDoc ]
+  then
+    class=`echo $f | sed s:"refManual/class\(.*\)\.html":"\1": | sed s:"qglviewer_._."::`
+    if [[ "X$validate" == "X1" ]] && [[ "$class" == "$1" ]]
+    then
+      cp -f /tmp/checkDoc .checkDoc/$class
+      echo "Class $class validated" 
+    fi
+
+    if [ -s .checkDoc/$class ]
+    then
+	diff .checkDoc/$class /tmp/checkDoc > /tmp/diff
+        if [ -s /tmp/diff ]
+	then
+	    echo "==== Class $class ===="
+	    cat /tmp/diff
+	    echo
+        fi  
+    else
+	echo "==== Class $class ===="
+	cat /tmp/checkDoc
+        echo
+    fi
+  fi  
+done
+
+if [[ "X$validate" == "X1" ]]
+then
+    exit
+fi
+
+for f in $(ls ../QGLViewer/*.h)
+do
+  awk '/enum.*{[^}]*}/ { print; next} /enum.*{/ { str=$0; enum=1; next} /}/ { if (enum) print (str "" $0); enum=0; next;} { if (enum) str=(str " " $0); next;}' $f | grep -v "MyType" | sed s%"[	 ]*,[	 ]*"%" "%g | sed s%".*enum *\([a-zA-Z0-9]*\).*{\(.*\)}.*"%"\2"%g > /tmp/qglEnum
+  for e in $(cat /tmp/qglEnum)
+  do
+    grep $e refManual/* | grep -v "$e</a>" | grep -v "[A-Z]_$e" | grep -v "$e</em>" | grep -v "$e\_[A-Z]" | grep -v "\/\/.*$e" | grep -v "MyAxisPlaneConstraint::FREE" > /tmp/enums
+    if [ -s /tmp/enum ]
+    then
+      echo "No link for enum $e"
+      cat /tmp/enum
+    fi
+  done
+done
+
+
+exit
+
+echo 
+echo "------ Bad references in filtered html ------" 
+for f in `ls -1 filteredHTML/*.html`
+do
+  name=`echo $f | sed s:"filteredHTML/"::`
+  grep "[A-Za-z]([^)]*)" $f | grep -v "([^)]*)</a>" > /tmp/checkDoc
+  # grep "[A-Za-z]([^)]*)" $f | grep -v "([^)]*)</a>" | sed s:".*\([A-Za-z_:]*([^)]*)\).*":" XX\1XX":g > /tmp/checkDoc
+  if [ -s /tmp/checkDoc ]
+  then
+    echo $f | sed s:"filteredHTML/":"== ":
+    sed /glPushMatrix/d /tmp/checkDoc | sed /glPopMatrix/d 
+  fi  
+done
+
+
+# Ne marche pas avec le dernier doxygen
+for f in `ls -1 refManual/class*-members.html`
+do
+  awk 'BEGIN { FS="><"; } /^[ \t]*<tr/ { print $3; }' $f | grep -v ^a | grep ^b | grep -v "enum value" | sed s:\(defined.*$:: | sed s:b\>:"   ": | sed s:\</b\>:: > /tmp/checkDoc
+  if [ -s /tmp/checkDoc ]
+  then
+    echo $f |  sed s:"refManual/class\(.*\)-members.html":"===> Undocumented functions in class \1": | sed s:qglviewer_._.::
+    cat /tmp/checkDoc
+    # cat /tmp/checkDoc >> /tmp/allFunctions
+    echo
+  fi
+done
+

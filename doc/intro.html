@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>QGLViewer - Introduction</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link href="qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="images/qglviewer.icon.png" type="image/png" />
+</head>
+<body>
+
+<div class="banner">
+  <a class="qindex highlight" href="index.html">Home</a>
+  <a class="qindex" href="refManual/hierarchy.html">Documentation</a>
+  <a class="qindex" href="download.html">Download</a>
+  <a class="qindex" href="examples/index.html">Examples</a>
+  <a class="qindex" href="developer.html">Developer</a>
+</div>
+
+<h1>QGLViewer - Introduction</h1>
+
+<h2>Philosophy</h2>
+
+QGLViewer provides 3D application developers some of the classical features of a 3D viewer. See the
+<a href="features.html">feature list</a> for details. All the functionalities of the viewer are
+illustrated by a very simple example which can be used as a cut and paste source for your own
+applications.
+<p>
+QGLViewer enables you to quickly develop a small test program as well as a complete 3D application.
+It is versatile and is not designed for any specific application. It it also very convenient as a
+3D/OpenGL pedagogical tool.
+</p>
+
+<h2>The QGLViewer class</h2>
+You will use the library by deriving a viewer class from the <code>QGLViewer</code> main class. For
+simple applications, all you need to do is to overload the <code>draw()</code> function, which will
+contain the OpenGL orders that describe your 3D scene. You may want to read a very simple <a
+href="commented.html">commented program</a> to see exactly how it works.
+<p>
+The different classical functionalities of a 3D viewer (such as a mouse trackball) are provided by
+the <code>QGLViewer</code> class, and can be overloaded in your own application. Apart from the
+<code>draw()</code> function, an other good example is the <code>init()</code> function, which can
+be used to initialize the OpenGL state of your viewer, before the first display. Many other
+functions can be used as is or redefined, see the <a href="features.html">feature list</a> for a
+complete description of the available functions.
+</p>
+
+
+<h2>Camera and world coordinate system</h2>
+When you start giving OpenGL orders in your <code>draw()</code> function, you are implicitly located
+at the origin of the so-called <i>world coordinate system</i>. In <code>libQGLViewer</code>, the
+camera is an "object" located in this virtual world, that can be moved with the mouse (try to press
+'A', the drawAxis() accelerator key to see the world coordinate system). This conception is
+different (but much more intuitive) from the original camera-centered OpenGL coordinate system.
+
+<p>
+The viewer associated <code>Camera</code> (accessed using <code>camera()</code>) holds most OpenGL
+related parameters, such as the projection matrix.
+</p>
+
+<h2>Scene radius and center</h2>
+<code>QGLViewer</code> is versatile and makes no assumptions on the type of 3D application you are
+developing. However, in order to implement <code>camera()->showEntireScene()</code>, to set the fly speed in
+walkthrough mode, to optimally set the <code>ZNear</code> and <code>ZFar</code> of the camera or to tune the
+stereo display, you need to provide an approximation of your <i>Scene radius</i>, expressed in
+OpenGL units. This is done using the <code>setSceneRadius()</code> function.
+<p>
+You may also want to tune the <i>Scene center</i> if your scene is not centered on the
+world coordinate origin (0,0,0).
+<br/>
+Default scene radius is 1.0 and the scene center is located at the world origin. These default
+values may explain why your viewer remains desperately black. Use code like this in your
+<code>init()</code> function to fit your scene dimensions:
+</p>
+
+<pre>
+  <font color="#2040a0">setSceneRadius</font><font color="4444FF">(</font><font color="#FF0000">100.0</font><font color="4444FF">)</font><font color="4444FF">;</font>  <font color="#444444">// for instance </font>
+  <font color="#2040a0">setSceneCenter</font><font color="4444FF">(</font><font color="#FF0000">400</font>,<font color="#FF0000">0</font>,<font color="#FF0000">0</font><font color="4444FF">)</font><font color="4444FF">;</font> <font color="#444444">// for instance</font>
+  <font color="#2040a0">camera()</font>-><font color="#2040a0">showEntireScene</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">;</font>
+</pre>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="images/css.png" alt="Valid CSS!" width="88" height="31"/></a>
+  <i>Last modified on #DATE#.</i>
+</p>
+
+</body></html>

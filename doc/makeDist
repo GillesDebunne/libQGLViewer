@@ -1,0 +1,116 @@
+#!/bin/sh
+
+version=`grep -a "^version=" ../makeDist | head -1 | cut -d'"' -f2`
+catVersion=`echo $version | sed s@"\."@""@g`
+release=`grep -a "^release=" ../makeDist | head -1 | cut -d'"' -f2`
+filteredDir="filteredHTML"
+WebURL="http://artis.imag.fr/Members/Gilles.Debunne/QGLViewer"
+
+if [ $# != 0 ]
+then
+  echo "No argument needed by makeDist. Try a cd .. first !"
+  exit
+fi
+
+### Check that doxygen is up to date ###
+########################################
+function updateDoc()
+{
+    doxygen Doxyfile
+    echo " - Extracting cw files"
+    cwExtractor
+    cd refManual
+    doxytag -s search.idx >& /dev/null
+    rm installdox
+
+    ### Changing header menu in doxygen pages ###
+    echo " - Removing unused pages"
+    rm -f files.html globals.html globals_*.html *_8*.html namespace*.html dir_[0-9]*.html dirs.html
+    rm -f functions.html functions_0x*.html functions_eval.html functions_enum.html functions_rela.html functions_vars.html
+
+    echo " - Patching functions pages"
+    for f in $(ls functions*.html)
+    do
+      newName=$(echo $f | sed s%"_func"%%)
+      grep -v "Variables.*Enumeration" $f | grep -v "^Here is a list" | awk '/^<div class="qindex"><a/ { gsub(" \\| ", " "); gsub("<a class=\"qindex", "<a class=\"alpha"); print; next } {print}' | sed s%"functions_func"%"functions"%g > $newName
+      rm -r $f
+    done
+
+    sed s%"This inheritance.*alphabetically:"%% hierarchy.html > /tmp/hierarchy.html
+    cp /tmp/hierarchy.html hierarchy.html
+
+    echo " - Changing QGLViewer:: enums"
+    for f in $(ls class*.html)
+    do
+      sed s%">QGLViewer::\([A-Z_]*\)</a>"%">\1</a>"%g $f > /tmp/qgl
+      mv /tmp/qgl $f
+    done
+
+    echo " - Changing header menus"
+    for f in `ls *.html *.php`
+      do
+      awk '/^<a class="qindex/ { gsub(" \\| ", ""); print }' $f > /tmp/header
+      sed s%"href=\"index.html\">Main"%"href=\"../index.html\">Main"% /tmp/header | sed s%"<a class=\"qindex\" href=\"globals.html\">File&nbsp;Members</a>"%% | sed s%"<a class=\"qindex\" href=\"namespaces.html\">Namespace List</a>"%% | sed s%"<a class=\"qindex\" href=\"annotated.*File&nbsp;List</a>"%% | sed s%"<a class=\"qindex\" href=\"globals.html\">File&nbsp;Members</a>"%% | sed s%"Class&nbsp;Members"%"All\&nbsp;Functions"% | sed s%"/a>"%"/a>\n"%g > /tmp/header.filtered
+      sed /"^<a class=\"qindex"/d $f | sed "/^<div class=\"qindex.*search.php/r /tmp/header.filtered" > $f.tmp
+      awk '/^<div class="nav">/ {skip=1; next} {if (skip) {skip=0; next} else print }' $f.tmp > $f
+      rm $f.tmp
+    done
+    
+    echo " - Removing auto-links"
+    for f in `ls class*.html | grep -v -- "-members.html"`
+    do
+      sed s%"<a class=\"el\" href=\"$f\">\([^<]*\)</a>"%"\1"%g $f > $f.tmp
+      mv $f.tmp $f
+    done
+
+    echo " - Adding icon"
+    for f in $(ls *.html)
+    do
+      sed /doxygen.css/a"<link rel=\"shortcut icon\" href=\"../images/qglviewer.ico\" type=\"image/x-icon\" /><link rel=\"icon\" href=\"../images/qglviewer.icon.png\" type=\"image/png\" />" $f > $f.tmp
+      mv $f.tmp $f
+    done
+    
+    cd -
+}
+
+echo " - Checking doxygen refManual"
+newer="../QGLViewer/qglviewer.h"
+for f in `ls ../QGLViewer/*.h ../QGLViewer/*.cpp`
+do
+  if [ $f -nt $newer ]
+  then
+    newer=$f
+  fi
+done
+
+if [ ! -d refManual ]
+then
+  echo "   refManual does not exist, running doxygen"
+  updateDoc
+fi
+
+for f in `ls refManual/class*`
+do
+  if [ $newer -nt $f ]
+  then
+    echo "   doxygen not up to date ($newer is newer)"
+    updateDoc
+    break
+  fi
+done
+
+
+### Date, version and release ###
+#################################
+echo " - Filtering main pages tags"
+test -d $filteredDir || mkdir -p $filteredDir
+rm -f $filteredDir/*
+export LC_TIME="en"
+for f in `ls *.html`
+do
+  date=`date -r $f "+%A, %B %-d, %Y"`
+  sed s:"#VERSION#":"$version":g $f | sed s:"#CATVERSION#":"$catVersion":g | sed s:"#RELEASE#":"$release":g | sed s§"#WEBURL#"§"$WebURL"§g | sed s:"#DATE#":"$date":g > $filteredDir/$f
+done
+unset LC_TIME
+
+rm $filteredDir/index.fr.html

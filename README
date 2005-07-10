@@ -1,0 +1,63 @@
+
+			l i b Q G L V i e w e r
+
+		   Copyright Gilles Debunne 2002-2005
+		Version #VERSION#-#RELEASE#. Packaged on #DATE#
+		         Gilles.Debunne@imag.fr
+
+libQGLViewer is an open source C++ library based on Qt that enables the quick creation 
+of OpenGL 3D viewers.  It features a powerful camera trackball and simple applications 
+simply  require an implementation of the  draw() function.  It is a tool of choice for
+OpenGL beginners and  assignements.  It provides screenshot saving,  mouse manipulated
+frames, stereo display, interpolated keyFrames, object selection, and much more. It is
+fully customizable and easy to extend to create complex applications, with an optional
+Qt GUI.
+
+libQGLViewer is not a 3D viewer that can be used directly to view 3D scenes in various
+formats.  It is more likely to be the starting  point for the coding of such a viewer.
+Since it is based on the Qt toolkit, it compiles on any architecture (Unix-Linux, Mac,
+Windows, ...). Full reference documentation and many examples are provided. 
+
+The viewer's main functionalities are : 
+
+     - A camera trackball to easily move the camera in the scene (explorer
+       or fly mode).
+     - Screenshot saving in different file formats (JPG, PNG, EPS...). 
+     - Handling  of local (possibly hierarchical) coordinate systems, that
+       can be moved with the mouse. 
+     - Extendable  displacement  constraints  that  can  be applied on the
+       displacement of those frames. 
+     - FPS and axis display, fast drawing of the scene and many convenient
+       functions.
+     - Definition and replay of KeyFrame paths.
+     - Stereo display (if your machine supports it). 
+     - Many simple examples illustrating the different functionalities and
+       a complete reference documentation. 
+
+--------------------------------------------------------------------------
+
+See the doc/index.html page for more details.
+See the doc/features.html page for a detailed list of features.
+
+Project home page:
+#WEBURL#
+
+Send e-mail to Gilles.Debunne@imag.fr
+
+--------------------------------------------------------------------------
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+See the LICENCE file for details.

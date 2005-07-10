@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>QGLViewer - Commented code</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link href="qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="images/qglviewer.icon.png" type="image/png" />
+</head>
+<body>
+
+<div class="banner">
+  <a class="qindex highlight" href="index.html">Home</a>
+  <a class="qindex" href="refManual/hierarchy.html">Documentation</a>
+  <a class="qindex" href="download.html">Download</a>
+  <a class="qindex" href="examples/index.html">Examples</a>
+  <a class="qindex" href="developer.html">Developer</a>
+</div>
+
+<h1>QGLViewer - Commented code</h1>
+
+<h2>Simple example</h2>
+
+In your applications, you will mainly use the <code>QGLViewer</code> class, which opens an OpenGL
+window and lets you draw 3D geometry inside. It handles the mouse to move the camera and defines
+some keyboard shortcuts, thus providing the classical functions of a 3D viewer (although everything
+can be redefined). <code>QGLViewer</code> actually inherits from the Qt's <code>QGLWidget</code>
+class (use the Qt <code>assistant</code> to see its documentation).
+
+
+<h2>Header file</h2>
+
+A very simple application will look like <a href="examples/simpleViewer.html">simpleViewer</a>. Here
+is a typical header:
+
+<pre>
+<strong>class</strong> <span style="color:#2040a0">Viewer</span> <span style="#color:4444FF">:</span>
+<strong>public</strong> <span style="color:#2040a0">QGLViewer</span>
+<span style="color:#4444FF"><strong>{</strong></span>
+<strong>protected</strong> <span style="color:#4444FF">:</span>
+  <strong>void</strong> <span style="color:#2040a0">draw</span><span
+  style="color:#4444FF">(</span><span style="color:#4444FF">)</span><span style="color:#4444FF">;</span>
+<span style="color:#4444FF"><strong>}</strong></span><span style="color:#4444FF">;</span>
+</pre>
+In your header file, you declare a new class (<code>Viewer</code>) which publicly inherits from
+<code>QGLViewer</code> and you redefine the <code>draw()</code> method.
+
+
+<h2>Implementation file</h2>
+
+The <code>draw()</code> function is the heart of your program. Your <code>Viewer</code> implementation is as simple as this:
+<pre>
+<span style="color:#0000ff"><strong>#include <span style="color:#008000">&quot;viewer.h&quot;</span></strong></span>
+
+<strong>void</strong> <span style="color:#2040a0">Viewer</span><span
+style="color:#4444FF">:</span><span style="color:#4444FF">:</span><span
+style="color:#2040a0">draw</span><span style="color:#4444FF">(</span><span style="color:#4444FF">)</span>
+<span style="color:#4444FF"><strong>{</strong></span>
+  <span style="color:#444444">// Your OpenGL 3D code goes here.</span>
+  <span style="color:#444444">// It only consists in geometry description, the</span>
+  <span style="color:#444444">// GL_MODELVIEW and GL_PROJECTION are handled by the QGLViewer.</span>
+<span style="color:#4444FF"><strong>}</strong></span>
+</pre>
+
+<h2>Main file</h2>
+
+You then create a <code>main</code> function which uses the <code>Viewer</code> class (most <code>main</code> functions will be like this, simply cut and paste):
+<pre>
+<span style="color:#0000ff"><strong>#include <span style="color:#008000">&lt;qapplication.h&gt;</span></strong></span>
+<span style="color:#0000ff"><strong>#include <span style="color:#008000">&quot;viewer.h&quot;</span></strong></span>
+
+<strong>int</strong> <span style="color:#2040a0">main</span><span
+style="color:#4444FF">(</span><strong>int</strong> <span style="color:#2040a0">argc</span>,
+<strong>char</strong><span style="color:#4444FF">*</span><span style="color:#4444FF">*</span> <span
+style="color:#2040a0">argv</span><span style="color:#4444FF">)</span>
+<span style="color:#4444FF"><strong>{</strong></span>
+  <span style="color:#444444">// Read command lines arguments.</span>
+  <span style="color:#2040a0">QApplication</span> <span
+  style="color:#2040a0">application</span><span style="color:#4444FF">(</span><span
+  style="color:#2040a0">argc</span>,<span style="color:#2040a0">argv</span><span
+  style="color:#4444FF">)</span><span style="color:#4444FF">;</span>
+
+  <span style="color:#444444">// Instantiate the viewer.</span>
+  <span style="color:#2040a0">Viewer</span> <span style="color:#2040a0">v</span><span style="color:#4444FF">;</span>
+
+  <span style="color:#444444">// Make the viewer window visible on screen.</span>
+  <span style="color:#2040a0">v</span>.<span style="color:#2040a0">show</span><span
+  style="color:#4444FF">(</span><span style="color:#4444FF">)</span><span style="color:#4444FF">;</span>
+  
+  <span style="color:#444444">// Set the viewer as the application main widget.</span>
+  <span style="color:#2040a0">application</span>.<span
+  style="color:#2040a0">setMainWidget</span><span style="color:#4444FF">(</span><span
+  style="color:#4444FF">&amp;</span><span style="color:#2040a0">v</span><span
+  style="color:#4444FF">)</span><span style="color:#4444FF">;</span>
+  
+  <span style="color:#444444">// Run main loop.</span>
+  <strong>return</strong> <span style="color:#2040a0">application</span>.<span
+  style="color:#2040a0">exec</span><span style="color:#4444FF">(</span><span
+  style="color:#4444FF">)</span><span style="color:#4444FF">;</span>
+<span style="color:#4444FF"><strong>}</strong></span>
+</pre>
+
+<p>
+
+You just have to concentrate on the scene description and on the OpenGL orders that represent it.
+All the rest comes for free : camera displacement with the mouse in revolve or walk through mode,
+camera keyFrames paths, screenshots, frame per seconds display, objects of the scene that can be
+manipulated with the mouse, and <a href="features.html">much more</a>.
+
+</p><p>
+
+The <code>draw()</code> method is actually <i>one</i> of the functions that can be redefined to change
+the viewer's behavior. Beginners should read the <a href="intro.html">introduction page</a>.
+
+</p>
+
+<h2>Heritage versus Signals-Slots</h2>
+
+There are actually two ways of using the <code>QGLViewer</code> class in your applications :
+<ul>
+<li>Derive your own viewer class from <code>QGLViewer</code> and overload the methods you need
+(<code>init(), draw(), ...</code>) as is done above. The <a href="examples/simpleViewer.html">simpleViewer</a>
+example is an illustration of this method.</li>
+<li>Or use the Qt signal-slot mechanism and connect your own drawing method to the signals emitted by an
+instance of <code>QGLViewer</code>. See the <a href="examples/callback.html">callback</a> example for details.</li>
+</ul>
+
+In order to offer those two mechanisms, the <code>QGLViewer</code> class emits different signals in its
+key methods. When you derive and overload these functions, you replace this behavior by your own implementation.
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="images/css.png" alt="Valid CSS!" width="88" height="31"/></a>
+  <i>Last modified on #DATE#.</i>
+</p>
+
+</body></html>
+

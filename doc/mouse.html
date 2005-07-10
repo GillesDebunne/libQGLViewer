@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer mouse behavior</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link href="qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="images/qglviewer.icon.png" type="image/png" />
+</head>
+<body>
+
+<div class="banner">
+  <a class="qindex highlight" href="index.html">Home</a>
+  <a class="qindex" href="refManual/hierarchy.html">Documentation</a>
+  <a class="qindex" href="download.html">Download</a>
+  <a class="qindex" href="examples/index.html">Examples</a>
+  <a class="qindex" href="developer.html">Developer</a>
+</div>
+
+<h1>Mouse binding customization</h1>
+
+<h2>Principles</h2>
+
+A mouse click can either perform a given atomic <i>click action</i> (such as selecting an object) or can be
+the initiation of a <i>mouse action</i> (such as moving the camera). This action is then transmitted to
+the <code>camera()</code>, the <code>manipulatedFrame()</code> or the <code>mouseGrabber()</code>.
+
+<p>
+The actual behavior is entirely customizable: the <code>ClickAction</code> (triggered when you
+click) and the <code>MouseAction</code> (activated when you click then drag) can be binded to any
+mouse button(s) with any <code>Control, Alt, Shift</code> modifier key combination.
+</p>
+
+<p>
+Default bindings are described below. To sum up, the <code>camera()</code> is the default mouse event
+receiver while the <code>manipulatedFrame()</code> is used when the <code>Ctrl</code> key is pressed.
+<br/>
+The <code>MouseGrabber</code> is specific since its behavior entirely depends on your
+implementation. See the <a href="refManual/classqglviewer_1_1MouseGrabber.html">MouseGrabber
+documentation</a> for details.
+</p>
+
+
+<h2>Customizing your mouse binding</h2>
+The following functions are illustrated in the <a href="examples/keyboardAndMouse.html">keyboardAndMouse</a> example.
+<ul>
+<li>
+To bind a <code>ClickAction</code>, use <code>setMouseBinding(Qt::ButtonState, ClickAction,
+doubleClick=false, buttonBefore=Qt::NoButton)</code>:
+<pre>
+// Click on the right button to make a selection
+setMouseBinding(Qt::RightButton, SELECT);
+
+// Pressing the middle button, then double clicking the right button, while pressing Alt shows the entire scene. Cool huh ?
+setMouseBinding(Qt::AltButton | Qt::RightButton, SHOW_ENTIRE_SCENE, true, Qt::MidButton);
+</pre>
+</li>
+<li>
+To bind a <code>MouseAction</code>, use <code>setMouseBinding(Qt::ButtonState, MouseHandler,
+MouseAction, withConstraint=true)</code> (same function name as above, but different parameters):
+<pre>
+// Left and right buttons together make a camera zoom : emulates a mouse third button if needed.
+setMouseBinding(Qt::LeftButton | Qt::RightButton, CAMERA, ZOOM);
+
+// Alt + Shift + Left button rotates the manipulatedFrame().
+setMouseBinding(Qt::AltButton | Qt::ShiftButton | Qt::LeftButton, FRAME, ROTATE);
+</pre>
+</li>
+<li>
+And finally, for the mouse wheel associated action, use <code>setWheelBinding(Qt::ButtonState, MouseHandler, MouseAction, withConstraint=true)</code>:
+<pre>
+// Alt + wheel moves the camera forward.
+setWheelBinding(Qt::AltButton, CAMERA, MOVE_FORWARD);
+</pre>
+</li>
+</ul>
+
+<p>
+The following tables list all the available <code>ClickAction</code> and <code>MouseAction</code> as
+well as their default associated bindings. Note that the current bindings are always available in
+the <code>Mouse</code> tab of the help window (press <code>H</code> for help).
+</p>
+
+<center>
+<table bgcolor="#E0C0F0" border="2" cellspacing="0" cellpadding="5">
+  <tr bgcolor="#9999CC">
+    <td><code><b>ClickAction</b></code></td>
+    <td><b>Description</b></td>
+    <td><b>Default binding</b></td>
+  </tr>
+
+  <tr>
+    <td><code><b>ALIGN_CAMERA</b></code></td>
+    <td>Align the camera axis with the world coordinate system axis.</td>
+    <td>Double click left button</td>
+  </tr>
+
+  <tr bgcolor="#C0C0F0">
+    <td><code><b>ALIGN_FRAME</b></code></td>
+    <td>Align the <code>manipulatedFrame()</code> axis with the camera.</td>
+    <td>Control + double click left button</td>
+  </tr>
+  
+  <tr>
+    <td><code><b>CENTER_FRAME</b></code></td>
+    <td>Translates the <code>manipulatedFrame()</code> to the center of the screen.</td>
+    <td>Control + double click right button</td>
+  </tr>
+  
+  <tr bgcolor="#C0C0F0">
+    <td><code><b>CENTER_SCENE</b></code></td>
+    <td>Translates the camera so that the <code>sceneCenter</code> is in the center of the screen.</td>
+    <td>Double click right button</td>
+  </tr>
+  
+  <tr>
+    <td><code><b>NO_CLICK_ACTION</b></code></td>
+    <td>No action, only used as a specific return value in <code>QGLViewer::clickAction()</code>.</td>
+    <td>&nbsp;</td>
+  </tr>
+  
+  <tr bgcolor="#C0C0F0">
+    <td><code><b>SELECT</b></code></td>
+    <td>Calls the <code>QGLViewer::select()</code> function.</td>
+    <td>Shift + Left button</td>
+  </tr>
+  
+  <tr>
+    <td><code><b>RAP_FROM_PIXEL</b></code></td>
+    <td>Set the camera <code>revolveAroundPoint()</code> to the point under pixel (if any).</td>
+    <td>Double click left button with right button pressed</td>
+  </tr>
+  
+  <tr bgcolor="#C0C0F0">
+    <td><code><b>RAP_IS_CENTER</b></code></td>
+    <td>Makes the <code>sceneCenter</code> the new camera <code>revolveAroundPoint()</code>.</td>
+    <td>Double click right button with left button pressed</td>
+  </tr>
+  
+  <tr>
+    <td><code><b>SHOW_ENTIRE_SCENE</b></code></td>
+    <td>Translates the camera so that the entire scene is visible.</td>
+    <td>Double click middle button</td>
+  </tr>
+
+  <tr bgcolor="#C0C0F0">
+    <td><code><b>ZOOM_ON_PIXEL</b></code></td>
+    <td>Makes the camera zoom on the pixel under the mouse (if any).</td>
+    <td>Double click left button with middle button pressed</td>
+  </tr>
+  
+  <tr>
+    <td><code><b>ZOOM_TO_FIT</b></code></td>
+    <td>Makes the camera zoom to see the entire scene.</td>
+    <td>Double click right button with middle button pressed</td>
+  </tr>
+</table>
+</center>
+
+<br />
+<br />
+
+<center>
+<table bgcolor="#E0C0F0" border="2" cellspacing="0" cellpadding="5">
+  <tr bgcolor="#9999CC">
+    <td><code><b>MouseAction</b></code></td>
+    <td><code><b>Handler</b></code></td>
+    <td><b>Description</b></td>
+    <td><b>Default binding</b></td>
+  </tr>
+
+  <tr>
+    <td><code><b>NO_MOUSE_ACTION</b></code></td>
+    <td>&nbsp;</td>
+    <td>No action, only used as a specific return value in <code>QGLViewer::mouseAction()</code>.</td>
+    <td>&nbsp;</td>
+  </tr>
+  
+  <tr bgcolor="#C0C0F0">
+    <td rowspan="2"><code><b>ROTATE</b></code></td>
+    <td><code><b>CAMERA</b></code></td>
+    <td>Rotates the camera around its <code>revolveAroundPoint()</code>.</td>
+    <td>Left button</td>
+  </tr>
+  
+  <tr bgcolor="#C0C0F0">
+    <td><code><b>FRAME</b></code></td>
+    <td>Rotates the <code>manipulatedFrame()</code> around its origin.</td>
+    <td>Control + Left button</td>
+  </tr>
+  
+  <tr>
+    <td rowspan="2"><code><b>ZOOM</b></code></td>
+    <td><code><b>CAMERA</b></code></td>
+    <td>Makes the camera zoom in/out. Speed depends on distance to the scene center.</td>
+    <td>Middle button</td>
+  </tr>
+  
+  <tr>
+    <td><code><b>FRAME</b></code></td>
+    <td>Makes the manipulatedFrame() move closer or further from the camera.</td>
+    <td>Control + Middle button</td>
+  </tr>
+  
+  <tr bgcolor="#C0C0F0">
+    <td rowspan="2"><code><b>TRANSLATE</b></code></td>
+    <td><code><b>CAMERA</b></code></td>
+    <td rowspan="2">Translates in the camera XY plane.</td>
+    <td>Right button</td>
+  </tr>
+  
+  <tr bgcolor="#C0C0F0">
+    <td><code><b>FRAME</b></code></td>
+    <td>Control + Right button</td>
+  </tr>
+  
+  <tr>
+    <td><code><b>MOVE_FORWARD</b></code></td>
+    <td><code><b>CAMERA</b></code></td>
+    <td>Makes the camera go forward at <code>flySpeed()</code> and view direction can be changed.</td>
+    <td>&nbsp;</td>
+  </tr>
+  
+  <tr bgcolor="#C0C0F0">
+    <td><code><b>LOOK_AROUND</b></code></td>
+    <td><code><b>CAMERA</b></code></td>
+    <td>Change the viewing direction. The camera position is not modified.</td>
+    <td>&nbsp;</td>
+  </tr>
+  
+  <tr>
+    <td><code><b>MOVE_BACKWARD</b></code></td>
+    <td><code><b>CAMERA</b></code></td>
+    <td>Same as <code>MOVE_FORWARD</code> but backward.</td>
+    <td>&nbsp;</td>
+  </tr>
+  
+  <tr bgcolor="#C0C0F0">
+    <td rowspan="2"><code><b>SCREEN_ROTATE</b></code></td>
+    <td><code><b>CAMERA</b></code></td>
+    <td rowspan="2">Rotates around an axis orthogonal to the screen.</td>
+    <td>Left and middle buttons</td>
+  </tr>
+  
+  <tr bgcolor="#C0C0F0">
+    <td><code><b>FRAME</b></code></td>
+    <td>Control + Left and middle buttons</td>
+  </tr>
+  
+  <tr>
+    <td><code><b>ROLL</b></code></td>
+    <td><code><b>CAMERA</b></code></td>
+    <td>Rolls camera according to horizontal mouse displacement.</td>
+    <td>Left and middle buttons (fly mode only)</td>
+  </tr>
+  
+  <tr bgcolor="#C0C0F0">
+    <td rowspan="2"><code><b>SCREEN_TRANSLATE</b></code></td>
+    <td><code><b>CAMERA</b></code></td>
+    <td rowspan="2">Translates purely horizontally or vertically on screen.</td>
+    <td>Middle and right buttons</td>
+  </tr>
+  
+  <tr bgcolor="#C0C0F0">
+    <td><code><b>FRAME</b></code></td>
+    <td>Control + Middle and right buttons</td>
+  </tr>
+
+  <tr>
+    <td><code><b>ZOOM_ON_REGION</b></code></td>
+    <td><code><b>CAMERA</b></code></td>
+    <td>Draws a rectangular region on screen and zoom on it.</td>
+    <td>Shift + Middle button</td>
+  </tr>
+  
+</table>
+</center>
+
+<p>
+The <code><b>CAMERA</b></code> and <code><b>FRAME</b></code> default bindings are essentially
+identical: You simply have to press the <code>Control</code> state key to move the
+<code><b>FRAME</b></code> instead of the <code><b>CAMERA</b></code>. This default state key can be
+modified using <code>setHandlerStateKey()</code>.
+</p>
+
+Also note that a double click basically automates the normal mouse action.
+
+<p>
+<code>MOVE_FORWARD</code>, <code>MOVE_BACKWARD</code>, <code>LOOK_AROUND</code> and
+<code>ROLL</code> are specific to the <code><b>CAMERA</b></code> fly mode. Press <code>Space</code>
+to switch between revolve and fly camera modes.
+</p>
+
+Try the <a href="examples/simpleViewer.html">simpleViewer</a> and <a
+href="examples/manipulatedFrame.html">manipulatedFrame</a> examples for an illustration.
+
+<a name="newBindings"></a>
+<h2>Defining new mouse bindings</h2>
+
+If you want to implement a new mouse behavior, simply overload the <code>mousePressEvent(),
+mouseMoveEvent(), mouseDoubleClickEvent()</code> and <code>mouseReleaseEvent()</code> callback
+methods in your <code>QGLViewer</code> derived class. See the
+<code>QGLViewer::mouseMoveEvent()</code> documentation for details.
+
+<p>
+Use <code>QGLViewer::setMouseBindingDescription()</code> to add an entry in the help window
+<code>Mouse</code> tab that describes your new mouse binding.
+</p>
+
+<p>
+See the <a href="examples/keyboardAndMouse.html">keyboardAndMouse</a> example for a practical
+implementation.
+</p>
+
+<p>
+If you implemented a new mouse behavior and you think it can be useful for other applications, send
+me an <a href="mailto:Gilles.Debunne at imag dot fr?Subject=QGLViewer">e-mail</a> and I will add it
+in the standard list.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="images/css.png" alt="Valid CSS!" width="88" height="31"/></a>
+  <i>Last modified on #DATE#.</i>
+</p>
+</body></html>

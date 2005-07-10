@@ -1,0 +1,344 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer installation on Unix</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link href="qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="images/qglviewer.icon.png" type="image/png" />
+</head>
+<body>
+
+<div class="banner">
+  <a class="qindex" href="index.html">Home</a>
+  <a class="qindex" href="refManual/hierarchy.html">Documentation</a>
+  <a class="qindex highlight" href="download.html">Download</a>
+  <a class="qindex" href="examples/index.html">Examples</a>
+  <a class="qindex" href="developer.html">Developer</a>
+</div>
+
+<h1>libQGLViewer installation<br/>
+<a href="#linux"><img src="images/linux.png" width="49" height="54" align="middle" alt="linux"/></a>
+Unix systems
+<a href="#mac"><img src="images/mac.png" width="55" height="54" align="middle" alt="mac"/></a>
+</h1>
+
+<div class="summary">
+<b>&raquo;</b> Installation on Linux and Unix : <a href="#linux">libQGLViewer</a> and <a href="#qt-linux">Qt</a><br/>
+<b>&raquo;</b> Installation on Macintosh : <a href="#mac">libQGLViewer</a> and <a href="#qt-mac">Qt</a><br/>
+<b>&raquo;</b> <a href="#plugin">QGLViewer designer plugin</a> installation<br/>
+<b>&raquo;</b> <a href="#troubleshooting">Troubleshooting</a><br/>
+</div>
+
+
+<a name="linux"></a>
+<h2><img src="images/linux.png" width="49" height="54" align="middle" alt="linux"/>Linux and Unix</h2>
+
+<h3>Compilation and installation</h3>
+Directly install <a href="http://blabluga.hell.pl/QGLViewer/">Debian package</a>
+(made by Artur Czechowski) or the pre-compiled RPM (built on Fedora Core 2 with gcc 3.3.3):
+<pre>
+rpm -Uvh <a href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.i586.rpm">libQGLViewer-#VERSION#-#RELEASE#.i586.rpm</a> <a href="#WEBURL#/src/libQGLViewer-devel-#VERSION#-#RELEASE#.i586.rpm">libQGLViewer-devel-#VERSION#-#RELEASE#.i586.rpm</a>
+</pre>
+
+<br/>
+
+However, for optimal results, compile from the sources:
+<pre>
+rpmbuild --rebuild <a href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.src.rpm">libQGLViewer-#VERSION#-#RELEASE#.src.rpm</a>
+cd /usr/src/RPM/RPMS/i586/ (or /usr/src/redhat/RPMS/i586, see the rpmbuild last log lines)
+rpm -Uvh libQGLViewer-*#VERSION#-#RELEASE#.i?86.rpm
+</pre>
+
+or using the source tarball:
+<pre>
+tar -xzf <a href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.tar.gz">libQGLViewer-#VERSION#-#RELEASE#.tar.gz</a>
+cd libQGLViewer-#VERSION#-#RELEASE#/QGLViewer
+qmake (see options below)
+make
+make install
+</pre>
+
+You need root privileges to install the library, since default install paths are system directories.
+
+
+<h3>Compilation of the examples</h3>
+Once the library is installed, <a href="examples/index.html#linux">compile the examples</a> and test them:
+<pre>
+cd ../examples
+qmake
+make
+</pre>
+
+
+<h3>Custom installation</h3>
+The following files are installed:
+<ul>
+<li>The library (<code>libQGLViewer-#VERSION#.so</code>) in <code>/usr/lib</code></li>
+<li>The header files in <code>/usr/include/QGLViewer</code></li>
+<li>The documentation and the examples in <code>/usr/share/doc/QGLViewer</code></li>
+</ul>
+
+<p>
+&nbsp; <b>&raquo; RPM customization</b><br/>
+If you want to change the RPM installation prefix, say to <code>/usr/local</code> instead of the default
+<code>/usr</code>, use <code>rpm -Uvh --prefix /usr/local ...</code> in the rpm command line instead.
+</p>
+
+<p>
+&nbsp; <b>&raquo; qmake customization</b><br/>
+Optional <code>qmake</code> parameters let you customize your <code>make install</code> installation directories:
+</p>
+<pre>
+qmake [PREFIX=...] [INCLUDE_DIR=...] [LIB_DIR=...] [DOC_DIR=...]
+</pre>
+
+A typical usage would be <code>qmake PREFIX=$HOME</code>. Default values are:
+<pre>
+- Param -      - Default value -
+PREFIX         /usr
+LIB_DIR        PREFIX/lib
+INCLUDE_DIR    PREFIX/include
+DOC_DIR        PREFIX/share/doc
+</pre>
+
+Use the same <code>qmake</code> parameters when you compile the examples.
+
+<p>
+If your Qt version is lower than 3.1, you need to link with the <code>glut</code> library:
+uncomment a line in <code>QGLViewer.pro</code> as explained. <code>glut</code> can be installed
+using the <code>freeglut-devel</code> rpm or with <code>apt-get libglut3-dev</code>.
+</p>
+
+     
+
+
+
+<a name="qt-linux"></a>
+<h2><img src="images/linux.png" width="49" height="54" align="middle" alt="linux"/> &nbsp;
+<img src="images/qt.png" width="38" height="40" align="middle" alt="Qt"/> &nbsp; Qt installation</h2>
+
+You need to have the <a href="http://www.trolltech.com">Qt</a> library installed in order to run
+libQGLViewer. Qt is probably already installed on your machine, or available on your distribution
+CDs. You may however have to install the <code>qt3-devel</code> (rpm) or <code>libqt3-mt-dev</code>
+(debian) development package. The complete Qt/X11 non commercial version can also freely be
+<a href="http://www.trolltech.com/developer/download/">downloaded</a> from Trolltech.
+
+<p>
+Try to compile a simple Qt example and check the
+<a href="http://www.trolltech.com/developer/faqs/index.html?catid=1851">Qt FAQ</a> page in case of
+problem. Consider compiling one of the Qt OpenGL examples to test your configuration.
+</p>
+
+If your shell is <code>bash</code> or <code>zsh</code> (use <code>echo $SHELL</code> to know), add
+these lines to your <code>.profile</code>:
+
+<pre>
+export QTDIR=/usr/lib/qt3 (or /usr/lib/qt-3.3 or /usr/share/qt...)
+export PATH=${PATH}:${QTDIR}/bin
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${QTDIR}/lib
+</pre>
+
+If you use <code>tcsh</code> or <code>csh</code> instead, add these lines to your <code>.login</code>:
+
+<pre>
+setenv QTDIR /usr/lib/qt3 (or /usr/lib/qt-3.3 or /usr/share/qt...)
+setenv PATH ${PATH}:${QTDIR}/bin
+setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${QTDIR}/lib
+</pre>
+
+Source this file or open a new shell to take these values into account. If you installed
+<code>libQGLViewer</code> in a custom directory, add the path to this directory in
+<code>LD_LIBRARY_PATH</code> as is done above for <code>${QTDIR}/lib</code>.
+
+
+<br/>
+<br/>
+<br/>
+
+<a name="mac"></a>
+<h2><img src="images/mac.png" width="55" height="54" align="middle" alt="mac"/> Mac OS X</h2>
+
+The installation procedure is essentially identical to the one described in the <a
+href="#linux">Linux section</a>:
+<pre>
+tar -xzf <a href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.tar.gz">libQGLViewer-#VERSION#-#RELEASE#.tar.gz</a>
+cd libQGLViewer-#VERSION#-#RELEASE#/QGLViewer
+qmake
+make
+make install
+</pre>
+
+See the <a href="#linux">Linux section</a> for details and install paths customization. Once the
+library is installed, <a href="examples/index.html#mac">compile the examples</a> and test them:
+
+<pre>
+cd ../examples
+qmake
+make
+</pre>
+
+Threads are activated with the <code>darwin-g++</code> version and disabled with <code>macx</code>.
+Add or remove <code>thread</code> in the <code>CONFIG</code> section of <code>.pro</code> files
+if this does not correspond to your Qt configuration.
+
+<p>
+If your Qt version is lower than 3.1, you need to link with the <code>glut</code> library. Install
+<code>glut</code> and uncomment a line in <code>QGLViewer.pro</code> as explained.
+</p>
+
+
+
+<a name="qt-mac"></a>
+<h2><img src="images/mac.png" width="55" height="54" align="middle" alt="mac"/> &nbsp;
+<img src="images/qt.png" width="38" height="40" align="middle" alt="Qt"/> &nbsp; Qt installation</h2>
+
+Qt is available under two versions for the mac architecture :
+<ul>
+<li>The <code>Qt/Mac</code> native version (also called <code>macx</code>) designed for Aqua, and
+released as a GPL Free Edition. It can freely be <a
+href="http://www.trolltech.com/download/qt/mac.html">downloaded</a> from Trolltech.</li>
+
+<li>The <code>darwin</code> version, that relies on the <a
+href="http://www.apple.com/macosx/features/x11/">X11</a> implementation. You need to launch the X11 application to
+run your programs and have to install Qt using the <a href="http://www.trolltech.com/developer/download/">free
+X11 edition</a>.</li>
+</ul>
+
+You have to define some variables as is detailed in the <a href="#qt-linux">Qt linux section</a>.
+Check their current values first.<br/>
+
+If your shell is <code>bash</code> or <code>zsh</code> (use <code>echo $SHELL</code> to know), add
+these lines to your <code>.profile</code>:
+
+<pre>
+export QTDIR=/sw (if you use fink, or to set to where ever Qt was installed)
+export PATH=${PATH}:${QTDIR}/bin
+export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${QTDIR}/lib
+export QMAKESPEC=darwin-g++ (or macx-g++ or macx-mwerks or macx-pbuilder)
+</pre>
+
+If you use <code>tcsh</code> or <code>csh</code> instead, add these lines to your <code>.login</code>:
+<pre>
+setenv QTDIR /sw (if you use fink, or to set to where ever Qt was installed)
+setenv PATH ${PATH}:${QTDIR}/bin
+setenv DYLD_LIBRARY_PATH ${DYLD_LIBRARY_PATH}:${QTDIR}/lib
+setenv QMAKESPEC darwin-g++ (or macx-g++ or macx-mwerks or macx-pbuilder)
+</pre>
+
+Your <code>QMAKESPEC</code> should correspond to your Qt installation : <code>macx-g++</code> for
+Qt/Mac (or <code>macx-mwerks</code> with CodeWarrior, <code>macx-pbuilder</code> with Project
+Builder) and <code>darwin-g++</code> for X11. Compile a simple Qt example to check your configuration.
+
+<p>
+If you installed <code>libQGLViewer</code> in a custom directory, add the path to this directory in
+<code>DYLD_LIBRARY_PATH</code> as is done above for <code>${QTDIR}/lib</code>.
+</p>
+
+
+<br/>
+<br/>
+<br/>
+
+
+<a name="plugin"></a>
+<h2><img src="images/qt.png" width="38" height="40" align="middle" alt="Qt"/> Installation of the designer plugin</h2>
+
+This installation is optional. To compile and install the QGLViewer designer plugin:
+
+<pre>
+cd designerPlugin
+qmake
+make
+make install
+</pre>
+
+The <code>make install</code> step requires root privileges since the plugin is installed in
+<code>$QTDIR/plugins/designer</code>, which is usually a system directory.
+
+<p>
+Such a plugin eases the creation of user interfaces that feature a QGLViewer using designer. It
+makes a GLViewer icon appear in the designer's <code>Display</code> widget tab, as a standard Qt
+widget. When added to your user interface, the widget displays the standard spiral, which can be
+rotated when you test your interface (using <code>Ctrl+T</code>).
+</p>
+
+ &nbsp; &nbsp; <img src="images/designerplugin.jpg" width="800" height="300" align="middle" alt="Designer plugin" /><br/>
+
+All the viewers' signals and slots are available and can be connected to your interface.
+
+<p>
+Note that an alternative to this plugin is to add a "Custom Widget" using the
+<i>Tools/Custom</i> designer menu. <i>Load Descriptions...</i> and provide the
+<code>qglviewer.cw</code> custom widget description file, located in the QGLViewer header files
+directory. You can customize this description with your own signals and slots and change the header
+file path.
+</p>
+
+See the <a href="examples/interface.html">interface example</a> for an illustration of a user
+interface that includes a QGLViewer.
+
+
+
+<a name="troubleshooting"></a>
+<h2>Troubleshooting</h2>
+
+<ul>
+
+<li><b>declaration of <code>qtObsolete</code> conflicts with previous declaration</b> : error
+message. See the <a href="examples/index.html#mac">mac example section</a>.</li>
+
+<li><b>uic: File generated with too recent version of Qt Designer</b> : try to change the
+<code>version=""</code> in the first line of the <code>ui</code> file.</li>
+
+<li><b>Error while loading shared libraries</b> : You must add the path to
+<code>libQGLViewer.so</code> in your <code>LD_LIBRARY_PATH</code> (see above).</li>
+
+<li><b>Random or no display</b> : This may come from a bug in your compiler. Try to edit
+<code>QGLViewer.pro</code>, replace <code>release</code> by <code>debug</code> in the
+<code>CONFIG</code> line, and re-compile.</li>
+
+<li><b>lib3ds</b> : This library is needed to compile the <a
+href="examples/3dsViewer.html">3dsViewer example</a>. Download the patched <a
+href="#WEBURL#/src/lib3ds-1.2.0-1.i686.rpm">lib3ds-1.2.0-1.i686.rpm</a> or the sources (<a
+href="#WEBURL#/src/lib3ds-1.2.0-1.src.rpm">lib3ds-1.2.0-1.src.rpm</a> or <a
+href="#WEBURL#/src/lib3ds-1.2.0.tar.gz">lib3ds-1.2.0.tar.gz</a>).</li>
+
+<li><b>libX3DTK</b> : This library is needed to compile the <a
+href="examples/x3dViewer.html">x3dViewer example</a>. Download the library from the
+<a href="http://artis.imag.fr/Members/Yannick.Legoc/X3D">X3DTK web site</a>.</li>
+
+<li><b>The indicated type is incomplete</b> error message in <code>qvaluevector.h</code> while
+compiling <code>keyFrameInterpolator.cpp</code>: include <code>frame.h</code> (see top of
+<code>keyFrameInterpolator.cpp</code>).</li>
+
+<li><b>overloading cannot distinguish from previous declaration</b> : while compiling
+<code>translate</code> and <code>rotate</code> in <code>Frame.h</code>. Simply comment the
+<code>const</code> versions of these methods.</li>
+
+<li><b>cp: illegal option -- P</b> : This option is very useful but may not be available on your
+machine. Remove the <code>QMAKE_COPY_FILE</code> modification in <code>QGLViewer.pro</code></li>
+
+<li><b>gcc 2.95: ostream operator &lt;&lt; with <code>QString</code></b> : Uncomment the patch in
+<code>config.h</code></li>
+
+<li><b>Undefined reference to QString::QString</b>: Add/remove <code>thread</code> in the
+<code>CONFIG</code> line of <code>QGLViewer.pro</code> and re-compile.</li>
+
+<li><b>exception handling disabled</b>: Add <code>QMAKE_CXXFLAGS *= -fexceptions</code> in <code>QGLViewer.pro</code>.</li>
+
+</ul>
+
+<p>
+Please <a href="mailto:Gilles.Debunne at imag dot fr?Subject=QGLViewer RPM">let me know</a> if you
+encountered specific installation problems that could be reported on this page.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="images/css.png" alt="Valid CSS!" width="88" height="31"/></a>
+  <i>Last modified on #DATE#.</i>
+</p>
+    
+</body>
+</html>

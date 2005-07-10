@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>QGLViewer - General FAQ</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link href="qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="images/qglviewer.icon.png" type="image/png" />
+</head>
+<body>
+
+<div class="banner">
+  <a class="qindex" href="index.html">Home</a>
+  <a class="qindex" href="refManual/hierarchy.html">Documentation</a>
+  <a class="qindex" href="download.html">Download</a>
+  <a class="qindex" href="examples/index.html">Examples</a>
+  <a class="qindex highlight" href="developer.html">Developer</a>
+</div>
+
+<h1>QGLViewer - General FAQ</h1>
+<center>See also the <a href="techFaq.html">Technical FAQ</a></center>
+
+<div class="summary">
+<b><a href="#whatisit">&raquo;&raquo;</a></b> &nbsp; What is libQGLViewer ?<br/>
+<b><a href="#whatitisnot">&raquo;&raquo;</a></b> &nbsp; What is <i>not</i> libQGLViewer ?<br/>
+<b><a href="#diffglut">&raquo;&raquo;</a></b> &nbsp; What is the difference with glut ?<br/>
+<b><a href="#features">&raquo;&raquo;</a></b> &nbsp; What are the main features ?<br/>
+<b><a href="#whyqt">&raquo;&raquo;</a></b> &nbsp; Why is it based on Qt ?<br/>
+<b><a href="#whyglut">&raquo;&raquo;</a></b> &nbsp; Why is Glut needed then ?<br/>
+<b><a href="#whouses">&raquo;&raquo;</a></b> &nbsp; Who should use this library ?<br/>
+<b><a href="#start">&raquo;&raquo;</a></b> &nbsp; How should I start ?<br/>
+</div>
+
+<a name="whatisit"></a>
+<h2>What is libQGLViewer ?</h2>
+libQGLViewer is a GPL free software C++ library which lets you
+quickly start the development of a new 3D application. It is designed for 3D developers, who can
+display and move around a 3D scene by simply providing the OpenGL orders that define their 3D
+geometry. The viewer is designed to be as general as possible and is not designed for a specific 3D
+application.
+
+<a name="whatitisnot"></a>
+<h2>What is <i>not</i> libQGLViewer ?</h2>
+libQGLViewer is <i>not</i> a 3D viewer that can be used directly to view 3D scenes in various formats
+(well, there is a 3dsViewer example, but it is just a proof of concept). It
+is more likely to be the starting point for the coding of such a viewer.
+
+<a name="diffglut"></a>
+<h2>What is the difference with glut ?</h2>
+<a href="http://www.opengl.org/documentation/spec.html">Glut</a> eases the creation of an
+OpenGL window and lets you implements your own mouse and keyboard callback functions. In that sense,
+it is very comparable to the <code>Qt::QGLWidget</code> class functionalities.
+
+<br/>
+
+However, libQGLViewer is a higher level API, it is designed to create OpenGL <i>3D viewers</i>.
+These default callback functions are already implemented and the mouse can intuitively be used to
+move the camera (or any object of the scene) with no extra code needed. Simple applications only
+have to define the <code>draw()</code> function to get a functional viewer. Although
+adapted for most applications, the default handlers can be customized if needed.
+
+<a name="features"></a>
+<h2>What are the main features ?</h2>
+libQGLViewer provides some useful classical functionalities such as : a camera trackball,
+screenshot saving, mouse manipulated frames, stereo display, camera point of view saving, full
+screen display, keyFrames paths and much more. See the <a href="features.html">features page</a> for
+a more exhaustive listing.
+
+<a name="whyqt"></a>
+<h2>Why is it based on Qt ?</h2>
+As mentioned above, <code>glut</code> and the <code>Qt::QGLWidget</code> class provide similar
+OpenGL window creation facilities with a callback framework. The clean <code>Qt</code> object
+oriented design, the powerful GUI creation tools it provides and some of its functionalities
+(framebuffer grabbing, image format abstration...) made us adopt Qt.
+
+<a name="whyglut"></a>
+<h2>Why is Glut needed then ?</h2>
+Glut is required only if your Qt version is lower than 3.1. It provides text drawing functionalities
+that were missing until Qt 3.1. 
+
+<a name="whouses"></a>
+<h2>Who should use this library ?</h2>
+Anyone who needs to visualize a 3D scene. libQGLViewer is currently used by Computer Graphics
+research labs, industrials or game designers. Note however that it is not designed for critical
+real-time applications (namely games), as it could benefit from some optimizations (that were not
+performed in order to keep the library versatile). It is however a very good debugging and
+prototyping tool in these cases.
+
+<br/>
+
+libQGLViewer also has a strong pedagogical interest, as it allows students to very quickly develop
+their application and to focus on <i>what</i> is drawn instead of <i>how</i> to make the computer
+draw it.
+
+<a name="start"></a>
+<h2>How should I start ?</h2>
+The main goal of libQGLViewer is to allow a student to have a complete 3D viewer application in less
+than five minutes. Once the library is <a href="download.html">installed</a>, the best way to
+achieve this challenge is to start from one of the provided <a
+href="examples/index.html">examples</a> (Windows users, see the <a
+href="examples/index.html">examples</a> page) :
+<pre>
+ > cp -r /usr/share/doc/QGLViewer/examples/simpleViewer .
+ > cd simpleViewer
+ > qmake
+ > make
+ > simpleViewer
+</pre>
+
+Your first program should execute and you can start extending it. However, before you start
+coding, you should <a href="intro.html">discover the principles</a> of the library and <a
+href="commented.html">read a commented version</a> of this example.
+
+<p>
+Other questions can be sent by
+<a href="mailto:&#71;&#105;&#108;&#108;&#101;&#115;&#46;&#68;&#101;&#98;&#117;&#110;&#110;&#101;&#64;&#105;&#109;&#97;&#103;&#46;&#102;&#114;">e-mail</a>
+and will be added to this page. See also the <a href="techFaq.html">Technical FAQ</a> page.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="images/css.png" alt="Valid CSS!" width="88" height="31"/></a>
+  <i>Last modified on #DATE#.</i>
+</p>
+
+</body></html>

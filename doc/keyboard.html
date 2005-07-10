@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Keyboard shortcut customization</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link href="qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="images/qglviewer.icon.png" type="image/png" />
+</head>
+<body>
+
+<div class="banner">
+  <a class="qindex highlight" href="index.html">Home</a>
+  <a class="qindex" href="refManual/hierarchy.html">Documentation</a>
+  <a class="qindex" href="download.html">Download</a>
+  <a class="qindex" href="examples/index.html">Examples</a>
+  <a class="qindex" href="developer.html">Developer</a>
+</div>
+
+<h1>Keyboard shortcut customization</h1>
+
+Default shortcut bindings are described below. They can be redefined in your application and you can
+add new ones. See the <a href="examples/keyboardAndMouse.html">keyboardAndMouse</a> example for a
+practical illustration.
+
+<h2>Default keyboard shortcuts</h2>
+This table lists the different <code>KeyboardAction</code> with their default shortcuts.
+<center>
+<table bgcolor="#E0C0F0" border="2" cellspacing="0" cellpadding="5">
+  <tr bgcolor="#9999CC">
+    <td><b><code>KeyboardAction</code></b></td>
+    <td><b>Key</b></td>
+    <td><b>Description</b></td>
+    <td><b>Associated function</b></td>
+  </tr>
+  <tr>
+    <td>DRAW_AXIS</td>
+    <td><b>A</b></td>
+    <td>Toggles the display of the world axis</td>
+    <td><code>QGLViewer::toggleAxisIsDrawn()</code></td>
+  </tr>
+  <tr bgcolor="#C0C0F0">
+    <td>DRAW_GRID</td>
+    <td><b>G</b></td>
+    <td>Toggles the display of the XY grid</td>
+    <td><code>QGLViewer::toggleGridIsDrawn()</code></td>
+  </tr>
+  <tr>
+    <td>DISPLAY_FPS</td>
+    <td><b>F</b></td>
+    <td>Toggles the display of the frame rate</td>
+    <td><code>QGLViewer::toggleFPSIsDisplayed()</code></td>
+  </tr>
+  <tr bgcolor="#C0C0F0">
+    <td>ENABLE_TEXT</td>
+    <td><b>?</b></td>
+    <td>Toggles the display of all the text</td>
+    <td><code>QGLViewer::toggleTextIsEnabled()</code></td>
+  </tr>
+  <tr>
+    <td>STEREO</td>
+    <td><b>S</b></td>
+    <td>Toggles the stereo display</td>
+    <td><code>QGLViewer::toggleStereoDisplay()</code></td>
+  </tr>
+  <tr bgcolor="#C0C0F0">
+    <td>HELP</td>
+    <td><b>H</b></td>
+    <td>Displays a help window</td>
+    <td><code>QGLViewer::help()</code></td>
+  </tr>
+  <tr>
+    <td>EXIT_VIEWER</td>
+    <td><b>Escape</b></td>
+    <td>Quits the application</td>
+    <td><code>qApp-&gt;quit</code></td>
+  </tr>
+  <tr bgcolor="#C0C0F0">
+    <td>CAMERA_MODE</td>
+    <td><b>Space</b></td>
+    <td>Switches between the FLY and REVOLVE camera mode</td>
+    <td><code>camera()-&gt;toggleCameraMode()</code></td>
+  </tr>
+  <tr>
+    <td>ANIMATION</td>
+    <td><b>Return</b></td>
+    <td>Starts/stops the animation loop</td>
+    <td><code>QGLViewer::toggleAnimation()</code></td>
+  </tr>
+  <tr bgcolor="#C0C0F0">
+    <td>SAVE_SCREENSHOT</td>
+    <td><b>Ctrl+S</b></td>
+    <td>Opens the save screenshot dialog box</td>
+    <td><code>QGLViewer::saveSnapshot()</code></td>
+  </tr>
+  <tr>
+    <td>FULL_SCREEN</td>
+    <td><b>Alt+Return</b></td>
+    <td>Toggles the full screen mode</td>
+    <td><code>QGLViewer::toggleFullScreen()</code></td>
+  </tr>
+  <tr bgcolor="#C0C0F0">
+    <td>EDIT_CAMERA</td>
+    <td><b>C</b></td>
+    <td>Toggles the camera edition</td>
+    <td><code>toggleCameraIsEdited()</code></td>
+  </tr>
+  <tr>
+    <td>INCREASE_FLYSPEED<br/>DECREASE_FLYSPEED</td>
+    <td><b>+ / -</b></td>
+    <td>Increases or decreases the camera fly speed.</td>
+    <td><code>camera()-&gt;setFlySpeed()</code></td>
+  </tr>
+  <tr bgcolor="#C0C0F0">
+    <td>MOVE_CAMERA_LEFT<br/>MOVE_CAMERA_RIGHT<br/>
+    MOVE_CAMERA_UP<br/>MOVE_CAMERA_DOWN</td>
+    <td><b>Left, right<br/>up and down<br/>arrow keys</b></td>
+    <td>Moves the camera, parallel to the screen.<br/>
+    Displacement amplitude is proportional to <code>flySpeed()</code></td>
+    <td><code>camera()-&gt;frame()-&gt;translate(...)</code></td>
+  </tr>
+  <tr>
+    <td>See <code>pathKey()</code> and<br/><code>playPathStateKey()</code></td>
+    <td><b>F1...F12</b></td>
+    <td>Plays/Pauses camera key frame path (if defined)<br/>Reset the path when Fx is quickly press twice.</td>
+    <td><code>camera()-&gt;playPath(i)</code><br/><code>camera()-&gt;resetPath(i)</code></td>
+  </tr>
+  <tr  bgcolor="#C0C0F0">
+    <td>See <code>pathKey()</code> and<br/><code>addKeyFrameStateKey()</code></td>
+    <td><b>Alt+(F1...F12)</b></td>
+    <td>Defines a new camera key frame for path 1..12.<br/>Deletes the path when Fx is quickly press twice.</td>
+    <td><code>camera()-&gt;addKeyFrameToPath(i)</code><br/><code>camera()-&gt;deletePath(i)</code></td>
+  </tr>
+</table>
+</center>
+
+<p>
+
+Use <code>QGLViewer::setShortcut(Action, Key)</code> to redefine one of these (probably in your
+<code>init()</code> function). <code>Action</code> is defined by the <code>KeyboardAction</code>
+enum, described in the above table, while <code>Key</code> is provided as an <code>int</code> using
+Qt enumerated values. Setting <code>0</code> as the shortcut key disables the associated
+<code>KeyboardAction</code>:
+
+</p>
+
+<pre>
+void Viewer::init()
+{
+  // Press 'Q' to exit application
+  setShortcut(EXIT_VIEWER, Key_Q);
+
+  // Alt+M toggles camera mode
+  setShortcut(CAMERA_MODE, ALT+Key_M);
+  
+  // The DISPLAY_FPS action is disabled
+  setShortcut(DISPLAY_FPS, 0);
+}
+</pre>
+
+You can retrieve the current shortcut with <code>shortcut(Action)</code>.
+Current bindings are always available in the help window "Keyboard" tab.
+
+<h2>Binding new keyboard actions</h2>
+
+If you want to define a new keyboard shortcuts for one of your own methods, overload the
+<code>QGLViewer::keyPressEvent(QKeyEvent *e)</code> method:
+
+<pre>
+void Viewer::keyPressEvent(QKeyEvent *e)
+  {
+    switch (e->key())
+    {
+      case Qt::Key_R :
+        myResetMethod();
+        updateGL();
+        break;
+      // and so on...
+      // Calls the original method to handle other keys
+      default: QGLViewer::keyPressEvent(e);
+    }
+  }
+</pre>
+
+You should then use <code>setKeyDescription()</code> to add a short description of your keyboard
+shortcut in the <code>help</code> window. See the <a
+href="examples/keyboardAndMouse.html">keyboardAndMouse</a> example for a practical illustration.
+
+
+
+<h2>Camera paths keyboard bindings</h2>
+
+A <code>Camera</code> can have associated <code>KeyFrameInterpolator</code> that define paths and
+positions. The <code>F1...F12</code> keys (noted Fx below) are binded to the
+<code>Camera::keyFrameInterpolator()</code> of indexes 1..12 by default.
+
+<ul>
+<li><code>Alt+F<i>x</i></code> adds a new keyFrame to path <i>x</i>.</li>
+<li><code>F<i>x</i></code> will then make the Camera play/pause the associated path (or will simply
+restore the saved position if only one keyFrame was defined for this path).</li>
+</ul>
+
+Quickly pressing <code>F<i>x</i></code> twice resets the interpolation:
+<ul>
+<li><code>Alt+F<i>x</i>+F<i>x</i></code> deletes path <i>x</i>.</li>
+<li><code>F<i>x</i>+F<i>x</i></code> resets path <i>x</i> to its starting point.</li>
+</ul>
+
+Use these methods to modify the camera path keyboard shortcuts:
+<ul>
+<li><code>setPathKey(int key, int index)</code> (default are <code>F1...F12</code> for
+path 1..12), </li>
+<li><code>setAddKeyFrameStateKey(int buttonState)</code> (default is <code>Alt</code>) and</li>
+<li><code>setPlayPathStateKey(int buttonState)</code> (default is <code>Qt::NoButton</code>).</li>
+</ul>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="images/css.png" alt="Valid CSS!" width="88" height="31"/></a>
+  <i>Last modified on #DATE#.</i>
+</p>
+
+</body></html>

@@ -1,0 +1,667 @@
+#!/bin/sh
+
+libName="libQGLViewer"
+version="2.0.0"
+release="3"
+
+version_major=`echo $version | cut -d"." -f1`
+version_minor=`echo $version | cut -d"." -f2`
+version_patch=`echo $version | cut -d"." -f3`
+
+WebSuffix="Members/Gilles.Debunne/QGLViewer"
+WebDir="/home/wwwartis/pub/$WebSuffix"
+test -d $WebDir || WebDir="/net/cedre/chroot/var/www/artis/pub/$WebSuffix"
+test -d $WebDir || WebDir="/h/cedre/chroot/var/www/artis/pub/$WebSuffix"
+WebURL="http://artis.imag.fr/$WebSuffix"
+
+libNameVersion="$libName-$version-$release"
+tarName="$libNameVersion.tar.gz"
+tmpDir="/tmp/$libNameVersion"
+
+# echo "$0 disabled for security"
+# exit
+
+if [ $# == 0 ]
+then
+  echo "Usage : $0 [web|rpm]"
+  exit
+fi
+
+
+##################################################################
+############        Checking version coherence        ############
+##################################################################
+
+echo " - Checking version coherence"
+
+function checkVersion()
+{
+  grep "^$START $VERSION" $FILE > /dev/null
+  if [[ "$?" -ne "0" ]]
+  then
+    echo "Version found in $FILE is not $VERSION - Patching"
+    sed s~"^$START.*"~"$START $VERSION"~ $FILE > /tmp/makeDist
+    cp /tmp/makeDist $FILE
+  fi
+}
+
+grep "Gilles Debunne <Gilles.Debunne@imag.fr> $version-$release" QGLViewer/qglviewer.spec > /dev/null
+if [[ "$?" -ne "0" ]]
+then
+  echo "No changelog comment in QGLViewer/qglviewer.spec for $version-$release - Abort"
+  exit
+fi
+
+grep "$version-$release" doc/index.html > /dev/null
+if [[ "$?" -ne "0" ]]
+then
+  echo "No news section in doc/index.html for $version-$release - Abort"
+  exit
+fi
+
+VERSION=$version_major
+START="%define version_major"
+FILE="QGLViewer/qglviewer.spec"
+checkVersion
+
+VERSION=$version_minor
+START="%define version_minor"
+FILE="QGLViewer/qglviewer.spec"
+checkVersion
+
+VERSION=$version_patch
+START="%define version_patch"
+FILE="QGLViewer/qglviewer.spec"
+checkVersion
+
+VERSION=$release
+START="Release:	"
+FILE="QGLViewer/qglviewer.spec"
+checkVersion
+
+VERSION=$version
+START="VERSION  ="
+FILE="QGLViewer/QGLViewer.pro"
+checkVersion
+
+VERSION=$version
+START="VERSION  ="
+FILE="QGLViewer/QGLViewer.Qt2.3.pro"
+checkVersion
+
+hexVersion="0x0${version_major}0${version_minor}0${version_patch}"
+VERSION=$hexVersion
+START="#define QGLVIEWER_VERSION"
+FILE="QGLViewer/config.h"
+checkVersion
+
+VERSION="$version-$release\""
+START="PROJECT_NUMBER         = \"Version"
+FILE="doc/Doxyfile"
+checkVersion
+
+catVersion="QGViewer"$(echo $version | sed s%"\."%""%g)
+VERSION="$catVersion"
+START="  NUMBERED_VERSION ="
+FILE="examples/release.pri"
+checkVersion
+
+echo " - Checking file integrity"
+
+for f in `ls QGLViewer/QGLViewer.pro examples/*/*.pro examples/contribs/*/*.pro`
+do
+  if [ $f == "examples/debug/debug.pro" ]
+  then
+    continue
+  fi
+  if [ $f == "examples/contribs/contribs.pro" ]
+  then
+    continue
+  fi
+  if [ `grep "^CONFIG" $f | grep "release" | wc -c` == 0 ]
+  then
+    echo "Non release version in $f - Aborting"
+    exit
+  fi
+done
+ 
+grep -a "^WebURL" doc/makeDist | grep "$WebURL" > /dev/null
+if [[ "$?" -ne "0" ]]
+then
+  echo "Bad WebURL in doc/makeDist - Aborting"
+  exit
+fi
+
+grep "^URL" QGLViewer/qglviewer.spec | grep "$WebURL" > /dev/null
+if [[ "$?" -ne "0" ]]
+then
+  echo "Bad WebURL in QGLViewer/qglviewer.spec URL - Aborting"
+  exit
+fi
+
+grep 'version="3.0"' QGLViewer/VRenderInterface.ui > /dev/null
+if [[ "$?" -ne "0" ]]
+then
+ echo "No 3.0 version in QGLViewer/VRenderInterface.ui - Aborting"
+ exit
+fi
+
+grep 'version="3.1"' examples/interface/myInterface.ui > /dev/null
+if [[ "$?" -ne "0" ]]
+then
+ echo "No 3.0 version in examples/interface/myInterface.ui - Aborting"
+ exit
+fi
+
+
+
+
+
+
+
+if [ $1 == "web" ]
+then
+  test -d $WebDir || mkdir -p $WebDir
+
+  cd examples
+    echo " - Creating examples"
+    makeDist
+    echo " - Copy examples"
+    test -d $WebDir/examples || rm -rf $WebDir/examples
+    mkdir -p $WebDir/examples
+    cp html/* $WebDir/examples
+  cd -
+
+  cd doc
+    echo " - Filtering doc"
+    makeDist
+    filteredHTML=`grep -a ^filteredDir makeDist | cut -d'"' -f2`
+    echo " - Copy result from $filteredHTML"
+    rm -f $WebDir/*.html $WebDir/*.css
+    cp $filteredHTML/* $WebDir
+    cp qglviewer.css $WebDir
+    
+    echo " - Copy images"
+    rm -rf $WebDir/images
+    cp -r images $WebDir
+    cp ../statsDownload/downloads.png ../statsDownload/examples.png $WebDir/images
+
+    echo " - Copy refManual"
+    rm -rf $WebDir/refManual
+    cp -r refManual $WebDir
+    #cp -r man $WebDir
+    #cd latex ; make clear ; make pdf > /dev/null ; cp refman.pdf $WebDir/qglviewer.pdf
+  cd -
+
+  # cd QGLViewer
+    # echo " - Making CVS index..."
+    # test -d $WebDir/CVS || mkdir -p $WebDir/CVS
+    # test -d $WebDir/CVS/diff || rm -rf $WebDir/CVS/diff
+    # cvs2html -f -C chrono.html -p -o $WebDir/CVS/index.html -a -b -n3 -N20 > /dev/null
+  # cd -
+  
+  echo " - Checking web site links"
+  cd $WebDir
+  checkLinks.pl -r
+  ls -1 src | grep -v "^lib" | grep -v "index.html" | grep -v "md5sum.txt"
+  exit
+fi
+
+
+
+
+
+
+
+
+
+if [ $1 == "rpm" ]
+then
+echo " - Building libQGLViewer version $version-$release"
+
+# echo "This will replace files of version $version-$release, are you sure ?"
+# exit
+
+QGLViewerRootDir=`pwd`
+
+##################################################################
+############        Checking RPM configuration        ############
+##################################################################
+
+echo " - Checking RPM configuration"
+
+rpmDir=`grep '^%_topdir' $HOME/.rpmmacros | awk '{print $2}'`
+rpmTmpDir=`grep '^%_tmppath' $HOME/.rpmmacros | awk '{print $2}'`
+rpmFindReq=`grep '^%__find_requires' $HOME/.rpmmacros | awk '{print $2}'`
+
+for dir in SRPMS RPMS SPECS SOURCES BUILD
+do
+  if [ ! -d $rpmDir/$dir ]
+  then
+    echo " - RPM dir ($rpmDir/$dir) not found - Aborting"
+    exit
+  fi
+done
+
+if [ ! -d $rpmTmpDir ]
+then
+  echo " - RPM tmp dir ($rpmTmpDir) not found - Aborting"
+  exit
+fi
+
+if [ ! -f $rpmFindReq ]
+then
+  echo " - RPM find requires ($rpmFindReq) not found - Aborting"
+  exit
+fi
+
+ 
+##################################################################
+############            Collecting  sources            ###########
+##################################################################
+
+echo " - Collecting sources"
+
+test -d $tmpDir && rm -rf $tmpDir/*
+test -d $tmpDir || mkdir -p $tmpDir
+
+cp CHANGELOG INSTALL README LICENCE gpl-warning $tmpDir
+
+cd QGLViewer
+
+qmake
+
+# Patch for rmdir error message on non empty directories
+sed s/"rmdir"/"rm -rf"/ Makefile > Makefile.gcc3
+make -f Makefile.gcc3 dist
+rm Makefile.gcc3
+
+mv QGLViewer.tar.gz $tmpDir
+cd -
+
+cd examples ; makeDist ; cd -
+tar -cf Examples.tar examples/examples.pro examples/contribs/contribs.pro examples/release.pri examples/html
+EXAMPLES_SKIPPED_DIRS="attic contribs debug html CVS"
+for f in `cd examples ; ls`
+do
+  test -d examples/$f || continue
+  for r in $EXAMPLES_SKIPPED_DIRS
+  do
+    if [ $f == $r ]
+    then
+      continue 2
+    fi
+  done
+
+  if [ `grep $f examples/examples.pro | wc -l` = 0 ]
+  then
+    echo "Example $f not found in examples.pro - Aborting"
+    exit
+  fi
+
+  if [ ! -f examples/$f/$f.pro ]
+  then
+    echo "No example $f.pro file - Aborting"
+    exit
+  fi
+
+  cd examples/$f
+  qmake
+  make dist
+  mv $f.tar.gz ..
+  cd -
+  tar -rf Examples.tar examples/$f.tar.gz
+  rm examples/$f.tar.gz
+done
+
+for f in `cd examples/contribs ; ls`
+do
+  test -d examples/contribs/$f || continue
+  if [ $f == "CVS" ]
+  then
+      continue
+  fi
+
+  if [ `grep $f examples/contribs/contribs.pro | wc -l` = 0 ]
+  then
+    echo "Contrib example $f not found in contribs.pro - Aborting"
+    exit
+  fi
+
+  if [ ! -f examples/contribs/$f/$f.pro ]
+  then
+    echo "No example $f.pro file - Aborting"
+    exit
+  fi
+
+  cd examples/contribs/$f
+  qmake
+  make dist
+  mv $f.tar.gz ..
+  cd -
+  tar -rf Examples.tar examples/contribs/$f.tar.gz
+  rm examples/contribs/$f.tar.gz
+done
+gzip Examples.tar
+mv Examples.tar.gz $tmpDir
+
+cd doc
+  makeDist
+  filteredHTML=`grep -a ^filteredDir makeDist | cut -d'"' -f2`
+  if [ -z "$filteredHTML" ]
+  then
+    echo "Unable to find filteredHTML directory in doc - Aborting"
+    exit
+  fi
+cd -
+tar -czf Doc.tar.gz doc/$filteredHTML doc/qglviewer.css doc/refManual doc/images/*jpg doc/images/*png doc/images/*ico doc/qglviewer.cw
+# tar -czf Doc.tar.gz doc/$filteredHTML doc/*.css doc/refManual doc/man/man3/QGLViewer.3 doc/man/man3/qglviewer_* doc/images doc/qglviewer.cw
+mv Doc.tar.gz $tmpDir
+
+cd designerPlugin
+qmake
+make dist
+mv qglviewerplugin.tar.gz $tmpDir
+cd -
+
+##################################################################
+############            Filtering  sources            ############
+##################################################################
+
+echo " - Filtering sources"
+
+cd $tmpDir
+for f in `ls *.tar.gz`
+do
+  tar -xzf $f
+  rm $f
+done
+
+# Filter files
+export LC_TIME="en"
+date=`date "+%B %-d, %Y"`
+for f in "gpl-warning" "CHANGELOG" "INSTALL" "LICENCE" "README"
+do
+  sed s:"#VERSION#":"$version":g $f | sed s:"#RELEASE#":"$release":g | sed s§"#WEBURL#"§"$WebURL"§g | sed s:"#DATE#":"$date":g > $f.filtered
+  mv $f.filtered $f
+done
+
+# html examples go to doc
+mv examples/html doc/examples
+
+mv qglviewerplugin designerPlugin
+grep -v "^include" designerPlugin/designerPlugin.pro > /tmp/designer.pro
+sed s%"\.\./\.\."%"\.\."% examples/release.pri > /tmp/release.pri
+cat /tmp/designer.pro /tmp/release.pri > designerPlugin/designerPlugin.pro
+
+sed s%"\.\./\.\."%"\.\./\.\./\.\."% examples/release.pri > examples/contribs/release.pri
+for dir in "examples" "examples/contribs"
+do
+  cd $dir
+  # Extract examples tars
+  for f in `ls *.tar.gz`
+    do
+    tar -xzf $f
+    rm $f
+  done
+  
+  # Modify examples' .pro
+  for f in `ls */*.pro`
+  do
+    if [[ $f == "contribs/contribs.pro" ]]
+    then
+      continue
+    fi
+    grep -v "^include" $f > $f.tmp
+    cat $f.tmp release.pri > $f
+    rm $f.tmp
+  done
+  rm release.pri
+
+  cd -
+done
+
+# GPL warning
+for f in `find . -name '*.h' -o -name '*.cpp'`
+do
+  cat gpl-warning $f > $f.bak
+  mv $f.bak $f
+done
+
+if [ ! -f $QGLViewerRootDir/QGLViewer/VRender/copyright ]
+then
+  echo "No copyright in VRender"
+  exit
+fi
+
+for f in `find QGLViewer/VRender -name '*.h' -o -name '*.cpp'`
+do
+  cat $QGLViewerRootDir/QGLViewer/VRender/copyright $f > $f.bak
+  mv $f.bak $f
+done
+
+mv gpl-warning /tmp/
+
+cd doc
+  cp qglviewer.cw ../QGLViewer
+  mv qglviewer.cw ../examples/interface
+  mv $filteredHTML/* .
+  rm -r $filteredHTML
+  # Remove search engine (requires php).
+  rm refManual/search.idx refManual/search.php
+  for f in `ls refManual/*.html`
+    do
+    sed s%" <span class=\"search\".*</span>"%""% $f > $f.tmp
+    mv $f.tmp $f
+  done
+cd -
+
+##################################################################
+############                Create RPM                ############
+##################################################################
+
+function checkRPMUpdate() {
+  cd $tmpDir/..
+
+  action="Create"
+
+  if [ -f $tarName ]
+  then
+    mkdir previous$libName
+    cd previous$libName
+    tar -xzf ../$tarName
+    cd ..
+    diff -r $libNameVersion previous$libName/$libNameVersion > /tmp/qgldiff
+    if [ ! -s /tmp/qgldiff ]
+    then
+      echo " - Sources did not change"
+      if [ -f $rpmDir/SRPMS/$libNameVersion.src.rpm -a $rpmDir/SRPMS/$libNameVersion.src.rpm -nt $tarName ]
+      then
+        echo " - RPM is created and up to date"
+	action="None"
+      else
+        echo " - RPM is not up to date"    
+      fi
+    else
+      echo " - Sources have changed (see /tmp/qgldiff)"
+    fi
+    rm -rf previous$libName
+  fi
+}
+
+checkRPMUpdate
+
+if [ $action == "Create" ]
+then  
+  if [ `grep "^%__find_requires" ~/.rpmmacros | grep "/Bin/find-requires-non-nvidia" | wc -c` == 0 ]
+  then
+    echo "find-requires-non-nvidia not found in .rpmmacros - Abort"
+    exit
+  fi
+  tar -czf $tarName $libNameVersion
+  cp -f $tarName $rpmDir/SOURCES
+  cp -f $QGLViewerRootDir/QGLViewer/qglviewer.spec $rpmDir/SPECS/$libNameVersion.spec
+  cd $rpmDir/SPECS/
+  echo " - RPM build... (see /tmp/QGLViewer.rpmbuild)"
+  #echo " - ##### Commented"
+  rpmbuild -ba $libNameVersion.spec >& /tmp/QGLViewer.rpmbuild
+  if [ $? != 0 ]
+  then
+    echo "Problem in RPM creation - Abort"
+    exit
+  fi
+fi
+
+checkRPMUpdate
+
+
+##################################################################
+############       Create example binaries            ############
+##################################################################
+echo " - Creating Linux binary examples"
+exName="$libName-examples-linux"
+exDir="$tmpDir/../$exName"
+test -d $exDir || mkdir $exDir
+rm -f $exDir/*
+
+cp $rpmDir/BUILD/$libNameVersion/QGLViewer/libQGLViewer.so.2 $exDir
+
+BIN_EXAMPLES="simpleViewer manipulatedFrame luxo select animation"
+cd $rpmDir/BUILD/$libNameVersion/examples
+for e in $BIN_EXAMPLES
+do
+  echo "   = $e"
+  cd $e
+  qmake INCLUDE_DIR=../.. LIB_DIR=../../QGLViewer >& /dev/null
+  make > /dev/null
+  cp $e $exDir
+  cd -
+done
+
+cd $exDir
+for f in `ls`
+do
+  strip $f
+done
+
+echo "These are Linux pre-compiled versions of some libQGLViewer examples." > readme.txt
+echo >> readme.txt
+echo "These examples were compiled on a Fedora Core 2 using Qt 3.3.3." >> readme.txt
+echo "Rebuild from the sources to fit your configuration and for optimal results." >> readme.txt
+echo >> readme.txt
+echo "You have to add the current directory to your LD_LIBRARY_PATH in order to run the examples:" >> readme.txt
+echo "> export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:. (if you use bash)" >> readme.txt
+echo " (or use \"setenv LD_LIBRARY_PATH \$LD_LIBRARY_PATH:.\" with [t]csh)" >> readme.txt
+echo >> readme.txt
+echo "Note that these examples are not designed to be impressive by themselves." >> readme.txt
+echo "What is impressive is that the library enables their creation with only few tens of lines of code !" >> readme.txt
+
+cd ..
+tar -czf $exName.tar.gz $exName
+
+##################################################################
+############            Create Win Zip                ############
+##################################################################
+echo " - Creating windows zip"
+
+cd $tmpDir
+mv CHANGELOG ChangeLog.txt
+mv INSTALL Install.txt
+mv LICENCE Licence.txt
+mv README Readme.txt
+
+cat /tmp/gpl-warning $QGLViewerRootDir/QGLViewer/keySequence.h   > QGLViewer/keySequence.h
+cat /tmp/gpl-warning $QGLViewerRootDir/QGLViewer/keySequence.cpp > QGLViewer/keySequence.cpp
+
+# Add Qt 2.3 specific files
+cp $QGLViewerRootDir/QGLViewer/QGLViewer.Qt2.3.pro QGLViewer/
+cp $QGLViewerRootDir/QGLViewer/VRenderInterface.Qt2.3.ui QGLViewer/
+cp $QGLViewerRootDir/examples/interface/myInterface.Qt2.3.ui examples/interface/
+
+function addNamespace()
+{
+  str="class QGLVIEWER_EXPORT $1 : public $2"
+  if [ `grep "$str" QGLViewer/$3.h | wc -l` -ne 1 ]
+  then
+      echo "Unrecognized syntax for class $class declaration. Cannot add qglviewer::"
+      exit 1
+  fi
+
+  sed s%"$str"%"class QGLVIEWER_EXPORT $1 : public qglviewer::$2"% QGLViewer/$3.h > /tmp/addNamespace
+  mv /tmp/addNamespace QGLViewer/$3.h 
+}
+#addNamespace SpinningFrame Frame spinningFrame
+addNamespace ManipulatedFrame Frame manipulatedFrame
+addNamespace ManipulatedCameraFrame ManipulatedFrame manipulatedCameraFrame
+
+for f in `find . -name '*.h' -o -name '*.cpp' -o -name '*.html' -o -name '*.css' -o -name '*.txt'`
+do
+  recode ..pc $f
+done
+
+cd ..
+zip -qr $libNameVersion.zip $libNameVersion
+
+##################################################################
+############            Update web site               ############
+##################################################################
+echo " - Updating web site"
+
+# echo "Canceled"
+# exit
+
+test -d $WebDir/src || mkdir -p $WebDir/src
+if [[ ! -d $WebDir/src ]]
+then
+    echo " - Unable to reach $WebDir, aborting"
+    exit
+fi
+
+cp -f $tarName $rpmDir/SRPMS/$libNameVersion.src.rpm $libNameVersion.zip $WebDir/src
+
+if [[ `grep "Fedora Core release 2" /etc/redhat-release` ]]
+then
+  archExt="fc2.tar.gz"
+fi
+
+if [[ `grep "Mandrake Linux release 9.1" /etc/redhat-release` ]]
+then
+  archExt="mdk9.1.tar.gz"
+fi
+
+if [[ $archExt == "" ]]
+then
+    echo "Unable to detect machine architecture for example archExt"
+    cat /etc/redhat-release
+    archExt=".tar.gz"
+else
+  echo "  Creating binary example package for $archExt"
+fi
+
+cp -f $exName.tar.gz $WebDir/src/$exName.$archExt
+
+for i in "i586" "i486" "i386"
+do
+  if [ -f $rpmDir/RPMS/$i/$libNameVersion.$i.rpm ]
+  then
+      ix86=$i
+      break
+  fi
+done
+
+if [ ! -f $rpmDir/RPMS/$ix86/$libNameVersion.$ix86.rpm ]
+then
+    echo "Unable to find ix86 dir in $rpmDir/RPMS/"
+else
+    cp -f $rpmDir/RPMS/$ix86/$libNameVersion.$ix86.rpm $WebDir/src/$libNameVersion.i586.rpm
+    cp -f $rpmDir/RPMS/$ix86/$libName-devel-$version-$release.$ix86.rpm $WebDir/src/$libName-devel-$version-$release.i586.rpm
+fi
+
+cd $WebDir/src
+rm md5sum.txt
+md5sum `find . -type f` > md5sum.txt
+cd -
+exit
+fi # $1=rpm
+
+echo "Unrecognized option: $@"

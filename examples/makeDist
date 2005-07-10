@@ -1,0 +1,652 @@
+#!/bin/sh
+# composite -geometry +14+12 @ ~/background.jpg #.bis.jpg to #.jpg
+
+IMAGES_DIR="../doc/images"
+OUTPUT_DIR="html"
+SKIP_DIRS="attic debug contribs CVS $OUTPUT_DIR"
+VERSION=`grep -a "^version=" ../makeDist | sed s/"version=\"\(.*\)\""/"\1"/`
+BASIC_DIRS="simpleViewer manipulatedFrame select keyboardAndMouse"
+
+indexUpToDate="Yes"
+
+# Check all basic directories are present
+for name in $BASIC_DIRS
+do
+  if [ ! -d $name ]
+  then
+      echo "Basic example $name is not found"
+      exit
+  fi
+done
+
+test -d $OUTPUT_DIR || mkdir -p $OUTPUT_DIR
+
+# which highlight >& /dev/null
+which source-highlight >& /dev/null
+if [ $? != 0 ]
+then
+    echo "Unable to find source-highlight - Abort"
+    exit
+fi
+
+export LC_TIME="en"
+date=`date "+%A, %B %-d, %Y"`
+unset LC_TIME
+
+# Create the examples HTML files with included code
+for name in `ls -1`
+do
+  if [ ! -d $name ]
+  then
+    continue
+  fi
+
+  for skip in $SKIP_DIRS
+  do
+    if [ $name == $skip ]
+    then
+      continue 2
+    fi
+  done
+
+  isBasic=0
+  for basic in $BASIC_DIRS
+  do
+    if [ $name == $basic ]
+    then
+      isBasic=1
+      break
+    fi
+  done
+
+  if [ $isBasic -eq 0 ]
+  then
+      EXAMPLE_DIRS="$EXAMPLE_DIRS $name"
+  fi
+  
+  output="$OUTPUT_DIR/$name.html"
+  updateNeeded="No"
+
+  if [ ! -f $output ]
+  then
+    updateNeeded="Yes"
+  fi
+
+  for file in `ls $name/*.h $name/*.cpp $name/*.pro`
+  do
+    if [ $file -nt $output -o $0 -nt $output ]
+    then
+      updateNeeded="Yes"
+      break
+    fi
+  done
+
+  if [ -f $IMAGES_DIR/$name.jpg ] && [ $IMAGES_DIR/$name.jpg -nt $output ]
+  then
+    updateNeeded="Yes"
+  fi
+
+  if [ $updateNeeded == "No" ]
+  then
+    continue
+  fi
+  
+  echo "   Creating $output"
+  indexUpToDate="No"
+
+  if [ ! -f $IMAGES_DIR/$name.jpg ]
+  then
+     echo "    No image found for $name - Aborting"
+     exit
+  fi
+
+  if [ ! -f $name/$name.pro ]
+  then
+     echo "    No .pro found for $name"
+     exit
+  fi
+
+  cat > $output <<EOF
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer $name example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Examples</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The $name example</h1>
+EOF
+
+  echo "<center>" >> $output
+  echo "  <img src=\"../images/$name.jpg\" width=\"330\" height=\"228\" alt=\"$name\"/>" >> $output
+  echo -e "</center>\n" >> $output
+
+  awk 'BEGIN { p=0; print "<p>"; }
+       /^#/    { if (p==2) print "<p>"; print substr($0, 2); p=1; next; }
+       /^ *$/  { if (p==1) print "</p>"; p=2; }
+       /^ *\w/ { print "\n"; exit; }' $name/$name.pro >> $output
+
+  fileList=""
+  test -f $name/$name.h   && fileList="$fileList $name/$name.h"
+  test -f $name/$name.cpp && fileList="$fileList $name/$name.cpp"
+
+  for file in `ls $name/*.h`
+    do
+    for f in $fileList
+      do
+      if [ $f == $file ]
+	  then
+          continue 2
+      fi
+    done
+    fileList="$fileList $file"
+  done
+  
+  for file in `ls $name/*.cpp`
+    do
+    for f in $fileList
+      do
+      if [ $f == $file ]
+	  then
+          continue 2
+      fi
+    done
+    fileList="$fileList $file"
+  done
+  
+  for file in $fileList
+    do
+    chap=`echo $file | sed s#$name/##`
+    echo "<h2>$chap</h2>" >> $output
+      # echo "<pre>" >> $output
+    cp $file /tmp/src-high
+    source-highlight -s cpp -f html /tmp/src-high >> $output >& /dev/null
+    cat /tmp/src-high.html >> $output
+      # highlight -fX $file >> $output
+      #code2html -l c++ --no-header $file >> $output
+      # echo "</pre>" >> $output
+    echo -e "\n" >> $output
+  done
+
+  cat >> $output <<EOF
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.png" width="88" height="31" alt="Valid CSS!"/></a>
+EOF
+
+echo "<i>Last modified on $date.</i>" >> $output
+
+cat >> $output <<EOF
+</p>
+
+</body>
+</html>
+EOF
+
+done
+
+
+
+
+
+# Create the contrib examples HTML files with simple description
+output="$OUTPUT_DIR/contribs.html"
+contribsDir="contribs"
+updateNeeded="No"
+
+if [ ! -f $output ]
+then
+    updateNeeded="Yes"
+fi
+
+for name in `ls -1 $contribsDir`
+do
+  if [ ! -d $contribsDir/$name ]
+  then
+    continue
+  fi
+
+  if [ $name == "CVS" ]
+  then
+      continue
+  fi
+
+  CONTRIB_DIRS="$CONTRIB_DIRS $name"
+  
+  for file in `ls $contribsDir/$name/*.h $contribsDir/$name/*.cpp $contribsDir/$name/*.cpp $contribsDir/$name/*.pro`
+  do
+    if [ $file -nt $output -o $0 -nt $output ]
+    then
+      updateNeeded="Yes"
+      indexUpToDate="No"
+      break
+    fi
+  done
+done
+
+if [ $updateNeeded == "Yes" ]
+then
+    echo "   Creating $output"
+    indexUpToDate="No"
+
+    cat > $output <<EOF
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer contribution examples</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Examples</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The contribution examples</h1>
+
+The following examples do not directly illustrate a functionality of the library. Some are very
+simple while others are much more involved. Feel free to browse the files and to cut and paste. Only
+a short description is here given, the different source code are available in the
+<code>examples/contribs</code> directory.
+
+EOF
+
+    for name in `ls -1 $contribsDir`
+    do
+      if [ ! -d $contribsDir/$name ]
+      then
+	  continue
+      fi
+
+      if [ $name == "CVS" ]
+      then
+	  continue
+      fi
+      
+      if [ ! -f $IMAGES_DIR/$name.jpg ]
+      then
+	  echo "    No image found for $name"
+	  exit
+      fi
+
+      if [ ! -f $contribsDir/$name/$name.pro ]
+      then
+	  echo "    No .pro found for $name"
+	  exit
+      fi
+
+      # echo "   - $name"
+      echo "<a name=\""$name"\"></a>" >> $output
+      echo "<h2>$name</h2>" >> $output
+
+      echo -e "<table>\n<tr>" >> $output
+      echo "  <td><img src=\"../images/$name.jpg\" width=\"330\" height=\"228\" alt=\"$name\"/></td>" >> $output
+
+      awk 'BEGIN { p=0; print "<td>\n<p>"; }
+       /^#/    { if (p==2) print "<p>"; print substr($0, 2); p=1; next; }
+       /^ *$/  { if (p==1) print "</p>"; p=2; }
+       /^ *\w/ { print "\n</td>\n</tr></table>\n"; exit; }' $contribsDir/$name/$name.pro >> $output
+    done
+
+    cat >> $output <<EOF
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.png" width="88" height="31" alt="Valid CSS!"/></a>
+EOF
+
+    echo "<i>Last modified on $date.</i>" >> $output
+
+    cat >> $output <<EOF
+</p>
+
+</body>
+</html>
+EOF
+fi
+
+
+
+
+
+
+function makeExampleCell()
+{
+  if [[ $col == 0 ]]
+  then
+    echo "  <tr>" >> $output
+  fi
+  
+  if [ ! -f $dir$name/$name.pro ]
+  then
+      echo "Unable to find $name.pro - Aborting"
+      exit
+  fi
+
+  if [ ! -f $IMAGES_DIR/$name.jpg ]
+  then
+      echo "Unable to find image for $name - Aborting"
+      exit
+  fi
+
+  text=`awk 'BEGIN { p = 0; } /^#/    { print substr($0, 2); p=1; next; } /^ *$/  { exit; }' $dir$name/$name.pro`
+
+  if [ "$dir" == "" ]
+  then
+    ref="$name.html"
+  else
+    ref="contribs.html#$name"
+  fi
+    
+  echo "    <td style='border:2px solid #aaaacc' align=\"center\">" >> $output
+  echo "      <a href=\"$ref\"><img src=\"../images/$name.jpg\" width=\"198\" height=\"137\" alt=\"$name\"/><br/>" >> $output
+  echo "      <b>$name</b></a><br/>$text" >> $output
+  echo "    </td>" >> $output
+
+  col=`expr $col \+ 1`
+  if [[ $col == $nbCol ]]
+  then
+    echo "  </tr>" >> $output
+    col=0
+  fi
+}
+
+function fillTable()
+{
+  if [[ $col != 0 ]]
+  then
+    while [[ $col != $nbCol ]]
+    do
+      echo "    <td>&nbsp;</td>" >> $output
+      col=`expr $col \+ 1`
+    done
+
+    echo "  </tr>" >> $output
+  fi
+  
+  echo "</table>" >> $output
+  echo "</td></tr></table>" >> $output
+  echo >> $output
+  echo >> $output
+}
+
+
+# Main example index page
+output="$OUTPUT_DIR/index.html"
+if [ $indexUpToDate == "No" ]
+then
+  echo "   Creating index page $output"
+
+  cat > $output <<EOF
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer examples</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Examples</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>libQGLViewer examples</h1>
+
+<div class="summary">
+<b><a href="#introduction">&raquo;&raquo;</a></b> &nbsp; Introduction<br/>
+<b><a href="#basic">&raquo;&raquo;</a></b> &nbsp; Basic examples<br/>
+<b><a href="#pedagogical">&raquo;&raquo;</a></b> &nbsp; Pedagogical examples<br/>
+<b><a href="#complex">&raquo;&raquo;</a></b> &nbsp; More complex examples<br/>
+<b><a href="#compilation">&raquo;&raquo;</a></b> &nbsp; Compilation of the examples<br/>
+</div>
+
+
+<a name="introduction"></a>
+<h2>Introduction</h2>
+
+Many pedagogical examples illustrate some of the functionalities of the viewer and are provided for
+understanding and cut and paste.
+
+<p>
+
+One should first try the <a href="#basic">basic examples</a> listed below. A <a
+href="../download.html#examples">pre-compiled</a> version of these is available for evaluation.
+
+</p>
+
+New developers should first read the <a href="../intro.html">introduction page</a> and the <a
+href="../commented.html">commented example</a> to understand the philosophy of the library.
+
+
+<a name="basic"></a>
+<h2>Basic examples</h2>
+<table align="center"><tr><td>
+<table cellpadding="2" cellspacing="9">
+EOF
+
+# Basic examples
+nbCol=2
+col=0
+for name in $BASIC_DIRS
+do
+  makeExampleCell
+done
+fillTable
+
+echo "<a name=\"pedagogical\"></a>" >> $output
+echo "<h2>Pedagogical examples</h2>" >> $output
+
+nbCol=3
+col=0
+echo "<table align=\"center\"><tr><td>" >> $output
+echo "<table cellpadding=\"2\" cellspacing=\"9\">" >> $output
+for name in $EXAMPLE_DIRS
+do
+  makeExampleCell
+done
+fillTable
+
+echo "<a name=\"complex\"></a>" >> $output
+echo "<h2>More complex examples</h2>" >> $output
+
+col=0
+dir="$contribsDir/"
+echo "<table align=\"center\"><tr><td>" >> $output
+echo "<table cellpadding=\"2\" cellspacing=\"9\">" >> $output
+for name in $CONTRIB_DIRS
+do
+  makeExampleCell
+done
+fillTable
+
+
+cat >> $output <<EOF
+
+<a name="compilation"></a>
+<h2>Compilation of the examples</h2>
+
+Some pre-compiled examples are available for an easy evaluation of the library's functionnalities on
+the <a href="../download.html#examples">download page</a>. It is however better to recompile from the
+sources to ensure a full compatibility with dependencies.
+
+<p>
+<a name="linux"></a>
+<img src="../images/linux.png" width="49" height="54" align="middle" alt="linux"/>
+
+If you installed the RPM, the examples' source files are in
+<code>/usr/share/doc/QGLViewer/examples</code> and you have to copy the desired example(s)
+directories to a place where you have write permission.<br/>
+If you have downloaded the tarball instead, simply go to the <code>examples</code> directory. Then,
+</p>
+
+<pre>
+> cd exampleDirectory
+> qmake [PREFIX=...] [INCLUDE_DIR=...] [LIB_DIR=...] [QGLVIEWER_STATIC=1]
+> make
+</pre>
+
+The optional <code>PREFIX, INCLUDE_DIR</code> and <code>LIB_DIR</code> parameters are those you used
+if you customized your <code><a href="../installUnix.html#linux">make install</a></code>. Use
+<code>QGLVIEWER_STATIC=1</code> to link with the static version of the library.
+These commands can also be typed in the <code>examples</code>'s main directory to compile <i>all</i> the examples.
+
+<p>
+You may be prompted with an <code>"error while loading shared libraries"</code> message when trying
+to execute an example. You probably forgot to add the <code>libQGLViewer.so</code> directory to your
+default library path. Simply do this (use <code>LD_LIBRARYN32_PATH</code> instead on some Unix
+flavors):
+</p>
+
+<pre>
+[bash] > export LD_LIBRARY_PATH=\${LD_LIBRARY_PATH}:/Path/To/libQGLViewer
+[tcsh] > setenv LD_LIBRARY_PATH \${LD_LIBRARY_PATH}:/Path/To/libQGLViewer
+</pre>
+
+Some configurations may require you to add <code>LIBS *= -lXi</code> in the <code>.pro</code> file.
+Debian users may have to replace <code>-lQGLViewer-2</code> by <code>-lQGLViewer</code> (change the
+<code>Makefile</code> or create a link on <code>libQGLViewer.so</code> in your lib directory).
+
+<p>
+See also the <a href="../installUnix.html#qt-linux">Qt-Unix</a> and <a
+href="../installUnix.html#linux">libQGLViewer on Unix</a> installation pages.
+</p>
+
+<hr/>
+
+<p>
+<a name="mac"></a>
+<img src="../images/mac.png" width="55" height="54" align="middle" alt="mac"/>
+
+The examples' compilation is essentially identical to the one described above in the linux section.
+Simply replace the above lines by:
+
+</p>
+<pre>
+[bash] > export DYLD_LIBRARY_PATH=\${DYLD_LIBRARY_PATH}:/Path/To/libQGLViewer
+[tcsh] > setenv DYLD_LIBRARY_PATH \${DYLD_LIBRARY_PATH}:/Path/To/libQGLViewer
+</pre>
+
+You can safely ignore the prebound warning. Building a prebound library creates overlapping address
+ranges. This requires further investigations and any help is more than welcome.
+
+<p>
+A <code>declaration of C function 'void qObsolete' conflicts with previous declaration</code> error
+message may appear during the examples' compilation. This seems to only happen when the include
+files are installed in <code>/usr/include</code>. Easiest patch, install somewhere else !
+</p>
+
+<pre>
+cd QGLViewer
+make uninstall
+qmake INCLUDE_DIR=/usr/local/include (for instance)
+make install
+</pre>
+
+Then compile the examples with the same <code>qmake INCLUDE_DIR=/usr/local/include</code> line. Any
+cleaner solution is more than welcome.
+
+<p>
+See also the <a href="../installUnix.html#qt-mac">Qt-Mac</a> and <a
+href="../installUnix.html#mac">libQGLViewer on Mac</a> installation pages.
+</p>
+
+<hr/>
+
+<p>
+<a name="windows"></a>
+<img src="../images/windows.png" width="55" height="54" align="middle" alt="windows"/>
+
+Windows users have to compile each example separately, using the <i>Open Qt project</i> <span
+style="color:red">*</span> icon. With Visual Studio 6.0, use <i>File-Open workspace</i> to open the
+<code>.dsp</code> generated file.
+</p>
+
+Qt 2.3 users have to first edit the examples' <code>.pro</code> files (uncomment and remove end of
+file as explained. Remove <code>QT_DLL</code> from <code>DEFINES</code> for .NET). If no
+<code>Project created</code> dialog is displayed when you open the <code>.pro</code> , try to run
+Visual with Administrator priviledges. With Qt 2.3, you also have to add <code>/GX /GR</code> in
+<i>Project-Settings-C-C++, Project options</i> before compilation and tune the include and lib
+paths:
+
+<ul>
+EOF
+
+echo "<li>Add the path to <code>libQGLViewer-$VERSION</code> (note there is no trailing <code>QGLViewer</code>) to your" >> $output
+echo "<i>Project-Properties-C/C++-General-Additional Include Directories</i> <span style=\"color:red\">*</span></li>" >> $output
+echo "<li>Add the path <code>libQGLViewer-$VERSION\QGLViewer</code> to your" >> $output
+
+cat >> $output <<EOF
+
+<i>Linker-General-Additional Library Directories</i> <span style="color:red">*</span>. Visual 6
+users may add <code>Release</code> (or <code>Debug</code>) to this path: it must be the directoy
+where <code>QGLViewer.lib</code> is located.</li>
+
+</ul>
+
+<p>
+All this should be done automatically if you use a Qt 3.x version.
+</p>
+
+See also the installation advices for <a href="../installWindows.html#qt">Qt-Windows</a> and <a href="../installWindows.html">libQGLViewer on Windows</a>.
+
+<br/><br/>
+
+<span style="color:red">*</span> Names are given in .NET standards, and differ from those of Visual 6.
+Here is a correspondance table:
+
+<table>
+<tr style="background-color:#66a; color:#eef; text-align:center"><th>.NET</th><th>Visual Studio 6</th></tr>
+<tr style="background-color:#bbd"><td>Open Qt Project</td><td>Generate Qt Project</td></tr>
+<tr style="background-color:#ddf"><td>Project-Properties-C/C++-General-Additional Include Directories</td><td>Tools-Options-Directories-Include files</td></tr>
+<tr style="background-color:#bbd"><td>Project-Properties-Linker-General-Additional Library Directories</td><td>Tools-Options-Directories-Library files</td></tr>
+</table>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.png" alt="Valid CSS!" width="88" height="31"/></a>
+EOF
+
+echo "  <i>Last modified on $date.</i>" >> $output
+
+cat >> $output <<EOF
+</p>
+
+</body>
+</html>
+EOF
+fi

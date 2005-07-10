@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+  <link href="qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="images/qglviewer.icon.png" type="image/png" />
+</head>
+<body>
+
+<div class="banner">
+  <a class="qindex highlight" href="index.html">Home</a>
+  <a class="qindex" href="refManual/hierarchy.html">Documentation</a>
+  <a class="qindex" href="download.html">Download</a>
+  <a class="qindex" href="examples/index.html">Examples</a>
+  <a class="qindex" href="developer.html">Developer</a>
+</div>
+
+<br/>
+
+<center>
+<table>
+ <tr>
+  <td rowspan="2"><img src="images/qglviewer.png" width="196" height="210" align="middle" alt="QGLViewer"/></td>
+  <td valign="bottom"><h1>libQGLViewer</h1></td>
+ </tr>
+ <tr>
+  <td align="center" valign="top">
+   <a href="http://www.opengl.org"><img src="images/openGL.png" width="91" height="40" align="middle" alt="openGL"/></a>
+   &nbsp; &nbsp; &nbsp; 
+   <a href="http://www.trolltech.com"><img src="images/qt.png" width="38" height="40" align="middle" alt="Qt"/></a>
+  </td>
+ </tr>
+</table>
+
+<p>
+<span style="font-size:x-large; margin-top:20px">News :  Version 2.0 has just been released !</span>
+</p>
+</center>
+
+
+<h2>Presentation</h2>
+<p>
+
+libQGLViewer is a free C++ library based on Qt that enables the quick creation of OpenGL 3D viewers.
+It features a powerful camera trackball and simple applications simply require an implementation of
+the <code>draw()</code> function. It is a tool of choice for OpenGL beginners and assignments. It
+provides screenshot saving, mouse manipulated frames, stereo display, interpolated keyFrames, object
+selection, and much <a href="features.html">more</a>. It is fully customizable and easy to extend to
+create complex applications, with an optional Qt GUI.
+
+</p><p>
+
+libQGLViewer is <i>not</i> a 3D viewer that can be used directly to view 3D scenes in various
+formats. It is more likely to be the starting point for the coding of such a viewer. Since it is based
+on the Qt toolkit, it compiles on any architecture (Unix-Linux, Mac, Windows, ...). Full <a
+href="refManual/hierarchy.html">reference documentation</a> and many <a
+href="examples/index.html">examples</a> are provided.
+
+</p>
+
+Over <a href="http://artis.imag.fr/Members/Gilles.Debunne/QGLViewer/images/downloads.png">300 downloads</a> are recorded each month.
+
+<h2>Short tour</h2>
+
+<ul>
+<li><a href="download.html">Download</a> and install the library.</li>
+<li>Test the <a href="examples/index.html">examples</a> (some have a <a href="download.html#examples">precompiled version</a>).</li>
+<li>Before you start coding, <a href="intro.html">discover the principles</a> of the library and <a href="commented.html">read a commented program</a>.</li>
+<li>See the list of the <a href="features.html">different features</a> of the library.</li>
+<li>Get familiar with the default <a href="mouse.html">mouse behavior</a> and the <a href="keyboard.html">keyboard shortcuts</a>.</li>
+<li>Read the <a href="faq.html">General FAQ</a> or the <a href="techFaq.html">Technical FAQ</a> if you have questions.</li>
+</ul>
+
+<h2>Latest news</h2>
+
+<table style="width:90%; margin-left:50px; border:1px solid #AAF; background-color:#DDE" cellspacing="8" cellpadding="8">
+ <tr>
+  <td><b>July 7th, 2005</b><br/><a href="changeLog.html">Version 2.0.0-3</a></td>
+  <td>Patches for Qt 3.1, 64 bits architectures and gcc 4.0 compilation.<br/>
+      Thanks to Adam, Sylvain, Artur and Janek.</td>
+ </tr>
+
+ <tr>
+  <td><b>July 4th, 2005</b></td>
+  <td>Debian packages are now <a href="http://blabluga.hell.pl/QGLViewer">available</a>. Thanks Artur.</td>
+ </tr>
+
+ <tr>
+  <td><b>June 29th, 2005</b><br/><a href="changeLog.html">Version 2.0.0-2</a></td>
+  <td>float/double warnings fixed for .NET windows compilation (thanks JD).</td>
+ </tr>
+ 
+ <tr>
+  <td><b>June 28th, 2005</b><br/><a href="changeLog.html">Version 2.0.0-1</a></td>
+  <td>VRender library patched for windows (templates removed).</td>
+ </tr>
+
+ <tr>
+  <td><b>June 24th, 2005</b><br/><a href="changeLog.html">Version 2.0.0-0</a></td>
+  <td>New major release.<br/>
+  API cleaned up and documentation entirely rewritten.</td>
+ </tr>
+ <tr><td>&nbsp;</td><td>
+  Here are the main modifications that may impact your code (see the <a href="changeLog.html">full list</a>):
+  <ul>
+  <li>Methods with <code>float</code> parameter removed.<br/>
+   Use their <code>Vec(x,y,z)</code> and <code>Quaternion(q0,q1,q2,q3)</code> equivalents instead.</li>
+  <li>2D positions are now given as <code>QPoint</code>. Especially change your <code>postSelection()</code> overloading.</li>
+  <li><code>ORTHO</code> camera mode renamed <code>ORTHOGRAPHIC</code>.</li>
+  <li>Use <code>Vec::operator float*</code> instead of <code>Vec::address()</code>.</li>
+  </ul>
+  </td>
+ </tr>
+</table>
+
+<p>
+Subscribe to the <b><a href="http://listes-serv.inrialpes.fr/wws/info/qglviewer.developer">
+qglviewer.developer mailing list</a></b> to get informed of new releases.
+</p>
+
+This project is referenced by the <a href="http://directory.fsf.org/libQGLViewer.html">FSF</a>, 
+<a href="http://freshmeat.net/projects/libqglviewer/">FreshMeat</a>,
+<a href="http://savannah.gnu.org/projects/libqglviewer">Savannah</a>,
+<a href="http://sourceforge.net/projects/libqglviewer/">SourceForge</a>,
+<a href="http://www.kde-apps.org/content/show.php?content=18565">Kde-apps</a> and
+<a href="http://www.trolltech.com/freesoftware/index.html?Action=ShowCat&amp;category=Widgets">Trolltech</a>.
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="images/css.png" alt="Valid CSS!" width="88" height="31"/></a>
+  <i>Last modified on #DATE#.</i> 
+</p>
+
+</body></html>

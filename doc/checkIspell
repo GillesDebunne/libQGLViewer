@@ -1,0 +1,97 @@
+#!/bin/sh
+
+if [ "$1" == "-h" ]
+then
+  echo "Usage $0 [-v] [file[s]]"
+  echo "iSpells documentation in files"
+  echo "Errors listed in .ispell/file are not reported."
+  echo "Use option -v to validate (overwrite previous file)."
+  exit
+fi
+
+test -d .ispell || mkdir -p .ispell 
+
+if [ "$1" == "-v" ]
+then
+  validate=1
+  shift
+fi
+
+if [ $# = 0 ]
+then
+  # files="../QGLViewer/*.h ../QGLViewer/*.cpp"
+  # files="../examples/*/*.pro ../examples/*/*/*.pro "
+  files="*.html"
+  # files="../QGLViewer/*.h ../QGLViewer/*.cpp ../examples/*/*.pro ../examples/*/*/*.pro "
+else
+  files=$*
+fi
+
+for f in `ls $files`
+do
+  echo $f | grep EPSInterface > /dev/null
+  if [ $? = 0 ]
+  then
+    continue
+  fi
+
+  echo $f | grep "/attic/" > /dev/null
+  if [ $? = 0 ]
+  then
+    continue
+  fi
+
+  echo $f | grep "index.fr.html" > /dev/null
+  if [ $? = 0 ]
+  then
+    continue
+  fi
+
+  echo $f | grep "changeLog.html" > /dev/null
+  if [ $? = 0 ]
+  then
+    continue
+  fi
+
+  echo $f | grep "\.pro$" > /dev/null
+  if [ $? = 0 ]
+  then
+    awk '/^\#/ {if (!end) print} /^ *[A-Za-z]/ {end=1} {next}' $f | sed s%"<[^>]*>"%" "%g | sed s%"#"%%g > /tmp/ispellQGL
+  else
+    echo $f | grep "\.html$" > /dev/null
+    if [ $? = 0 ]
+    then
+      awk '/^ *$/ {print str; str=""} {str=(str " " $0); next}' $f | sed s%"<[^>]*>"%" "%g | sed s%"&[a-z]*;"%%g> /tmp/ispellQGL
+    else
+      awk '/\/\*!.*\*\// {print; next} /\/\*!/ {comment=1; str=$0; next} /\*\// {if (comment) {comment=0; print str,$0,"\n";} next} /\\code/ {code=1} { if (comment) if (!code) str=(str " " $0); else if (match($0,"//.*",c)) print c[0] } /\\endcode/ {code=0}' $f | sed s%"\\\\[cp] *[a-zA-Z]*"%" "%g | sed s%"\\\\[a-zA-Z]*"%" "%g | sed s%"<[^>]*>"%" "%g > /tmp/ispellQGL
+      fi
+  fi
+
+  cat /tmp/ispellQGL | ispell -C -p ./qglviewer.aspell -a | grep -v "^*" | grep -v "^@(#)" | grep -v '^$' | sed s%". \([a-zA-Z']*\).*"%"\1"%g > /tmp/ispellQGL2
+  
+  file=".ispell/$(echo $f | sed s%"\.\./"%""% | sed s%"/"%"#"%g)"
+  if [ -s /tmp/ispellQGL2 ]
+  then
+    if [[ "X$validate" == "X1" ]]
+    then
+      cp -f /tmp/ispellQGL2 $file
+      echo "File $f validated" 
+    fi
+
+    if [ -s $file ]
+    then
+	diff $file /tmp/ispellQGL2 > /tmp/diff
+        if [ -s /tmp/diff ]
+	then
+	    echo "==== File $f ===="
+	    cat /tmp/diff
+	    echo
+        fi  
+    else
+	echo "==== File $f ===="
+	cat /tmp/ispellQGL2
+        echo
+    fi
+  fi  
+
+done
