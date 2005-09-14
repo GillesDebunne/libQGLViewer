@@ -424,8 +424,12 @@ void TERRAIN::GenerateTextureMap( unsigned int size )
 	}
     }
 
-  myTexture.create(  size,  size, 32 );
-
+#if QT_VERSION < 0x040000
+  myTexture.create( size, size, 32 );
+#else
+  myTexture = QImage(size, size, QImage::Format_ARGB32);
+#endif
+    
   //determiner relation entre resolution de la carte d'hauteur et la res. de la texture
   //.. en general, la texture aura une res. plus elevee
   mapRatio= ( float )sizeHeightMap/ size;
@@ -480,8 +484,12 @@ void TERRAIN::GenerateTextureMap( unsigned int size )
   //le plus grand mystere de tout le code: pour une raison completement pourrie, QImage inverse
   //.. les canaux rouge et bleu lors de l'ecriture dans l'image; mais si j'utilise QGLWidget::convertToGLFormat,
   //.. l'image est inversee; la solution swapRGB marche (apres 3h de recherche desesperee) pour une raison mysterieuse
+#if QT_VERSION < 0x040000
   myTexture = myTexture.swapRGB();
-
+#else
+  myTexture = myTexture.rgbSwapped();
+#endif
+    
   //definir la source de donnees pour la texture
   glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA, size,  size, 0, GL_RGBA, GL_UNSIGNED_BYTE, myTexture.bits() );
 

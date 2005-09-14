@@ -15,8 +15,10 @@ int main(int argc, char * argv[])
 
   DvonnWindowImpl mainWindow(&game,NULL,"mainWindow");
   mainWindow.show();
+#if QT_VERSION < 0x040000
   application.setMainWidget(&mainWindow);
-
+#endif
+  
   // Run main loop.
   return application.exec();
 }

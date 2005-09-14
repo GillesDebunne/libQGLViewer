@@ -14,9 +14,11 @@ int main(int argc, char** argv)
   // v.show();
   v2->show();
 
+#if QT_VERSION < 0x040000
   // Set the viewer as the application main widget.
   // application.setMainWidget(&v);
   application.setMainWidget(v2);
+#endif
 
   // Run main loop.
   return application.exec();

@@ -77,6 +77,17 @@ do
   done
 done
 
+for f in `ls -1 refManual/class*.html`
+do
+  mgrep -n "<td> <p> </td>" $f > /tmp/mgrep
+  if [ -s /tmp/mgrep ]
+  then
+    echo -n "===> Undocumented functions in class "
+    echo $f | sed s:"refManual/class\(.*\).html":"\1":g
+    awk '{if (NR%4==0) print $1}' /tmp/mgrep
+  fi
+done
+
 
 exit
 

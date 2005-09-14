@@ -5,7 +5,7 @@ class CameraPathPlayer : public qglviewer::MouseGrabber
 public:
   CameraPathPlayer(int nb) : pathNb(nb) {};
   void checkIfGrabsMouse(int x, int y, const qglviewer::Camera* const camera);
-  int yPos() { return 25*pathNb + 25; };
+  int yPos() { return 25*pathNb; };
 
 protected:
   void mousePressEvent(QMouseEvent* const, qglviewer::Camera* const camera) { camera->playPath(pathNb); };
@@ -39,5 +39,9 @@ protected :
 private:
   CameraPathPlayer** player_;
   int nbPlayers_;
+#if QT_VERSION < 0x040000
   QValueVector<Spiral> spiral_;
+#else
+  QList<Spiral> spiral_;
+#endif
 };

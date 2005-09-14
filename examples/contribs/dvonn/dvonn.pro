@@ -23,4 +23,13 @@ QMAKE_CXXFLAGS_RELEASE *= -O7 -funroll-all-loops -felide-constructors -fstrict-a
 # "make dist" additionnal files
 DISTFILES += images/*.png rules/*.png rules/rules.html
 
-include( ../examples.pri )
+QT_VERSION=$$[QT_VERSION]
+contains( QT_VERSION, "^4.*" ) {
+  warning(This example has not yet been ported to Qt4)
+}
+
+include( ../../examples.pri )
+
+# NOT IN DISTRIBUTION BEGIN
+DISTFILES *= 
+# NOT IN DISTRIBUTION END

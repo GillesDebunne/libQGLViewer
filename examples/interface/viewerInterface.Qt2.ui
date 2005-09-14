@@ -1,10 +1,10 @@
 <!DOCTYPE UI><UI>
-<class>myInterface</class>
+<class>ViewerInterface</class>
 <widget>
     <class>QWidget</class>
     <property stdset="1">
         <name>name</name>
-        <cstring>myInterface</cstring>
+        <cstring>ViewerInterface</cstring>
     </property>
     <property stdset="1">
         <name>geometry</name>

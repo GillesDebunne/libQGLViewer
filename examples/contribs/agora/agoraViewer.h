@@ -1,3 +1,5 @@
+#ifndef AGORA_VIEWER_H
+#define AGORA_VIEWER_H
 #include "QGLViewer/qglviewer.h"
 #include "agora.h"
 
@@ -140,3 +142,5 @@ private :
   void updateUndoHistory(bool before);
   unsigned int undoIndex_, maxUndoIndex_;
 };
+
+#endif // AGORA_VIEWER_H

@@ -41,9 +41,7 @@ Directly install <a href="http://blabluga.hell.pl/QGLViewer/">Debian package</a>
 rpm -Uvh <a href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.i586.rpm">libQGLViewer-#VERSION#-#RELEASE#.i586.rpm</a> <a href="#WEBURL#/src/libQGLViewer-devel-#VERSION#-#RELEASE#.i586.rpm">libQGLViewer-devel-#VERSION#-#RELEASE#.i586.rpm</a>
 </pre>
 
-<br/>
-
-However, for optimal results, compile from the sources:
+You should re-compile for optimal results:
 <pre>
 rpmbuild --rebuild <a href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.src.rpm">libQGLViewer-#VERSION#-#RELEASE#.src.rpm</a>
 cd /usr/src/RPM/RPMS/i586/ (or /usr/src/redhat/RPMS/i586, see the rpmbuild last log lines)
@@ -61,33 +59,37 @@ make install
 
 You need root privileges to install the library, since default install paths are system directories.
 
+<br/>
+<br/>
 
 <h3>Compilation of the examples</h3>
-Once the library is installed, <a href="examples/index.html#linux">compile the examples</a> and test them:
+Once the library is installed, <a href="examples/index.html#linux">compile the examples</a>:
 <pre>
 cd ../examples
 qmake
 make
 </pre>
 
+<br/>
 
 <h3>Custom installation</h3>
 The following files are installed:
 <ul>
-<li>The library (<code>libQGLViewer-#VERSION#.so</code>) in <code>/usr/lib</code></li>
+<li>The library (<code>libQGLViewer-#VERSION#.so</code> and <code>libQGLViewer-#VERSION#.a</code>) in <code>/usr/lib</code></li>
 <li>The header files in <code>/usr/include/QGLViewer</code></li>
 <li>The documentation and the examples in <code>/usr/share/doc/QGLViewer</code></li>
 </ul>
 
 <p>
 &nbsp; <b>&raquo; RPM customization</b><br/>
-If you want to change the RPM installation prefix, say to <code>/usr/local</code> instead of the default
-<code>/usr</code>, use <code>rpm -Uvh --prefix /usr/local ...</code> in the rpm command line instead.
+If you want to change the RPM installation prefix, say to <code>/usr/local</code> (default is
+<code>/usr</code>), use <code>rpm -Uvh --prefix /usr/local ...</code> in the rpm command line
+instead.
 </p>
 
 <p>
 &nbsp; <b>&raquo; qmake customization</b><br/>
-Optional <code>qmake</code> parameters let you customize your <code>make install</code> installation directories:
+Optional <code>qmake</code> parameters let you customize your <code>make install</code> target installation directories:
 </p>
 <pre>
 qmake [PREFIX=...] [INCLUDE_DIR=...] [LIB_DIR=...] [DOC_DIR=...]
@@ -105,24 +107,25 @@ DOC_DIR        PREFIX/share/doc
 Use the same <code>qmake</code> parameters when you compile the examples.
 
 <p>
-If your Qt version is lower than 3.1, you need to link with the <code>glut</code> library:
-uncomment a line in <code>QGLViewer.pro</code> as explained. <code>glut</code> can be installed
-using the <code>freeglut-devel</code> rpm or with <code>apt-get libglut3-dev</code>.
+If your Qt version is lower than 3.1, you need to link with the <code>glut</code> library: uncomment
+a line in <code>QGLViewer.pro</code> as explained there.<br/
+<code>glut</code> can be installed from the <code>freeglut-devel</code> rpm or using <code>apt-get
+install libglut3-dev</code>.
 </p>
 
-     
+
 
 
 
 <a name="qt-linux"></a>
 <h2><img src="images/linux.png" width="49" height="54" align="middle" alt="linux"/> &nbsp;
-<img src="images/qt.png" width="38" height="40" align="middle" alt="Qt"/> &nbsp; Qt installation</h2>
+<img src="images/qt.png" width="38" height="40" align="middle" alt="Qt"/> &nbsp; Qt installation on Linux</h2>
 
 You need to have the <a href="http://www.trolltech.com">Qt</a> library installed in order to run
 libQGLViewer. Qt is probably already installed on your machine, or available on your distribution
-CDs. You may however have to install the <code>qt3-devel</code> (rpm) or <code>libqt3-mt-dev</code>
-(debian) development package. The complete Qt/X11 non commercial version can also freely be
-<a href="http://www.trolltech.com/developer/download/">downloaded</a> from Trolltech.
+CDs. You may however have to install the "<code>dev</code>" development package. The complete Qt/X11
+non commercial version can also freely be <a
+href="http://www.trolltech.com/developer/download/">downloaded from Trolltech</a>.
 
 <p>
 Try to compile a simple Qt example and check the
@@ -130,8 +133,9 @@ Try to compile a simple Qt example and check the
 problem. Consider compiling one of the Qt OpenGL examples to test your configuration.
 </p>
 
-If your shell is <code>bash</code> or <code>zsh</code> (use <code>echo $SHELL</code> to know), add
-these lines to your <code>.profile</code>:
+With Qt version 3, you need to set some shell variables. If your shell is <code>bash</code> or
+<code>zsh</code> (use <code>echo $SHELL</code> to know), add these lines to your
+<code>.profile</code>:
 
 <pre>
 export QTDIR=/usr/lib/qt3 (or /usr/lib/qt-3.3 or /usr/share/qt...)
@@ -191,7 +195,7 @@ If your Qt version is lower than 3.1, you need to link with the <code>glut</code
 
 <a name="qt-mac"></a>
 <h2><img src="images/mac.png" width="55" height="54" align="middle" alt="mac"/> &nbsp;
-<img src="images/qt.png" width="38" height="40" align="middle" alt="Qt"/> &nbsp; Qt installation</h2>
+<img src="images/qt.png" width="38" height="40" align="middle" alt="Qt"/> &nbsp; Qt installation on Mac</h2>
 
 Qt is available under two versions for the mac architecture :
 <ul>
@@ -205,7 +209,7 @@ run your programs and have to install Qt using the <a href="http://www.trolltech
 X11 edition</a>.</li>
 </ul>
 
-You have to define some variables as is detailed in the <a href="#qt-linux">Qt linux section</a>.
+With Qt version 3, you have to define some variables as is detailed in the <a href="#qt-linux">Qt linux section</a>.
 Check their current values first.<br/>
 
 If your shell is <code>bash</code> or <code>zsh</code> (use <code>echo $SHELL</code> to know), add
@@ -250,39 +254,44 @@ This installation is optional. To compile and install the QGLViewer designer plu
 cd designerPlugin
 qmake
 make
-make install
 </pre>
 
-The <code>make install</code> step requires root privileges since the plugin is installed in
-<code>$QTDIR/plugins/designer</code>, which is usually a system directory.
+This requires root privileges since the plugin is installed in <code>QTDIR/plugins/designer</code>,
+which is usually a system directory.
 
 <p>
 Such a plugin eases the creation of user interfaces that feature a QGLViewer using designer. It
-makes a GLViewer icon appear in the designer's <code>Display</code> widget tab, as a standard Qt
-widget. When added to your user interface, the widget displays the standard spiral, which can be
-rotated when you test your interface (using <code>Ctrl+T</code>).
+makes a QGLViewer icon appear in the designer's <code>Display</code> widget tab. When added to your
+user interface, the widget displays the standard spiral, which can be manipulated when you test your
+interface.
 </p>
 
- &nbsp; &nbsp; <img src="images/designerplugin.jpg" width="800" height="300" align="middle" alt="Designer plugin" /><br/>
-
-All the viewers' signals and slots are available and can be connected to your interface.
+ &nbsp; &nbsp; &nbsp; &nbsp; <img src="images/designerplugin.jpg" width="638" height="222" align="middle" alt="Designer plugin" /><br/>
 
 <p>
-Note that an alternative to this plugin is to add a "Custom Widget" using the
+All the viewers' signals and slots are available and can be connected to your interface.
+</p>
+
+Start from this code to create your own designer plugin for your derived QGLViewer classes. See the
+code of the plugin for details.
+
+<p>
+With Qt version 3, an alternative to this plugin is to add a "Custom Widget" using the
 <i>Tools/Custom</i> designer menu. <i>Load Descriptions...</i> and provide the
 <code>qglviewer.cw</code> custom widget description file, located in the QGLViewer header files
 directory. You can customize this description with your own signals and slots and change the header
 file path.
 </p>
 
-See the <a href="examples/interface.html">interface example</a> for an illustration of a user
+<p>
+See the <a href="examples/interface.html">interface example</a> for an illustration of a Qt user
 interface that includes a QGLViewer.
-
+</p>
 
 
 <a name="troubleshooting"></a>
 <h2>Troubleshooting</h2>
-
+Here are some error messages that you may encounter and the solution to the problem:
 <ul>
 
 <li><b>declaration of <code>qtObsolete</code> conflicts with previous declaration</b> : error
@@ -331,7 +340,7 @@ machine. Remove the <code>QMAKE_COPY_FILE</code> modification in <code>QGLViewer
 
 <p>
 Please <a href="mailto:Gilles.Debunne at imag dot fr?Subject=QGLViewer RPM">let me know</a> if you
-encountered specific installation problems that could be reported on this page.
+encounter specific installation problems.
 </p>
 
 <p>

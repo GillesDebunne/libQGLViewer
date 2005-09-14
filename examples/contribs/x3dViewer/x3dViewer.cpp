@@ -2,7 +2,6 @@
 #include <qfiledialog.h>
 
 using namespace X3DTK;
-using namespace std;
 
 void Viewer::init()
 {
@@ -37,7 +36,10 @@ void Viewer::loadFile()
   scene.load(name);
 
   // QGLViewer settings
-  setSceneBoundingBox(qglviewer::Vec(scene.getBBoxMin().f_data()), qglviewer::Vec(scene.getBBoxMax().f_data()));
+  qglviewer::Vec bbMin(scene.getBBoxMin().f_data());
+  qglviewer::Vec bbMax(scene.getBBoxMax().f_data());
+  setSceneBoundingBox(bbMin, bbMax);
+
   showEntireScene();
 }
 
@@ -49,7 +51,7 @@ void Viewer::draw()
 QString Viewer::helpString() const
 {
   QString text("<h2>x 3 d V i e w e r</h2>");
-  text += "This example uses the libX3D library to load an x3d object file.<br><br>";
+  text += "This example uses the libX3DToolkit library to load an x3d object file.<br><br>";
   text += "Press <b>L</b>(oad) to open an x3d file.";
   return text;
 }

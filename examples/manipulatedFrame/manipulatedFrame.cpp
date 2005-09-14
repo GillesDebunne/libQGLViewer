@@ -30,11 +30,17 @@ static void drawSpiral()
 void Viewer::init()
 {
   // Swap the CAMERA and FRAME state keys (NoButton and Control)
-  // Save CAMERA binding first. See setHandlerStateKey() documentation.
-  setHandlerStateKey(QGLViewer::CAMERA, Qt::AltButton);
-  setHandlerStateKey(QGLViewer::FRAME,  Qt::NoButton);
-  setHandlerStateKey(QGLViewer::CAMERA, Qt::ControlButton);
-
+  // Save CAMERA binding first. See setHandlerKeyboardModifiers() documentation.
+#if QT_VERSION < 0x040000
+  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::AltButton);
+  setHandlerKeyboardModifiers(QGLViewer::FRAME,  Qt::NoButton);
+  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::ControlButton);
+#else
+  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::AltModifier);
+  setHandlerKeyboardModifiers(QGLViewer::FRAME,  Qt::NoModifier);
+  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::ControlModifier);
+#endif
+  
 #ifdef GL_RESCALE_NORMAL  // OpenGL 1.2 Only...
   glEnable(GL_RESCALE_NORMAL);
 #endif

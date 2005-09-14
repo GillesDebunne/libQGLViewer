@@ -1,0 +1,206 @@
+<ui version="4.0" >
+ <author></author>
+ <comment></comment>
+ <exportmacro></exportmacro>
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>642</width>
+    <height>475</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Interface</string>
+  </property>
+  <layout class="QVBoxLayout" >
+   <property name="margin" >
+    <number>8</number>
+   </property>
+   <property name="spacing" >
+    <number>6</number>
+   </property>
+   <item>
+    <widget class="Viewer" name="viewer" />
+   </item>
+   <item>
+    <layout class="QHBoxLayout" >
+     <property name="margin" >
+      <number>0</number>
+     </property>
+     <property name="spacing" >
+      <number>6</number>
+     </property>
+     <item>
+      <widget class="QCheckBox" name="FPSCheckBox" >
+       <property name="text" >
+        <string>FPS</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="GridCheckBox" >
+       <property name="text" >
+        <string>Grid</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="AxisCheckBox" >
+       <property name="text" >
+        <string>Axis</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" >
+        <size>
+         <width>141</width>
+         <height>31</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="cancelButton" >
+       <property name="text" >
+        <string>Quit</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <pixmapfunction></pixmapfunction>
+ <customwidgets>
+  <customwidget>
+   <class>Viewer</class>
+   <extends></extends>
+   <header>interface.h</header>
+   <container>0</container>
+   <pixmap></pixmap>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>cancelButton</sender>
+   <signal>clicked()</signal>
+   <receiver>Dialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>628</x>
+     <y>460</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>493</x>
+     <y>446</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FPSCheckBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>viewer</receiver>
+   <slot>setFPSIsDisplayed(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>41</x>
+     <y>449</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>41</x>
+     <y>263</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>AxisCheckBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>viewer</receiver>
+   <slot>setAxisIsDrawn(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>150</x>
+     <y>441</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>150</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>GridCheckBox</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>viewer</receiver>
+   <slot>setGridIsDrawn(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>94</x>
+     <y>449</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>94</x>
+     <y>234</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>viewer</sender>
+   <signal>gridIsDrawnChanged(bool)</signal>
+   <receiver>GridCheckBox</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>72</x>
+     <y>414</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>73</x>
+     <y>444</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>viewer</sender>
+   <signal>axisIsDrawnChanged(bool)</signal>
+   <receiver>AxisCheckBox</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>126</x>
+     <y>346</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>129</x>
+     <y>453</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>viewer</sender>
+   <signal>FPSIsDisplayedChanged(bool)</signal>
+   <receiver>FPSCheckBox</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>18</x>
+     <y>419</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>21</x>
+     <y>450</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

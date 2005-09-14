@@ -17,16 +17,21 @@ HEADERS += agora_class.h        agora_evaluation.inl      agora_io.h      contai
 HEADERS += agora_coup.h         agora.h                   agora_io.inl    agora_types.h     givtimer.h
 SOURCES += main.cpp givtimer.C agoraViewer.cpp
 
-FORMS += agoraWindow.ui
+QT_VERSION=$$[QT_VERSION]
+contains( QT_VERSION, "^4.*" ) {
+  FORMS += agoraWindow.Qt4.ui
+} else {
+  FORMS += agoraWindow.Qt3.ui
+}
 
-# "make dist" additionnal files
+# "make dist" additionnal file
 DISTFILES += wood.png
 
 QMAKE_CXXFLAGS_RELEASE *= -O7 -funroll-all-loops -felide-constructors -fstrict-aliasing -frerun-loop-opt \
 			  -fexpensive-optimizations -fforce-addr -fforce-mem -fstrength-reduce
 
-# JG's paths
-#INCLUDEPATH *=/home/soft/libQGLViewer-1.3.5/include
-#LIBS *= -L/home/soft/libQGLViewer-1.3.5/lib -lQGLViewer
+include( ../../examples.pri )
 
-include( ../examples.pri )
+# NOT IN DISTRIBUTION BEGIN
+DISTFILES *= agoraWindow.Qt4.ui
+# NOT IN DISTRIBUTION END

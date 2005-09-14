@@ -15,5 +15,5 @@ CONFIG  += qt opengl warn_on release thread
 HEADERS  = anaglyph.h
 SOURCES  = anaglyph.cpp main.cpp
 
-include( ../examples.pri )
+include( ../../examples.pri )
 

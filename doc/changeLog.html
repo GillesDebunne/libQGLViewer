@@ -19,6 +19,36 @@
 
 <h1>Change Log</h1>
 
+<h2>August ??th 2005 - 2.1.0</h2>
+<p>
+The library now also compiles with Qt version 4. When enum or function names have been changed in
+Qt4, the QGLViewer documentation uses their Qt 4 version and gives Qt 2&3 translations.
+</p>
+<b>New features</b>
+<ul>
+ <li><code>QGLViewer::drawArrow()</code> method from two points (thanks Sylvain).</li>
+</ul>
+
+<b>Changes in the API</b>
+<p>
+<code>Qt::ButtonState</code> (Qt versions 2 &amp; 3) has been split into
+<code>Qt::KeyboardModifiers</code> and <code>Qt::MouseButtons</code> in Qt4. Since these are just
+enums, previous code will still work.
+</p>
+
+<ul>
+ <li><code>playPathStateKey()</code> and <code>addKeyFrameStateKey()</code> were renamed
+ <code>playPathKeyboardModifiers()</code> and <code>addKeyFrameKeyboardModifiers()</code>.<br/>
+ Their <code>int</code> parameter has been replaced by a type-safe <code>Qt::KeyboardModifiers</code>.</li>
+ <li><code>setHandlerStateKey</code> renamed <code>setHandlerKeyboardModifiers</code>.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li><code>Camera</code> copy constructor fixed.</li>
+</ul>
+
+
 <h2>June 24th 2005 - 2.0.0</h2>
 
 <b>New features</b>

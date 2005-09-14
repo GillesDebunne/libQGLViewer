@@ -1,0 +1,402 @@
+<ui version="4.0" >
+ <author></author>
+ <comment></comment>
+ <exportmacro></exportmacro>
+ <class>AgoraWindow</class>
+ <widget class="QMainWindow" name="AgoraWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>482</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Agora</string>
+  </property>
+  <property name="windowIcon" >
+   <iconset/>
+  </property>
+  <widget class="QWidget" name="widget" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>29</y>
+     <width>600</width>
+     <height>453</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" >
+    <property name="margin" >
+     <number>11</number>
+    </property>
+    <property name="spacing" >
+     <number>6</number>
+    </property>
+    <item row="0" column="0" >
+     <widget class="AgoraViewer" name="agoraViewer" />
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>600</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="fileMenu" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>700</width>
+      <height>420</height>
+     </rect>
+    </property>
+    <property name="title" >
+     <string>&amp;File</string>
+    </property>
+    <addaction name="fileOpenAction" />
+    <addaction name="fileSaveAction" />
+    <addaction name="fileSaveAsAction" />
+    <addaction name="separator" />
+    <addaction name="filePrintAction" />
+    <addaction name="separator" />
+    <addaction name="fileExitAction" />
+   </widget>
+   <widget class="QMenu" name="editMenu" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>700</width>
+      <height>420</height>
+     </rect>
+    </property>
+    <property name="title" >
+     <string>&amp;Game</string>
+    </property>
+    <addaction name="editUndoAction" />
+    <addaction name="editRedoAction" />
+    <addaction name="separator" />
+    <addaction name="newGameAction" />
+    <addaction name="suggestPlayAction" />
+    <addaction name="separator" />
+    <addaction name="twoPlayersAction" />
+    <addaction name="computerBlackAction" />
+    <addaction name="separator" />
+    <addaction name="EasyAction" />
+    <addaction name="AverageAction" />
+    <addaction name="DifficultAction" />
+    <addaction name="separator" />
+   </widget>
+   <widget class="QMenu" name="PopupMenu" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>700</width>
+      <height>420</height>
+     </rect>
+    </property>
+    <property name="title" >
+     <string>&amp;Display</string>
+    </property>
+    <addaction name="toggleAnimationAction" />
+    <addaction name="togglePossDestAction" />
+    <addaction name="toggleLightsAction" />
+    <addaction name="toggleTexturesAction" />
+   </widget>
+   <widget class="QMenu" name="helpMenu" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>700</width>
+      <height>420</height>
+     </rect>
+    </property>
+    <property name="title" >
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="helpRulesAction" />
+    <addaction name="separator" />
+    <addaction name="helpAboutAction" />
+   </widget>
+   <addaction name="fileMenu" />
+   <addaction name="editMenu" />
+   <addaction name="PopupMenu" />
+   <addaction name="helpMenu" />
+  </widget>
+  <action name="fileOpenAction" >
+   <property name="icon" >
+    <iconset>image2</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Load game</string>
+   </property>
+   <property name="iconText" >
+    <string>Load game</string>
+   </property>
+   <property name="toolTip" >
+    <string>Load a saved game</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="fileSaveAction" >
+   <property name="icon" >
+    <iconset>image3</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Save</string>
+   </property>
+   <property name="iconText" >
+    <string>Save</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="fileSaveAsAction" >
+   <property name="text" >
+    <string>Save &amp;As...</string>
+   </property>
+   <property name="iconText" >
+    <string>Save As</string>
+   </property>
+   <property name="shortcut" >
+    <string/>
+   </property>
+  </action>
+  <action name="filePrintAction" >
+   <property name="icon" >
+    <iconset>image4</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Print...</string>
+   </property>
+   <property name="iconText" >
+    <string>Print</string>
+   </property>
+   <property name="shortcut" >
+    <string/>
+   </property>
+  </action>
+  <action name="fileExitAction" >
+   <property name="text" >
+    <string>E&amp;xit</string>
+   </property>
+   <property name="iconText" >
+    <string>Exit</string>
+   </property>
+   <property name="shortcut" >
+    <string>Esc</string>
+   </property>
+  </action>
+  <action name="editUndoAction" >
+   <property name="icon" >
+    <iconset>image5</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Undo</string>
+   </property>
+   <property name="iconText" >
+    <string>Undo</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="editRedoAction" >
+   <property name="icon" >
+    <iconset>image6</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Redo</string>
+   </property>
+   <property name="iconText" >
+    <string>Redo</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="helpRulesAction" >
+   <property name="text" >
+    <string>&amp;Rules of Agora...</string>
+   </property>
+   <property name="iconText" >
+    <string>Rules of Agora</string>
+   </property>
+   <property name="shortcut" >
+    <string/>
+   </property>
+  </action>
+  <action name="helpAboutAction" >
+   <property name="text" >
+    <string>&amp;About...</string>
+   </property>
+   <property name="iconText" >
+    <string>About</string>
+   </property>
+   <property name="shortcut" >
+    <string/>
+   </property>
+  </action>
+  <action name="newGameAction" >
+   <property name="text" >
+    <string>&amp;New game</string>
+   </property>
+   <property name="iconText" >
+    <string>New game</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="toggleAnimationAction" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="iconText" >
+    <string>Animate plays</string>
+   </property>
+  </action>
+  <action name="suggestPlayAction" >
+   <property name="icon" >
+    <iconset>image7</iconset>
+   </property>
+   <property name="iconText" >
+    <string>Suggest play</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="togglePossDestAction" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="iconText" >
+    <string>Show possible plays</string>
+   </property>
+  </action>
+  <action name="toggleTexturesAction" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Use &amp;textures</string>
+   </property>
+   <property name="iconText" >
+    <string>Use textures</string>
+   </property>
+  </action>
+  <action name="toggleLightsAction" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Spot &amp;light</string>
+   </property>
+   <property name="iconText" >
+    <string>Spot light</string>
+   </property>
+  </action>
+  <action name="computerBlackAction" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="iconText" >
+    <string>Computer plays blacks</string>
+   </property>
+  </action>
+  <action name="twoPlayersAction" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="iconText" >
+    <string>Play against computer</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+T</string>
+   </property>
+  </action>
+  <actiongroup name="levelActionGroup" >
+   <action name="EasyAction" >
+    <property name="checkable" >
+     <bool>true</bool>
+    </property>
+    <property name="checked" >
+     <bool>true</bool>
+    </property>
+    <property name="text" >
+     <string>&amp;Easy</string>
+    </property>
+    <property name="iconText" >
+     <string>Easy</string>
+    </property>
+   </action>
+   <action name="AverageAction" >
+    <property name="checkable" >
+     <bool>true</bool>
+    </property>
+    <property name="iconText" >
+     <string>&amp;Average</string>
+    </property>
+   </action>
+   <action name="DifficultAction" >
+    <property name="checkable" >
+     <bool>true</bool>
+    </property>
+    <property name="iconText" >
+     <string>Difficult</string>
+    </property>
+   </action>
+  </actiongroup>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <pixmapfunction></pixmapfunction>
+ <customwidgets>
+  <customwidget>
+   <class>AgoraViewer</class>
+   <extends></extends>
+   <header>agoraViewer.h</header>
+   <container>0</container>
+   <pixmap></pixmap>
+  </customwidget>
+  <customwidget>
+   <class>QMainWindow</class>
+   <extends></extends>
+   <header>qmainwindow.h</header>
+   <container>1</container>
+   <pixmap></pixmap>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

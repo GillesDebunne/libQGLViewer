@@ -3546,7 +3546,7 @@ QString QGLViewer::stateFileName() const
 	name += QString::number(QGLViewer::QGLViewerIndex(this));
       else
 #if QT_VERSION >= 0x040000
-	name = fi.absolutePath() + '/' + fi.baseName() + QString::number(QGLViewer::QGLViewerIndex(this)) + "." + fi.completeSuffix();
+	name = fi.absolutePath() + '/' + fi.completeBaseName() + QString::number(QGLViewer::QGLViewerIndex(this)) + "." + fi.suffix();
 #else
 # if QT_VERSION >= 0x030000
 	name = fi.dirPath() + '/' + fi.baseName(true) + QString::number(QGLViewer::QGLViewerIndex(this)) + "." + fi.extension(false);

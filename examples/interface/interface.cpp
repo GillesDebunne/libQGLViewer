@@ -2,8 +2,13 @@
 #include <math.h>
 
 // Constructor must call the base class constructor.
+#if QT_VERSION < 0x040000
 Viewer::Viewer(QWidget *parent, const char *name)
   : QGLViewer(parent, name)
+#else
+Viewer::Viewer(QWidget *parent)
+    : QGLViewer(parent)
+#endif
 {
   restoreStateFromFile();
   help();

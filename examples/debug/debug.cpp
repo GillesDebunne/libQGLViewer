@@ -5,6 +5,7 @@
 #include <qpixmap.h>
 #include <qmessagebox.h>
 #include <qdom.h>
+#include <qapplication.h>
 // #include <GL/glut.h>
 
 using namespace std;
@@ -39,26 +40,30 @@ void Viewer::init()
   fr.setReferenceFrame(mf);
   center->setReferenceFrame(mf);
 
+  setShortcut(SAVE_SCREENSHOT, Qt::ALT+Qt::Key_S);
+
   Camera autreCamera;
   *(camera()) = autreCamera;
 
-  // setPathKey(Qt::Key_Space, 2);
-  // setPathKey(Qt::Key_T, 10);
+  //  Camera* frozenCamera = new Camera(*(camera()));
+  
+  setPathKey(Qt::Key_Space, 2);
+  setPathKey(Qt::Key_T, 10);
   setPathKey(-Qt::Key_F1);
   setPathKey(-Qt::Key_F2);
   setPathKey(-Qt::Key_F3);
   setPathKey(-Qt::Key_F4);
-  setPathKey(-Qt::Key_F5);
+  // setPathKey(-Qt::Key_F5);
   setPathKey(-Qt::Key_F6);
-  setPathKey(-Qt::Key_F7);
+  // setPathKey(-Qt::Key_F7);
   setPathKey(-Qt::Key_F8);
-  setPathKey(-Qt::Key_F9);
+  // setPathKey(-Qt::Key_F9);
   setPathKey(-Qt::Key_F10);
   setPathKey(-Qt::Key_F10);
-  setPathKey(-Qt::Key_F11);
-  setPathKey(-Qt::Key_F12);
+  // setPathKey(-Qt::Key_F11);
+  // setPathKey(-Qt::Key_F12);
   setAddKeyFrameStateKey(Qt::ShiftButton | Qt::AltButton);
-
+  
   Vec tii = Vec();
   Frame* fr = NULL;
   AxisPlaneConstraintLeRetour* a = new AxisPlaneConstraintLeRetour();
@@ -185,7 +190,7 @@ void Viewer::init()
   sunElement.appendChild(sunPos.domElement("sunPosition", document));
   // Other additions to the document hierarchy...
 
-  // Save doc document
+  /*  // Save doc document
   QFile f("test.xml");
   if (f.open(IO_WriteOnly))
     {
@@ -193,7 +198,7 @@ void Viewer::init()
       document.save(out, 2);
       f.close();
     }
-
+  */
 
   return;
   cout << "debut init pos : " << camera()->position() << endl;
@@ -241,7 +246,6 @@ void Viewer::init()
   // setManipulatedFrame(new ManipulatedCameraFrame());
   setManipulatedFrame(new ManipulatedFrame());
 
-  setKeyboardAccelerator(SAVE_SCREENSHOT, ALT+Qt::Key_S);
   // glDisable(GL_LIGHTING);
   // setSceneCenter(0,2,0);
   // camera()->setRevolveAroundPoint(Vec(0,1,0));
@@ -286,8 +290,8 @@ void Viewer::init()
 
 void Viewer::keyPressEvent(QKeyEvent *e)
 {
-  // QGLViewer::keyPressEvent(e);
-  // return;
+  QGLViewer::keyPressEvent(e);
+  return;
   //  static int toto=123;
   switch (e->key())
     {

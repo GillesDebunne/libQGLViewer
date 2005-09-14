@@ -49,12 +49,20 @@ void Viewer::draw()
 {
   // Draw selected spheres only.
   glColor3f(0.9, 0.3, 0.3);
+#if QT_VERSION < 0x040000
   for (QValueList<int>::const_iterator it=selection_.begin(), end=selection_.end(); it != end; ++it)
+#else
+  for (QList<int>::const_iterator it=selection_.begin(), end=selection_.end(); it != end; ++it)
+#endif
     sphere_[*it].draw();
 
   // Draw all the spheres. Selected ones are not repainted because of GL depth test.
   glColor3f(0.8, 0.8, 0.8);
+#if QT_VERSION < 0x040000
   for (QValueVector<Sphere>::const_iterator it=sphere_.begin(), end=sphere_.end(); it != end; ++it)
+#else
+  for (QList<Sphere>::const_iterator it=sphere_.begin(), end=sphere_.end(); it != end; ++it)
+#endif
     (*it).draw();
 
   // Draw rectangular selection area. Could be done in postDraw() instead.
@@ -69,10 +77,18 @@ void Viewer::mousePressEvent(QMouseEvent* e)
 {
   // Start selection. Mode is ADD with Shift key and TOGGLE with Control key.
   rectangle_ = QRect(e->pos(), e->pos());
+#if QT_VERSION < 0x040000
   if ((e->button() == Qt::LeftButton) && (e->state() == Qt::ShiftButton))
+#else
+  if ((e->button() == Qt::LeftButton) && (e->modifiers() == Qt::ShiftModifier))
+#endif
     selectionMode_ = ADD;
   else
+#if QT_VERSION < 0x040000
     if ((e->button() == Qt::LeftButton) && (e->state() == Qt::ControlButton))
+#else
+    if ((e->button() == Qt::LeftButton) && (e->modifiers() == Qt::ControlModifier))
+#endif
       selectionMode_ = REMOVE;
     else
       QGLViewer::mousePressEvent(e);
@@ -83,7 +99,7 @@ void Viewer::mouseMoveEvent(QMouseEvent* e)
   if (selectionMode_ != NONE)
     {
       // Updates rectangle_ coordinates and redraws rectangle
-#if QT_VERSION < 300
+#if QT_VERSION < 0x030000
       rectangle_.setX(e->x());
       rectangle_.setY(e->y());
 #else
@@ -101,7 +117,11 @@ void Viewer::mouseReleaseEvent(QMouseEvent* e)
     {
       // Actual selection on the rectangular area.
       // Possibly swap left/right and top/bottom to make rectangle_ valid.
+#if QT_VERSION < 0x040000
       rectangle_ = rectangle_.normalize();
+#else
+      rectangle_ = rectangle_.normalized();
+#endif
       // Define selection window dimensions
       setSelectRegionWidth(rectangle_.width());
       setSelectRegionHeight(rectangle_.height());
@@ -119,7 +139,11 @@ void Viewer::mouseReleaseEvent(QMouseEvent* e)
 
 void Viewer::drawWithNames()
 {
+#if QT_VERSION < 0x040000
   for (unsigned int i=0; i<sphere_.size(); ++i)
+#else
+  for (int i=0; i<sphere_.size(); ++i)
+#endif
     {
       glPushName(i);
       sphere_[i].draw();
@@ -155,23 +179,17 @@ void Viewer::endSelection(const QPoint&)
 
 void Viewer::addIdToSelection(int id)
 {
-  QValueList<int>::iterator it;
-  for (it=selection_.begin(); it != selection_.end(); ++it)
-    if (*it == id)
-	break;
-
-  if (it == selection_.end())
+  if (!selection_.contains(id))
     selection_.push_back(id);
 }
 
 void Viewer::removeIdFromSelection(int id)
 {
-  for (QValueList<int>::iterator it=selection_.begin(); it != selection_.end(); ++it)
-    if (*it == id)
-      {
-	selection_.erase(it);
-	break;
-      }
+#if QT_VERSION < 0x040000
+  selection_.remove(id);
+#else
+  selection_.removeAll(id);
+#endif
 }
 
 void Viewer::drawSelectionRectangle() const

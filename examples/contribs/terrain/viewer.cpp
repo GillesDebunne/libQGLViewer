@@ -197,8 +197,12 @@ bool Viewer::DrawShutdown()
 //overload c,s,w,r,t
 void Viewer::keyPressEvent(QKeyEvent *e)
 {
+#if QT_VERSION < 0x040000
   if (e->state() == Qt::NoButton)
-    switch (e->key())
+#else
+  if (e->modifiers() == Qt::NoModifier)
+#endif
+	switch (e->key())
       {
       case Qt::Key_C :	//recreer le terrain
 	if (!myQuadtree.MakeTerrainFault( mapSize, 32, 0, 255, 3 ))

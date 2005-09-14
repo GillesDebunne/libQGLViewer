@@ -21,15 +21,15 @@
 <img src="images/windows.png" width="55" height="54" align="middle" alt="windows"/> Windows</h1>
 
 <div class="summary">
-<b>&raquo;</b> Installation using <a href="#qt3">Qt version 3</a><br/>
+<b>&raquo;</b> Installation using <a href="#qt3or4">Qt version 3 or 4</a><br/>
 <b>&raquo;</b> Installation using <a href="#qt2.3">Qt version 2.3</a><br/>
 <b>&raquo;</b> Installation using <a href="#cygwin">cygwin linux emulator</a><br/>
 <b>&raquo;</b> Details on <a href="#qt">Qt installation</a><br/>
 <b>&raquo;</b> Installation of the <a href="#plugin">QGLViewer designer plugin</a><br/>
 </div>
 
-<a name="qt3"></a>
-<h2>Using Qt version 3</h2>
+<a name="qt3or4"></a>
+<h2>Compilation and installation using Qt version 3 or 4</h2>
 <ol>
 <li>Make sure Qt is installed on your machine, and recognized as an add-in in .NET (see the <i>Tools Add-In
 manager</i> <span style="color:red">*</span> menu)</li>
@@ -87,13 +87,14 @@ spaces (such as <code>Program Files</code>). You also need to download and insta
 href="http://www.xmission.com/~nate/glut.html">GLUT library</a> as explained above.
 
 <p>
-To compile with Qt 2.3, follow the installation procedure described above for Qt 3, but:
+As an alternative, you can use the free Qt 4 GPL version, available on the <a
+href="http://www.trolltech.com/download/qt/windows.html">Trolltech web site</a>. It uses the MinGW
+compiler and is not directly usable with Visual Studio. 
 </p>
+
+To compile with Qt 2.3, follow the installation procedure described above for Qt 3 or 4, but:
 <ul>
 <li>Replace the <code>QGLViewer.pro</code> file by <code>QGLViewer.Qt2.3.pro</code>.</li>
-
-<li>Replace the <code>VRenderInterface.ui</code> file by <code>VRenderInterface.Qt2.3.ui</code>.</li>
-
 <li>Edit <code>qglviewer.h</code> and change <code>saveSnapshot()</code> as explained on line ~491.</li>
 </ul>
 
@@ -149,7 +150,7 @@ This <a href="http://hohle.net/scrap_post.php?post=14">page</a> details how to p
 This has not yet been tested (<a href="mailto:Gilles dot Debunne at imag dot fr">feedback welcome</a>), but may avoid the previous patchs/hacks.
 
 <a name="cygwin"></a>
-<h2>Using the latest Qt version with cygwin</h2>
+<h2>Compilation and installation using cygwin</h2>
 
 An other option is to install the <a href="http://www.cygwin.com/">cygwin</a> linux emulator, with
 the <a href="http://kde-cygwin.sourceforge.net/qt3">Qt-KDE</a> port. This was successfully tested, although
@@ -158,11 +159,11 @@ Qt had to be recompiled. You may also have to remove <code>thread</code> from th
 
 <p>
 Then compile QGLViewer as explained in the <a href="installUnix.html">Unix installation page</a>.
-You should link a file named <code>libQGLViewer.dll</code> to the resulting
-<code>cygQGLViewer-1.dll</code> (or rename it) and copy <code>libQGLViewer.dll</code> in the
-<code>C:\WINDOWS\system32</code> directory. Note that <code>cygqt-3.dll</code> and
-<code>cygqui-1.dll</code> (located in <code>$(QTDIR)/bin</code> or <code>$(QTDIR)/lib</code>) should
-also be copied in that directory. Thanks Jean-Gui for these details.
+You should rename the generated <code>cygQGLViewer-1.dll</code> file to
+<code>libQGLViewer.dll</code> and copy it in the <code>C:\WINDOWS\system32</code> directory. Note
+that <code>cygqt-3.dll</code> and <code>cygqui-1.dll</code> (located in <code>$(QTDIR)/bin</code> or
+<code>$(QTDIR)/lib</code>) should also be copied in that directory. Thanks Jean-Gui for these
+details.
 </p>
 
 
@@ -171,18 +172,21 @@ also be copied in that directory. Thanks Jean-Gui for these details.
 <a name="qt"></a>
 <h2><img src="images/qt.png" width="38" height="40" align="middle" alt="Qt"/> &nbsp; Qt installation</h2>
 
-If you have a Qt commercial license, simply follow installation instructions. Otherwise, download
-the <a href="ftp://ftp.trolltech.com/qt/non-commercial/QtWin230-NonCommercial.exe">Qt 2.3</a> non
-commercial version, or the <a href="http://www.trolltech.com/developer/download/">Qt/Desktop 30 day
-evaluation version</a>.
+Download Qt from the <a href="http://www.trolltech.com/developer/download/">Trolltech web site</a>.
 
 <p>
-This <a href="http://hohle.net/scrap_post.php?post=14">page</a> details how to patch Qt 2.3 to make it work with .NET.
+This <a href="http://hohle.net/scrap_post.php?post=14">page</a> details how to patch <a
+href="ftp://ftp.trolltech.com/qt/non-commercial/QtWin230-NonCommercial.exe">Qt 2.3</a> to make it
+work with .NET.
 </p>
 
 Visual Studio users must check the <i>Tools/Customize/Add-ins and Macro Files/QMsDev Add in</i> box
 in order to use Qt with Visual Studio.
 
+<p>
+There are ways to integrate the non-commercial Qt 4 version into Visual Studio. Browse the web for
+up-to-date advices.
+</p>
 
 
 <a name="plugin"></a>
@@ -190,21 +194,26 @@ in order to use Qt with Visual Studio.
 
 The compilation and installation of the QGLViewer designer plugin is optional. Open the
 <code>designerPlugin.pro</code> file to create your workspace. Compile it and install the resulting
-library in <code>$QTDIR\plugins\designer</code> (which may require administrator privileges).
+library in <code>$QTDIR\plugins\designer</code> (may require administrator privileges).
 
 <p>
 Such a plugin eases the creation of user interfaces that feature a QGLViewer using designer. It
 makes a GLViewer icon appear in the designer's <code>Display</code> widget tab, as a standard Qt
 widget. When added to your user interface, the widget displays the standard spiral, which can be
-rotated when you test your interface (using <code>Ctrl+T</code>).
+manipulated when you test your interface (using <code>Ctrl+T</code> or <code>Ctrl+R</code> with Qt 4).
 </p>
 
- &nbsp; &nbsp; <img src="images/designerplugin.jpg" width="800" height="300" align="middle" alt="Designer plugin" /><br/>
-
-All the viewers' signals and slots are available and can be connected to the rest of your interface.
+ &nbsp; &nbsp; &nbsp; &nbsp; <img src="images/designerplugin.jpg" width="638" height="222" align="middle" alt="Designer plugin" /><br/>
 
 <p>
-Note that an alternative to this plugin is to add a "Custom Widget" using the
+All the viewers' signals and slots are available and can be connected to the rest of your interface.
+</p>
+
+Start from this code to create your own designer plugin for your derived QGLViewer classes. See the
+code of the plugin for details.
+
+<p>
+With Qt version 3, an alternative to this plugin is to add a "Custom Widget" using the
 <i>Tools/Custom</i> designer menu. <i>Load Descriptions...</i> and provide the
 <code>qglviewer.cw</code> custom widget description file, located in the QGLViewer header files
 directory. You can customize this description with your own signals and slots and change the header
@@ -216,7 +225,7 @@ interface that includes a QGLViewer.
 
 <p>
 Please <a href="mailto:Gilles.Debunne at imag dot fr?Subject=QGLViewer installation">let me know</a> if you
-encountered installation problems that could be reported on this page.
+encounter installation problems.
 </p>
 
 <p>

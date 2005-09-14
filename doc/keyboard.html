@@ -120,13 +120,13 @@ This table lists the different <code>KeyboardAction</code> with their default sh
     <td><code>camera()-&gt;frame()-&gt;translate(...)</code></td>
   </tr>
   <tr>
-    <td>See <code>pathKey()</code> and<br/><code>playPathStateKey()</code></td>
+    <td>See <code>pathKey()</code> and<br/><code>playPathKeyboardModifiers()</code></td>
     <td><b>F1...F12</b></td>
     <td>Plays/Pauses camera key frame path (if defined)<br/>Reset the path when Fx is quickly press twice.</td>
     <td><code>camera()-&gt;playPath(i)</code><br/><code>camera()-&gt;resetPath(i)</code></td>
   </tr>
   <tr  bgcolor="#C0C0F0">
-    <td>See <code>pathKey()</code> and<br/><code>addKeyFrameStateKey()</code></td>
+    <td>See <code>pathKey()</code> and<br/><code>addKeyFrameKeyboardModifiers()</code></td>
     <td><b>Alt+(F1...F12)</b></td>
     <td>Defines a new camera key frame for path 1..12.<br/>Deletes the path when Fx is quickly press twice.</td>
     <td><code>camera()-&gt;addKeyFrameToPath(i)</code><br/><code>camera()-&gt;deletePath(i)</code></td>
@@ -148,10 +148,10 @@ Qt enumerated values. Setting <code>0</code> as the shortcut key disables the as
 void Viewer::init()
 {
   // Press 'Q' to exit application
-  setShortcut(EXIT_VIEWER, Key_Q);
+  setShortcut(EXIT_VIEWER, Qt::Key_Q);
 
   // Alt+M toggles camera mode
-  setShortcut(CAMERA_MODE, ALT+Key_M);
+  setShortcut(CAMERA_MODE, Qt::ALT+Qt::Key_M);
   
   // The DISPLAY_FPS action is disabled
   setShortcut(DISPLAY_FPS, 0);
@@ -171,12 +171,10 @@ void Viewer::keyPressEvent(QKeyEvent *e)
   {
     switch (e->key())
     {
-      case Qt::Key_R :
-        myResetMethod();
-        updateGL();
-        break;
+      case Qt::Key_R : myResetMethod(); updateGL(); break;
       // and so on...
-      // Calls the original method to handle other keys
+
+      // Default calls the original method to handle standard keys
       default: QGLViewer::keyPressEvent(e);
     }
   }
@@ -210,8 +208,8 @@ Use these methods to modify the camera path keyboard shortcuts:
 <ul>
 <li><code>setPathKey(int key, int index)</code> (default are <code>F1...F12</code> for
 path 1..12), </li>
-<li><code>setAddKeyFrameStateKey(int buttonState)</code> (default is <code>Alt</code>) and</li>
-<li><code>setPlayPathStateKey(int buttonState)</code> (default is <code>Qt::NoButton</code>).</li>
+<li><code>setAddKeyFrameKeyboardModifiers(int buttonState)</code> (default is <code>Alt</code>) and</li>
+<li><code>setPlayPathKeyboardModifiers(int buttonState)</code> (default is no modifier).</li>
 </ul>
 
 <p>

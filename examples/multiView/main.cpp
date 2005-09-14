@@ -23,8 +23,10 @@ int main(int argc, char** argv)
 
   // Set main QSplitter as the main widget.
   hSplit->show();
+#if QT_VERSION < 0x040000
   application.setMainWidget(hSplit);
-
+#endif
+  
   // Run main loop.
   return application.exec();
 }

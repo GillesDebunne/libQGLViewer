@@ -2,10 +2,8 @@
 
 class Viewer : public QGLViewer
 {
-public :
-  Viewer(const QGLFormat& format);
-
 protected :
   virtual void draw();
+  virtual void init();
   virtual QString helpString() const;
 };

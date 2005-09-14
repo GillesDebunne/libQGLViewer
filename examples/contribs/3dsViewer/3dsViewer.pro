@@ -32,4 +32,4 @@ SOURCES  = 3dsViewer.cpp main.cpp
 
 DISTFILES += *.3DS
 
-include( ../examples.pri )
+include( ../../examples.pri )

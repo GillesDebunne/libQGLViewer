@@ -1,5 +1,4 @@
 #include "agoraViewer.h"
-#include "agoraWindow.h"
 #include <fstream>
 #include <math.h>
 #include <qmessagebox.h>
@@ -9,11 +8,27 @@
 #include <qfiledialog.h>
 #include <qaction.h>
 
+#if QT_VERSION >= 0x040000
+# include "ui_agoraWindow.Qt4.h"
+  class AgoraWindow : public QMainWindow, public Ui::AgoraWindow {};
+#else
+# if QT_VERSION >= 0x030000
+#  include "agoraWindow.h"
+# else
+//#  include "myInterface.Qt2.h"
+# endif
+#endif
+
 using namespace std;
 using namespace qglviewer;
 
 AgoraViewer::AgoraViewer(QWidget* parent, const char* name)
-  : QGLViewer(parent, name), computerIsBlack_(true), selectedPiece_(-1),
+#if QT_VERSION < 0x040000
+  : QGLViewer(parent, name),
+#else
+  : QGLViewer(parent),
+#endif
+    computerIsBlack_(true), selectedPiece_(-1),
     playerIsComputer_(true), displayPossibleDestination_(true), animatePlays_(true), textures_(true),
     fileName("savedGame.ago"), undoIndex_(0), maxUndoIndex_(0)
 {
@@ -27,11 +42,11 @@ AgoraViewer::AgoraViewer(QWidget* parent, const char* name)
   levelIsEasy();
 
   QObject::connect(&kfi_[0], SIGNAL(interpolated()), this, SLOT(updateGL()));
-  QObject::connect(&kfi_[0], SIGNAL(finished()), this, SLOT(simplePlay()));
+  QObject::connect(&kfi_[0], SIGNAL(endReached()), this, SLOT(simplePlay()));
 }
 
 
-// I n i t i a l i z a t i o n   f u n c t i o n s //
+// I n i t i a l i z a t i o n   f u n c t i o n s
 
 void AgoraViewer::init()
 {
@@ -42,6 +57,32 @@ void AgoraViewer::init()
 
   setMouseBinding(Qt::RightButton, CAMERA, ROTATE);
   setMouseBinding(Qt::LeftButton, SELECT);
+
+#if QT_VERSION >= 0x040000
+
+  // Signals and slots connections
+  AgoraWindow* aw = (AgoraWindow*)(window());
+  connect(aw->toggleTexturesAction, SIGNAL(toggled(bool)), this, SLOT(toggleTexture(bool)));
+  connect(aw->togglePossDestAction, SIGNAL(toggled(bool)), this, SLOT(toggleShowPossible(bool)));
+  connect(aw->toggleLightsAction, SIGNAL(toggled(bool)), this, SLOT(toggleLight(bool)));
+  connect(aw->toggleAnimationAction, SIGNAL(toggled(bool)), this, SLOT(toggleAnimation(bool)));
+  connect(aw->EasyAction, SIGNAL(toggled(bool)), this, SLOT(levelIsEasy()));
+  connect(aw->AverageAction, SIGNAL(toggled(bool)), this, SLOT(levelIsAverage()));
+  connect(aw->DifficultAction, SIGNAL(toggled(bool)), this, SLOT(levelIsDifficult()));
+  connect(aw->suggestPlayAction, SIGNAL(activated()), this, SLOT(suggestPlay()));
+  connect(aw->editUndoAction, SIGNAL(activated()), this, SLOT(undo()));
+  connect(aw->editRedoAction, SIGNAL(activated()), this, SLOT(redo()));
+  connect(aw->computerBlackAction, SIGNAL(toggled(bool)), this, SLOT(toggleComputerIsBlack(bool)));
+  connect(aw->fileExitAction, SIGNAL(activated()), this, SLOT(close()));
+  connect(aw->fileOpenAction, SIGNAL(activated()), this, SLOT(load()));
+  connect(aw->fileSaveAction, SIGNAL(activated()), this, SLOT(save()));
+  connect(aw->fileSaveAsAction, SIGNAL(activated()), this, SLOT(saveAs()));
+  connect(aw->filePrintAction, SIGNAL(activated()), this, SLOT(print()));
+  connect(aw->newGameAction, SIGNAL(activated()), this, SLOT(startNewGame()));
+  connect(aw->helpAboutAction, SIGNAL(activated()), this, SLOT(about()));
+  connect(aw->helpRulesAction, SIGNAL(activated()), this, SLOT(help()));
+  connect(aw->twoPlayersAction, SIGNAL(toggled(bool)), this, SLOT(togglePlayAgainstComputer(bool)));
+#endif
 }
 
 void AgoraViewer::initSpotLight()
@@ -141,7 +182,7 @@ void AgoraViewer::initViewer()
 
   if (img.isNull())
     {
-      cerr << "Unable to load wood texture from " << texFileName << endl;
+      qWarning("Unable to load wood texture.");;
       exit(1);
     }
 
@@ -149,7 +190,7 @@ void AgoraViewer::initViewer()
   if ( ( img.width()  != 1<<(int)(1+log(img.width() -1+1E-3) / log(2.0)) ) ||
        ( img.height() != 1<<(int)(1+log(img.height()-1+1E-3) / log(2.0))) )
     {
-      cerr << "Texture dimensions are not powers of 2 in " << texFileName << endl;
+      qWarning("Texture dimensions are not powers of 2 in wood texture.");
       exit(1);
     }
 
@@ -691,7 +732,11 @@ void AgoraViewer::select(const QMouseEvent* e)
 
   endSelection(e->pos());
 
+#if QT_VERSION < 0x040000
   reactToSelection(selectedName(), e->state() == Qt::NoButton);
+#else
+  reactToSelection(selectedName(), e->modifiers() == Qt::NoModifier);
+#endif
 }
 
 void AgoraViewer::updatePiecePositions()
@@ -725,14 +770,22 @@ void AgoraViewer::updatePiecePositions()
 // F i l e  m e n u   f u n c t i o n s
 void AgoraViewer::load()
 {
+#if QT_VERSION < 0x040000
   fileName = QFileDialog::getOpenFileName("", "Agora files (*.ago);;All files (*)", this);
-
+#else
+  fileName = QFileDialog::getOpenFileName(this, "Select a saved game", ".", "Agora files (*.ago);;All files (*)");
+#endif
+    
   // In case of Cancel
   if (fileName.isEmpty())
     return;
 
+#if QT_VERSION < 0x040000
   std::ifstream f(fileName.latin1());
-  f >> agora;
+#else
+  std::ifstream f(fileName.toLatin1().constData());
+#endif
+    f >> agora;
   f >> undoIndex_ >> maxUndoIndex_;
   history_.clear();
   for (unsigned int i=0; i<maxUndoIndex_; ++i)
@@ -751,8 +804,12 @@ void AgoraViewer::load()
 
 void AgoraViewer::save()
 {
+#if QT_VERSION < 0x040000
   std::ofstream f(fileName.latin1());
-  f << agora;
+#else
+  std::ofstream f(fileName.toLatin1().constData());
+#endif
+    f << agora;
   // save undo history
   f << undoIndex_ << " " << maxUndoIndex_ << endl;
   for (std::vector<Undo>::iterator it=history_.begin(), end=history_.end(); it != end; ++it)
@@ -764,12 +821,20 @@ void AgoraViewer::save()
 
 void AgoraViewer::saveAs()
 {
+#if QT_VERSION < 0x040000
   fileName = QFileDialog::getSaveFileName("", "Agora files (*.ago);;All files (*)", this, fileName.latin1());
-
+#else
+  fileName = QFileDialog::getSaveFileName(this, "Save game", fileName, "Agora files (*.ago);;All files (*)");
+#endif
+    
   QFileInfo fi(fileName);
 
+#if QT_VERSION < 0x040000
   if (fi.extension().isEmpty())
-    {
+#else
+  if (fi.suffix().isEmpty())
+#endif
+	{
       fileName += ".ago";
       fi.setFile(fileName);
     }
@@ -863,12 +928,6 @@ void AgoraViewer::togglePlayAgainstComputer(bool on)
   playerIsComputer_ = on;
 
   // Disable menu items
-  AgoraWindow* window = dynamic_cast<AgoraWindow*>(parent()->parent());
-  if (!window)
-    {
-      qWarning("Unable to disable menu items");
-      return;
-    }
-  window->levelActionGroup->setEnabled(on);
-  window->computerBlackAction->setEnabled(on);
+  ((AgoraWindow*)(topLevelWidget()))->levelActionGroup->setEnabled(on);
+  ((AgoraWindow*)(topLevelWidget()))->computerBlackAction->setEnabled(on);
 }

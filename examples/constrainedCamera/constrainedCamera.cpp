@@ -58,11 +58,11 @@ void Viewer::init()
 
   setAxisIsDrawn();
 
-  setKeyDescription(Key_G, "Change translation constraint direction");
-  setKeyDescription(Key_D, "Change rotation constraint direction");
-  setKeyDescription(Key_Space, "Change constraint reference");
-  setKeyDescription(Key_T, "Change translation constraint type");
-  setKeyDescription(Key_R, "Change rotation constraint type");
+  setKeyDescription(Qt::Key_G, "Change translation constraint direction");
+  setKeyDescription(Qt::Key_D, "Change rotation constraint direction");
+  setKeyDescription(Qt::Key_Space, "Change constraint reference");
+  setKeyDescription(Qt::Key_T, "Change translation constraint type");
+  setKeyDescription(Qt::Key_R, "Change rotation constraint type");
 
   help();
 }

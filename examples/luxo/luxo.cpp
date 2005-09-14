@@ -53,13 +53,19 @@ void Viewer::init()
   // Make camera the default manipulated frame.
   setManipulatedFrame( camera()->frame() );
 
-  // Preserve CAMERA bindings, see setHandlerStateKey documentation.
-  setHandlerStateKey(QGLViewer::CAMERA, Qt::AltButton);
+#if QT_VERSION < 0x040000
+  // Preserve CAMERA bindings, see setHandlerKeyboardModifiers documentation.
+  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::AltButton);
   // The frames can be move without any key pressed
-  setHandlerStateKey(QGLViewer::FRAME, Qt::NoButton);
+  setHandlerKeyboardModifiers(QGLViewer::FRAME, Qt::NoButton);
   // The camera can always be moved with the Control key.
-  setHandlerStateKey(QGLViewer::CAMERA, Qt::ControlButton);
-
+  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::ControlButton);
+#else
+  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::AltModifier);
+  setHandlerKeyboardModifiers(QGLViewer::FRAME, Qt::NoModifier);
+  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::ControlModifier);
+#endif
+  
   initSpotLight();
 
   help();

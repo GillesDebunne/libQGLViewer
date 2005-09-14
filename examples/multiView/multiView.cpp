@@ -4,7 +4,11 @@ using namespace qglviewer;
 using namespace std;
 
 Viewer::Viewer(const Scene* const s, int type, QWidget* parent, const QGLWidget* shareWidget)
+#if QT_VERSION < 0x040000
   : QGLViewer(parent, "viewer", shareWidget), scene_(s)
+#else
+  : QGLViewer(parent, shareWidget), scene_(s)
+#endif
 {
   setAxisIsDrawn();
   setGridIsDrawn();

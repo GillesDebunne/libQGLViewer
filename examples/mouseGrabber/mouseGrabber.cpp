@@ -21,17 +21,17 @@ void Viewer::displayPlayers()
 	    {
 	      glColor3f(1,1,1);
 	      if (camera()->keyFrameInterpolator(i)->numberOfKeyFrames() > 1)
-		s = "Play path F" + QString::number(i+1);
+		s = "Play path F" + QString::number(i);
 	      else
-		s = "Restore pos F" + QString::number(i+1);
+		s = "Restore pos F" + QString::number(i);
 	    }
 	  else
 	    {
 	      glColor3f(0.6, 0.6, 0.6);
 	      if (camera()->keyFrameInterpolator(i)->numberOfKeyFrames() > 1)
-		s = "Path F" + QString::number(i+1);
+		s = "Path F" + QString::number(i);
 	      else
-		s = "Pos F" + QString::number(i+1);
+		s = "Pos F" + QString::number(i);
 	    }
 	  drawText(10, cpp->yPos()-3, s);
 	}
@@ -87,7 +87,11 @@ void Viewer::init()
 
 void Viewer::draw()
 {
+#if QT_VERSION < 0x040000
   for (QValueVector<Spiral>::const_iterator it=spiral_.begin(), end=spiral_.end(); it != end; ++it)
+#else
+  for (QList<Spiral>::const_iterator it=spiral_.begin(), end=spiral_.end(); it != end; ++it)
+#endif
     (*it).draw();
 
   updatePlayers();

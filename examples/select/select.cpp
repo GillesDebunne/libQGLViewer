@@ -1,4 +1,5 @@
 #include "select.h"
+#include <qmessagebox.h>
 #include <math.h>
 
 using namespace std;
@@ -58,10 +59,12 @@ void Viewer::postSelection(const QPoint& point)
   // Note that "found" is different from (selectedObjectId()>=0) because of the size of the select region.
 
   if (selectedName() == -1)
-    qWarning("No object selected under pixel " + QString::number(point.x()) + "," + QString::number(point.y()));
+    QMessageBox::information(this, "No selection",
+			     "No object selected under pixel " + QString::number(point.x()) + "," + QString::number(point.y()));
   else
-    qWarning("Spiral number " + QString::number(selectedName()) + " selected under pixel " +
-	     QString::number(point.x()) + "," + QString::number(point.y()));
+    QMessageBox::information(this, "Selection",
+			     "Spiral number " + QString::number(selectedName()) + " selected under pixel " +
+			     QString::number(point.x()) + "," + QString::number(point.y()));
 }
 
 void Viewer::init()

@@ -37,8 +37,8 @@ void Viewer::init()
   // Restore previous viewer state.
   restoreStateFromFile();
 
-  setKeyDescription(Key_R, "Starts/stops recording scenario.");
-  setKeyDescription(SHIFT+Key_R, "Replay recorded scenario.");
+  setKeyDescription(Qt::Key_R, "Starts/stops recording scenario.");
+  setKeyDescription(Qt::SHIFT+Qt::Key_R, "Replay recorded scenario.");
 
   help();
 }
@@ -47,7 +47,11 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 {
   if (e->key() == Qt::Key_R)
     {
+#if QT_VERSION < 0x040000
       if (e->state() & Qt::ShiftButton)
+#else
+      if (e->modifiers() & Qt::ShiftModifier)
+#endif
 	eventRecorder_->openReplayInterfaceWindow();
       else
 	{

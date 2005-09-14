@@ -36,16 +36,24 @@ QString Viewer::helpString() const
 
 void Viewer::loadFile()
 {
-  QString name = QFileDialog::getOpenFileName("", "3DS files (*.3ds *.3DS);;All files (*)", this);
+#if QT_VERSION < 0x040000
+  QString name = QFileDialog::getOpenFileName(".", "3DS files (*.3ds *.3DS);;All files (*)", this, "Choose", "Select a 3ds model");
+#else
+  QString name = QFileDialog::getOpenFileName(this, "Select a 3ds model", ".", "3DS files (*.3ds *.3DS);;All files (*)");
+#endif
 
   // In case of Cancel
   if (name.isEmpty())
     return;
 
+#if QT_VERSION < 0x040000
   file = lib3ds_file_load(name.latin1());
-  if (!file)
+#else
+  file = lib3ds_file_load(name.toLatin1().constData());
+#endif
+    if (!file)
     {
-      cout << "Error : Unable to open file " << name << endl;
+      qWarning("Error : Unable to open file ");
       exit(1);
     }
 
@@ -81,7 +89,7 @@ void Viewer::init()
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
 
-  setKeyDescription(Key_L, "Loads a new 3ds file");
+  setKeyDescription(Qt::Key_L, "Loads a new 3ds file");
 
   restoreStateFromFile();
   help();

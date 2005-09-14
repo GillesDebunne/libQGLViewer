@@ -16,4 +16,13 @@ SOURCES  = viewer.cpp eventRecorder.cpp main.cpp
 
 FORMS = replayInterface.ui
 
-include( ../examples.pri )
+QT_VERSION=$$[QT_VERSION]
+contains( QT_VERSION, "^4.*" ) {
+  warning(This example has not yet been ported to Qt4)
+}
+
+include( ../../examples.pri )
+
+# NOT IN DISTRIBUTION BEGIN
+DISTFILES *= 
+# NOT IN DISTRIBUTION END

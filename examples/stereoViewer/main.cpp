@@ -6,16 +6,21 @@ int main(int argc, char** argv)
   // Read command lines arguments.
   QApplication application(argc,argv);
 
-  // Instantiate the viewer with a stereo OpenGl context.
+  // Set the default OpenGL format with stereo capabilities.
+  // An alternative is to pass this parameter to the QGLWidget constructor.
   QGLFormat format;
-  format.setStereo( TRUE );
-  Viewer viewer(format);
+  format.setStereo(true);
+  QGLFormat::setDefaultFormat(format);
+  
+  Viewer v;
 
   // Make the viewer window visible on screen.
-  viewer.show();
+  v.show();
 
+#if QT_VERSION < 0x040000
   // Set the viewer as the application main widget.
-  application.setMainWidget(&viewer);
+  application.setMainWidget(&v);
+#endif
 
   // Run main loop.
   return application.exec();

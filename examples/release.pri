@@ -7,6 +7,8 @@
 # LIBS *= -lQGLViewer (unix)
 # LIBS *= QGLViewer.lib (Visual 6) or QGLViewer200.lib (.NET) (win32)
 
+# Used by Qt4 only. Adds appropriate include paths.
+QT += xml opengl
 
 #                       Unix configuration
 # See doc/installUnix.html and doc/examples/index.html for details.
@@ -104,7 +106,6 @@ unix {
 
 
 #                    Windows configuration.
-# See doc/installWindows.html and doc/examples/index.html for details
 win32 {
   # Various compilation flags
   QMAKE_CXXFLAGS = -TP -G6 -GR -GX -Zi
@@ -114,25 +115,27 @@ win32 {
   # Use the Qt DLL version
   DEFINES *= QT_DLL QT_THREAD_SUPPORT
 
-  # Standard zip tree : libQGLViewer is in ../..
-  exists( ../../QGLViewer/qglviewer.h ) {
-    INCLUDEPATH *= ../..
-  }
-
-  exists( ../../QGLViewer/Debug ) {
-    exists( ../../QGLViewer/Debug/QGLViewer*.lib ) {
-      LIBPATH = ../../QGLViewer/Debug
+  # Compilation from zip file : libQGLViewer is in ../..
+  exists( ../../QGLViewer ) {
+    exists( ../../QGLViewer/qglviewer.h ) {
+      INCLUDEPATH *= ../..
     }
-  }
 
-  exists( ../../QGLViewer/Release ) {
-    exists( ../../QGLViewer/Release/QGLViewer*.lib ) {
-      LIBPATH = ../../QGLViewer/Release
+    exists( ../../QGLViewer/Debug ) {
+      exists( ../../QGLViewer/Debug/QGLViewer*.lib ) {
+        LIBPATH = ../../QGLViewer/Debug
+      }
     }
-  }
 
-  exists( ../../QGLViewer/QGLViewer*.lib ) {
-    LIBPATH = ../../QGLViewer
+    exists( ../../QGLViewer/Release ) {
+      exists( ../../QGLViewer/Release/QGLViewer*.lib ) {
+        LIBPATH = ../../QGLViewer/Release
+      }
+    }
+
+    exists( ../../QGLViewer/QGLViewer*.lib ) {
+      LIBPATH = ../../QGLViewer
+    }
   }
 
   !isEmpty( QGLVIEWER_STATIC ) {

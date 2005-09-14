@@ -10,8 +10,10 @@ int main(int argc, char** argv)
   Viewer viewer;
   viewer.show();
 
+#if QT_VERSION < 0x040000
   // Set the viewer as the application's main widget.
   application.setMainWidget(&viewer);
+#endif
 
   // Run main loop.
   return application.exec();

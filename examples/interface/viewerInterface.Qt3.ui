@@ -1,8 +1,8 @@
 <!DOCTYPE UI><UI version="3.1" stdsetdef="1">
-<class>myInterface</class>
+<class>ViewerInterface</class>
 <widget class="QWidget">
     <property name="name">
-        <cstring>Form1</cstring>
+        <cstring>Interface</cstring>
     </property>
     <property name="geometry">
         <rect>
@@ -13,7 +13,7 @@
         </rect>
     </property>
     <property name="caption">
-        <string>Form1</string>
+        <string>Interface</string>
     </property>
     <grid>
         <property name="name">
@@ -164,7 +164,7 @@
     <connection>
         <sender>QuitButton</sender>
         <signal>released()</signal>
-        <receiver>Form1</receiver>
+        <receiver>Interface</receiver>
         <slot>close()</slot>
     </connection>
     <connection>

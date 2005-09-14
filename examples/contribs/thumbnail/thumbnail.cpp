@@ -102,7 +102,7 @@ void Viewer::init()
 
   thumbnail_ = true;
 
-  setKeyDescription(Key_T, "Toggles thumbnail display");
+  setKeyDescription(Qt::Key_T, "Toggles thumbnail display");
 }
 
 QString Viewer::helpString() const

@@ -509,9 +509,9 @@ sources to ensure a full compatibility with dependencies.
 <img src="../images/linux.png" width="49" height="54" align="middle" alt="linux"/>
 
 If you installed the RPM, the examples' source files are in
-<code>/usr/share/doc/QGLViewer/examples</code> and you have to copy the desired example(s)
-directories to a place where you have write permission.<br/>
-If you have downloaded the tarball instead, simply go to the <code>examples</code> directory. Then,
+<code>/usr/share/doc/QGLViewer/examples</code> (may have to be copied to a place where you have
+write permission). If you have downloaded the tarball instead, simply go to the
+<code>examples</code> directory. Then,
 </p>
 
 <pre>
@@ -523,7 +523,7 @@ If you have downloaded the tarball instead, simply go to the <code>examples</cod
 The optional <code>PREFIX, INCLUDE_DIR</code> and <code>LIB_DIR</code> parameters are those you used
 if you customized your <code><a href="../installUnix.html#linux">make install</a></code>. Use
 <code>QGLVIEWER_STATIC=1</code> to link with the static version of the library.
-These commands can also be typed in the <code>examples</code>'s main directory to compile <i>all</i> the examples.
+These commands can also be typed in the <code>examples</code>' main directory to compile <i>all</i> the examples.
 
 <p>
 You may be prompted with an <code>"error while loading shared libraries"</code> message when trying
@@ -598,7 +598,7 @@ style="color:red">*</span> icon. With Visual Studio 6.0, use <i>File-Open worksp
 
 Qt 2.3 users have to first edit the examples' <code>.pro</code> files (uncomment and remove end of
 file as explained. Remove <code>QT_DLL</code> from <code>DEFINES</code> for .NET). If no
-<code>Project created</code> dialog is displayed when you open the <code>.pro</code> , try to run
+<code>Project created</code> dialog is displayed when you open the <code>.pro</code>, try to run
 Visual with Administrator priviledges. With Qt 2.3, you also have to add <code>/GX /GR</code> in
 <i>Project-Settings-C-C++, Project options</i> before compilation and tune the include and lib
 paths:
@@ -619,10 +619,13 @@ where <code>QGLViewer.lib</code> is located.</li>
 </ul>
 
 <p>
-All this should be done automatically if you use a Qt 3.x version.
+All this should be done automatically if you use Qt version 3 or 4. Apply the same options to your
+own projects if you didn't start them from one of the examples.
 </p>
 
-See also the installation advices for <a href="../installWindows.html#qt">Qt-Windows</a> and <a href="../installWindows.html">libQGLViewer on Windows</a>.
+See also the installation advices for
+<a href="../installWindows.html#qt">Qt-Windows</a> and
+<a href="../installWindows.html">libQGLViewer on Windows</a>.
 
 <br/><br/>
 

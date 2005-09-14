@@ -42,9 +42,14 @@ private :
   enum SelectionMode { NONE, ADD, REMOVE };
   SelectionMode selectionMode_;
 
+#if QT_VERSION < 0x040000
   // Objects of the scene
   QValueVector<Sphere> sphere_;
-
   // ids of the selected objects
   QValueList<int> selection_;
+#else
+  QList<Sphere> sphere_;
+  QList<int> selection_;
+#endif
+
 };

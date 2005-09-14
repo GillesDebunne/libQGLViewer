@@ -14,5 +14,5 @@ CONFIG  += qt opengl warn_on release thread
 HEADERS  = thumbnail.h
 SOURCES  = thumbnail.cpp main.cpp
 
-include( ../examples.pri )
+include( ../../examples.pri )
 

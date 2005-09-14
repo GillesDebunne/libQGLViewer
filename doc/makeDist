@@ -63,14 +63,21 @@ function updateDoc()
       mv $f.tmp $f
     done
 
+    echo " - Patching QtKeyboardModifiers and QtMouseButtons"
+    for f in `ls *.html`
+    do
+      sed s%"QtKeyboardModifiers"%"Qt::KeyboardModifiers"%g $f > $f.tmp
+      sed s%"QtMouseButtons"%"Qt::MouseButtons"%g $f.tmp > $f
+    done
+
     echo " - Adding icon"
     for f in $(ls *.html)
     do
       sed /doxygen.css/a"<link rel=\"shortcut icon\" href=\"../images/qglviewer.ico\" type=\"image/x-icon\" /><link rel=\"icon\" href=\"../images/qglviewer.icon.png\" type=\"image/png\" />" $f > $f.tmp
       mv $f.tmp $f
     done
-    
-    cd -
+
+    cd - > /dev/null
 }
 
 echo " - Checking doxygen refManual"

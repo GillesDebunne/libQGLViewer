@@ -139,11 +139,19 @@ public:
   }
 
   inline void UnloadTexture( void )
-  {	myTexture.reset( );	}
+  {
+#if QT_VERSION < 0x040000
+    myTexture.reset( );
+#endif
+  }
 
   inline void UnloadDetailMap( void )
-  {	myDetailMap.reset( );	}
-
+  {
+#if QT_VERSION < 0x040000
+    myDetailMap.reset( );
+#endif
+  }
+  
   inline void DoMultitexturing( bool have )
   {	haveMultitexture= have;	}
 
@@ -163,7 +171,11 @@ public:
   {	return textures.data[type].load( filename ); }
 
   inline void UnloadTile( TEXTURETYPE type )
-  {	textures.data[type].reset( );	}
+  {
+#if QT_VERSION < 0x040000
+    textures.data[type].reset();
+#endif
+  }
 
   inline void UnloadAllTextures( void )
   {
@@ -174,7 +186,7 @@ public:
   }
 
   //gestion des fct. pourries de QIMAGE
-  inline void GetColor( QImage imageData, unsigned int x, unsigned  int y, unsigned char* Red, unsigned char* Green, unsigned char* Blue )
+  inline void GetColor( const QImage& imageData, unsigned int x, unsigned  int y, unsigned char* Red, unsigned char* Green, unsigned char* Blue )
   {
     QRgb colors = imageData.pixel((int)x,(int)y);
     *Red = (unsigned char)qRed(colors);
@@ -183,7 +195,7 @@ public:
   }
 
 
-  inline void SetColor( QImage imageData, unsigned int x, unsigned  int y, unsigned char Red, unsigned char Green, unsigned char Blue )
+  inline void SetColor( QImage& imageData, unsigned int x, unsigned  int y, unsigned char Red, unsigned char Green, unsigned char Blue )
   {
     imageData.setPixel( (int)x, (int)y, qRgb((int)Red ,(int)Green , (int)Blue ) );
   }

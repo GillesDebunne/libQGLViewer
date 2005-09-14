@@ -22,11 +22,12 @@ void Viewer::init()
   ratio = 1.0;
   background_ = true;
 
-  setKeyDescription(Key_L, "Loads a new background image");
-  setKeyDescription(Key_B, "Toggles background display");
+  setKeyDescription(Qt::Key_L, "Loads a new background image");
+  setKeyDescription(Qt::Key_B, "Toggles background display");
 
   loadImage();
   help();
+  qWarning("fin init"); 
 }
 
 void Viewer::draw()
@@ -86,8 +87,12 @@ void Viewer::drawBackground()
 
 void Viewer::loadImage()
 {
+#if QT_VERSION < 0x040000
   QString name = QFileDialog::getOpenFileName(".", "Images (*.png *.xpm *.jpg)", this, "Choose", "Select an image");
-
+#else
+  QString name = QFileDialog::getOpenFileName(this, "Select an image", ".", "Images (*.png *.xpm *.jpg)");
+#endif
+    
   // In case of Cancel
   if (name.isEmpty())
     return;
@@ -96,12 +101,16 @@ void Viewer::loadImage()
 
   if (img.isNull())
     {
-      cerr << "Unable to load " << name << ", unsupported file format" << endl;
+      qWarning("Unable to load file, unsupported file format");
       return;
     }
 
-  cout << "Loading " << name << ", " << img.width() << "x" << img.height() << " pixels" << endl;
-
+#if QT_VERSION < 0x040000
+  qWarning("Loading %s, %dx%d pixels", name.latin1(), img.width(), img.height());
+#else
+  qWarning("Loading %s, %dx%d pixels", name.toLatin1().constData(), img.width(), img.height());
+#endif
+    
   // 1E-3 needed. Just try with width=128 and see !
   int newWidth  = 1<<(int)(1+log(img.width() -1+1E-3) / log(2.0));
   int newHeight = 1<<(int)(1+log(img.height()-1+1E-3) / log(2.0));
@@ -111,7 +120,7 @@ void Viewer::loadImage()
 
   if ((img.width()!=newWidth) || (img.height()!=newHeight))
     {
-      cout << "Image size set to " << newWidth << "x" << newHeight << " pixels" << endl;
+      qWarning("Image size set to %dx%d pixels", newWidth, newHeight);
       img = img.copy(0, 0, newWidth, newHeight);
     }
 
@@ -141,7 +150,7 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 
 QString Viewer::helpString() const
 {
-  QString text("<h2>B a c k g r o u n d I m  a g e</h2>");
+  QString text("<h2>B a c k g r o u n d I m a g e</h2>");
   text += "This example is derivated from textureViewer.<br><br>";
   text += "It displays a background image in the viewer using a texture.<br><br>";
   text += "Press <b>L</b> to load a new image, and <b>B</b> to toggle the background display.";

@@ -17,4 +17,4 @@ SOURCES  = textureViewer.cpp main.cpp
 
 DISTFILES += *.png
 
-include( ../examples.pri )
+include( ../../examples.pri )

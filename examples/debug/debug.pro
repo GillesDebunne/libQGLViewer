@@ -13,8 +13,5 @@ include( ../examples.pri )
 
 # gmon benchmark options
 #QMAKE_CXXFLAGS_RELEASE += -pg
-QMAKE_CXXFLAGS += -fexceptions
-#QMAKE_CFLAGS_RELEASE   += -pg
-#QMAKE_CFLAGS_RELEASE   -= -fomit-frame-pointer
 #QMAKE_CXXFLAGS_RELEASE -= -fomit-frame-pointer
 #QMAKE_LFLAGS_RELEASE   = -pg

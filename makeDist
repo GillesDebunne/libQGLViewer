@@ -27,12 +27,20 @@ then
   exit
 fi
 
-
 ##################################################################
 ############        Checking version coherence        ############
 ##################################################################
 
 echo " - Checking version coherence"
+
+function checkError()
+{
+  if [[ "$?" -ne "0" ]]
+  then
+    echo "Error - $MSG"
+    exit 1
+  fi
+}
 
 function checkVersion()
 {
@@ -44,6 +52,13 @@ function checkVersion()
     cp /tmp/makeDist $FILE
   fi
 }
+
+grep ".moc4" QGLViewer/QGLViewer.pro > /dev/null
+if [[ "$?" -eq "0" ]]
+then
+  echo "Remove .moc4 hack in QGLViewer/QGLViewer.pro - Abort"
+  exit
+fi
 
 grep "Gilles Debunne <Gilles.Debunne@imag.fr> $version-$release" QGLViewer/qglviewer.spec > /dev/null
 if [[ "$?" -ne "0" ]]
@@ -139,7 +154,7 @@ then
   exit
 fi
 
-grep 'version="3.0"' QGLViewer/VRenderInterface.ui > /dev/null
+grep 'version="3.0"' QGLViewer/VRenderInterface.changethis.ui > /dev/null
 if [[ "$?" -ne "0" ]]
 then
  echo "No 3.0 version in QGLViewer/VRenderInterface.ui - Aborting"
@@ -389,8 +404,16 @@ done
 # html examples go to doc
 mv examples/html doc/examples
 
+#MSG="release.pri .." ; test `grep "\.\./\.\." examples/release.pri | wc -l` -eq 1 ; checkError
+
+for pro in "QGLViewer/QGLViewer.pro" "qglviewerplugin/designerPlugin.pro"
+  do
+  sed /"NOT +IN +DISTRIBUTION +BEGIN"/,/"NOT +IN +DISTRIBUTION +END"/d $pro > /tmp/notInDistrib
+  mv /tmp/notInDistrib $pro
+done
+
 mv qglviewerplugin designerPlugin
-grep -v "^include" designerPlugin/designerPlugin.pro > /tmp/designer.pro
+grep -v "^include.*examples.pri" designerPlugin/designerPlugin.pro > /tmp/designer.pro
 sed s%"\.\./\.\."%"\.\."% examples/release.pri > /tmp/release.pri
 cat /tmp/designer.pro /tmp/release.pri > designerPlugin/designerPlugin.pro
 
@@ -412,9 +435,8 @@ do
     then
       continue
     fi
-    grep -v "^include" $f > $f.tmp
-    cat $f.tmp release.pri > $f
-    rm $f.tmp
+    grep -v "^include.*examples.pri" $f | sed /"NOT +IN +DISTRIBUTION +BEGIN"/,/"NOT +IN +DISTRIBUTION +END"/d > /tmp/$f.tmp
+    cat /tmp/$f.tmp release.pri > $f
   done
   rm release.pri
 

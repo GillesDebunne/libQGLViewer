@@ -5,7 +5,6 @@
 
 #include <qevent.h>
 #include <qdatetime.h>
-#include <qvaluevector.h>
 
 class Viewer;
 class ReplayInterface;
@@ -234,13 +233,21 @@ private:
   int viewerWidth_, viewerHeight_;
 
   // R e c o r d s
+#if QT_VERSION < 0x040000
   QValueVector<Event> eventRecords_;
+#else
+  QList<Event> eventRecords_;
+#endif
   int eventIndex_;
   QTime time_;
 
   // I n t e r n a l   d a t a
   bool isRecording_;
+#if QT_VERSION < 0x040000
   QValueVector<PredefinedSettings> predefinedSettings_;
+#else
+  QList<PredefinedSettings> predefinedSettings_;
+#endif
   int nextSnapshotTime_;
   int nextReplayEvent_;
   bool nextEventIsSaveSnapshot_;

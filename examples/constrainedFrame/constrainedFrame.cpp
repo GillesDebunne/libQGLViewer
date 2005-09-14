@@ -54,25 +54,36 @@ void Viewer::init()
   setManipulatedFrame(frame);
   frame->setConstraint(constraints[activeConstraint]);
 
-  // Preserve CAMERA bindings, see setHandlerStateKey documentation.
-  setHandlerStateKey(QGLViewer::CAMERA, Qt::AltButton);
+#if QT_VERSION < 0x040000
+  // Preserve CAMERA bindings, see setHandlerKeyboardModifiers documentation.
+  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::AltButton);
   // The frames can be move without any key pressed
-  setHandlerStateKey(QGLViewer::FRAME, Qt::NoButton);
+  setHandlerKeyboardModifiers(QGLViewer::FRAME, Qt::NoButton);
   // The camera can always be moved with the Control key.
-  setHandlerStateKey(QGLViewer::CAMERA, Qt::ControlButton);
+  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::ControlButton);
 
   setMouseBinding(Qt::ShiftButton | Qt::LeftButton,  QGLViewer::FRAME, QGLViewer::ROTATE,    false);
   setMouseBinding(Qt::ShiftButton | Qt::RightButton, QGLViewer::FRAME, QGLViewer::TRANSLATE, false);
   setMouseBinding(Qt::ShiftButton | Qt::MidButton,   QGLViewer::FRAME, QGLViewer::ZOOM,      false);
   setWheelBinding(Qt::ShiftButton,                   QGLViewer::FRAME, QGLViewer::ZOOM,      false);
+#else
+  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::AltModifier);
+  setHandlerKeyboardModifiers(QGLViewer::FRAME, Qt::NoModifier);
+  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::ControlModifier);
+
+  setMouseBinding(Qt::ShiftModifier | Qt::LeftButton,  QGLViewer::FRAME, QGLViewer::ROTATE,    false);
+  setMouseBinding(Qt::ShiftModifier | Qt::RightButton, QGLViewer::FRAME, QGLViewer::TRANSLATE, false);
+  setMouseBinding(Qt::ShiftModifier | Qt::MidButton,   QGLViewer::FRAME, QGLViewer::ZOOM,      false);
+  setWheelBinding(Qt::ShiftModifier,                   QGLViewer::FRAME, QGLViewer::ZOOM,      false);
+#endif
   
   setAxisIsDrawn();
 
-  setKeyDescription(Key_G, "Change translation constraint direction");
-  setKeyDescription(Key_D, "Change rotation constraint direction");
-  setKeyDescription(Key_Space, "Change constraint reference");
-  setKeyDescription(Key_T, "Change translation constraint type");
-  setKeyDescription(Key_R, "Change rotation constraint type");
+  setKeyDescription(Qt::Key_G, "Change translation constraint direction");
+  setKeyDescription(Qt::Key_D, "Change rotation constraint direction");
+  setKeyDescription(Qt::Key_Space, "Change constraint reference");
+  setKeyDescription(Qt::Key_T, "Change translation constraint type");
+  setKeyDescription(Qt::Key_R, "Change rotation constraint type");
 
   restoreStateFromFile();
   help();

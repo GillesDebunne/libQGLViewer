@@ -45,32 +45,32 @@ documentation</a> for details.
 The following functions are illustrated in the <a href="examples/keyboardAndMouse.html">keyboardAndMouse</a> example.
 <ul>
 <li>
-To bind a <code>ClickAction</code>, use <code>setMouseBinding(Qt::ButtonState, ClickAction,
-doubleClick=false, buttonBefore=Qt::NoButton)</code>:
+To bind a <code>ClickAction</code>, use <code>setMouseBinding(uint, ClickAction,
+doubleClick=false, buttonsBefore=Qt::NoButton)</code>:
 <pre>
 // Click on the right button to make a selection
 setMouseBinding(Qt::RightButton, SELECT);
 
 // Pressing the middle button, then double clicking the right button, while pressing Alt shows the entire scene. Cool huh ?
-setMouseBinding(Qt::AltButton | Qt::RightButton, SHOW_ENTIRE_SCENE, true, Qt::MidButton);
+setMouseBinding(Qt::ALT + Qt::RightButton, SHOW_ENTIRE_SCENE, true, Qt::MidButton);
 </pre>
 </li>
 <li>
-To bind a <code>MouseAction</code>, use <code>setMouseBinding(Qt::ButtonState, MouseHandler,
+To bind a <code>MouseAction</code>, use <code>setMouseBinding(int, MouseHandler,
 MouseAction, withConstraint=true)</code> (same function name as above, but different parameters):
 <pre>
 // Left and right buttons together make a camera zoom : emulates a mouse third button if needed.
-setMouseBinding(Qt::LeftButton | Qt::RightButton, CAMERA, ZOOM);
+setMouseBinding(Qt::LeftButton + Qt::RightButton, CAMERA, ZOOM);
 
 // Alt + Shift + Left button rotates the manipulatedFrame().
-setMouseBinding(Qt::AltButton | Qt::ShiftButton | Qt::LeftButton, FRAME, ROTATE);
+setMouseBinding(Qt::ALT + Qt::SHIFT + Qt::LeftButton, FRAME, ROTATE);
 </pre>
 </li>
 <li>
-And finally, for the mouse wheel associated action, use <code>setWheelBinding(Qt::ButtonState, MouseHandler, MouseAction, withConstraint=true)</code>:
+And finally, for the mouse wheel associated action, use <code>setWheelBinding(Qt::KeyboardModifiers, MouseHandler, MouseAction, withConstraint=true)</code>:
 <pre>
 // Alt + wheel moves the camera forward.
-setWheelBinding(Qt::AltButton, CAMERA, MOVE_FORWARD);
+setWheelBinding(Qt::ALT, CAMERA, MOVE_FORWARD);
 </pre>
 </li>
 </ul>
@@ -278,9 +278,9 @@ the <code>Mouse</code> tab of the help window (press <code>H</code> for help).
 
 <p>
 The <code><b>CAMERA</b></code> and <code><b>FRAME</b></code> default bindings are essentially
-identical: You simply have to press the <code>Control</code> state key to move the
-<code><b>FRAME</b></code> instead of the <code><b>CAMERA</b></code>. This default state key can be
-modified using <code>setHandlerStateKey()</code>.
+identical: You simply have to press the <code>Control</code> keyboard modifier to move the
+<code><b>FRAME</b></code> instead of the <code><b>CAMERA</b></code>. This modifier key can be
+modified using <code>setHandlerKeyboardModifiers()</code>.
 </p>
 
 Also note that a double click basically automates the normal mouse action.

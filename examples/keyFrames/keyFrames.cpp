@@ -26,23 +26,22 @@ Viewer::Viewer()
       kfi_.addKeyFrame(keyFrame_[i]);
     }
 
-  connect(&kfi_, SIGNAL(interpolated()), SLOT(updateGL()));
-
-  kfi_.startInterpolation();
-
   currentKF_ = 0;
   setManipulatedFrame(keyFrame_[currentKF_]);
 
   // Enable direct frame manipulation when the mouse hovers.
   setMouseTracking(true);
 
-  setKeyDescription(Key_Plus, "Increases interpolation speed");
-  setKeyDescription(Key_Minus, "Decreases interpolation speed");
-  setKeyDescription(Key_Left, "Selects previous key frame");
-  setKeyDescription(Key_Right, "Selects next key frame");
-  setKeyDescription(Key_Return, "Starts/stops interpolation");
+  setKeyDescription(Qt::Key_Plus, "Increases interpolation speed");
+  setKeyDescription(Qt::Key_Minus, "Decreases interpolation speed");
+  setKeyDescription(Qt::Key_Left, "Selects previous key frame");
+  setKeyDescription(Qt::Key_Right, "Selects next key frame");
+  setKeyDescription(Qt::Key_Return, "Starts/stops interpolation");
 
   help();
+
+  connect(&kfi_, SIGNAL(interpolated()), SLOT(updateGL()));
+  kfi_.startInterpolation();
 }
 
 QString Viewer::helpString() const
@@ -53,10 +52,10 @@ QString Viewer::helpString() const
   text += "during interpolation.<br><br>";
   text += "Note that the camera holds 12 such keyFrameInterpolators, binded to F1-F12. Press <b>Alt+Fx</b> to define new key ";
   text += "frames, and then press <b>Fx</b> to make the camera follow the path. Press <b>C</b> to visualize these paths.<br><br>";
-  text += "Use the left and right arrows to change the manipulated frame.<br><br>";
   text += "<b>+/-</b> changes the interpolation speed. Negative values are allowed.<br><br>";
   text += "<b>Return</b> starts-stops the interpolation.<br><br>";
-  text += "Press <b>Control</b> to move a KeyFrame or hover over it.";
+  text += "Use the left and right arrows to change the manipulated KeyFrame. ";
+  text += "Press <b>Control</b> to move it or simply hover over it.";
   return text;
 }
 
@@ -93,21 +92,24 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 
 void Viewer::draw()
 {
+  // Draw interpolated frame
   glPushMatrix();
   glMultMatrixd(kfi_.frame()->matrix());
   drawAxis(0.3);
   glPopMatrix();
 
-  kfi_.drawPath(5, 30);
+  kfi_.drawPath(5, 10);
 
   for (int i=0; i<nbKeyFrames; ++i)
     {
       glPushMatrix();
       glMultMatrixd(kfi_.keyFrame(i).matrix());
+
       if ((i == currentKF_) || (keyFrame_[i]->grabsMouse()))
 	drawAxis(0.4);
       else
 	drawAxis(0.2);
+      
       glPopMatrix();
     }
 }
