@@ -3939,6 +3939,8 @@ bool QGLViewer::restoreFromFile(const QString& fileName)
  Use glReadBuffer() to select which buffer is copied into the texture. See also glPixelTransfer(),
  glPixelZoom() and glCopyPixel() for pixel color transformations during copy.
 
+ Call makeCurrent() before this method to make the OpenGL context active if needed.
+
  \note The \c GL_DEPTH_COMPONENT format may not be supported by all hardware. It may sometimes be
  emulated in software, resulting in poor performances.
 
