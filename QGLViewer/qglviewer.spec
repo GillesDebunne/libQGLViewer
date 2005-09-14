@@ -136,6 +136,10 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+
+* Wed Sep 14 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.1.0-0
+- Now runs with Qt version 2, 3 and 4. Dual licensing.
+
 * Wed Aug 10 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.0.1-0
 - Bounding box warning when viewing EPS fixed.  
 

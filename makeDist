@@ -53,13 +53,6 @@ function checkVersion()
   fi
 }
 
-grep ".moc4" QGLViewer/QGLViewer.pro > /dev/null
-if [[ "$?" -eq "0" ]]
-then
-  echo "Remove .moc4 hack in QGLViewer/QGLViewer.pro - Abort"
-  exit
-fi
-
 grep "Gilles Debunne <Gilles.Debunne@imag.fr> $version-$release" QGLViewer/qglviewer.spec > /dev/null
 if [[ "$?" -ne "0" ]]
 then
@@ -154,17 +147,17 @@ then
   exit
 fi
 
-grep 'version="3.0"' QGLViewer/VRenderInterface.changethis.ui > /dev/null
+grep 'version="3.0"' QGLViewer/VRenderInterface.Qt3.ui > /dev/null
 if [[ "$?" -ne "0" ]]
 then
  echo "No 3.0 version in QGLViewer/VRenderInterface.ui - Aborting"
  exit
 fi
 
-grep 'version="3.1"' examples/interface/myInterface.ui > /dev/null
+grep 'version="3.1"' examples/interface/viewerInterface.Qt3.ui > /dev/null
 if [[ "$?" -ne "0" ]]
 then
- echo "No 3.0 version in examples/interface/myInterface.ui - Aborting"
+ echo "No 3.1 version in examples/interface/viewerInterface.Qt3.ui - Aborting"
  exit
 fi
 
