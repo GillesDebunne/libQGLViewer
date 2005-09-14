@@ -142,7 +142,7 @@ win32 {
     DEFINES *= QGLVIEWER_STATIC
   }
 
-  NUMBERED_VERSION = QGViewer200
+  NUMBERED_VERSION = QGViewer201
   exists( $${LIBPATH}/$${NUMBERED_VERSION}.lib ) {
     LIBS *= $${LIBPATH}/$${NUMBERED_VERSION}.lib
   } else {

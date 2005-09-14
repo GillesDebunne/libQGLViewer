@@ -414,7 +414,7 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
       QString filename;
 #if QT_VERSION < 0x030000
       if (openSnapshotFormatDialog())
-        filename = QFileDialog::getSaveFileName(snapshotFilename(), FDFormatString[snapshotFormat()]+";;All files (*.*)", this);
+        filename = QFileDialog::getSaveFileName(snapshotFilename(), FDFormatString[snapshotFormat()]+";;All files (*.*)", this, "Save dialog");
       else
         return;
 #else

@@ -1,8 +1,8 @@
 #!/bin/sh
 
 libName="libQGLViewer"
-version="2.0.0"
-release="3"
+version="2.0.1"
+release="0"
 
 version_major=`echo $version | cut -d"." -f1`
 version_minor=`echo $version | cut -d"." -f2`
@@ -184,7 +184,7 @@ then
     echo " - Copy examples"
     test -d $WebDir/examples || rm -rf $WebDir/examples
     mkdir -p $WebDir/examples
-    cp html/* $WebDir/examples
+    cp html/*.html $WebDir/examples
   cd -
 
   cd doc
@@ -478,6 +478,9 @@ cd doc
   done
 cd -
 
+echo " - All files set in $tmpDir"
+#exit
+
 ##################################################################
 ############                Create RPM                ############
 ##################################################################
@@ -681,7 +684,7 @@ fi
 
 cd $WebDir/src
 rm md5sum.txt
-md5sum `find . -type f` > md5sum.txt
+md5sum `find . -type f | sort` > md5sum.txt
 cd -
 exit
 fi # $1=rpm

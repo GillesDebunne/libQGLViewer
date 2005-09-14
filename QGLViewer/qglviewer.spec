@@ -1,10 +1,10 @@
 %define version_major 2
 %define version_minor 0
-%define version_patch 0
+%define version_patch 1
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_patch}
-Release:	 3
+Release:	 0
 
 Summary:	Qt based OpenGL generic 3D viewer library.
 License:	GPL
@@ -136,6 +136,15 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Wed Aug 10 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.0.1-0
+- Bounding box warning when viewing EPS fixed.  
+
+* Thu Jul 25 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.0.0-5
+- Unclosed parenthesis fixed in saveSnapshot with Qt 2.3.
+
+* Thu Jul 21 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.0.0-4
+- Division by 0 in manipulatedFrame fixed. terrain and agora examples fixed.
+
 * Thu Jul 7 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.0.0-3
 - Patches for Qt 3.1, 64 bits architectures and gcc 4.0 compilation. 
 

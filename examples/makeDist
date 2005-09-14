@@ -516,7 +516,7 @@ write permission). If you have downloaded the tarball instead, simply go to the
 
 <pre>
 > cd exampleDirectory
-> qmake [PREFIX=...] [INCLUDE_DIR=...] [LIB_DIR=...] [QGLVIEWER_STATIC=1]
+> qmake [PREFIX=...] [INCLUDE_DIR=...] [LIB_DIR=...] [QGLVIEWER_STATIC=yes]
 > make
 </pre>
 
@@ -596,7 +596,7 @@ style="color:red">*</span> icon. With Visual Studio 6.0, use <i>File-Open worksp
 <code>.dsp</code> generated file.
 </p>
 
-Qt 2.3 users have to first edit the examples' <code>.pro</code> files (uncomment and remove end of
+Qt 2.3 users have to first edit the examples' <code>.pro</code> files (uncomment two lines and remove end of
 file as explained. Remove <code>QT_DLL</code> from <code>DEFINES</code> for .NET). If no
 <code>Project created</code> dialog is displayed when you open the <code>.pro</code>, try to run
 Visual with Administrator priviledges. With Qt 2.3, you also have to add <code>/GX /GR</code> in

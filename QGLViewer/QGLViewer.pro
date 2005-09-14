@@ -15,7 +15,7 @@
 TEMPLATE = lib
 CONFIG  *= qt opengl warn_on release thread create_prl
 TARGET   = QGLViewer
-VERSION  = 2.0.0
+VERSION  = 2.0.1
 
 HEADERS  = qglviewer.h \
 	   camera.h \

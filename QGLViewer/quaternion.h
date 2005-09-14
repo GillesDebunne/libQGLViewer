@@ -41,7 +41,7 @@ namespace qglviewer {
 
   The Quaternion is always normalized, so that its inverse() is actually its conjugate.
 
-  See also the Vec and Frame class documentations.
+  See also the Vec and Frame classes' documentations.
   \nosubgrouping */
 class QGLVIEWER_EXPORT Quaternion
 {
