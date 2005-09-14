@@ -3,7 +3,11 @@
 using namespace qglviewer;
 
 // Static private variable
+#if QT_VERSION >= 0x040000
+QList<MouseGrabber*> MouseGrabber::MouseGrabberPool_;
+#else
 QPtrList<MouseGrabber> MouseGrabber::MouseGrabberPool_;
+#endif
 
 /*! Default constructor.
 
@@ -35,7 +39,11 @@ has no effect. */
 void MouseGrabber::removeFromMouseGrabberPool()
 {
   if (isInMouseGrabberPool())
+#if QT_VERSION >= 0x040000
+    MouseGrabber::MouseGrabberPool_.removeAll(const_cast<MouseGrabber*>(this));
+#else
     MouseGrabber::MouseGrabberPool_.removeRef(this);
+#endif
 }
 
 /*! Clears the MouseGrabberPool().
@@ -48,6 +56,11 @@ void MouseGrabber::removeFromMouseGrabberPool()
  (use this only if you're sure of what you do). */
 void MouseGrabber::clearMouseGrabberPool(bool autoDelete)
 {
+#if QT_VERSION >= 0x040000
+  if (autoDelete)
+    qDeleteAll(MouseGrabber::MouseGrabberPool_);
+#else
   MouseGrabber::MouseGrabberPool_.setAutoDelete(autoDelete);
+#endif
   MouseGrabber::MouseGrabberPool_.clear();
 }

@@ -1,10 +1,10 @@
- #ifndef QGLVIEWER_VEC_H
+#ifndef QGLVIEWER_VEC_H
 #define QGLVIEWER_VEC_H
 
 #include <math.h>
 #include <iostream>
 #include <qdom.h>
-#include "qapplication.h"
+// #include <qapplication.h>
 
 // Included by all files as vec.h is at the end of the include hierarchy
 #include "config.h" // Specific configuration options.

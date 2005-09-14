@@ -15,12 +15,13 @@ using namespace qglviewer;
 Camera::Camera()
   : fieldOfView_(M_PI/4.0f)
 {
-  // #CONNECTION# default values identical in initFromDOMElement.
-
+  // #CONNECTION# Camera copy constructor
   interpolationKfi_ = new KeyFrameInterpolator;
   // Requires the interpolationKfi_
   setFrame(new ManipulatedCameraFrame());
 
+  // #CONNECTION# All these default values identical in initFromDOMElement.
+  
   // Requires fieldOfView() to define focusDistance()
   setSceneRadius(1.0);
 
@@ -44,11 +45,13 @@ Camera::Camera()
   setIODistance(0.062f);
   setPhysicalDistanceToScreen(0.5f);
   setPhysicalScreenWidth(0.4f);
+  // focusDistance is set from setFieldOfView()
 
+  // #CONNECTION# Camera copy constructor
   for (unsigned short j=0; j<16; ++j)
     {
       modelViewMatrix_[j] = ((j%5 == 0) ? 1.0 : 0.0);
-      // #CONNECTION# computeProjectionMatrix() which assumes 0.0 almost everywhere.
+      // #CONNECTION# computeProjectionMatrix() is lazy and assumes 0.0 almost everywhere.
       projectionMatrix_[j] = 0.0;
     }
   computeProjectionMatrix();
@@ -67,8 +70,20 @@ Camera::~Camera()
 
 /*! Copy constructor. Performs a deep copy using operator=(). */
 Camera::Camera(const Camera& camera)
-  : QObject()
+ : QObject()
 {
+  // #CONNECTION# Camera constructor
+  interpolationKfi_ = new KeyFrameInterpolator;
+  // Requires the interpolationKfi_
+  setFrame(new ManipulatedCameraFrame());
+
+  for (unsigned short j=0; j<16; ++j)
+    {
+      modelViewMatrix_[j] = ((j%5 == 0) ? 1.0 : 0.0);
+      // #CONNECTION# computeProjectionMatrix() is lazy and assumes 0.0 almost everywhere.
+      projectionMatrix_[j] = 0.0;
+    }
+
   (*this)=camera;
 }
 
@@ -242,8 +257,16 @@ float Camera::distanceToSceneCenter() const
 
  These values are only valid and used when the Camera is of type() Camera::ORTHOGRAPHIC. They are
  expressed in OpenGL units and are used by loadProjectionMatrix() to define the projection matrix
- using: \code \c glOrtho( -halfWidth, halfWidth, -halfHeight, halfHeight, zNear(), zFar() )
- \endcode */
+ using:
+ \code
+ glOrtho( -halfWidth, halfWidth, -halfHeight, halfHeight, zNear(), zFar() )
+ \endcode
+
+ These values are proportional to the Camera (z projected) distance to the revolveAroundPoint().
+ When zooming on the object, the Camera is translated forward \e and its frustum is narrowed, making
+ the object appear bigger on screen, as intuitively expected.
+
+ Overload this method to change this behavior if desired. */
 void Camera::getOrthoWidthHeight(GLdouble& halfWidth, GLdouble& halfHeight) const
 {
   const float dist = orthoCoef_ * fabs(cameraCoordinatesOf(revolveAroundPoint()).z);
@@ -267,9 +290,9 @@ void Camera::getOrthoWidthHeight(GLdouble& halfWidth, GLdouble& halfHeight) cons
  Use getProjectionMatrix() to retrieve this matrix. Overload loadProjectionMatrix() if you want your
  Camera to use an exotic projection matrix.
 
- You must call this method if your Camera is not associated with a QGLViewer and is used for
- offscreen computations ((un)projectedCoordinatesOf() for instance). loadProjectionMatrix() does it
- otherwise. */
+ \note You must call this method if your Camera is not associated with a QGLViewer and is used for
+ offscreen computations (using (un)projectedCoordinatesOf() for instance). loadProjectionMatrix()
+ does it otherwise. */
 void Camera::computeProjectionMatrix() const
 {
   const float ZNear = zNear();
@@ -308,14 +331,14 @@ void Camera::computeProjectionMatrix() const
 
 /*! Computes the modelView matrix associated with the Camera's position() and orientation().
 
- This matrix converts from the world coordinates system to the Camera coordinates system, and is
- applied just before the projection matrix when points are projected on screen.
+ This matrix converts from the world coordinates system to the Camera coordinates system, so that
+ coordinates can then be projected on screen using the projection matrix (see computeProjectionMatrix()).
 
  Use getModelViewMatrix() to retrieve this matrix.
 
- You must call this method if your Camera is not associated with a QGLViewer and is used for
- offscreen computations ((un)projectedCoordinatesOf() for instance). loadModelViewMatrix() does it
- otherwise. */
+ \note You must call this method if your Camera is not associated with a QGLViewer and is used for
+ offscreen computations (using (un)projectedCoordinatesOf() for instance). loadModelViewMatrix()
+ does it otherwise. */
 void Camera::computeModelViewMatrix() const
 {
   const Quaternion q = frame()->orientation();
@@ -869,7 +892,7 @@ void Camera::fitSphere(const Vec& center, float radius)
       {
 	const float yview = radius / sin(fieldOfView()/2.0);
 	const float xview = radius / sin(horizontalFieldOfView()/2.0);
-	distance = QMAX(xview,yview);
+	distance = qMax(xview,yview);
 	break;
       }
     case Camera::ORTHOGRAPHIC :
@@ -886,8 +909,8 @@ void Camera::fitSphere(const Vec& center, float radius)
   visible, using fitSphere(). */
 void Camera::fitBoundingBox(const Vec& min, const Vec& max)
 {
-  float diameter = QMAX(fabs(max[1]-min[1]), fabs(max[0]-min[0]));
-  diameter = QMAX(fabs(max[2]-min[2]), diameter);
+  float diameter = qMax(fabs(max[1]-min[1]), fabs(max[0]-min[0]));
+  diameter = qMax(fabs(max[2]-min[2]), diameter);
   fitSphere(0.5*(min+max), 0.5*diameter);
 }
 
@@ -921,7 +944,7 @@ void Camera::fitScreenRegion(const QRect& rectangle)
       {
 	const float distX = (pointX-newCenter).norm() / sin(horizontalFieldOfView()/2.0);
 	const float distY = (pointY-newCenter).norm() / sin(fieldOfView()/2.0);
-	distance = QMAX(distX, distY);
+	distance = qMax(distX, distY);
 	break;
       }
     case Camera::ORTHOGRAPHIC :
@@ -930,7 +953,7 @@ void Camera::fitScreenRegion(const QRect& rectangle)
 	//#CONNECTION# getOrthoWidthHeight
 	const float distX = (pointX-newCenter).norm() / orthoCoef_ / ((aspectRatio() < 1.0) ? 1.0 : aspectRatio());
 	const float distY = (pointY-newCenter).norm() / orthoCoef_ / ((aspectRatio() < 1.0) ? 1.0/aspectRatio() : 1.0);
-	distance = dist + QMAX(distX, distY);
+	distance = dist + qMax(distX, distY);
 	break;
       }
     }
@@ -1293,7 +1316,7 @@ KeyFrameInterpolator* Camera::keyFrameInterpolator(int i) const
  \endcode
 
  \note These connections are done automatically when a Camera is attached to a QGLViewer, or when a
- new KeyFrameInterpolator is defined using the QGLViewer::addKeyFrameStateKey() and
+ new KeyFrameInterpolator is defined using the QGLViewer::addKeyFrameKeyboardModifiers() and
  QGLViewer::pathKey() (default is Alt+F[1-12]). See the <a href="../keyboard.html">keyboard page</a>
  for details. */
 void Camera::setKeyFrameInterpolator(int i, KeyFrameInterpolator* const kfi)
@@ -1311,7 +1334,7 @@ single keyFrame). Use playPath() to make the Camera play the keyFrame path (resp
 the point of view). Use deletePath() to clear the path.
 
 The default keyboard shortcut for this method is Alt+F[1-12]. Set QGLViewer::pathKey() and
-QGLViewer::addKeyFrameStateKey().
+QGLViewer::addKeyFrameKeyboardModifiers().
 
 If you use directly this method and the keyFrameInterpolator(i) does not exist, a new one is
 created. Its KeyFrameInterpolator::interpolated() signal should then be connected to the
@@ -1331,7 +1354,7 @@ void Camera::addKeyFrameToPath(int i)
  This method silently ignores undefined (empty) paths (see keyFrameInterpolator()).
 
  The default keyboard shortcut for this method is F[1-12]. Set QGLViewer::pathKey() and
- QGLViewer::playPathStateKey(). */
+ QGLViewer::playPathKeyboardModifiers(). */
 void Camera::playPath(int i)
 {
   if (kfi_.contains(i))
@@ -1385,7 +1408,11 @@ void Camera::deletePath(int i)
 void Camera::drawAllPaths()
 {
   for (QMap<int, KeyFrameInterpolator*>::ConstIterator it = kfi_.begin(), end=kfi_.end(); it != end; ++it)
+#if QT_VERSION >= 0x040000
+    (it.value())->drawPath(3, 5, sceneRadius());
+#else
     (it.data())->drawPath(3, 5, sceneRadius());
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1445,7 +1472,11 @@ QDomElement Camera::domElement(const QString& name, QDomDocument& document) cons
   // KeyFrame paths
   for (QMap<int, KeyFrameInterpolator*>::ConstIterator it = kfi_.begin(), end=kfi_.end(); it != end; ++it)
     {
+#if QT_VERSION >= 0x040000
+      QDomElement kfNode = (it.value())->domElement("KeyFrameInterpolator", document);
+#else
       QDomElement kfNode = (it.data())->domElement("KeyFrameInterpolator", document);
+#endif
       kfNode.setAttribute("index", QString::number(it.key()));
       de.appendChild(kfNode);
     }

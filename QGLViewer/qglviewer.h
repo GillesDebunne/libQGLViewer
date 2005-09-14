@@ -2,13 +2,22 @@
 #define QGLVIEWER_QGLVIEWER_H
 
 #include "camera.h"
-#include "qmap.h"
+#include <qmap.h>
 
 class QTabWidget;
 
 namespace qglviewer {
   class MouseGrabber;
 }
+
+#if QT_VERSION >= 0x040000
+  // Qt::ButtonState was split into Qt::KeyboardModifiers and Qt::MouseButtons in Qt 4.
+# define QtKeyboardModifiers Qt::KeyboardModifiers
+# define QtMouseButtons Qt::MouseButtons
+#else
+# define QtKeyboardModifiers Qt::ButtonState
+# define QtMouseButtons Qt::ButtonState
+#endif
 
 /*! \brief A versatile 3D OpenGL viewer based on QGLWidget.
  \class QGLViewer qglviewer.h QGLViewer/qglviewer.h
@@ -38,13 +47,15 @@ class QGLVIEWER_EXPORT QGLViewer : public QGLWidget
   Q_OBJECT
 
 public:
-  explicit QGLViewer(QWidget* parent=NULL, const char* name=0,
-		     const QGLWidget* shareWidget=0, WFlags flags=0);
-
-  explicit QGLViewer(const QGLFormat& format, QWidget* parent=0,const char* name=0,
-		     const QGLWidget* shareWidget=0, WFlags flags=0);
-
-  QGLViewer(QGLContext* context, QWidget* parent, const char* name=0, const QGLWidget* shareWidget=0, WFlags flags=0);
+#if QT_VERSION < 0x040000 || defined QT3_SUPPORT
+  explicit QGLViewer(QWidget* parent=NULL, const char* name=0, const QGLWidget* shareWidget=0, Qt::WFlags flags=0);
+  explicit QGLViewer(const QGLFormat& format, QWidget* parent=0,const char* name=0, const QGLWidget* shareWidget=0, Qt::WFlags flags=0);
+  QGLViewer(QGLContext* context, QWidget* parent, const char* name=0, const QGLWidget* shareWidget=0, Qt::WFlags flags=0);
+#else
+  explicit QGLViewer(QWidget* parent=0, const QGLWidget* shareWidget=0, Qt::WFlags flags=0);
+  explicit QGLViewer(QGLContext *context, QWidget* parent=0, const QGLWidget* shareWidget=0, Qt::WFlags flags=0);
+  explicit QGLViewer(const QGLFormat& format, QWidget* parent=0, const QGLWidget* shareWidget=0, Qt::WFlags flags=0);
+#endif
 
   virtual ~QGLViewer();
 
@@ -72,6 +83,9 @@ public:
   possibly displayed text, cleaning display. Default value is \c true. */
   bool textIsEnabled() const { return textIsEnabled_; };
 
+  /*! Returns \c true if a gray-scale image of the zBuffer is displayed on screen.
+
+  Set by setZBufferIsDisplayed(). Default value is \p false.*/
   bool zBufferIsDisplayed() const { return zBufferIsDisplayed_; }
 
   /*! Returns \c true if the camera() is being edited in the viewer.
@@ -147,9 +161,9 @@ public:
   See also backgroundColor(). */
   QColor foregroundColor() const { return foregroundColor_; };
 public slots:
-  /*! Sets the backgroundColor() of the viewer and calls \c qglClearColor(). See also
+/*! Sets the backgroundColor() of the viewer and calls \c qglClearColor(). See also
   setForegroundColor(). */
-  void setBackgroundColor(const QColor& color) { backgroundColor_=color; qglClearColor(color); };
+void setBackgroundColor(const QColor& color) { backgroundColor_=color; qglClearColor(color); };
   /*! Sets the foregroundColor() of the viewer, used to draw visual hints. See also setBackgroundColor(). */
   void setForegroundColor(const QColor& color) { foregroundColor_ = color; };
   //@}
@@ -181,11 +195,11 @@ public:
   qglviewer::Vec sceneCenter() const { return camera()->sceneCenter(); }
 
 public slots:
-  /*! Sets the sceneRadius().
+/*! Sets the sceneRadius().
 
-  The camera() qglviewer::Camera::flySpeed() is set to 1% of this value by this method. Simple
-  wrapper around camera()->setSceneRadius(). */
-  void setSceneRadius(float radius) { camera()->setSceneRadius(radius); }
+The camera() qglviewer::Camera::flySpeed() is set to 1% of this value by this method. Simple
+wrapper around camera()->setSceneRadius(). */
+void setSceneRadius(float radius) { camera()->setSceneRadius(radius); }
 
   /*! Sets the sceneCenter(), defined in world coordinates.
 
@@ -228,7 +242,7 @@ public:
   qglviewer::ManipulatedFrame* manipulatedFrame() const { return manipulatedFrame_; };
 
 public slots:
-  void setCamera(qglviewer::Camera* const camera);
+void setCamera(qglviewer::Camera* const camera);
   void setManipulatedFrame(qglviewer::ManipulatedFrame* frame);
   //@}
 
@@ -237,21 +251,21 @@ public slots:
   //@{
 public:
   /*! Returns the current qglviewer::MouseGrabber, or \c NULL if no qglviewer::MouseGrabber
-  currently grabs mouse events.
+    currently grabs mouse events.
 
-  When qglviewer::MouseGrabber::grabsMouse(), the different mouse events are sent to the
-  mouseGrabber() instead of their usual targets (camera() or manipulatedFrame()).
+    When qglviewer::MouseGrabber::grabsMouse(), the different mouse events are sent to the
+    mouseGrabber() instead of their usual targets (camera() or manipulatedFrame()).
 
-  See the qglviewer::MouseGrabber documentation for details on MouseGrabber's mode of operation.
+    See the qglviewer::MouseGrabber documentation for details on MouseGrabber's mode of operation.
 
-  In order to use MouseGrabbers, you need to enable mouse tracking (so that mouseMoveEvent() is
-  called even when no mouse button is pressed). Add this line in init() or in your viewer
-  constructor:
-  \code
-  setMouseTracking(true);
-  \endcode
-  Note that mouse tracking is disabled by default. Use QWidget::hasMouseTracking() to
-  retrieve current state. */
+    In order to use MouseGrabbers, you need to enable mouse tracking (so that mouseMoveEvent() is
+    called even when no mouse button is pressed). Add this line in init() or in your viewer
+    constructor:
+    \code
+    setMouseTracking(true);
+    \endcode
+    Note that mouse tracking is disabled by default. Use QWidget::hasMouseTracking() to
+    retrieve current state. */
   qglviewer::MouseGrabber* mouseGrabber() const { return mouseGrabber_; };
 
   void setMouseGrabberIsEnabled(const qglviewer::MouseGrabber* const mouseGrabber, bool enabled=true);
@@ -266,7 +280,7 @@ public:
   MouseGrabber in all the QGLViewers. */
   bool mouseGrabberIsEnabled(const qglviewer::MouseGrabber* const mouseGrabber) { return !disabledMouseGrabbers_.contains(reinterpret_cast<size_t>(mouseGrabber)); };
 public slots:
-  void setMouseGrabber(qglviewer::MouseGrabber* mouseGrabber);
+void setMouseGrabber(qglviewer::MouseGrabber* mouseGrabber);
   //@}
 
 
@@ -315,11 +329,11 @@ public:
   virtual QSize sizeHint() const { return QSize(600, 400); }
 
 public slots:
-  void setFullScreen(bool fullScreen=true);
-  /*! Toggles the state of isFullScreen(). See also setFullScreen(). */
+void setFullScreen(bool fullScreen=true);
   void setStereoDisplay(bool stereo=true);
-  /*! Toggles the state of displaysInStereo(). See setStereoDisplay(). */
+  /*! Toggles the state of isFullScreen(). See also setFullScreen(). */
   void toggleFullScreen() { setFullScreen(!isFullScreen()); };
+  /*! Toggles the state of displaysInStereo(). See setStereoDisplay(). */
   void toggleStereoDisplay() { setStereoDisplay(!stereo_); };
   void toggleCameraMode();
 
@@ -332,6 +346,7 @@ private:
   //@{
 public:
   static void drawArrow(float length=1.0f, float radius=-1.0f, int nbSubdivisions=12);
+  static void drawArrow(const qglviewer::Vec& from, const qglviewer::Vec& to, float radius=-1.0f, int nbSubdivisions=12);
   static void drawAxis(float length=1.0f);
   static void drawGrid(float size=1.0f, int nbSubdivisions=10);
 
@@ -389,8 +404,8 @@ public:
   details in the QWidget documentation. */
   bool hasMouseTracking () const;
 public slots:
-  /*! Resizes the widget to size \p width by \p height pixels. See also width() and height(). */
-  virtual void resize(int width, int height);
+/*! Resizes the widget to size \p width by \p height pixels. See also width() and height(). */
+virtual void resize(int width, int height);
   /*! Sets the hasMouseTracking() value. */
   virtual void setMouseTracking(bool enable);
 protected:
@@ -398,8 +413,8 @@ protected:
     documentation. */
   bool autoBufferSwap() const;
 protected slots:
-  /*! Sets the autoBufferSwap() value. */
-  void setAutoBufferSwap(bool on);
+/*! Sets the autoBufferSwap() value. */
+void setAutoBufferSwap(bool on);
   //@}
 #endif
 
@@ -428,9 +443,9 @@ public:
   The available formats are those handled by Qt. Classical values are \c "JPEG", \c "PNG",
   \c "PPM, \c "BMP". Use the following code to get the actual list:
   \code
-   QStringList formatList = QImage::outputFormatList();
-   for (QStringList::Iterator it = formatList.begin(); it != formatList.end(); ++it)
-     qWarning(*it);
+  QStringList formatList = QImage::outputFormatList();
+  for (QStringList::Iterator it = formatList.begin(); it != formatList.end(); ++it)
+  qWarning(*it);
   \endcode
 
   If the library was compiled with the vectorial rendering option (default), three additional
@@ -450,10 +465,10 @@ public:
   saveSnapshot() may fail if the format string is not supported. */
   const QString& snapshotFormat() const { return snapshotFormat_; };
   /*! Returns the value of the counter used to name snapshots in saveSnapshot() when \p automatic is
-  \c true.
+    \c true.
 
-  Set using setSnapshotCounter(). Default value is 0, and it is incremented after each \p automatic
-  snapshot. See saveSnapshot() for details. */
+    Set using setSnapshotCounter(). Default value is 0, and it is incremented after each \p automatic
+    snapshot. See saveSnapshot() for details. */
   int snapshotCounter() const { return snapshotCounter_; };
   /*! Defines the image quality of the snapshots produced with saveSnapshot().
 
@@ -466,10 +481,10 @@ public:
   int snapshotQuality() { return snapshotQuality_; };
 
 public slots:
-  // Qt 2.3 does not support double default value parameters
-  // Uncomment the following line (and comment the next one) with Qt 2.3
-  // void saveSnapshot(bool automatic, bool overwrite=false);
-  void saveSnapshot(bool automatic=false, bool overwrite=false);
+// Qt 2.3 does not support double default value parameters in slots.
+// Uncomment the following line (and comment the next one) with Qt 2.3
+// void saveSnapshot(bool automatic, bool overwrite=false);
+void saveSnapshot(bool automatic=false, bool overwrite=false);
 
   void saveSnapshot(const QString& filename, bool overwrite=false);
 
@@ -501,7 +516,7 @@ public:
   /*! Same as bufferTextureMaxU(), but for the v texture coordinate. */
   float bufferTextureMaxV() const { return bufferTextureMaxV_; };
 public slots:
-  void copyBufferToTexture(GLint internalFormat, GLenum format=GL_NONE);
+void copyBufferToTexture(GLint internalFormat, GLenum format=GL_NONE);
   //@}
 
   /*! @name Animation */
@@ -533,8 +548,8 @@ public:
   int animationPeriod() const { return animationPeriod_; };
 
 public slots:
-  /*! Sets the animationPeriod(), in milliseconds. */
-  void setAnimationPeriod(int period) { animationPeriod_ = period; };
+/*! Sets the animationPeriod(), in milliseconds. */
+void setAnimationPeriod(int period) { animationPeriod_ = period; };
   virtual void startAnimation();
   virtual void stopAnimation();
   /*! Scene animation method.
@@ -554,7 +569,7 @@ public slots:
   //@}
 
 public:
-signals:
+  signals:
   /*! Signal emitted by the default init() method.
 
   Connect this signal to the methods that need to be called to initialize your viewer or overload init(). */
@@ -626,9 +641,9 @@ public:
   \code
   QString myViewer::helpString() const
   {
-    QString text("<h2>M y V i e w e r</h2>");
-    text += "Displays a <b>Scene</b> using OpenGL. Move the camera using the mouse.";
-    return text;
+  QString text("<h2>M y V i e w e r</h2>");
+  text += "Displays a <b>Scene</b> using OpenGL. Move the camera using the mouse.";
+  return text;
   }
   \endcode
 
@@ -646,7 +661,7 @@ public:
 #endif
 
 public slots:
-  virtual void help();
+virtual void help();
   virtual void aboutQGLViewer();
 
 protected:
@@ -725,12 +740,12 @@ protected:
   //@{
 public:
   /*! Returns the name (an integer value) of the entity that was last selected by select(). This
-  value is set by endSelection(). See the select() documentation for details.
+    value is set by endSelection(). See the select() documentation for details.
 
-  As a convention, this method returns -1 if the selectBuffer() was empty, meaning that no object
-  was selected.
+    As a convention, this method returns -1 if the selectBuffer() was empty, meaning that no object
+    was selected.
 
-  Return value is -1 before the first call to select(). This value is modified using setSelectedName(). */
+    Return value is -1 before the first call to select(). This value is modified using setSelectedName(). */
   int selectedName() const { return selectedObjectId_; };
   /*! Returns the selectBuffer() size.
 
@@ -742,18 +757,18 @@ public:
   int selectBufferSize() const { return selectBufferSize_; };
 
   /*! Returns the width (in pixels) of a selection frustum, centered on the mouse cursor, that is
-  used to select objects.
+    used to select objects.
 
-  The height of the selection frustum is defined by selectRegionHeight().
+    The height of the selection frustum is defined by selectRegionHeight().
 
-  The objects that will be drawn in this region by drawWithNames() will be recorded in the
-  selectBuffer(). endSelection() then analyzes this buffer and setSelectedName() to the name of the
-  closest object. See the gluPickMatrix() documentation for details.
+    The objects that will be drawn in this region by drawWithNames() will be recorded in the
+    selectBuffer(). endSelection() then analyzes this buffer and setSelectedName() to the name of the
+    closest object. See the gluPickMatrix() documentation for details.
 
-  The default value is 3, which is adapted to standard applications. A smaller value results in a
-  more precise selection but the user has to be careful for small feature selection.
+    The default value is 3, which is adapted to standard applications. A smaller value results in a
+    more precise selection but the user has to be careful for small feature selection.
 
-  See the <a href="../examples/multiSelect.html">multiSelect example</a> for an illustration. */
+    See the <a href="../examples/multiSelect.html">multiSelect example</a> for an illustration. */
   int selectRegionWidth() const { return selectRegionWidth_; };
   /*! See the selectRegionWidth() documentation. Default value is 3 pixels. */
   int selectRegionHeight() const { return selectRegionHeight_; };
@@ -766,7 +781,7 @@ public:
   GLuint* selectBuffer() { return selectBuffer_; };
 
 public slots:
-  virtual void select(const QMouseEvent* event);
+virtual void select(const QMouseEvent* event);
   virtual void select(const QPoint& point);
 
   void setSelectBufferSize(int size);
@@ -780,7 +795,7 @@ public slots:
   endSelection() method. */
   void setSelectedName(int id) { selectedObjectId_=id; };
 
- protected:
+protected:
   virtual void beginSelection(const QPoint& point);
   /*! This method is called by select() and should draw selectable entities.
 
@@ -791,12 +806,12 @@ public slots:
   \code
   void Viewer::drawWithNames()
   {
-    for (int i=0; i<nbObjects; ++i)
-    {
-      glPushName(i);
-      object(i)->draw();
-      glPopName();
-    }
+  for (int i=0; i<nbObjects; ++i)
+  {
+  glPushName(i);
+  object(i)->draw();
+  glPopName();
+  }
   }
   \endcode
 
@@ -806,12 +821,12 @@ public slots:
   virtual void drawWithNames() {};
   virtual void endSelection(const QPoint& point);
   /*! This method is called at the end of the select() procedure. It should finalize the selection
-  process and update the data structure/interface/computation/display... according to the newly
-  selected entity.
+    process and update the data structure/interface/computation/display... according to the newly
+    selected entity.
 
-  The default implementation is empty. Overload this method if needed, and use selectedName() to
-  retrieve the selected entity name (returns -1 if no object was selected). See the <a
-  href="../examples/select.html">select example</a> for an illustration. */
+    The default implementation is empty. Overload this method if needed, and use selectedName() to
+    retrieve the selected entity name (returns -1 if no object was selected). See the <a
+    href="../examples/select.html">select example</a> for an illustration. */
   virtual void postSelection(const QPoint& point) { Q_UNUSED(point); };
   //@}
 
@@ -820,9 +835,9 @@ public slots:
   //@{
 protected:
   /*! Defines the different actions that can be associated with a keyboard shortcut using
-  setShortcut().
+    setShortcut().
 
-  See the <a href="../keyboard.html">keyboard page</a> for details. */
+    See the <a href="../keyboard.html">keyboard page</a> for details. */
   enum KeyboardAction { DRAW_AXIS, DRAW_GRID, DISPLAY_FPS, DISPLAY_Z_BUFFER, ENABLE_TEXT, EXIT_VIEWER,
 			SAVE_SCREENSHOT, CAMERA_MODE, FULL_SCREEN, STEREO, ANIMATION, HELP, EDIT_CAMERA,
 			MOVE_CAMERA_LEFT, MOVE_CAMERA_RIGHT, MOVE_CAMERA_UP, MOVE_CAMERA_DOWN,
@@ -830,16 +845,20 @@ protected:
 public:
   int shortcut(KeyboardAction action) const;
 #ifndef DOXYGEN
+  // QGLViewer 1.x
   int keyboardAccelerator(KeyboardAction action) const;
   Qt::Key keyFrameKey(int index) const;
-  Qt::ButtonState playKeyFramePathStateKey() const;
+  QtKeyboardModifiers playKeyFramePathStateKey() const;
+  // QGLViewer 2.0 without Qt4 support
+  QtKeyboardModifiers addKeyFrameStateKey() const;
+  QtKeyboardModifiers playPathStateKey() const;
 #endif
   Qt::Key pathKey(int index) const;
-  Qt::ButtonState addKeyFrameStateKey() const;
-  Qt::ButtonState playPathStateKey() const;
+  QtKeyboardModifiers addKeyFrameKeyboardModifiers() const;
+  QtKeyboardModifiers playPathKeyboardModifiers() const;
 
 public slots:
-  void setShortcut(KeyboardAction action, int key);
+void setShortcut(KeyboardAction action, int key);
 #ifndef DOXYGEN
   void setKeyboardAccelerator(KeyboardAction action, int key);
 #endif
@@ -847,12 +866,16 @@ public slots:
 
   // Key Frames shortcut keys
 #ifndef DOXYGEN
+  // QGLViewer 1.x compatibility methods
   virtual void setKeyFrameKey(int index, int key);
   virtual void setPlayKeyFramePathStateKey(int buttonState);
-#endif
-  virtual void setPathKey(int key, int index = 0);
+  // QGLViewer 2.0 without Qt4 support
   virtual void setPlayPathStateKey(int buttonState);
   virtual void setAddKeyFrameStateKey(int buttonState);
+#endif
+  virtual void setPathKey(int key, int index = 0);
+  virtual void setPlayPathKeyboardModifiers(QtKeyboardModifiers modifiers);
+  virtual void setAddKeyFrameKeyboardModifiers(QtKeyboardModifiers modifiers);
   //@}
 
 
@@ -868,19 +891,20 @@ protected:
   /*! Defines the possible actions that can be binded to a mouse click using
     setMouseBinding(int,ClickAction,bool,int).
 
-  See the <a href="../mouse.html">mouse page</a> for details. */
+    See the <a href="../mouse.html">mouse page</a> for details. */
   enum ClickAction { NO_CLICK_ACTION, ZOOM_ON_PIXEL, ZOOM_TO_FIT, SELECT, RAP_FROM_PIXEL, RAP_IS_CENTER,
 		     CENTER_FRAME, CENTER_SCENE, SHOW_ENTIRE_SCENE, ALIGN_FRAME, ALIGN_CAMERA };
 
 #ifndef DOXYGEN
+  // So that it can be used in ManipulatedFrame and ManipulatedCameraFrame.
 public:
 #endif
 
   /*! Defines the possible actions that can be binded to a mouse motion (a click, followed by a
-  mouse displacement).
+    mouse displacement).
 
-  These actions may be binded to the camera() or to the manipulatedFrame() (see QGLViewer::MouseHandler) using
-  setMouseBinding(). */
+    These actions may be binded to the camera() or to the manipulatedFrame() (see QGLViewer::MouseHandler) using
+    setMouseBinding(). */
   enum MouseAction { NO_MOUSE_ACTION,
 		     ROTATE, ZOOM, TRANSLATE,
 		     MOVE_FORWARD, LOOK_AROUND, MOVE_BACKWARD,
@@ -891,30 +915,31 @@ public:
 public:
 #endif
 
-  MouseAction mouseAction(int buttonState) const;
-  int mouseHandler(int buttonState) const;
-  Qt::ButtonState mouseButtonState(MouseHandler handler, MouseAction action, bool withConstraint=true) const;
-  ClickAction clickAction(int buttonState, bool doubleClick, int buttonBefore) const;
-  void getClickButtonState(ClickAction action, Qt::ButtonState& buttonState, bool& doubleClick, Qt::ButtonState& buttonBefore) const;
+  MouseAction mouseAction(int state) const;
+  int mouseHandler(int state) const;
+  int mouseButtonState(MouseHandler handler, MouseAction action, bool withConstraint=true) const;
+  ClickAction clickAction(int state, bool doubleClick, QtMouseButtons buttonsBefore) const;
+  void getClickButtonState(ClickAction action, int& state, bool& doubleClick, QtMouseButtons& buttonsBefore) const;
 
-  MouseAction wheelAction(int buttonState) const;
-  int wheelHandler(int buttonState) const;
+  MouseAction wheelAction(QtKeyboardModifiers modifiers) const;
+  int wheelHandler(QtKeyboardModifiers modifiers) const;
   int wheelButtonState(MouseHandler handler, MouseAction action, bool withConstraint=true) const;
 
- public slots:
-  void setMouseBinding(int buttonState, MouseHandler handler, MouseAction action, bool withConstraint=true);
+public slots:
+void setMouseBinding(int state, MouseHandler handler, MouseAction action, bool withConstraint=true);
 #if QT_VERSION < 0x030000
   // Two slots cannot have the same name with Qt 2.3
- public:
+public:
 #endif
-  void setMouseBinding(int buttonState, ClickAction action, bool doubleClick=false, int buttonBefore=Qt::NoButton);
+  void setMouseBinding(int state, ClickAction action, bool doubleClick=false, QtMouseButtons buttonsBefore=Qt::NoButton);
 #if QT_VERSION < 0x030000
- public slots:
+public slots:
 #endif
-  void setWheelBinding(int buttonState, MouseHandler handler, MouseAction action, bool withConstraint=true);
-  void setMouseBindingDescription(int buttonState, QString description, bool doubleClick=false);
-  void setHandlerStateKey(MouseHandler handler, int buttonState);
+void setWheelBinding(QtKeyboardModifiers modifiers, MouseHandler handler, MouseAction action, bool withConstraint=true);
+  void setMouseBindingDescription(int state, QString description, bool doubleClick=false, QtMouseButtons buttonsBefore=Qt::NoButton);
+  void setHandlerKeyboardModifiers(MouseHandler handler, QtKeyboardModifiers modifiers);
 #ifndef DOXYGEN
+  void setHandlerStateKey(MouseHandler handler, int buttonState);
   void setMouseStateKey(MouseHandler handler, int buttonState);
 #endif
 
@@ -931,7 +956,7 @@ public:
   virtual QDomElement domElement(const QString& name, QDomDocument& document) const;
 
 public slots:
-  virtual void initFromDOMElement(const QDomElement& element);
+virtual void initFromDOMElement(const QDomElement& element);
   virtual void saveStateToFile(); // cannot be const because of QMessageBox
   virtual bool restoreStateFromFile();
 
@@ -942,7 +967,7 @@ public slots:
 
   \code
   // Name depends on the displayed 3D model. Saved in current directory.
-  setStateFileName(displayedModelName() + ".xml");
+  setStateFileName(3DModelName() + ".xml");
 
   // Files are stored in a dedicated directory under user's home directory.
   setStateFileName(QDir::homeDirPath + "/.config/myApp.xml");
@@ -961,40 +986,60 @@ private:
 
   /*! @name QGLViewer pool */
   //@{
-  public:
-  /*! Returns a \c QPtrList (see Qt documentation) that contains all the created QGLViewer.
+public:
+  /*! Returns a \c QList (see Qt documentation) that contains pointers to all the created
+    QGLViewers.
 
-  Can be useful to apply a method or to connect a signal to all the viewers:
-  \code
-  QPtrListIterator<QGLViewer> it(QGLViewer::QGLViewerPool());
-  for (QGLViewer* viewer; (viewer = it.current()) != NULL; ++it)
+    Can be useful to apply a method or to connect a signal to all the viewers.
+
+    \attention With Qt version 3, this method returns a \c QPtrList instead. Use a \c QPtrListIterator
+    to iterate on the list:
+    \code
+    QPtrListIterator<QGLViewer> it(QGLViewer::QGLViewerPool());
+    for (QGLViewer* viewer; (viewer = it.current()) != NULL; ++it)
     connect(myObject, SIGNAL(mySignal), viewer, SLOT(updateGL()));
-  \endcode */
-  static const QPtrList<QGLViewer>& QGLViewerPool() { return QGLViewerPool_; };
-  /*! Returns the index of the QGLViewer \p viewer in the QGLViewerPool(). This index in unique and
-  can be used to identify the different created QGLViewers (see stateFileName() for an application
-  example).
+    \endcode */
+#if QT_VERSION < 0x030000
+  fix-me;
+#endif
+#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
+  static const QList<QGLViewer*>& QGLViewerPool() { return QGLViewer::QGLViewerPool_; };
+#else
+  static const QPtrList<QGLViewer>& QGLViewerPool() { return QGLViewer::QGLViewerPool_; };
+#endif
 
-  When a QGLViewer is deleted, the following QGLViewers' indexes are shifted down. Returns -1 if the
-  QGLViewer could not be found (which should not be possible). */
-  static int  QGLViewerIndex(const QGLViewer* const viewer) { return QGLViewerPool_.find(viewer); };
+
+  /*! Returns the index of the QGLViewer \p viewer in the QGLViewerPool(). This index in unique and
+    can be used to identify the different created QGLViewers (see stateFileName() for an application
+    example).
+
+    When a QGLViewer is deleted, the following QGLViewers' indexes are shifted down. Returns -1 if the
+    QGLViewer could not be found (which should not be possible). */
+#if QT_VERSION < 0x030000
+  fix-me;
+#endif
+#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
+  static int QGLViewerIndex(const QGLViewer* const viewer) { return QGLViewer::QGLViewerPool_.indexOf(const_cast<QGLViewer*>(viewer)); };
+#else
+  static int QGLViewerIndex(const QGLViewer* const viewer) { return QGLViewer::QGLViewerPool_.find(viewer); };
+#endif
   //@}
 
 #ifndef DOXYGEN
   /*! @name Visual hints */
   //@{
- public:
+public:
   virtual void setVisualHintsMask(int mask, int delay = 2000);
   virtual void drawVisualHints();
 
- public slots:
-  virtual void resetVisualHints();
+public slots:
+virtual void resetVisualHints();
   //@}
 #endif
 
- private slots:
-  // Patch for a Qt bug with fullScreen on startup
-  void delayedFullScreen() { move(prevPos_); setFullScreen(); };
+private slots:
+// Patch for a Qt bug with fullScreen on startup
+void delayedFullScreen() { move(prevPos_); setFullScreen(); };
   void hideMessage();
 
 private:
@@ -1072,7 +1117,7 @@ private:
 
   // K e y   F r a m e s   s h o r t c u t s
   QMap<Qt::Key, int> pathIndex_;
-  Qt::ButtonState addKFStateKey_, playPathStateKey_;
+  QtKeyboardModifiers addKeyFrameKeyboardModifiers_, playPathKeyboardModifiers_;
 
   // B u f f e r   T e x t u r e
   GLuint bufferTextureId_;
@@ -1091,20 +1136,24 @@ private:
 
   // C l i c k   a c t i o n s
   struct ClickActionPrivate {
-    Qt::ButtonState buttonState;
+    QtKeyboardModifiers modifiers;
+    QtMouseButtons button;
     bool doubleClick;
-    Qt::ButtonState buttonBefore;
+    QtMouseButtons buttonsBefore; // only defined when doubleClick is true
 
     // This sort order in used in mouseString() to displays sorted mouse bindings
     bool operator<(const ClickActionPrivate& cap) const
     {
-      if (buttonBefore != cap.buttonBefore)
-	return buttonBefore < cap.buttonBefore;
+      if (buttonsBefore != cap.buttonsBefore)
+	return buttonsBefore < cap.buttonsBefore;
       else
-	if (buttonState != cap.buttonState)
-	  return buttonState < cap.buttonState;
+	if (modifiers != cap.modifiers)
+	  return modifiers < cap.modifiers;
 	else
-	  return !doubleClick && cap.doubleClick;
+	  if (button != cap.button)
+	    return button < cap.button;
+	  else
+	    return !doubleClick && cap.doubleClick;
     }
   };
 #endif
@@ -1113,8 +1162,8 @@ private:
 
   void setDefaultMouseBindings();
   void performClickAction(ClickAction ca, const QMouseEvent* const e);
-  QMap<Qt::ButtonState, MouseActionPrivate> mouseBinding_;
-  QMap<Qt::ButtonState, MouseActionPrivate> wheelBinding_;
+  QMap<int, MouseActionPrivate> mouseBinding_;
+  QMap<QtKeyboardModifiers, MouseActionPrivate> wheelBinding_;
   QMap<ClickActionPrivate, ClickAction> clickBinding_;
 
   // S n a p s h o t s
@@ -1123,7 +1172,14 @@ private:
   int snapshotCounter_, snapshotQuality_;
 
   // Q G L V i e w e r   p o o l
+#if QT_VERSION < 0x030000
+  fix_me;
+#endif
+#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
+  static QList<QGLViewer*> QGLViewerPool_;
+#else
   static QPtrList<QGLViewer> QGLViewerPool_;
+#endif
 
   // S t a t e   F i l e
   QString stateFileName_;

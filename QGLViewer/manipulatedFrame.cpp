@@ -209,9 +209,13 @@ use mouse speed. Currently used to trigger spinning in mouseReleaseEvent(). */
 void ManipulatedFrame::computeMouseSpeed(const QMouseEvent* const e)
 {
   const QPoint delta = (e->pos() - prevPos_);
-  float dist = sqrt(static_cast<float>(delta.x()*delta.x() + delta.y()*delta.y()));
+  const float dist = sqrt(static_cast<float>(delta.x()*delta.x() + delta.y()*delta.y()));
   delay_ = last_move_time.restart();
-  mouseSpeed_ = dist/delay_;
+  if (delay_ == 0)
+    // Less than a millisecond: assume delay = 1ms
+    mouseSpeed_ = dist;
+  else
+    mouseSpeed_ = dist/delay_;
 }
 
 /*! Return 1 if mouse motion was started horizontally and -1 if it was more vertical. Returns 0 if
@@ -416,7 +420,11 @@ Left button double click aligns the ManipulatedFrame with the \p camera axis (se
  direction. */
 void ManipulatedFrame::mouseDoubleClickEvent(QMouseEvent* const event, Camera* const camera)
 {
+#if QT_VERSION >= 0x040000
+  if (event->modifiers() == Qt::NoModifier)
+#else
   if (event->state() == Qt::NoButton)
+#endif
     switch (event->button())
       {
       case Qt::LeftButton:  alignWithFrame(camera->frame()); break;

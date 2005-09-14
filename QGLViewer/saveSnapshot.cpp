@@ -1,11 +1,25 @@
 #include "qglviewer.h"
 
 #ifndef NO_VECTORIAL_RENDER
-# include "VRenderInterface.h"
+# if QT_VERSION >= 0x040000
+#  include "ui_VRenderInterface.Qt4.h"
+# else
+#  if QT_VERSION >= 0x030000
+#   include "VRenderInterface.Qt3.h"
+#  else
+#   include "VRenderInterface.Qt2.h"
+#  endif
+# endif
 # include "VRender/VRender.h"
 #endif
 
-#include <qimage.h>
+// Output format list
+#if QT_VERSION < 0x040000
+# include <qimage.h>
+#else
+# include <QImageReader>
+#endif
+
 #include <qfileinfo.h>
 #include <qfiledialog.h>
 #include <qmessagebox.h>
@@ -19,6 +33,10 @@
 #include <qpushbutton.h>
 #include <qcursor.h>
 #include <qlayout.h>
+
+#if QT_VERSION >= 0x040000
+# include <qpicture.h> // for outputFormatList
+#endif
 
 using namespace std;
 
@@ -36,35 +54,52 @@ static QMap<QString, QString> extension;
 /*! Sets snapshotFilename(). */
 void QGLViewer::setSnapshotFilename(const QString& name)
 {
+#if QT_VERSION >= 0x040000
+  snapshotFilename_ = QFileInfo(name).absoluteFilePath();
+#else
   snapshotFilename_ = QFileInfo(name).absFilePath();
+#endif
 }
 
 /*! Opens a dialog that displays the different available snapshot formats.
 
 Then calls setSnapshotFormat() with the selected one (unless the user cancels).
 
-Returns \c false if the user presses Cancel and \c true otherwise. */
+Returns \c false if the user presses the Cancel button and \c true otherwise. */
 bool QGLViewer::openSnapshotFormatDialog()
 {
   bool ok = false;
-  QStringList lst = QStringList::split(";;", formats);
-  int current = lst.findIndex(FDFormatString[snapshotFormat()]);
-  QString format = QInputDialog::getItem("Snapshot format", "Select a snapshot format", lst, current, false, &ok, this);
+#if QT_VERSION >= 0x040000
+  QStringList list = formats.split(";;", QString::SkipEmptyParts);
+  int current = list.indexOf(FDFormatString[snapshotFormat()]);
+  QString format = QInputDialog::getItem(this, "Snapshot format", "Select a snapshot format", list, current, false, &ok);
+#else
+  QStringList list = QStringList::split(";;", formats);
+  int current = list.findIndex(FDFormatString[snapshotFormat()]);
+  QString format = QInputDialog::getItem("Snapshot format", "Select a snapshot format", list, current, false, &ok, this);
+#endif
   if (ok)
     setSnapshotFormat(Qtformat[format]);
   return ok;
 }
 
 
-// Find all available Qt output formats, so that they can be available in
+// Finds all available Qt output formats, so that they can be available in
 // saveSnapshot dialog. Initialize snapshotFormat() to the first one.
 void QGLViewer::initializeSnapshotFormats()
 {
+#if QT_VERSION >= 0x040000
+  QList<QByteArray> list = QImageReader::supportedImageFormats();
+  QStringList formatList;
+  for (int i=0; i < list.size(); ++i)
+    formatList << QString(list.at(i).toUpper());
+#else
   QStringList formatList = QImage::outputFormatList();
+#endif
   //        qWarning("Available image formats: ");
   //        QStringList::Iterator it = formatList.begin();
   //        while( it != formatList.end() )
-  //  	      qWarning(*it++);
+  //  	      qWarning((*it++).);  QT4 change this. qWarning no longer accepts QString
 
 #ifndef NO_VECTORIAL_RENDER
   // We add the 3 vectorial formats to the list
@@ -124,7 +159,11 @@ bool checkFileName(QString& filename, QWidget* widget, const QString& snapshotFo
   // Check that extension has been provided
   QFileInfo info(filename);
 
+#if QT_VERSION >= 0x040000
+  if (info.suffix().isEmpty())
+#else
   if (info.extension(false).isEmpty())
+#endif
     {
       // No extension given. Silently add one
       if (filename.right(1) != ".")
@@ -132,13 +171,21 @@ bool checkFileName(QString& filename, QWidget* widget, const QString& snapshotFo
       filename += extension[snapshotFormat];
       info.setFile(filename);
     }
+#if QT_VERSION >= 0x040000
+  else if (info.suffix() != extension[snapshotFormat])
+#else
   else if (info.extension(false) != extension[snapshotFormat])
+#endif
     {
       // Extension is not appropriate. Propose a modification
-#if QT_VERSION < 0x030000
-      QString modifiedName = info.dirPath() + "/" + info.baseName() + "." + extension[snapshotFormat];
+#if QT_VERSION >= 0x040000
+      QString modifiedName = info.absolutePath() + '/' + info.baseName() + "." + extension[snapshotFormat];
 #else
-      QString modifiedName = info.dirPath() + "/" + info.baseName(true) + "." + extension[snapshotFormat];
+# if QT_VERSION >= 0x030000
+      QString modifiedName = info.dirPath() + '/' + info.baseName(true) + '.' + extension[snapshotFormat];
+# else
+      QString modifiedName = info.dirPath() + '/' + info.baseName() + '.' + extension[snapshotFormat];
+# endif
 #endif
       QFileInfo modifInfo(modifiedName);
       int i=(QMessageBox::warning(widget,"Wrong extension",
@@ -189,7 +236,11 @@ QProgressDialog* ProgressDialog::progressDialog = NULL;
 void ProgressDialog::showProgressDialog(QGLWidget* parent)
 {
   progressDialog = new QProgressDialog(parent);
+#if QT_VERSION >= 0x040000
+  progressDialog->setWindowTitle("Vectorial rendering progress");
+#else
   progressDialog->setCaption("Vectorial rendering progress");
+#endif
   progressDialog->setMinimumSize(300, 40);
   progressDialog->setCancelButton(NULL);
   progressDialog->show();
@@ -197,7 +248,11 @@ void ProgressDialog::showProgressDialog(QGLWidget* parent)
 
 void ProgressDialog::updateProgress(float progress, const std::string& stepString)
 {
+#if QT_VERSION >= 0x040000
+  progressDialog->setValue(int(progress*100));
+#else
   progressDialog->setProgress(int(progress*100));
+#endif
   QString message(stepString.c_str());
   if (message.length() > 33)
     message = message.left(17) + "..." + message.right(12);
@@ -217,13 +272,22 @@ void ProgressDialog::hideProgressDialog()
 // -1 if action has been canceled
 static int saveVectorialSnapshot(const QString& filename, QGLWidget* widget, const QString& snapshotFormat)
 {
-  static VRenderInterface* VRinterface = NULL;
+#if QT_VERSION >= 0x040000
+  class VRenderInterface: public QDialog, public Ui::VRenderInterface
+  {
+  public:
+    VRenderInterface(QWidget *parent) : QDialog(parent) { setupUi(this); }
+  };
+#endif
 
+  static VRenderInterface* VRinterface = NULL;
+    
   if (!VRinterface)
-#if QT_VERSION < 0x030000
-    VRinterface = new VRenderInterface(widget, "VRender interface", true);
-#else
+#if QT_VERSION >= 0x030000
     VRinterface = new VRenderInterface(widget);
+#else
+#error Are two cases really needed ?
+    VRinterface = new VRenderInterface(widget, "VRender interface", true);
 #endif
 
   // Configure interface according to selected snapshotFormat
@@ -242,7 +306,11 @@ static int saveVectorialSnapshot(const QString& filename, QGLWidget* widget, con
     return 1;
 
   vrender::VRenderParams vparams;
+#if QT_VERSION >= 0x040000
+  vparams.setFilename(filename.toLatin1().data());
+#else
   vparams.setFilename(filename);
+#endif
 
   if (snapshotFormat == "EPS")	vparams.setFormat(vrender::VRenderParams::EPS);
   if (snapshotFormat == "PS")	vparams.setFormat(vrender::VRenderParams::PS);
@@ -254,7 +322,11 @@ static int saveVectorialSnapshot(const QString& filename, QGLWidget* widget, con
   vparams.setOption(vrender::VRenderParams::AddBackground, VRinterface->colorBackground->isChecked());
   vparams.setOption(vrender::VRenderParams::TightenBoundingBox, VRinterface->tightenBBox->isChecked());
 
+#if QT_VERSION >= 0x040000
+  switch (VRinterface->sortMethod->currentIndex())
+#else
   switch (VRinterface->sortMethod->currentItem())
+#endif
     {
     case 0: vparams.setSortMethod(vrender::VRenderParams::NoSorting); 		break;
     case 1: vparams.setSortMethod(vrender::VRenderParams::BSPSort); 		break;
@@ -342,12 +414,17 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
       QString filename;
 #if QT_VERSION < 0x030000
       if (openSnapshotFormatDialog())
-        filename = QFileDialog::getSaveFileName(snapshotFilename(), FDFormatString[snapshotFormat()]+";;All files (*.*)",
+        filename = QFileDialog::getSaveFileName(snapshotFilename(), FDFormatString[snapshotFormat()]+";;All files (*.*)", this);
       else
         return;
 #else
       QString selectedFormat = FDFormatString[snapshotFormat()];
-      filename = QFileDialog::getSaveFileName(snapshotFilename(), formats, this, "Save Snapshot dialog", "Choose a file", &selectedFormat);
+#if QT_VERSION >= 0x040000
+      filename = QFileDialog::getSaveFileName(this, "Choose a filename to save under", snapshotFilename(), formats, &selectedFormat);
+#else
+      filename = QFileDialog::getSaveFileName(snapshotFilename(), formats, this,
+					      "Save Snapshot dialog", "Choose a filename to save under", &selectedFormat);
+#endif
       setSnapshotFormat(Qtformat[selectedFormat]);
 #endif
 
@@ -360,7 +437,11 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
   // Determine file name in automatic mode
   QFileInfo final(snapshotFilename());
 
+#if QT_VERSION >= 0x040000
+  if (final.completeSuffix().isEmpty())
+#else
   if (final.extension().isEmpty())
+#endif
     final.setFile(final.filePath() + "." + extension[snapshotFormat()]);
 
   // In automatic mode, names have a number appended
@@ -369,13 +450,21 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
       const QString baseName = final.baseName();
       QString count;
       count.sprintf("%.04d", snapshotCounter_++);
-      final.setFile(final.dirPath()+"/" + baseName + "-" + count + "." + final.extension());
+#if QT_VERSION >= 0x040000
+      final.setFile(final.absolutePath()+ '/' + baseName + '-' + count + '.' + final.completeSuffix());
+#else
+      final.setFile(final.dirPath()+ '/' + baseName + '-' + count + '.' + final.extension());
+#endif
 
       if (!overwrite)
 	while (final.exists())
 	  {
 	    count.sprintf("%.04d", snapshotCounter_++);
-	    final.setFile(final.dirPath() + "/"+baseName + "-" + count + "." + final.extension());
+#if QT_VERSION >= 0x040000
+	    final.setFile(final.absolutePath() + '/' +baseName + '-' + count + '.' + final.completeSuffix());
+#else
+	    final.setFile(final.dirPath() + '/' + baseName + '-' + count + '.' + final.extension());
+#endif
 	  }
     }
 
@@ -392,7 +481,11 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
     }
   else
 #endif
+#if QT_VERSION >= 0x040000
+    saveOK = snapshot.save(final.filePath(), snapshotFormat().toLatin1().data(), snapshotQuality());
+#else
     saveOK = snapshot.save(final.filePath(), snapshotFormat(), snapshotQuality());
+#endif
 
   if (!saveOK)
     QMessageBox::warning(this, "Snapshot problem", "Unable to save snapshot in\n"+final.filePath());

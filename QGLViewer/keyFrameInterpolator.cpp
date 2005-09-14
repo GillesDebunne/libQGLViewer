@@ -4,6 +4,11 @@
 using namespace qglviewer;
 using namespace std;
 
+#if QT_VERSION < 0x040000
+// Patch for QPtrList / QList syntax difference
+# define peekNext current
+#endif
+
 /*! Creates a KeyFrameInterpolator, with \p frame as associated frame().
 
   The frame() can be set or changed using setFrame().
@@ -16,9 +21,15 @@ KeyFrameInterpolator::KeyFrameInterpolator(Frame* frame)
   // #CONNECTION# Values cut pasted initFromDOMElement()
 {
   setFrame(frame);
+#if QT_VERSION < 0x040000
   keyFrame_.setAutoDelete(true);
+#endif
   for (int i=0; i<4; ++i)
+#if QT_VERSION >= 0x040000
+    currentFrame_[i] = new QMutableListIterator<KeyFrame*>(keyFrame_);
+#else
     currentFrame_[i] = new QPtrListIterator<KeyFrame>(keyFrame_);
+#endif
   connect(&timer_, SIGNAL(timeout()), SLOT(update()));
 }
 
@@ -54,27 +65,27 @@ void KeyFrameInterpolator::update()
 
   interpolationTime_ += interpolationSpeed() * interpolationPeriod() / 1000.0;
 
-  if (interpolationTime() > keyFrame_.getLast()->time())
+  if (interpolationTime() > keyFrame_.last()->time())
     {
       if (loopInterpolation())
-	setInterpolationTime(keyFrame_.getFirst()->time() + interpolationTime_ - keyFrame_.getLast()->time());
+	setInterpolationTime(keyFrame_.first()->time() + interpolationTime_ - keyFrame_.last()->time());
       else
 	{
 	  // Make sure last KeyFrame is reached and displayed
-	  interpolateAtTime(keyFrame_.getLast()->time());
+	  interpolateAtTime(keyFrame_.last()->time());
 	  stopInterpolation();
 	}
       emit endReached();
     }
   else
-    if (interpolationTime() < keyFrame_.getFirst()->time())
+    if (interpolationTime() < keyFrame_.first()->time())
       {
 	if (loopInterpolation())
-	  setInterpolationTime(keyFrame_.getLast()->time() - keyFrame_.getFirst()->time() + interpolationTime_);
+	  setInterpolationTime(keyFrame_.last()->time() - keyFrame_.first()->time() + interpolationTime_);
 	else
 	  {
 	    // Make sure first KeyFrame is reached and displayed
-	    interpolateAtTime(keyFrame_.getFirst()->time());
+	    interpolateAtTime(keyFrame_.first()->time());
 	    stopInterpolation();
 	  }
 	emit endReached();
@@ -109,10 +120,10 @@ void KeyFrameInterpolator::startInterpolation(int period)
 
   if (!keyFrame_.isEmpty())
     {
-      if ((interpolationSpeed() > 0.0) && (interpolationTime() >= keyFrame_.getLast()->time()))
-	setInterpolationTime(keyFrame_.getFirst()->time());
-      if ((interpolationSpeed() < 0.0) && (interpolationTime() <= keyFrame_.getFirst()->time()))
-	setInterpolationTime(keyFrame_.getLast()->time());
+      if ((interpolationSpeed() > 0.0) && (interpolationTime() >= keyFrame_.last()->time()))
+	setInterpolationTime(keyFrame_.first()->time());
+      if ((interpolationSpeed() < 0.0) && (interpolationTime() <= keyFrame_.first()->time()))
+	setInterpolationTime(keyFrame_.last()->time());
       timer_.start(interpolationPeriod());
       interpolationStarted_ = true;
       update();
@@ -158,7 +169,7 @@ void KeyFrameInterpolator::addKeyFrame(const Frame* const frame, float time)
   if (keyFrame_.isEmpty())
     interpolationTime_ = time;
 
-  if ( (!keyFrame_.isEmpty()) && (keyFrame_.getLast()->time() > time) )
+  if ( (!keyFrame_.isEmpty()) && (keyFrame_.last()->time() > time) )
     qWarning("Error in KeyFrameInterpolator::addKeyFrame: time is not monotone");
   else
     keyFrame_.append(new KeyFrame(frame, time));
@@ -181,7 +192,7 @@ void KeyFrameInterpolator::addKeyFrame(const Frame& frame, float time)
   if (keyFrame_.isEmpty())
     interpolationTime_ = time;
 
-  if ( (!keyFrame_.isEmpty()) && (keyFrame_.getLast()->time() > time) )
+  if ( (!keyFrame_.isEmpty()) && (keyFrame_.last()->time() > time) )
     qWarning("Error in KeyFrameInterpolator::addKeyFrame: time is not monotone");
   else
     keyFrame_.append(new KeyFrame(frame, time));
@@ -218,7 +229,7 @@ void KeyFrameInterpolator::addKeyFrame(const Frame& frame)
   if (keyFrame_.isEmpty())
     time = 0.0;
   else
-    time = keyFrame_.getLast()->time() + 1.0;
+    time = keyFrame_.last()->time() + 1.0;
 
   addKeyFrame(frame, time);
 }
@@ -227,6 +238,9 @@ void KeyFrameInterpolator::addKeyFrame(const Frame& frame)
 void KeyFrameInterpolator::deletePath()
 {
   stopInterpolation();
+#if QT_VERSION >= 0x040000
+  qDeleteAll(keyFrame_);
+#endif
   keyFrame_.clear();
   pathIsValid_ = false;
   valuesAreValid_ = false;
@@ -270,7 +284,9 @@ void KeyFrameInterpolator::drawPath(int mask, int nbFrames, float scale)
   if (!pathIsValid_)
     {
       path_.clear();
+#if QT_VERSION < 0x040000
       path_.reserve(nbSteps*keyFrame_.count());
+#endif
 
       if (keyFrame_.isEmpty())
 	return;
@@ -278,16 +294,24 @@ void KeyFrameInterpolator::drawPath(int mask, int nbFrames, float scale)
       if (!valuesAreValid_)
 	updateModifiedFrameValues();
 
-      if (keyFrame_.getFirst() == keyFrame_.getLast())
-	path_.push_back(Frame(keyFrame_.getFirst()->position(), keyFrame_.getFirst()->orientation()));
+      if (keyFrame_.first() == keyFrame_.last())
+	path_.push_back(Frame(keyFrame_.first()->position(), keyFrame_.first()->orientation()));
       else
 	{
 	  static Frame fr;
 	  KeyFrame* kf_[4];
 	  kf_[0] = keyFrame_.first();
 	  kf_[1] = kf_[0];
+#if QT_VERSION >= 0x040000
+	  int index = 1;
+	  kf_[2] = (index < keyFrame_.size()) ? keyFrame_.at(index) : NULL;
+	  index++;
+	  kf_[3] = (index < keyFrame_.size()) ? keyFrame_.at(index) : NULL;
+#else
 	  kf_[2] = keyFrame_.next();
 	  kf_[3] = keyFrame_.next();
+#endif
+	  
 	  bool exit = false;
 	  while (kf_[2])
 	    {
@@ -317,10 +341,15 @@ void KeyFrameInterpolator::drawPath(int mask, int nbFrames, float scale)
 	      kf_[0] = kf_[1];
 	      kf_[1] = kf_[2];
 	      kf_[2] = kf_[3];
+#if QT_VERSION >= 0x040000
+	      ++index;
+	      kf_[3] = (index < keyFrame_.size()) ? keyFrame_.at(index) : NULL;
+#else
 	      kf_[3] = keyFrame_.next();
+#endif
 	    }
 	  // Add last KeyFrame
-	  path_.push_back(Frame(kf_[2]->position(), kf_[2]->orientation()));
+	  path_.push_back(Frame(kf_[1]->position(), kf_[1]->orientation()));
 	}
       pathIsValid_ = true;
     }
@@ -333,8 +362,13 @@ void KeyFrameInterpolator::drawPath(int mask, int nbFrames, float scale)
       if (mask & 1)
 	{
 	  glBegin(GL_LINE_STRIP);
+#if QT_VERSION >= 0x040000
+	  for (int i=0; i < path_.size(); ++i)
+	    glVertex3fv((path_.at(i)).position());
+#else
 	  for (QValueVector<Frame>::const_iterator pnt=path_.begin(), end=path_.end(); pnt!=end; ++pnt)
 	    glVertex3fv((*pnt).position());
+#endif
 	  glEnd();
 	}
       if (mask & 6)
@@ -343,37 +377,59 @@ void KeyFrameInterpolator::drawPath(int mask, int nbFrames, float scale)
 	  if (nbFrames > nbSteps)
 	    nbFrames = nbSteps;
 	  float goal = 0.0f;
-	  for (QValueVector<Frame>::const_iterator pnt=path_.begin(), end=path_.end(); pnt!=end; ++pnt)
-	    if ((count++) >= goal)
-	      {
-		goal += nbSteps / static_cast<float>(nbFrames);
-		glPushMatrix();
-		glMultMatrixd((*pnt).matrix());
-		if (mask & 2) Camera::drawCamera(scale);
-		if (mask & 4) QGLViewer::drawAxis(scale/10.0);
-		glPopMatrix();
-	      }
+#if QT_VERSION >= 0x040000
+	  for (int i=0; i < path_.size(); ++i)
+#else
+	    for (QValueVector<Frame>::const_iterator pnt=path_.begin(), end=path_.end(); pnt!=end; ++pnt)
+#endif
+	      if ((count++) >= goal)
+		{
+		  goal += nbSteps / static_cast<float>(nbFrames);
+		  glPushMatrix();
+#if QT_VERSION >= 0x040000
+		  glMultMatrixd((path_.at(i)).matrix());
+#else
+		  glMultMatrixd((*pnt).matrix());
+#endif
+		  if (mask & 2) Camera::drawCamera(scale);
+		  if (mask & 4) QGLViewer::drawAxis(scale/10.0);
+		  glPopMatrix();
+		}
 	}
     }
 }
 
 void KeyFrameInterpolator::updateModifiedFrameValues()
 {
-  Quaternion prevQ = keyFrame_.getFirst()->orientation();
+  Quaternion prevQ = keyFrame_.first()->orientation();
   KeyFrame* kf;
+#if QT_VERSION >= 0x040000
+  for (int i=0; i<keyFrame_.size(); ++i)
+    {
+      kf = keyFrame_.at(i);
+#else
   for (kf = keyFrame_.first(); kf; kf=keyFrame_.next())
     {
+#endif
       if (kf->frame())
 	kf->updateValuesFromPointer();
-      kf->flipOrientation(prevQ);
+      kf->flipOrientationIfNeeded(prevQ);
       prevQ = kf->orientation();
     }
 
-  KeyFrame* prev = keyFrame_.getFirst();
+  KeyFrame* prev = keyFrame_.first();
   kf = keyFrame_.first();
+#if QT_VERSION >= 0x040000
+  int index = 1;
+#endif
   while (kf)
     {
+#if QT_VERSION >= 0x040000
+      KeyFrame* next = (index < keyFrame_.size()) ? keyFrame_.at(index) : NULL;
+      index++;
+#else
       KeyFrame* next = keyFrame_.next();
+#endif
       if (next)
 	kf->computeTangent(prev, next);
       else
@@ -384,7 +440,7 @@ void KeyFrameInterpolator::updateModifiedFrameValues()
   valuesAreValid_ = true;
 }
 
-/*! Returns the Frame associated with the keyFrame number \p index.
+/*! Returns the Frame associated with the keyFrame at index \p index.
 
  See also keyFrameTime(). \p index has to be in the range 0..numberOfKeyFrames()-1.
 
@@ -421,7 +477,7 @@ float KeyFrameInterpolator::firstTime() const
   if (keyFrame_.isEmpty())
     return 0.0;
   else
-    return keyFrame_.getFirst()->time();
+    return keyFrame_.first()->time();
 }
 
 /*! Returns the time corresponding to the last keyFrame, expressed in seconds.
@@ -432,7 +488,7 @@ float KeyFrameInterpolator::lastTime() const
   if (keyFrame_.isEmpty())
     return 0.0;
   else
-    return keyFrame_.getLast()->time();
+    return keyFrame_.last()->time();
 }
 
 void KeyFrameInterpolator::updateCurrentKeyFrameForTime(float time)
@@ -440,57 +496,92 @@ void KeyFrameInterpolator::updateCurrentKeyFrameForTime(float time)
   // Assertion: times are sorted in monotone order.
   // Assertion: keyFrame_ is not empty
 
-  // TODO: Special case for loops when closed is implemented !!
+  // TODO: Special case for loops when closed path is implemented !!
   if (!currentFrameValid_)
     // Recompute everything from scrach
+#if QT_VERSION >= 0x040000
+    currentFrame_[1]->toFront();
+#else
     currentFrame_[1]->toFirst();
+#endif
 
-  while (currentFrame_[1]->current()->time() > time)
+  while (currentFrame_[1]->peekNext()->time() > time)
     {
       currentFrameValid_ = false;
+#if QT_VERSION >= 0x040000
+      if (!currentFrame_[1]->hasPrevious())
+#else
       if (currentFrame_[1]->atFirst())
+#endif
 	break;
+#if QT_VERSION >= 0x040000
+      currentFrame_[1]->previous();
+#else
       --(*currentFrame_[1]);
+#endif
     }
 
   if (!currentFrameValid_)
     *currentFrame_[2] = *currentFrame_[1];
 
-  while (currentFrame_[2]->current()->time() < time)
+  while (currentFrame_[2]->peekNext()->time() < time)
     {
       currentFrameValid_ = false;
+#if QT_VERSION >= 0x040000
+      if (!currentFrame_[2]->hasNext())
+#else
       if (currentFrame_[2]->atLast())
+#endif
 	break;
+#if QT_VERSION >= 0x040000
+      currentFrame_[2]->next();
+#else
       ++(*currentFrame_[2]);
+#endif
     }
 
   if (!currentFrameValid_)
     {
       *currentFrame_[1] = *currentFrame_[2];
+#if QT_VERSION >= 0x040000
+      if ((currentFrame_[1]->hasPrevious()) && (time < currentFrame_[2]->peekNext()->time()))
+	currentFrame_[1]->previous();
+#else
       if ((!currentFrame_[1]->atFirst()) && (time < currentFrame_[2]->current()->time()))
 	--(*currentFrame_[1]);
+#endif
 
       *currentFrame_[0] = *currentFrame_[1];
+#if QT_VERSION >= 0x040000
+      if (currentFrame_[0]->hasPrevious())
+	currentFrame_[0]->previous();
+#else
       if (!currentFrame_[0]->atFirst())
 	--(*currentFrame_[0]);
+#endif
 
       *currentFrame_[3] = *currentFrame_[2];
+#if QT_VERSION >= 0x040000
+      if (currentFrame_[3]->hasNext())
+	currentFrame_[3]->next();
+#else
       if (!currentFrame_[3]->atLast())
 	++(*currentFrame_[3]);
+#endif
 
       currentFrameValid_ = true;
       splineCacheIsValid_ = false;
     }
 
-  // cout << "Time = " << time << " : " << currentFrame_[0]->current()->time() << " , " <<
-  // currentFrame_[1]->current()->time() << " , " << currentFrame_[2]->current()->time() << " , " <<  currentFrame_[3]->current()->time() << endl;
+  // cout << "Time = " << time << " : " << currentFrame_[0]->peekNext()->time() << " , " <<
+  // currentFrame_[1]->peekNext()->time() << " , " << currentFrame_[2]->peekNext()->time() << " , " <<  currentFrame_[3]->peekNext()->time() << endl;
 }
 
 void KeyFrameInterpolator::updateSplineCache()
 {
-  Vec delta = currentFrame_[2]->current()->position() - currentFrame_[1]->current()->position();
-  v1 = 3.0 * delta - 2.0 * currentFrame_[1]->current()->tgP() - currentFrame_[2]->current()->tgP();
-  v2 = -2.0 * delta + currentFrame_[1]->current()->tgP() + currentFrame_[2]->current()->tgP();
+  Vec delta = currentFrame_[2]->peekNext()->position() - currentFrame_[1]->peekNext()->position();
+  v1 = 3.0 * delta - 2.0 * currentFrame_[1]->peekNext()->tgP() - currentFrame_[2]->peekNext()->tgP();
+  v2 = -2.0 * delta + currentFrame_[1]->peekNext()->tgP() + currentFrame_[2]->peekNext()->tgP();
   splineCacheIsValid_ = true;
 }
 
@@ -517,17 +608,17 @@ void KeyFrameInterpolator::interpolateAtTime(float time)
     updateSplineCache();
 
   float alpha;
-  float dt = currentFrame_[2]->current()->time() - currentFrame_[1]->current()->time();
+  float dt = currentFrame_[2]->peekNext()->time() - currentFrame_[1]->peekNext()->time();
   if (dt == 0.0)
     alpha = 0.0;
   else
-    alpha = (time - currentFrame_[1]->current()->time()) / dt;
+    alpha = (time - currentFrame_[1]->peekNext()->time()) / dt;
 
   // Linear interpolation - debug
-  // Vec pos = alpha*(currentFrame_[2]->current()->position()) + (1.0-alpha)*(currentFrame_[1]->current()->position());
-  Vec pos = currentFrame_[1]->current()->position() + alpha * (currentFrame_[1]->current()->tgP() + alpha * (v1+alpha*v2));
-  Quaternion q = Quaternion::squad(currentFrame_[1]->current()->orientation(), currentFrame_[1]->current()->tgQ(),
-				   currentFrame_[2]->current()->tgQ(), currentFrame_[2]->current()->orientation(), alpha);
+  // Vec pos = alpha*(currentFrame_[2]->peekNext()->position()) + (1.0-alpha)*(currentFrame_[1]->peekNext()->position());
+  Vec pos = currentFrame_[1]->peekNext()->position() + alpha * (currentFrame_[1]->peekNext()->tgP() + alpha * (v1+alpha*v2));
+  Quaternion q = Quaternion::squad(currentFrame_[1]->peekNext()->orientation(), currentFrame_[1]->peekNext()->tgQ(),
+				   currentFrame_[2]->peekNext()->tgQ(), currentFrame_[2]->peekNext()->orientation(), alpha);
   frame()->setPositionAndOrientationWithConstraint(pos, q);
 
   emit interpolated();
@@ -552,8 +643,14 @@ QDomElement KeyFrameInterpolator::domElement(const QString& name, QDomDocument& 
 {
   QDomElement de = document.createElement(name);
   int count = 0;
+#if QT_VERSION >= 0x040000
+  for (int i=0; i<keyFrame_.size(); ++i)
+    {
+      KeyFrame* kf = keyFrame_.at(i);
+#else
   for (KeyFrame* kf = keyFrame_.first(); kf; kf = keyFrame_.next() )
     {
+#endif
       Frame fr(kf->position(), kf->orientation());
       QDomElement kfNode = fr.domElement("KeyFrame", document);
       kfNode.setAttribute("index", QString::number(count));
@@ -580,6 +677,9 @@ QDomElement KeyFrameInterpolator::domElement(const QString& name, QDomDocument& 
  See also Camera::initFromDOMElement() and Frame::initFromDOMElement(). */
 void KeyFrameInterpolator::initFromDOMElement(const QDomElement& element)
 {
+#if QT_VERSION >= 0x040000
+  qDeleteAll(keyFrame_);
+#endif
   keyFrame_.clear();
   QDomElement child=element.firstChild().toElement();
   while (!child.isNull())
@@ -638,7 +738,7 @@ void KeyFrameInterpolator::KeyFrame::computeTangent(const KeyFrame* const prev, 
   tgQ_ = Quaternion::squadTangent(prev->orientation(), q_, next->orientation());
 }
 
-void KeyFrameInterpolator::KeyFrame::flipOrientation(const Quaternion& prev)
+void KeyFrameInterpolator::KeyFrame::flipOrientationIfNeeded(const Quaternion& prev)
 {
   if (Quaternion::dot(prev, q_) < 0.0)
     q_.negate();

@@ -76,7 +76,7 @@ namespace qglviewer {
 
     See type() and setType(). This type mainly defines different Camera projection matrix (see
     loadProjectionMatrix()). Many other methods (pointUnderPixel(), convertClickToLine(),
-    projectedCoordinatesOf(), ...) take this Type into account. */
+    projectedCoordinatesOf(), pixelGLRatio()...) take this Type into account. */
     enum Type { PERSPECTIVE, ORTHOGRAPHIC };
 
     /*! @name Position and orientation */
@@ -138,10 +138,14 @@ namespace qglviewer {
 
     Set by setType(). Mainly used by loadProjectionMatrix().
 
-    A Camera::PERSPECTIVE Camera is mainly defined by its fieldOfView(). With a Camera::ORTHOGRAPHIC
-    type(), the fieldOfView() is meaningless and the width and height of the Camera frustum are
-    inferred from the distance to the revolveAroundPoint() using getOrthoWidthHeight(). Both use
-    zNear() and zFar() (to define their clipping planes) and aspectRatio() (for frustum shape). */
+    A Camera::PERSPECTIVE Camera uses a classical projection mainly defined by its fieldOfView().
+
+    With a Camera::ORTHOGRAPHIC type(), the fieldOfView() is meaningless and the width and height of
+    the Camera frustum are inferred from the distance to the revolveAroundPoint() using
+    getOrthoWidthHeight().
+
+    Both types use zNear() and zFar() (to define their clipping planes) and aspectRatio() (for
+    frustum shape). */
     Type type() const { return type_; };
 
     /*! Returns the vertical field of view of the Camera (in radians).

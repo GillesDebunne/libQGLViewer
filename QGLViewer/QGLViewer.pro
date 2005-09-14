@@ -2,15 +2,14 @@
 #	C o m p i l a t i o n    c o n f i g u r a t i o n
 
 # This configuration file is divided into architecture specific sections.
-# You may need to tune some paths, especially for GL.
-# Other than that, simply run "qmake" with possible optional arguments, as in "qmake PREFIX=$HOME".
+# You may need to tune some paths, especially for OpenGL.
+# Other than that, simply run "qmake; make" to compile the library.
+# Optional arguments can tune install paths (as in "qmake PREFIX=$HOME"). See doc/download.html for details.
 
 # Attention : Windows Qt 2.3 users should use QGLViewer.Qt2.3.pro instead of this file.
 
-# See doc/download.html for details.
-
 # If your Qt version is lower than 3.1 (look at $QTDIR/lib), you need to link with GLUT.
-# Uncomment the following line :
+# Uncomment the following line:
 # USE_GLUT = yes
 
 TEMPLATE = lib
@@ -29,7 +28,6 @@ HEADERS  = qglviewer.h \
 	   quaternion.h \
 	   vec.h \
 	   domUtils.h \
-	   icon.h \
 	   config.h
 
 SOURCES  = qglviewer.cpp \
@@ -43,6 +41,15 @@ SOURCES  = qglviewer.cpp \
 	   mouseGrabber.cpp \
 	   quaternion.cpp \
 	   vec.cpp
+
+# Used by Qt4 only
+QT += xml opengl
+
+DISTFILES *= qglviewer-icon.xpm
+
+!isEmpty( QGLVIEWER_STATIC ) {
+  CONFIG *= staticlib
+}
 
 #		--  U n i x  --
 unix {
@@ -58,69 +65,83 @@ unix {
     INCLUDE_DIR = $${PREFIX}/include
   }
 
+  isEmpty( DOC_DIR ) {
+    DOC_DIR = $${PREFIX}/share/doc
+  }
+
   # GLUT for Unix architecture
   !isEmpty( USE_GLUT ) {
     QMAKE_LIBS_OPENGL *= -lglut
   }
 
-  # Documentation install
-  isEmpty( DOC_DIR ) {
-    DOC_DIR = $${PREFIX}/share/doc
-  }
-
   MOC_DIR = .moc
   OBJECTS_DIR = .obj
 
-  # -p option should be -P, so that "make install" as root creates files owned by root
-  # and links are preserved.
-  QMAKE_COPY_FILE = $(COPY) -P
+  # NOT IN DISTRIBUTION BEGIN
+  DISTFILES *= VRenderInterface.Qt4.ui
 
-  # Make much smaller libraries, removing debugging informations
+  QT_VERSION=$$[QT_VERSION]
+  contains( QT_VERSION, "^4.*" ) {
+    MOC_DIR = .moc4
+    OBJECTS_DIR = .obj4
+  } else {
+    MOC_DIR = .moc
+    OBJECTS_DIR = .obj
+  }
+  # NOT IN DISTRIBUTION END
+  # Adds a -P option so that "make install" as root creates files owned by root and links are preserved.
+  # This is not a standard option, and it may have to be removed on old Unix flavors.
+  !hpux {
+    QMAKE_COPY_FILE = $${QMAKE_COPY_FILE} -P
+  }
+
+  # Make much smaller libraries by removing debugging informations
   QMAKE_CFLAGS_RELEASE -= -g
   QMAKE_CXXFLAGS_RELEASE -= -g
 
   # install header
-  include.path  = $${INCLUDE_DIR}/QGLViewer
+  include.path = $${INCLUDE_DIR}/QGLViewer
   include.files = $${HEADERS} qglviewer.cw
+
   # install documentation html
   documentation.path = $${DOC_DIR}/QGLViewer
   documentation.files = ../doc/*.html ../doc/*.css
+
   # install documentation images
   docImages.path = $${DOC_DIR}/QGLViewer/images
   docImages.files = ../doc/images/*
+
   # install documentation examples
   #docExamples.path = $${DOC_DIR}/QGLViewer/examples
   #docExamples.files = ../examples/*../examples/*/*
+
   # install documentation refManual
   docRefManual.path = $${DOC_DIR}/QGLViewer/refManual
   docRefManual.files = ../doc/refManual/*
+
   # install static library
   staticlib.extra = make staticlib
   staticlib.path = $${LIB_DIR}
   staticlib.files = lib$${TARGET}.a
+
   # install library
-  target.path   = $${LIB_DIR}
+  target.path = $${LIB_DIR}
+
   # "make install" configuration options
-  INSTALLS     += target staticlib include documentation docImages docRefManual
+  INSTALLS += target staticlib include documentation docImages docRefManual
 }
 
 
 #		--  L i n u x  --
 linux-g++ {
-  # Patch for gcc 3.2.0
-  system( g++ --version | grep " 3\.2\.0 " > /dev/null ) {
-      message( Patching for gcc 3.2.0 - using debug configuration )
-      CONFIG -= release
-      CONFIG *= debug
-  }
-
-  # Patch for gcc 3.3.1-2
-  system( g++ --version | grep "3\.3\.1\-2" > /dev/null ) {
-      message( Patching for gcc 3.3.1-2 - using debug configuration )
+  # Patch for gcc 3.2.0 and 3.3.1-2
+  system( g++ --version | grep " 3\.2\.0 " > /dev/null )|system( g++ --version | grep " 3\.3\.1\-2" > /dev/null ) {
+      message( Patching gcc bug - using debug configuration )
       CONFIG -= release
       CONFIG *= debug
   }
 }
+
 
 #		--  S G I   I r i x  --
 irix-cc|irix-n32 {
@@ -143,26 +164,21 @@ irix-cc|irix-n32 {
   }
 }
 
-#		--  H P   U X  --
-hpux {
-  QMAKE_COPY_FILE = $(COPY)
-}
-
 
 #		--  W i n d o w s  --
 win32 {
   # Required to use dynamic_cast
   CONFIG *= rtti
 
-  !staticlib {
+  staticlib {
+    DEFINES *= QGLVIEWER_STATIC
+  } else {
     CONFIG *= dll
+    DEFINES *= CREATE_QGLVIEWER_DLL
   }
 
   # Use the DLL version of Qt
   DEFINES *= QT_DLL QT_THREAD_SUPPORT
-
-  # Creates a lib and a dll instead of a static lib
-  DEFINES *= MAKE_QGLVIEWER_DLL
 
   # Make sur to have C++ files, PentiumPro code, few warnings, add
   # support to RTTI and Exceptions, and generate debug info "program database"
@@ -171,8 +187,7 @@ win32 {
   # Optimise for speed, and expand any suitable inlines :
   QMAKE_CXXFLAGS_RELEASE = -O2
   # Optimise for debug, and generate browse database :
-  QMAKE_CXXFLAGS_DEBUG   = -Od -FR"Debug/"
-
+  QMAKE_CXXFLAGS_DEBUG = -Od -FR"Debug/"
   # Make sure that link prints its arguments:
   QMAKE_LDFLAGS += -logo
 }
@@ -193,12 +208,17 @@ macx {
 # In case of compilation troubles with vectorial rendering, uncomment this line
 # DEFINES *= NO_VECTORIAL_RENDER
 
-contains( DEFINES, NO_VECTORIAL_RENDER ): message( Vectorial rendering disabled )
+contains( DEFINES, NO_VECTORIAL_RENDER ) {
+  message( Vectorial rendering disabled )
+} else {
+  QT_VERSION=$$[QT_VERSION]
+  contains( QT_VERSION, "^4.*" ) {
+    FORMS *= VRenderInterface.Qt4.ui
+  } else {
+    FORMS *= VRenderInterface.Qt3.ui
+  }
 
-!contains( DEFINES, NO_VECTORIAL_RENDER ) {
-  FORMS    *= VRenderInterface.ui
-
-  SOURCES  *= \
+  SOURCES *= \
 	VRender/BackFaceCullingOptimizer.cpp \
 	VRender/BSPSortMethod.cpp \
 	VRender/EPSExporter.cpp \
@@ -215,7 +235,7 @@ contains( DEFINES, NO_VECTORIAL_RENDER ): message( Vectorial rendering disabled 
 	VRender/NVector3.cpp \
 	VRender/VRender.cpp
 
-  HEADERS  *= \
+  HEADERS *= \
 	VRender/AxisAlignedBox.h \
 	VRender/Exporter.h \
 	VRender/Functions.h \

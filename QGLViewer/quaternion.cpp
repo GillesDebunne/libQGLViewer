@@ -247,7 +247,11 @@ Quaternion::Quaternion(const QDomElement& element)
 {
   QStringList attribute;
   attribute << "q0" << "q1" << "q2" << "q3";
+#if QT_VERSION >= 0x040000
+  for (int i=0; i<attribute.size(); ++i)
+#else
   for (unsigned int i=0; i<attribute.count(); ++i)
+#endif
     q[i] = DomUtils::floatFromDom(element, attribute[i], ((i<3)?0.0f:1.0f));
 }
 

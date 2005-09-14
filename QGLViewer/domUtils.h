@@ -9,6 +9,16 @@
 // QDomElement loading with syntax checking.
 class DomUtils
 {
+private:
+  static void warning(const QString& message)
+  {
+#if QT_VERSION >= 0x040000
+    qWarning(message.toAscii().constData());
+#else
+    qWarning(message.latin1());
+#endif
+  }
+  
 public:
   static float floatFromDom(const QDomElement& e, const QString& attribute, float defValue)
   {
@@ -21,15 +31,15 @@ public:
 	if (ok)
 	  value = s.toFloat();
 	else
-	  qWarning("Bad float syntax for attribute \""+attribute+"\" in initialization of \""+e.tagName()+"\". Setting value to "+QString::number(value)+".");
+	  warning("Bad float syntax for attribute \""+attribute+"\" in initialization of \""+e.tagName()+"\". Setting value to "+QString::number(value)+".");
       }
     else
-      qWarning("\""+attribute+"\" attribute missing in initialization of \""+e.tagName()+"\". Setting value to "+QString::number(value)+".");
+      warning("\""+attribute+"\" attribute missing in initialization of \""+e.tagName()+"\". Setting value to "+QString::number(value)+".");
 
-#ifdef isnan
+    // The "isnan" method may not be available on all platforms.
+    // Find its equivalent or simply remove these two lines
     if (isnan(value))
-      qWarning("Warning, attribute \""+attribute+"\" initialized to Not a Number in \""+e.tagName()+"\"");
-#endif
+      warning("Warning, attribute \""+attribute+"\" initialized to Not a Number in \""+e.tagName()+"\"");
 
     return value;
   }
@@ -45,10 +55,10 @@ public:
 	if (ok)
 	  value = s.toInt();
 	else
-	  qWarning("Bad integer syntax for attribute \""+attribute+"\" in initialization of \""+e.tagName()+"\". Setting value to "+QString::number(value)+".");
+	  warning("Bad integer syntax for attribute \""+attribute+"\" in initialization of \""+e.tagName()+"\". Setting value to "+QString::number(value)+".");
       }
     else
-      qWarning("\""+attribute+"\" attribute missing in initialization of \""+e.tagName()+"\". Setting value to "+QString::number(value)+".");
+      warning("\""+attribute+"\" attribute missing in initialization of \""+e.tagName()+"\". Setting value to "+QString::number(value)+".");
     return value;
   }
 
@@ -58,18 +68,26 @@ public:
     if (e.hasAttribute(attribute))
       {
 	const QString s = e.attribute(attribute);
+#if QT_VERSION >= 0x040000
+	if (s.toLower() == QString("true"))
+#else
 	if (s.lower() == QString("true"))
+#endif
 	  value = true;
+#if QT_VERSION >= 0x040000
+	else if (s.toLower() == QString("false"))
+#else
 	else if (s.lower() == QString("false"))
+#endif
 	  value = false;
 	else
 	  {
-	    qWarning("Bad boolean syntax for attribute \""+attribute+"\" in initialization of \""+e.tagName()+"\" (should be \"true\" or \"false\").");
-	    qWarning("Setting value to "+(value?QString("true."):QString("false.")));
+	    warning("Bad boolean syntax for attribute \""+attribute+"\" in initialization of \""+e.tagName()+"\" (should be \"true\" or \"false\").");
+	    warning("Setting value to "+(value?QString("true."):QString("false.")));
 	  }
       }
     else
-      qWarning("\""+attribute+"\" attribute missing in initialization of \""+e.tagName()+"\". Setting value to "+(value?QString("true."):QString("false.")));
+      warning("\""+attribute+"\" attribute missing in initialization of \""+e.tagName()+"\". Setting value to "+(value?QString("true."):QString("false.")));
     return value;
   }
 
@@ -87,7 +105,11 @@ public:
     int color[3];
     QStringList attribute;
     attribute << "red" << "green" << "blue";
+#if QT_VERSION >= 0x040000
+    for (int i=0; i<attribute.count(); ++i)
+#else
     for (unsigned int i=0; i<attribute.count(); ++i)
+#endif
       color[i] = DomUtils::intFromDom(e, attribute[i], 0);
     return QColor(color[0], color[1], color[2]);
   }

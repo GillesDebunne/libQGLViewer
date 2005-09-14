@@ -5,9 +5,7 @@
 
 #include "keySequence.h"
 
-#include "qaccel.h"
-//#include "qshared.h"
-//#include "qnamespace.h"
+#include <qaccel.h>
 
 static struct {
     int key;

@@ -34,6 +34,8 @@ ManipulatedCameraFrame& ManipulatedCameraFrame::operator=(const ManipulatedCamer
 ManipulatedCameraFrame::ManipulatedCameraFrame(const ManipulatedCameraFrame& mcf)
   : ManipulatedFrame(mcf)
 {
+  removeFromMouseGrabberPool();
+  connect(&flyTimer_, SIGNAL(timeout()), SLOT(flyUpdate()));
   (*this)=(mcf);
 }
 
@@ -153,6 +155,9 @@ void ManipulatedCameraFrame::startAction(int ma, bool withConstraint)
     {
     case QGLViewer::MOVE_FORWARD:
     case QGLViewer::MOVE_BACKWARD:
+#if QT_VERSION >= 0x040000
+      flyTimer_.setSingleShot(false);
+#endif
       flyTimer_.start(10);
       break;
     default:
@@ -168,9 +173,12 @@ resulting displacements are basically inverted from those of a ManipulatedFrame.
 void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* const camera)
 {
   // #CONNECTION# QGLViewer::mouseMoveEvent does the updateGL.
+  // NO_MOUSE_ACTION should not emit manipulated().
   if (action_ != QGLViewer::NO_MOUSE_ACTION)
     {
       if (action_ == QGLViewer::ZOOM_ON_REGION)
+	// ZOOM_ON_REGION should not emit manipulated().
+	// prevPos_ is used to draw rectangle feedback.
 	prevPos_ = event->pos();
       else
 	{
@@ -220,7 +228,7 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 	    case QGLViewer::ZOOM:
 	      {
 		//#CONNECTION# wheelEvent() ZOOM case
-		const float coef = QMAX(fabs((camera->frame()->coordinatesOf(camera->revolveAroundPoint())).z), 0.2f*camera->sceneRadius());
+		const float coef = qMax(fabs((camera->frame()->coordinatesOf(camera->revolveAroundPoint())).z), 0.2f*camera->sceneRadius());
 		Vec trans(0.0, 0.0, -coef * (event->y() - prevPos_.y()) / camera->screenHeight());
 		translate(inverseTransformOf(trans));
 		break;
@@ -337,7 +345,7 @@ void ManipulatedCameraFrame::wheelEvent(QWheelEvent* const event, Camera* const 
       {
 	const float wheelSensitivityCoef = 8E-4f;
 	//#CONNECTION# mouseMoveEvent() ZOOM case
-       	const float coef = QMAX(fabs((camera->frame()->coordinatesOf(camera->revolveAroundPoint())).z), 0.2f*camera->sceneRadius());
+       	const float coef = qMax(fabs((camera->frame()->coordinatesOf(camera->revolveAroundPoint())).z), 0.2f*camera->sceneRadius());
 	Vec trans(0.0, 0.0, coef * event->delta() * wheelSensitivity() * wheelSensitivityCoef);
 	translate(inverseTransformOf(trans));
 	emit manipulated();
@@ -364,7 +372,12 @@ void ManipulatedCameraFrame::wheelEvent(QWheelEvent* const event, Camera* const 
   const int finalDrawAfterWheelEventDelay = 400;
 
   // Starts (or prolungates) the timer.
+#if QT_VERSION >= 0x040000
+  flyTimer_.setSingleShot(true);
+  flyTimer_.start(finalDrawAfterWheelEventDelay);
+#else
   flyTimer_.start(finalDrawAfterWheelEventDelay, true);
+#endif
 
   // This could also be done *before* manipulated is emitted, so that isManipulated() returns false.
   // But then fastDraw would not be used with wheel.

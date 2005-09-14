@@ -1,7 +1,7 @@
 #		l i b Q G L V i e w e r   Q t  - 2 . 3
 #	C o m p i l a t i o n    c o n f i g u r a t i o n
 
-# Replace QGLViewer.pro by this file to compile libQGLViewer with Qt 2.3
+# Replace QGLViewer.pro by this file to compile libQGLViewer with Qt 2.3 on windows.
 
 # Use the MS Visual "Generate Qt Project" icon to create a workspace out of this file.
 # Select the generated .dsp file using File / Open workspace and compile the project.
@@ -25,7 +25,6 @@ HEADERS  = qglviewer.h \
 	   quaternion.h \
 	   vec.h \
 	   domUtils.h \
-           icon.h \
 	   config.h
 
 SOURCES  = qglviewer.cpp \
@@ -45,14 +44,13 @@ SOURCES  = qglviewer.cpp \
 DEFINES *= QT_DLL QT_THREAD_SUPPORT
 
 # Creates a lib and a dll instead of a static lib
-DEFINES *= MAKE_QGLVIEWER_DLL
+DEFINES *= CREATE_QGLVIEWER_DLL
 
 # Uncomment this line and remove the rest of the file if you encounter
-# compilation problems with templates
+# compilation problems with the vectorial rendering code.
 # DEFINES *= NO_VECTORIAL_RENDER
 
-# You have to rename VRenderInterface.Qt2.3.ui into VRenderInterface.ui
-INTERFACES = VRenderInterface.ui
+INTERFACES = VRenderInterface.Qt2.ui
 
 SOURCES  *= \
         VRender/BackFaceCullingOptimizer.cpp \

@@ -43,7 +43,11 @@ Vec::Vec(const QDomElement& element)
 {
   QStringList attribute;
   attribute << "x" << "y" << "z";
+#if QT_VERSION >= 0x040000
+  for (int i=0; i<attribute.size(); ++i)
+#else
   for (unsigned int i=0; i<attribute.count(); ++i)
+#endif
 #ifdef UNION_NOT_SUPPORTED
     this->operator[](i) = DomUtils::floatFromDom(element, attribute[i], 0.0);
 #else

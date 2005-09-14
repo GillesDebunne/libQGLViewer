@@ -113,7 +113,14 @@ namespace qglviewer {
   public:
     MouseGrabber();
     /*! Virtual destructor. Removes the MouseGrabber from the MouseGrabberPool(). */
+#if QT_VERSION < 0x030000
+    fix-me;
+#endif
+#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
+    virtual ~MouseGrabber() { MouseGrabber::MouseGrabberPool_.removeAll(this); };
+#else
     virtual ~MouseGrabber() { MouseGrabber::MouseGrabberPool_.removeRef(this); };
+#endif
 
     /*! @name Mouse grabbing detection */
     //@{
@@ -164,27 +171,38 @@ namespace qglviewer {
     /*! @name MouseGrabber pool */
     //@{
   public:
-    /*! This list contains all the active MouseGrabbers.
+    /*! Returns a list containing pointers to all the active MouseGrabbers.
 
     Used by the QGLViewer to parse all the MouseGrabbers and to check if any of them grabsMouse()
     using checkIfGrabsMouse().
 
-    You should not have to directly use this list. In case you want to, use code like:
-    \code
-    QPtrListIterator<MouseGrabber> it(MouseGrabber::MouseGrabberPool());
-    for (MouseGrabber* mg; (mg = it.current()) != NULL; ++it)
-      mg->anyAction(); // possible dynamic_cast here.
-    \endcode
+    You should not have to directly use this list. Use removeFromMouseGrabberPool() and
+    addInMouseGrabberPool() to modify this list.
 
-    Use removeFromMouseGrabberPool() and addInMouseGrabberPool() to modify this list. */
+    \attention If your Qt major version number is 3 (Qt 3.x series), this method returns a \c
+    QPtrList<MouseGrabber> instead. Use a \c QPtrListIterator instead to traverse the list. */
+#if QT_VERSION < 0x030000
+    fix_me;
+#endif
+#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
+    static const QList<MouseGrabber*>& MouseGrabberPool() { return MouseGrabber::MouseGrabberPool_; };
+#else
     static const QPtrList<MouseGrabber>& MouseGrabberPool() { return MouseGrabber::MouseGrabberPool_; };
+#endif
 
     /*! Returns \c true if the MouseGrabber is currently in the MouseGrabberPool() list.
 
     Default value is \c true. When set to \c false using removeFromMouseGrabberPool(), the
     QGLViewers no longer checkIfGrabsMouse() on this MouseGrabber. Use addInMouseGrabberPool() to
     insert it back. */
-    bool isInMouseGrabberPool() const { return MouseGrabber::MouseGrabberPool_.findRef( this ) != -1; };
+#if QT_VERSION < 0x030000
+    fix-me;
+#endif
+#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
+    bool isInMouseGrabberPool() const { return MouseGrabber::MouseGrabberPool_.contains(const_cast<MouseGrabber*>(this)); };
+#else
+    bool isInMouseGrabberPool() const { return MouseGrabber::MouseGrabberPool_.findRef(this) != -1; };
+#endif
     void addInMouseGrabberPool();
     void removeFromMouseGrabberPool();
     void clearMouseGrabberPool(bool autoDelete=false);
@@ -237,7 +255,11 @@ namespace qglviewer {
     bool grabsMouse_;
 
     // Q G L V i e w e r   p o o l
+#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
+    static QList<MouseGrabber*> MouseGrabberPool_;
+#else
     static QPtrList<MouseGrabber> MouseGrabberPool_;
+#endif
   };
 
 } // namespace qglviewer

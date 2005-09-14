@@ -7,12 +7,12 @@
 #include "quaternion.h"
 
 // If you compiler complains about incomplete type, uncomment the next line
-#include "frame.h"
+// #include "frame.h"
 // and comment "class Frame;" 3 lines below
 
 namespace qglviewer {
   class Camera;
-  //class Frame;
+  class Frame;
   /*! \brief A keyFrame Catmull-Rom Frame interpolator.
   \class KeyFrameInterpolator keyFrameInterpolator.h QGLViewer/keyFrameInterpolator.h
 
@@ -291,7 +291,7 @@ namespace qglviewer {
       float time() const { return time_; }
       const Frame* frame() const { return frame_; }
       void updateValuesFromPointer();
-      void flipOrientation(const Quaternion& prev);
+      void flipOrientationIfNeeded(const Quaternion& prev);
       void computeTangent(const KeyFrame* const prev, const KeyFrame* const next);
     private:
       Vec p_, tgP_;
@@ -302,11 +302,19 @@ namespace qglviewer {
 #endif
 
     // K e y F r a m e s
+#if QT_VERSION < 0x040000
     mutable QPtrList<KeyFrame> keyFrame_;
     // 4 succesive frames. interpolationTime_ is between index 1 and 2.
     QPtrListIterator<KeyFrame>* currentFrame_[4];
+    // Cached path computed values (for drawPath()).
     // If you compiler complains about incomplete type, include frame.h (see top of this file)
     QValueVector<Frame> path_;
+#else
+    mutable QList<KeyFrame*> keyFrame_;
+    QMutableListIterator<KeyFrame*>* currentFrame_[4];
+    // If you compiler complains about incomplete type, include frame.h (see top of this file)
+    QList<Frame> path_;
+#endif
 
     // A s s o c i a t e d   f r a m e
     Frame* frame_;
