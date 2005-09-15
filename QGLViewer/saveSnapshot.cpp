@@ -283,12 +283,7 @@ static int saveVectorialSnapshot(const QString& filename, QGLWidget* widget, con
   static VRenderInterface* VRinterface = NULL;
     
   if (!VRinterface)
-#if QT_VERSION >= 0x030000
     VRinterface = new VRenderInterface(widget);
-#else
-#error Are two cases really needed ?
-    VRinterface = new VRenderInterface(widget, "VRender interface", true);
-#endif
 
   // Configure interface according to selected snapshotFormat
   if (snapshotFormat == "XFIG")

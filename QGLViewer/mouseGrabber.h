@@ -113,10 +113,7 @@ namespace qglviewer {
   public:
     MouseGrabber();
     /*! Virtual destructor. Removes the MouseGrabber from the MouseGrabberPool(). */
-#if QT_VERSION < 0x030000
-    fix-me;
-#endif
-#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
+#if QT_VERSION >= 0x040000
     virtual ~MouseGrabber() { MouseGrabber::MouseGrabberPool_.removeAll(this); };
 #else
     virtual ~MouseGrabber() { MouseGrabber::MouseGrabberPool_.removeRef(this); };
@@ -179,15 +176,15 @@ namespace qglviewer {
     You should not have to directly use this list. Use removeFromMouseGrabberPool() and
     addInMouseGrabberPool() to modify this list.
 
-    \attention If your Qt major version number is 3 (Qt 3.x series), this method returns a \c
-    QPtrList<MouseGrabber> instead. Use a \c QPtrListIterator instead to traverse the list. */
-#if QT_VERSION < 0x030000
-    fix_me;
-#endif
-#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
+    \attention This method returns a \c QPtrList<MouseGrabber> with Qt 3 and a \c QList<MouseGrabber> with Qt 2. */
+#if QT_VERSION >= 0x040000
     static const QList<MouseGrabber*>& MouseGrabberPool() { return MouseGrabber::MouseGrabberPool_; };
 #else
+# if QT_VERSION >= 0x030000
     static const QPtrList<MouseGrabber>& MouseGrabberPool() { return MouseGrabber::MouseGrabberPool_; };
+# else
+    static const QList<MouseGrabber>& MouseGrabberPool() { return MouseGrabber::MouseGrabberPool_; };
+# endif
 #endif
 
     /*! Returns \c true if the MouseGrabber is currently in the MouseGrabberPool() list.
@@ -195,10 +192,7 @@ namespace qglviewer {
     Default value is \c true. When set to \c false using removeFromMouseGrabberPool(), the
     QGLViewers no longer checkIfGrabsMouse() on this MouseGrabber. Use addInMouseGrabberPool() to
     insert it back. */
-#if QT_VERSION < 0x030000
-    fix-me;
-#endif
-#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
+#if QT_VERSION >= 0x040000
     bool isInMouseGrabberPool() const { return MouseGrabber::MouseGrabberPool_.contains(const_cast<MouseGrabber*>(this)); };
 #else
     bool isInMouseGrabberPool() const { return MouseGrabber::MouseGrabberPool_.findRef(this) != -1; };
@@ -255,7 +249,7 @@ namespace qglviewer {
     bool grabsMouse_;
 
     // Q G L V i e w e r   p o o l
-#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
+#if QT_VERSION >= 0x040000
     static QList<MouseGrabber*> MouseGrabberPool_;
 #else
     static QPtrList<MouseGrabber> MouseGrabberPool_;

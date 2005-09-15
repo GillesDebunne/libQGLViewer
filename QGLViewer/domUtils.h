@@ -36,11 +36,13 @@ public:
     else
       warning("\""+attribute+"\" attribute missing in initialization of \""+e.tagName()+"\". Setting value to "+QString::number(value)+".");
 
+#if defined(isnan)
     // The "isnan" method may not be available on all platforms.
     // Find its equivalent or simply remove these two lines
     if (isnan(value))
       warning("Warning, attribute \""+attribute+"\" initialized to Not a Number in \""+e.tagName()+"\"");
-
+#endif
+    
     return value;
   }
 

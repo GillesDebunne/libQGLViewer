@@ -5,6 +5,8 @@
 #include <qtimer.h>
 
 #include "quaternion.h"
+// Not actually needed, but some bad compilers (Microsoft VS6) complain.
+#include "frame.h"
 
 // If you compiler complains about incomplete type, uncomment the next line
 // #include "frame.h"
@@ -302,18 +304,20 @@ namespace qglviewer {
 #endif
 
     // K e y F r a m e s
-#if QT_VERSION < 0x040000
+#if QT_VERSION >= 0x040000
+    mutable QList<KeyFrame*> keyFrame_;
+    QMutableListIterator<KeyFrame*>* currentFrame_[4];
+    QList<Frame> path_;
+#else
     mutable QPtrList<KeyFrame> keyFrame_;
     // 4 succesive frames. interpolationTime_ is between index 1 and 2.
     QPtrListIterator<KeyFrame>* currentFrame_[4];
+# if QT_VERSION >= 0x030000
     // Cached path computed values (for drawPath()).
-    // If you compiler complains about incomplete type, include frame.h (see top of this file)
     QValueVector<Frame> path_;
-#else
-    mutable QList<KeyFrame*> keyFrame_;
-    QMutableListIterator<KeyFrame*>* currentFrame_[4];
-    // If you compiler complains about incomplete type, include frame.h (see top of this file)
-    QList<Frame> path_;
+# else
+    QVector<Frame> path_;
+# endif
 #endif
 
     // A s s o c i a t e d   f r a m e

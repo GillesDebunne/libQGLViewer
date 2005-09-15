@@ -1,17 +1,18 @@
 #		l i b Q G L V i e w e r   Q t  - 2 . 3
 #	C o m p i l a t i o n    c o n f i g u r a t i o n
 
-# Replace QGLViewer.pro by this file to compile libQGLViewer with Qt 2.3 on windows.
+# Use this file instead of QGLViewer.pro to compile libQGLViewer with Qt 2.3 on windows.
 
 # Use the MS Visual "Generate Qt Project" icon to create a workspace out of this file.
 # Select the generated .dsp file using File / Open workspace and compile the project.
+
 # See doc/installWindows.html for compilation instructions.
 
 #		--  M a i n   v a r i a b l e s  --
 TEMPLATE = lib
 CONFIG  *= qt opengl warn_on release thread dll
 TARGET   = QGLViewer
-VERSION  = 2.0.1
+VERSION  = 2.1.0
 
 HEADERS  = qglviewer.h \
 	   camera.h \

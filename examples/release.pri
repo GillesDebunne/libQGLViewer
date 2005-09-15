@@ -1,6 +1,6 @@
 #Windows Qt 2.3 users should uncomment the next 2 lines and remove all the remaining lines:
 #DEFINES *= QT_DLL QT_THREAD_SUPPORT
-#LIBS *= QGLViewer.lib
+#LIBS *= QGLViewer.Qt2.3.lib
 
 # The rest of this configuration file is pretty complex since it tries to automatically
 # detect system paths and configuration. In your applications, you can probably simply use:

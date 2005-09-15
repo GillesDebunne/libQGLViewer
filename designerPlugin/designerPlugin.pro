@@ -6,14 +6,16 @@ QT_VERSION=$$[QT_VERSION]
 contains( QT_VERSION, "^4.*" ) {
   CONFIG += designer
   # Documentation says $$QT_BUILD_TREE, but it does not work
-  DESTDIR = $$[QT_INSTALL_PLUGINS]/designer
+  target.path = $$[QT_INSTALL_PLUGINS]/designer
   HEADERS = qglviewerPlugin.Qt4.h
   SOURCES = qglviewerPlugin.Qt4.cpp
 } else {
-  DESTDIR = $(QTDIR)/plugins/designer
+  target.path = $(QTDIR)/plugins/designer
   HEADERS = qglviewerPlugin.Qt3.h
   SOURCES = qglviewerPlugin.Qt3.cpp
 }
+
+INSTALLS += target
 
 include( ../examples/examples.pri )
 

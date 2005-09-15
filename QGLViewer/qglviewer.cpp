@@ -38,10 +38,7 @@ using namespace std;
 using namespace qglviewer;
 
 // Static private variable
-#if QT_VERSION < 0x030000
-  fix_me;
-#endif
-#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
+#if QT_VERSION >= 0x040000
   QList<QGLViewer*> QGLViewer::QGLViewerPool_;
 #else
   QPtrList<QGLViewer> QGLViewer::QGLViewerPool_;
@@ -215,10 +212,7 @@ QGLViewer::~QGLViewer()
   // Hence we saveToFile here. It is however a bad idea if virtual domElement() has been overloaded !
   // if (parent())
     // saveStateToFileForAllViewers();
-#if QT_VERSION < 0x030000
-  fix_me;
-#endif
-#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
+#if QT_VERSION >= 0x040000
   QGLViewer::QGLViewerPool_.removeAll(this);
 #else
   QGLViewer::QGLViewerPool_.removeRef(this);
@@ -2125,7 +2119,7 @@ QString QGLViewer::cameraPathKeysString() const
   if (pathIndex_.isEmpty())
     return QString::null;
 
-#if QT_VERSION >= 0x040000
+#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
   QVector<int> keys;
 #else
   QValueVector<int> keys;
@@ -2143,7 +2137,7 @@ QString QGLViewer::cameraPathKeysString() const
 # endif
 #endif
 
-#if QT_VERSION >= 0x040000
+#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
   QVector<int>::const_iterator it = keys.begin(), end = keys.end();
 #else
   QValueVector<int>::const_iterator it = keys.begin(), end = keys.end();

@@ -228,7 +228,7 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 	    case QGLViewer::ZOOM:
 	      {
 		//#CONNECTION# wheelEvent() ZOOM case
-		const float coef = qMax(fabs((camera->frame()->coordinatesOf(camera->revolveAroundPoint())).z), 0.2f*camera->sceneRadius());
+		const float coef = qMax(fabsf((camera->frame()->coordinatesOf(camera->revolveAroundPoint())).z), 0.2f*camera->sceneRadius());
 		Vec trans(0.0, 0.0, -coef * (event->y() - prevPos_.y()) / camera->screenHeight());
 		translate(inverseTransformOf(trans));
 		break;
@@ -345,7 +345,7 @@ void ManipulatedCameraFrame::wheelEvent(QWheelEvent* const event, Camera* const 
       {
 	const float wheelSensitivityCoef = 8E-4f;
 	//#CONNECTION# mouseMoveEvent() ZOOM case
-       	const float coef = qMax(fabs((camera->frame()->coordinatesOf(camera->revolveAroundPoint())).z), 0.2f*camera->sceneRadius());
+       	const float coef = qMax(fabsf((camera->frame()->coordinatesOf(camera->revolveAroundPoint())).z), 0.2f*camera->sceneRadius());
 	Vec trans(0.0, 0.0, coef * event->delta() * wheelSensitivity() * wheelSensitivityCoef);
 	translate(inverseTransformOf(trans));
 	emit manipulated();

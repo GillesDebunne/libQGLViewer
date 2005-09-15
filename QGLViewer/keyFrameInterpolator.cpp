@@ -362,7 +362,7 @@ void KeyFrameInterpolator::drawPath(int mask, int nbFrames, float scale)
       if (mask & 1)
 	{
 	  glBegin(GL_LINE_STRIP);
-#if QT_VERSION >= 0x040000
+#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
 	  for (int i=0; i < path_.size(); ++i)
 	    glVertex3fv((path_.at(i)).position());
 #else
@@ -377,7 +377,7 @@ void KeyFrameInterpolator::drawPath(int mask, int nbFrames, float scale)
 	  if (nbFrames > nbSteps)
 	    nbFrames = nbSteps;
 	  float goal = 0.0f;
-#if QT_VERSION >= 0x040000
+#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
 	  for (int i=0; i < path_.size(); ++i)
 #else
 	    for (QValueVector<Frame>::const_iterator pnt=path_.begin(), end=path_.end(); pnt!=end; ++pnt)
@@ -386,7 +386,7 @@ void KeyFrameInterpolator::drawPath(int mask, int nbFrames, float scale)
 		{
 		  goal += nbSteps / static_cast<float>(nbFrames);
 		  glPushMatrix();
-#if QT_VERSION >= 0x040000
+#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
 		  glMultMatrixd((path_.at(i)).matrix());
 #else
 		  glMultMatrixd((*pnt).matrix());

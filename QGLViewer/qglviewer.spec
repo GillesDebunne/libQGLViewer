@@ -1,10 +1,10 @@
 %define version_major 2
-%define version_minor 0
-%define version_patch 1
+%define version_minor 1
+%define version_patch 0
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_patch}
-Release:	 0
+Release:	0
 
 Summary:	Qt based OpenGL generic 3D viewer library.
 License:	GPL
@@ -14,10 +14,9 @@ URL:		http://artis.imag.fr/Members/Gilles.Debunne/QGLViewer
 Buildroot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
-A versatile 3D viewer library for OpenGL application development.
-Features many useful classical functionalities such as a camera trackball,
-screenshot savings, stereo display, (hierarchical) frames that can be moved
-with the mouse, keyFrame interpolator...
+A versatile 3D viewer library for OpenGL application development. Features many useful classical
+functionalities such as a camera trackball, screenshot savings, stereo display, (hierarchical)
+frames that can be moved with the mouse, keyFrame interpolator...
 
 %package devel
 Summary: The libQGLViewer header files, documentation and examples.
@@ -25,10 +24,8 @@ Group: Development/Libraries
 Requires: %{name} = 0:%{version}
 
 %description devel
-This package contains the header files for libQGLViewer.
-Install this package if you want to develop programs
-that uses libQGLViewer. A reference documentation and pedagogical
-examples are included.
+This package contains the header files for libQGLViewer. Install this package to develop programs
+that uses libQGLViewer. A reference documentation and pedagogical examples are included.
 
 %prep
 %define docDir %{_defaultdocdir}/QGLViewer
@@ -37,24 +34,24 @@ examples are included.
 %setup -q -n %{name}-%{version}-%{release}
 
 %build
+# if [[ -z "${QTDIR}" ]]
+# then
+  # echo "QTDIR undefined - Trying to autodetect..."
+  # autoDetect=$(locate lib/libqt | head -1 | sed s:"/lib/libqt.*":"":)
+  # if [[ -d $autoDetect ]]
+  # then
+    # export QTDIR=$autoDetect
+  # else
+    # echo "Compilation error - QTDIR is undefined, unable to run qmake"
+    # echo "Use export QTDIR=... ([ba]sh) or setenv QTDIR ... ([t]csh) and re-run"
+    # exit 1
+  # fi
+# fi
+
+# export PATH=${PATH}:${QTDIR}/bin
+# export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${QTDIR}/lib
+
 cd QGLViewer
-
-if [[ -z "${QTDIR}" ]]
-then
-  echo "QTDIR undefined - Trying to autodetect..."
-  autoDetect=`locate lib/libqt | head -1 | sed s:"/lib/libqt.*":"":`
-  if [[ -d $autoDetect ]]
-  then
-    export QTDIR=$autoDetect
-  else
-    echo "Compilation error - QTDIR is undefined, unable to run qmake"
-    echo "Use export QTDIR=... ([ba]sh) or setenv QTDIR ... ([t]csh) and re-run"
-    exit 1
-  fi
-fi
-
-export PATH=${PATH}:${QTDIR}/bin
-export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${QTDIR}/lib
 qmake
 make %{?_smp_mflags}
 make staticlib
@@ -72,6 +69,9 @@ ln -s libQGLViewer.so.%{version} $RPM_BUILD_ROOT%{libDir}/libQGLViewer.so.%{vers
 ln -s libQGLViewer.so.%{version} $RPM_BUILD_ROOT%{libDir}/libQGLViewer.so
 %{__install} --mode=644 QGLViewer/libQGLViewer.a $RPM_BUILD_ROOT%{libDir}
 
+%{__install} -d $RPM_BUILD_ROOT%{includeDir}/designerPlugin
+%{__install} --mode=644 designerPlugin/* $RPM_BUILD_ROOT%{includeDir}/designerPlugin
+
 # %{__install} -d $RPM_BUILD_ROOT%{_mandir}/man3
 %{__install} -d $RPM_BUILD_ROOT%{docDir}
 %{__install} -d $RPM_BUILD_ROOT%{docDir}/refManual
@@ -87,10 +87,10 @@ ln -s libQGLViewer.so.%{version} $RPM_BUILD_ROOT%{libDir}/libQGLViewer.so
 # %{__install} --mode=644 doc/examples/*.html $RPM_BUILD_ROOT%{docDir}/examples
 # %{__install} --mode=644 examples/examples.pro $RPM_BUILD_ROOT%{docDir}/examples
 # %{__install} --mode=644 examples/contribs/contribs.pro $RPM_BUILD_ROOT%{docDir}/examples/contribs
-for dir in `find examples -type d`
+for dir in $(find examples -type d)
 do
   %{__install} -d $RPM_BUILD_ROOT%{docDir}/$dir
-  for file in `find $dir -type f -maxdepth 1`
+  for file in $(find $dir -type f -maxdepth 1)
   do
     %{__install} --mode=644 $file $RPM_BUILD_ROOT%{docDir}/$dir
   done
@@ -116,6 +116,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{includeDir}
 %{includeDir}/*.h
 %{includeDir}/qglviewer.cw
+
+%dir %{includeDir}/designerPlugin
+%{includeDir}/designerPlugin/*
 
 # %doc %{_mandir}/man3/QGLViewer.3.bz2
 # %doc %{_mandir}/man3/qglviewer_*

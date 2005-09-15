@@ -1,5 +1,5 @@
 /* XPM */
-static char * qglviewer_icon[] = {
+static const char * qglviewer_icon[] = {
 "100 100 256 2",
 "  	c None",
 ". 	c #0A0B27",

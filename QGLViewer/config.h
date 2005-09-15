@@ -6,7 +6,7 @@
 #ifndef QGLVIEWER_CONFIG_H
 #define QGLVIEWER_CONFIG_H
 
-#define QGLVIEWER_VERSION 0x020001
+#define QGLVIEWER_VERSION 0x020100
 
 // Needed for Qt < 4 (?)
 #ifndef QT_CLEAN_NAMESPACE
@@ -77,11 +77,11 @@
 # else
 #  pragma warning( disable : 4530 ) // exception handler but unwind semantics. Use \GX option
 #  include <vector> // also defines std::max and std::abs
-#  define QValueVector std::vector
+#  define QVector std::vector
 #  undef Q_UNUSED
 #  define Q_UNUSED(x) (void)x;
 #  include <qlist.h>
-#  error Check this out
+// So that there is no need to make Qt2 specific cases
 #  define QPtrList QList
 #  define QPtrListIterator QListIterator
 # endif

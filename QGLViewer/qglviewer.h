@@ -443,9 +443,9 @@ public:
   The available formats are those handled by Qt. Classical values are \c "JPEG", \c "PNG",
   \c "PPM, \c "BMP". Use the following code to get the actual list:
   \code
+  QList<QByteArray> formatList = QImageReader::supportedImageFormats();
+  // or with Qt version 2 or 3:
   QStringList formatList = QImage::outputFormatList();
-  for (QStringList::Iterator it = formatList.begin(); it != formatList.end(); ++it)
-  qWarning(*it);
   \endcode
 
   If the library was compiled with the vectorial rendering option (default), three additional
@@ -480,12 +480,19 @@ public:
   \note This value has no impact on the images produced in vectorial format. */
   int snapshotQuality() { return snapshotQuality_; };
 
+#if QT_VERSION >= 0x030000 // Hack to fool moc 2.3. Mind the order !
 public slots:
-// Qt 2.3 does not support double default value parameters in slots.
-// Uncomment the following line (and comment the next one) with Qt 2.3
-// void saveSnapshot(bool automatic, bool overwrite=false);
-void saveSnapshot(bool automatic=false, bool overwrite=false);
+#else
+public:
+#endif
+  // Qt 2.3 does not support double default value parameters in slots.
+  // This method is hence no declared as a slot with Qt 2.3.
+  // If you want to make saveSnapshot() a slot, only leave "public slots" in the above block
+  // and uncomment the following line (and comment the next one)
+  //void saveSnapshot(bool automatic, bool overwrite=false);
+  void saveSnapshot(bool automatic=false, bool overwrite=false);
 
+public slots:
   void saveSnapshot(const QString& filename, bool overwrite=false);
 
   void setSnapshotFilename(const QString& name);
@@ -928,15 +935,15 @@ public:
 public slots:
 void setMouseBinding(int state, MouseHandler handler, MouseAction action, bool withConstraint=true);
 #if QT_VERSION < 0x030000
-  // Two slots cannot have the same name with Qt 2.3
+  // Two slots cannot have the same name or two default parameters with Qt 2.3.
 public:
 #endif
   void setMouseBinding(int state, ClickAction action, bool doubleClick=false, QtMouseButtons buttonsBefore=Qt::NoButton);
+  void setMouseBindingDescription(int state, QString description, bool doubleClick=false, QtMouseButtons buttonsBefore=Qt::NoButton);
 #if QT_VERSION < 0x030000
 public slots:
 #endif
-void setWheelBinding(QtKeyboardModifiers modifiers, MouseHandler handler, MouseAction action, bool withConstraint=true);
-  void setMouseBindingDescription(int state, QString description, bool doubleClick=false, QtMouseButtons buttonsBefore=Qt::NoButton);
+  void setWheelBinding(QtKeyboardModifiers modifiers, MouseHandler handler, MouseAction action, bool withConstraint=true);
   void setHandlerKeyboardModifiers(MouseHandler handler, QtKeyboardModifiers modifiers);
 #ifndef DOXYGEN
   void setHandlerStateKey(MouseHandler handler, int buttonState);
@@ -999,10 +1006,7 @@ public:
     for (QGLViewer* viewer; (viewer = it.current()) != NULL; ++it)
     connect(myObject, SIGNAL(mySignal), viewer, SLOT(updateGL()));
     \endcode */
-#if QT_VERSION < 0x030000
-  fix-me;
-#endif
-#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
+#if QT_VERSION >= 0x040000
   static const QList<QGLViewer*>& QGLViewerPool() { return QGLViewer::QGLViewerPool_; };
 #else
   static const QPtrList<QGLViewer>& QGLViewerPool() { return QGLViewer::QGLViewerPool_; };
@@ -1015,10 +1019,7 @@ public:
 
     When a QGLViewer is deleted, the following QGLViewers' indexes are shifted down. Returns -1 if the
     QGLViewer could not be found (which should not be possible). */
-#if QT_VERSION < 0x030000
-  fix-me;
-#endif
-#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
+#if QT_VERSION >= 0x040000
   static int QGLViewerIndex(const QGLViewer* const viewer) { return QGLViewer::QGLViewerPool_.indexOf(const_cast<QGLViewer*>(viewer)); };
 #else
   static int QGLViewerIndex(const QGLViewer* const viewer) { return QGLViewer::QGLViewerPool_.find(viewer); };
@@ -1172,10 +1173,7 @@ private:
   int snapshotCounter_, snapshotQuality_;
 
   // Q G L V i e w e r   p o o l
-#if QT_VERSION < 0x030000
-  fix_me;
-#endif
-#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
+#if QT_VERSION >= 0x040000
   static QList<QGLViewer*> QGLViewerPool_;
 #else
   static QPtrList<QGLViewer> QGLViewerPool_;

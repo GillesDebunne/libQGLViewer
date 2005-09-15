@@ -63,7 +63,7 @@ You need root privileges to install the library, since default install paths are
 <br/>
 
 <h3>Compilation of the examples</h3>
-Once the library is installed, <a href="examples/index.html#linux">compile the examples</a>:
+Once the library is compiled, <a href="examples/index.html#linux">compile the examples</a>:
 <pre>
 cd ../examples
 qmake
@@ -76,7 +76,7 @@ make
 The following files are installed:
 <ul>
 <li>The library (<code>libQGLViewer-#VERSION#.so</code> and <code>libQGLViewer-#VERSION#.a</code>) in <code>/usr/lib</code></li>
-<li>The header files in <code>/usr/include/QGLViewer</code></li>
+<li>The header files and designer plugin code in <code>/usr/include/QGLViewer</code></li>
 <li>The documentation and the examples in <code>/usr/share/doc/QGLViewer</code></li>
 </ul>
 
@@ -254,10 +254,13 @@ This installation is optional. To compile and install the QGLViewer designer plu
 cd designerPlugin
 qmake
 make
+make install
 </pre>
 
-This requires root privileges since the plugin is installed in <code>QTDIR/plugins/designer</code>,
-which is usually a system directory.
+This last step requires root privileges since the plugin is installed in
+<code>QTDIR/plugins/designer</code>, which is usually a system directory. The
+<code>designerPlugin</code> directory is located in the tarball root directory or in
+<code>/usr/include/QGLViewer/designerPlugin</code> if you installed QGLViewer from the RPM.
 
 <p>
 Such a plugin eases the creation of user interfaces that feature a QGLViewer using designer. It
