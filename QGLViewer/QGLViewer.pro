@@ -13,9 +13,9 @@
 # USE_GLUT = yes
 
 TEMPLATE = lib
-CONFIG  *= qt opengl warn_on release thread create_prl
+CONFIG  *= qt opengl warn_on release thread create_prl dll
 TARGET   = QGLViewer
-VERSION  = 2.0.1
+VERSION  = 2.1.1
 
 HEADERS  = qglviewer.h \
 	   camera.h \

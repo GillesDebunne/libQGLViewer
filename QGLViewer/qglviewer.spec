@@ -1,6 +1,6 @@
 %define version_major 2
 %define version_minor 1
-%define version_patch 0
+%define version_patch 1
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_patch}
@@ -139,6 +139,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+
+* Sun Sep 18 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.1.1-0
+- saveSnapshot() file dialog problem fixed.
 
 * Wed Sep 14 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.1.0-0
 - Now runs with Qt version 2, 3 and 4. Dual licensing.

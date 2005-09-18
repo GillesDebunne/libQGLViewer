@@ -16,7 +16,6 @@ then
   shift
 fi
 
-
 if [ $# = 0 ]
 then
   files="refManual/class*.html"
@@ -26,6 +25,8 @@ fi
 
 docFiles=`ls -1 $files | grep -v -- -members.html`
 docFiles=`ls -1 refManual/class*QGLViewer.html`
+
+test -d .checkDoc || mkdir .checkDoc
 
 # Unreferenced xxxx() methods
 for f in $docFiles

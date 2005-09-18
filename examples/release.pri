@@ -4,8 +4,8 @@
 
 # The rest of this configuration file is pretty complex since it tries to automatically
 # detect system paths and configuration. In your applications, you can probably simply use:
-# LIBS *= -lQGLViewer (unix)
-# LIBS *= QGLViewer.lib (Visual 6) or QGLViewer200.lib (.NET) (win32)
+#unix:LIBS *= -lQGLViewer
+#win32:LIBS *= QGViewer211.lib (with Visual 6, use QGLViewer.lib instead)
 
 # Used by Qt4 only. Adds appropriate include paths.
 QT += xml opengl
@@ -89,7 +89,7 @@ unix {
   QMAKE_CFLAGS_RELEASE -= -g
   QMAKE_CXXFLAGS_RELEASE -= -g
 
-  # Hide intermediate files
+  # Intermediate files are created in an hidden folder
   MOC_DIR = .moc
   OBJECTS_DIR = .obj
 
@@ -142,7 +142,7 @@ win32 {
     DEFINES *= QGLVIEWER_STATIC
   }
 
-  NUMBERED_VERSION = QGViewer201
+  NUMBERED_VERSION = QGViewer211
   exists( $${LIBPATH}/$${NUMBERED_VERSION}.lib ) {
     LIBS *= $${LIBPATH}/$${NUMBERED_VERSION}.lib
   } else {

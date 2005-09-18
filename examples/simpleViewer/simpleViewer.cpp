@@ -50,7 +50,7 @@ QString Viewer::helpString() const
   text += "See the <b>Keyboard</b> tab in this window for a complete shortcut list.<br><br>";
   text += "Double clicks automates single click actions: A left button double click aligns the closer axis with the camera (if close enough). ";
   text += "A middle button double click fits the zoom of the camera and the right button re-centers the scene.<br><br>";
-  text += "A left button double click while holding right button pressed defines the <i>Revolve Around Point</i>. ";
+  text += "A left button double click while holding right button pressed defines the camera <i>Revolve Around Point</i>. ";
   text += "See the <b>Mouse</b> tab and the documentation web pages for details.<br><br>";
   text += "Press <b>Escape</b> to exit the viewer.";
   return text;

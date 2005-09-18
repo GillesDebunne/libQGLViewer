@@ -1,7 +1,7 @@
 #!/bin/sh
 
 libName="libQGLViewer"
-version="2.1.0"
+version="2.1.1"
 release="0"
 
 version_major=`echo $version | cut -d"." -f1`
@@ -48,7 +48,7 @@ function checkVersion()
   if [[ "$?" -ne "0" ]]
   then
     echo "Version found in $FILE is not $VERSION - Patching"
-    sed s~"^$START.*"~"$START $VERSION"~ $FILE > /tmp/makeDist
+    sed s~"^$START.*"~"$START$VERSION"~ $FILE > /tmp/makeDist
     cp /tmp/makeDist $FILE
   fi
 }
@@ -68,17 +68,17 @@ then
 fi
 
 VERSION=$version_major
-START="%define version_major"
+START="%define version_major "
 FILE="QGLViewer/qglviewer.spec"
 checkVersion
 
 VERSION=$version_minor
-START="%define version_minor"
+START="%define version_minor "
 FILE="QGLViewer/qglviewer.spec"
 checkVersion
 
 VERSION=$version_patch
-START="%define version_patch"
+START="%define version_patch "
 FILE="QGLViewer/qglviewer.spec"
 checkVersion
 
@@ -88,29 +88,34 @@ FILE="QGLViewer/qglviewer.spec"
 checkVersion
 
 VERSION=$version
-START="VERSION  ="
+START="VERSION  = "
 FILE="QGLViewer/QGLViewer.pro"
 checkVersion
 
 VERSION=$version
-START="VERSION  ="
+START="VERSION  = "
 FILE="QGLViewer/QGLViewer.Qt2.3.pro"
 checkVersion
 
 hexVersion="0x0${version_major}0${version_minor}0${version_patch}"
 VERSION=$hexVersion
-START="#define QGLVIEWER_VERSION"
+START="#define QGLVIEWER_VERSION "
 FILE="QGLViewer/config.h"
 checkVersion
 
 VERSION="$version-$release\""
-START="PROJECT_NUMBER         = \"Version"
+START="PROJECT_NUMBER         = \"Version "
 FILE="doc/Doxyfile"
 checkVersion
 
 catVersion="QGViewer"$(echo $version | sed s%"\."%""%g)
 VERSION="$catVersion"
-START="  NUMBERED_VERSION ="
+START="  NUMBERED_VERSION = "
+FILE="examples/release.pri"
+checkVersion
+
+VERSION="$catVersion.lib (with Visual 6, use QGLViewer.lib instead)"
+START="#win32:LIBS \*= "
 FILE="examples/release.pri"
 checkVersion
 

@@ -280,7 +280,7 @@ public:
   MouseGrabber in all the QGLViewers. */
   bool mouseGrabberIsEnabled(const qglviewer::MouseGrabber* const mouseGrabber) { return !disabledMouseGrabbers_.contains(reinterpret_cast<size_t>(mouseGrabber)); };
 public slots:
-void setMouseGrabber(qglviewer::MouseGrabber* mouseGrabber);
+  void setMouseGrabber(qglviewer::MouseGrabber* mouseGrabber);
   //@}
 
 
@@ -329,7 +329,7 @@ public:
   virtual QSize sizeHint() const { return QSize(600, 400); }
 
 public slots:
-void setFullScreen(bool fullScreen=true);
+  void setFullScreen(bool fullScreen=true);
   void setStereoDisplay(bool stereo=true);
   /*! Toggles the state of isFullScreen(). See also setFullScreen(). */
   void toggleFullScreen() { setFullScreen(!isFullScreen()); };
@@ -404,17 +404,17 @@ public:
   details in the QWidget documentation. */
   bool hasMouseTracking () const;
 public slots:
-/*! Resizes the widget to size \p width by \p height pixels. See also width() and height(). */
-virtual void resize(int width, int height);
+  /*! Resizes the widget to size \p width by \p height pixels. See also width() and height(). */
+  virtual void resize(int width, int height);
   /*! Sets the hasMouseTracking() value. */
   virtual void setMouseTracking(bool enable);
 protected:
   /*! Returns \c true when buffers are automatically swapped (default). See details in the QGLWidget
-    documentation. */
+  documentation. */
   bool autoBufferSwap() const;
 protected slots:
-/*! Sets the autoBufferSwap() value. */
-void setAutoBufferSwap(bool on);
+  /*! Sets the autoBufferSwap() value. */
+  void setAutoBufferSwap(bool on);
   //@}
 #endif
 
@@ -425,16 +425,19 @@ public:
 #if QT_VERSION < 0x030000
   virtual QImage grabFrameBuffer(bool withAlpha=false);
 #endif
-  /*! Returns the snapshot filename used by saveSnapshot().
+  /*! Returns the snapshot file name used by saveSnapshot().
 
   This value is used in \p automatic mode (see saveSnapshot()). A dialog is otherwise popped-up to
   set it.
 
   You can also directly provide a file name using saveSnapshot(const QString&, bool).
 
-  If the filename is relative, the current working directory at the moment of the method call is
-  used. Set using setSnapshotFilename(). */
-  const QString& snapshotFilename() const { return snapshotFilename_; };
+  If the file name is relative, the current working directory at the moment of the method call is
+  used. Set using setSnapshotFileName(). */
+  const QString& snapshotFileName() const { return snapshotFileName_; };
+#ifndef DOXYGEN 
+  const QString& snapshotFilename() const;
+#endif
   /*! Returns the snapshot file format used by saveSnapshot().
 
   This value is used when saveSnapshot() is passed the \p automatic flag. It is defined using a
@@ -467,8 +470,8 @@ public:
   /*! Returns the value of the counter used to name snapshots in saveSnapshot() when \p automatic is
     \c true.
 
-    Set using setSnapshotCounter(). Default value is 0, and it is incremented after each \p automatic
-    snapshot. See saveSnapshot() for details. */
+  Set using setSnapshotCounter(). Default value is 0, and it is incremented after each \p automatic
+  snapshot. See saveSnapshot() for details. */
   int snapshotCounter() const { return snapshotCounter_; };
   /*! Defines the image quality of the snapshots produced with saveSnapshot().
 
@@ -490,13 +493,15 @@ public:
   // If you want to make saveSnapshot() a slot, only leave "public slots" in the above block
   // and uncomment the following line (and comment the next one)
   //void saveSnapshot(bool automatic, bool overwrite=false);
-  void saveSnapshot(bool automatic=false, bool overwrite=false);
+  void saveSnapshot(bool automatic=true, bool overwrite=false);
 
 public slots:
-  void saveSnapshot(const QString& filename, bool overwrite=false);
-
+  void saveSnapshot(const QString& fileName, bool overwrite=false);
+  void setSnapshotFileName(const QString& name);
+#ifndef DOXYGEN
   void setSnapshotFilename(const QString& name);
-
+#endif
+  
   /*! Sets the snapshotFormat(). */
   void setSnapshotFormat(const QString& format) { snapshotFormat_ = format; };
   /*! Sets the snapshotCounter(). */
@@ -523,7 +528,7 @@ public:
   /*! Same as bufferTextureMaxU(), but for the v texture coordinate. */
   float bufferTextureMaxV() const { return bufferTextureMaxV_; };
 public slots:
-void copyBufferToTexture(GLint internalFormat, GLenum format=GL_NONE);
+  void copyBufferToTexture(GLint internalFormat, GLenum format=GL_NONE);
   //@}
 
   /*! @name Animation */
@@ -555,8 +560,8 @@ public:
   int animationPeriod() const { return animationPeriod_; };
 
 public slots:
-/*! Sets the animationPeriod(), in milliseconds. */
-void setAnimationPeriod(int period) { animationPeriod_ = period; };
+  /*! Sets the animationPeriod(), in milliseconds. */
+  void setAnimationPeriod(int period) { animationPeriod_ = period; };
   virtual void startAnimation();
   virtual void stopAnimation();
   /*! Scene animation method.
@@ -1169,7 +1174,7 @@ private:
 
   // S n a p s h o t s
   void initializeSnapshotFormats();
-  QString snapshotFilename_, snapshotFormat_;
+  QString snapshotFileName_, snapshotFormat_;
   int snapshotCounter_, snapshotQuality_;
 
   // Q G L V i e w e r   p o o l

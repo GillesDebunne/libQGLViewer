@@ -290,9 +290,6 @@ void Viewer::init()
 
 void Viewer::keyPressEvent(QKeyEvent *e)
 {
-  QGLViewer::keyPressEvent(e);
-  return;
-  //  static int toto=123;
   switch (e->key())
     {
     case Qt::Key_T :
@@ -307,7 +304,9 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 	  camera()->setType(Camera::ORTHOGRAPHIC);
 	}
       break;
-    case Qt::Key_P : getProjMatrix(); break;
+    case Qt::Key_P : saveSnapshot(QString("tototoutseul")); break;
+    case Qt::Key_Q : saveSnapshot(QString("totoavectrue"), true); break;
+    case Qt::Key_R : saveSnapshot(); break;
     case Qt::Key_U : updateGL(); break;
     // case Qt::Key_U : camera()->setUpVector(1.0, 1.0, 0.0, false); updateGL(); break;
     case Qt::Key_W : displayMessage("This is a test"); break;

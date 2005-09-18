@@ -219,7 +219,7 @@ these lines to your <code>.profile</code>:
 export QTDIR=/sw (if you use fink, or to set to where ever Qt was installed)
 export PATH=${PATH}:${QTDIR}/bin
 export DYLD_LIBRARY_PATH=${DYLD_LIBRARY_PATH}:${QTDIR}/lib
-export QMAKESPEC=darwin-g++ (or macx-g++ or macx-mwerks or macx-pbuilder)
+export QMAKESPEC=darwin-g++ (or macx-g++ or macx-xcode or macx-pbuilder)
 </pre>
 
 If you use <code>tcsh</code> or <code>csh</code> instead, add these lines to your <code>.login</code>:
@@ -227,7 +227,7 @@ If you use <code>tcsh</code> or <code>csh</code> instead, add these lines to you
 setenv QTDIR /sw (if you use fink, or to set to where ever Qt was installed)
 setenv PATH ${PATH}:${QTDIR}/bin
 setenv DYLD_LIBRARY_PATH ${DYLD_LIBRARY_PATH}:${QTDIR}/lib
-setenv QMAKESPEC darwin-g++ (or macx-g++ or macx-mwerks or macx-pbuilder)
+setenv QMAKESPEC darwin-g++ (or macx-g++ or macx-xcode or macx-pbuilder)
 </pre>
 
 Your <code>QMAKESPEC</code> should correspond to your Qt installation : <code>macx-g++</code> for

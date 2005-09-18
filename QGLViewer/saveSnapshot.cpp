@@ -34,10 +34,6 @@
 #include <qcursor.h>
 #include <qlayout.h>
 
-#if QT_VERSION >= 0x040000
-# include <qpicture.h> // for outputFormatList
-#endif
-
 using namespace std;
 
 ////// Static global variables - local to this file //////
@@ -51,15 +47,30 @@ static QMap<QString, QString> FDFormatString;
 static QMap<QString, QString> extension;
 
 
-/*! Sets snapshotFilename(). */
-void QGLViewer::setSnapshotFilename(const QString& name)
+/*! Sets snapshotFileName(). */
+void QGLViewer::setSnapshotFileName(const QString& name)
 {
 #if QT_VERSION >= 0x040000
-  snapshotFilename_ = QFileInfo(name).absoluteFilePath();
+  snapshotFileName_ = QFileInfo(name).absoluteFilePath();
 #else
-  snapshotFilename_ = QFileInfo(name).absFilePath();
+  snapshotFileName_ = QFileInfo(name).absFilePath();
 #endif
 }
+
+#ifndef DOXYGEN
+const QString& QGLViewer::snapshotFilename() const
+{
+  qWarning("snapshotFilename is deprecated. Use snapshotFileName() (uppercase N) instead.");
+  return snapshotFileName();
+}
+
+void QGLViewer::setSnapshotFilename(const QString& name)
+{
+  qWarning("setSnapshotFilename is deprecated. Use setSnapshotFileName() (uppercase N) instead.");
+  setSnapshotFileName(name);
+}
+#endif
+
 
 /*! Opens a dialog that displays the different available snapshot formats.
 
@@ -150,14 +161,14 @@ void QGLViewer::initializeSnapshotFormats()
     }
 }
 
-// Returns false is the user refused to use the filename
-bool checkFileName(QString& filename, QWidget* widget, const QString& snapshotFormat, bool overwrite)
+// Returns false is the user refused to use the fileName
+static bool checkFileName(QString& fileName, QWidget* widget, const QString& snapshotFormat)
 {
-  if (filename.isEmpty())
+  if (fileName.isEmpty())
     return false;
 
   // Check that extension has been provided
-  QFileInfo info(filename);
+  QFileInfo info(fileName);
 
 #if QT_VERSION >= 0x040000
   if (info.suffix().isEmpty())
@@ -166,10 +177,10 @@ bool checkFileName(QString& filename, QWidget* widget, const QString& snapshotFo
 #endif
     {
       // No extension given. Silently add one
-      if (filename.right(1) != ".")
-	filename += ".";
-      filename += extension[snapshotFormat];
-      info.setFile(filename);
+      if (fileName.right(1) != ".")
+	fileName += ".";
+      fileName += extension[snapshotFormat];
+      info.setFile(fileName);
     }
 #if QT_VERSION >= 0x040000
   else if (info.suffix() != extension[snapshotFormat])
@@ -198,18 +209,11 @@ bool checkFileName(QString& filename, QWidget* widget, const QString& snapshotFo
 
       if (i==QMessageBox::Yes)
 	{
-	  filename = modifiedName;
-	  info.setFile(filename);
+	  fileName = modifiedName;
+	  info.setFile(fileName);
 	}
     }
-
-  if ((info.exists()) && (!overwrite))
-    if (QMessageBox::warning(widget,"Overwrite file ?",
-			     "File "+info.fileName()+" already exists.\nSave anyway ?",
-			     QMessageBox::Yes,
-			     QMessageBox::Cancel) == QMessageBox::Cancel)
-      return false;
-
+  
   return true;
 }
 
@@ -268,9 +272,9 @@ void ProgressDialog::hideProgressDialog()
   progressDialog = NULL;
 }
 
-// Pops-up a vectorial output option dialog box
-// -1 if action has been canceled
-static int saveVectorialSnapshot(const QString& filename, QGLWidget* widget, const QString& snapshotFormat)
+// Pops-up a vectorial output option dialog box and save to fileName
+// Returns -1 in case of Cancel, 0 for success and (todo) error code in case of problem.
+static int saveVectorialSnapshot(const QString& fileName, QGLWidget* widget, const QString& snapshotFormat)
 {
 #if QT_VERSION >= 0x040000
   class VRenderInterface: public QDialog, public Ui::VRenderInterface
@@ -298,13 +302,13 @@ static int saveVectorialSnapshot(const QString& filename, QGLWidget* widget, con
     }
 
   if (VRinterface->exec() == QDialog::Rejected)
-    return 1;
+    return -1;
 
   vrender::VRenderParams vparams;
 #if QT_VERSION >= 0x040000
-  vparams.setFilename(filename.toLatin1().data());
+  vparams.setFilename(fileName.toLatin1().data());
 #else
-  vparams.setFilename(filename);
+  vparams.setFilename(fileName);
 #endif
 
   if (snapshotFormat == "EPS")	vparams.setFormat(vrender::VRenderParams::EPS);
@@ -343,21 +347,22 @@ static int saveVectorialSnapshot(const QString& filename, QGLWidget* widget, con
   widget->setCursor(QCursor(Qt::ArrowCursor));
 #endif
 
+  // Should return vparams.error(), but this is currently not set.
   return 0;
 }
 #endif // NO_VECTORIAL_RENDER
 
 /*! Saves a snapshot of the current image displayed by the widget.
 
- Options are set using snapshotFormat(), snapshotFilename() and snapshotQuality(). For non vectorial
+ Options are set using snapshotFormat(), snapshotFileName() and snapshotQuality(). For non vectorial
  image formats, the image size is equal to the current viewer's dimensions (see width() and
  height()). See snapshotFormat() for details on supported formats.
 
- If \p automatic is \c false (or if snapshotFilename() is empty), a file dialog is opened to ask for
+ If \p automatic is \c false (or if snapshotFileName() is empty), a file dialog is opened to ask for
  the file name.
 
- When \p automatic is \c true, the filename is set to \c NAME-NUMBER, where \c NAME is
- snapshotFilename() and \c NUMBER is snapshotCounter(). The snapshotCounter() is automatically
+ When \p automatic is \c true, the file name is set to \c NAME-NUMBER, where \c NAME is
+ snapshotFileName() and \c NUMBER is snapshotCounter(). The snapshotCounter() is automatically
  incremented after each snapshot saving. This is useful to create videos from your application:
  \code
  void Viewer::init()
@@ -378,17 +383,21 @@ static int saveVectorialSnapshot(const QString& filename, QGLWidget* widget, con
      {
        camera()->setOrientation(2.0*M_PI/nbImages, 0.0); // Theta-Phi orientation
        showEntireScene();
-       updateGL();  // calls draw(), which emits drawFinished(), which calls saveSnapshot()
+       updateGL(); // calls draw(), which emits drawFinished(), which calls saveSnapshot()
      }
  }
  \endcode
 
- When \p overwrite is set to false (default), a pop-up window asks for confirmation (when \p
- automatic is \c false) or the snapshotCounter() is incremented until a non-existing file name is
- found (when \p automatic is \c true). Otherwise the file is overwritten without confirmation.
+ If snapshotCounter() is negative, no number is appended to snapshotFileName() and the
+ snapshotCounter() is not incremented. This is useful to force the creation of a file, overwriting
+ the previous one.
+ 
+ When \p overwrite is set to \c false (default), a window asks for confirmation if the file already
+ exists. In \p automatic mode, the snapshotCounter() is incremented (if positive) until a
+ non-existing file name is found instead. Otherwise the file is overwritten without confirmation.
 
- Remove that anti-aliassing option to correctly display generated PS and EPS results. The
- VRender library was written by Cyril Soler (Cyril dot Soler at imag dot fr).
+ The VRender library was written by Cyril Soler (Cyril dot Soler at imag dot fr). Remove that
+ anti-aliasing option to correctly display the generated PS and EPS results.
 
  \note In order to correctly grab the frame buffer, the QGLViewer window is raised in front of
  other windows by this method. */
@@ -404,72 +413,71 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
   snapshot = grabFrameBuffer(true);
 
   // Ask for file name
-  if (snapshotFilename().isEmpty() || !automatic)
+  if (snapshotFileName().isEmpty() || !automatic)
     {
-      QString filename;
+      QString fileName;
 #if QT_VERSION < 0x030000
       if (openSnapshotFormatDialog())
-        filename = QFileDialog::getSaveFileName(snapshotFilename(), FDFormatString[snapshotFormat()]+";;All files (*.*)", this, "Save dialog");
+        fileName = QFileDialog::getSaveFileName(snapshotFileName(), FDFormatString[snapshotFormat()]+";;All files (*.*)", this, "Save dialog");
       else
         return;
 #else
       QString selectedFormat = FDFormatString[snapshotFormat()];
-#if QT_VERSION >= 0x040000
-      filename = QFileDialog::getSaveFileName(this, "Choose a filename to save under", snapshotFilename(), formats, &selectedFormat);
-#else
-      filename = QFileDialog::getSaveFileName(snapshotFilename(), formats, this,
-					      "Save Snapshot dialog", "Choose a filename to save under", &selectedFormat);
-#endif
+# if QT_VERSION >= 0x040000
+      fileName = QFileDialog::getSaveFileName(this, "Choose a file name to save under", snapshotFileName(), formats, &selectedFormat);
+# else
+      fileName = QFileDialog::getSaveFileName(snapshotFileName(), formats, this,
+					      "Save Snapshot dialog", "Choose a file name to save under", &selectedFormat);
+# endif
       setSnapshotFormat(Qtformat[selectedFormat]);
 #endif
 
-      if (checkFileName(filename, this, snapshotFormat(), overwrite))
-	setSnapshotFilename(filename);
+      if (checkFileName(fileName, this, snapshotFormat()))
+	setSnapshotFileName(fileName);
       else
 	return;
     }
 
-  // Determine file name in automatic mode
-  QFileInfo final(snapshotFilename());
+  QFileInfo fileInfo(snapshotFileName());
 
-#if QT_VERSION >= 0x040000
-  if (final.completeSuffix().isEmpty())
-#else
-  if (final.extension().isEmpty())
-#endif
-    final.setFile(final.filePath() + "." + extension[snapshotFormat()]);
-
-  // In automatic mode, names have a number appended
-  if (automatic)
+  if ((automatic) && (snapshotCounter() >= 0))
     {
-      const QString baseName = final.baseName();
+      // In automatic mode, names have a number appended
+      const QString baseName = fileInfo.baseName();
       QString count;
       count.sprintf("%.04d", snapshotCounter_++);
 #if QT_VERSION >= 0x040000
-      final.setFile(final.absolutePath()+ '/' + baseName + '-' + count + '.' + final.completeSuffix());
+      fileInfo.setFile(fileInfo.absolutePath()+ '/' + baseName + '-' + count + '.' + fileInfo.completeSuffix());
 #else
-      final.setFile(final.dirPath()+ '/' + baseName + '-' + count + '.' + final.extension());
+      fileInfo.setFile(fileInfo.dirPath()+ '/' + baseName + '-' + count + '.' + fileInfo.extension());
 #endif
 
       if (!overwrite)
-	while (final.exists())
+	while (fileInfo.exists())
 	  {
 	    count.sprintf("%.04d", snapshotCounter_++);
 #if QT_VERSION >= 0x040000
-	    final.setFile(final.absolutePath() + '/' +baseName + '-' + count + '.' + final.completeSuffix());
+	    fileInfo.setFile(fileInfo.absolutePath() + '/' +baseName + '-' + count + '.' + fileInfo.completeSuffix());
 #else
-	    final.setFile(final.dirPath() + '/' + baseName + '-' + count + '.' + final.extension());
+	    fileInfo.setFile(fileInfo.dirPath() + '/' + baseName + '-' + count + '.' + fileInfo.extension());
 #endif
 	  }
     }
 
+  if ((fileInfo.exists()) && (!overwrite) &&
+      (QMessageBox::warning(this,"Overwrite file ?",
+			    "File "+fileInfo.fileName()+" already exists.\nSave anyway ?",
+			    QMessageBox::Yes,
+			    QMessageBox::Cancel) == QMessageBox::Cancel))
+      return;
+  
   bool saveOK;
 #ifndef NO_VECTORIAL_RENDER
   if ( (snapshotFormat() == "EPS") || (snapshotFormat() == "PS") || (snapshotFormat() == "XFIG") )
     {
       // Vectorial snapshot
-      int res = saveVectorialSnapshot(final.filePath(), this, snapshotFormat());
-      if (res == 1) // CANCEL
+      int res = saveVectorialSnapshot(fileInfo.filePath(), this, snapshotFormat());
+      if (res == -1) // CANCEL
 	return;
       else
 	saveOK = (res == 0);
@@ -477,29 +485,35 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
   else
 #endif
 #if QT_VERSION >= 0x040000
-    saveOK = snapshot.save(final.filePath(), snapshotFormat().toLatin1().data(), snapshotQuality());
+    saveOK = snapshot.save(fileInfo.filePath(), snapshotFormat().toLatin1().constData(), snapshotQuality());
 #else
-    saveOK = snapshot.save(final.filePath(), snapshotFormat(), snapshotQuality());
+    saveOK = snapshot.save(fileInfo.filePath(), snapshotFormat(), snapshotQuality());
 #endif
 
   if (!saveOK)
-    QMessageBox::warning(this, "Snapshot problem", "Unable to save snapshot in\n"+final.filePath());
+    QMessageBox::warning(this, "Snapshot problem", "Unable to save snapshot in\n"+fileInfo.filePath());
 }
 
-/*! Same as saveSnapshot(), except that it uses \p filename instead of snapshotFilename().
+/*! Same as saveSnapshot(), except that it uses \p fileName instead of snapshotFileName().
 
- If \p filename is empty, opens a file dialog to select the name.
+ If \p fileName is empty, opens a file dialog to select the name.
 
- Uses snapshotFormat() and snapshotQuality() for the snapshot. A correct file extension is added if
- not provided in \p filename.
+ Snapshot settings are set from snapshotFormat() and snapshotQuality().
 
- Asks for confirmation when the file already exists and \p overwrite is \c false (default). */
-void QGLViewer::saveSnapshot(const QString& filename, bool overwrite)
+ Asks for confirmation when \p fileName already exists and \p overwrite is \c false (default).
+
+ \attention If \p fileName is a char* (as is "myFile.jpg"), it may be casted into a \c bool, and the
+ other saveSnapshot() method may be used instead. Pass QString("myFile.jpg") as a parameter to
+ prevent this. */
+void QGLViewer::saveSnapshot(const QString& fileName, bool overwrite)
 {
-  const QString previousName = snapshotFilename();
-  setSnapshotFilename(filename);
-  saveSnapshot(false, overwrite);
-  setSnapshotFilename(previousName);
+  const QString previousName = snapshotFileName();
+  const int previousCounter = snapshotCounter();
+  setSnapshotFileName(fileName);
+  setSnapshotCounter(-1);
+  saveSnapshot(true, overwrite);
+  setSnapshotFileName(previousName);
+  setSnapshotCounter(previousCounter);
 }
 
 

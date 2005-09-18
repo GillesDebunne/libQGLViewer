@@ -19,6 +19,22 @@
 
 <h1>Change Log</h1>
 
+<h2>September 18th 2005 - 2.1.1</h2>
+
+<b>Changes in the API</b>
+<ul>
+<li><code>snapshotFilename</code> renamed <code>snapshotFile<b>N</b>ame</code> (uppercased 'N').</li>
+<li>When negative, the <code>snapshotCounter</code> is not appended to <code>snapshotFileName</code> in automatic mode.</li> 
+</ul>
+
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li><code>saveSnapshot(fileName)</code> no longer opens a file dialog (bug finder Jürgen).</li>
+</ul>
+
+
+
 <h2>September 14th 2005 - 2.1.0</h2>
 <p>
 The library now compiles with Qt version 2, 3 and 4. When enum or function names have been changed in
@@ -47,7 +63,7 @@ enums, previous code will still work.
 
 <b>Bug fixes or improvements</b>
 <ul>
- <li><code>Camera</code> copy constructor fixed (thanks Xavier).</li>
+ <li><code>Camera</code> copy constructor fixed (bug finder Xavier).</li>
 </ul>
 
 
@@ -457,7 +473,7 @@ Other modifications:
 
 <b>Bug fixes or improvements</b>
 <ul>
- <li>The <code>Quaternion(from,to)</code> constructor had a bug (bugfinders Marc and Tanguy).</li>
+ <li>The <code>Quaternion(from,to)</code> constructor had a bug (bug finders Marc and Tanguy).</li>
  <li><code>MouseGrabber</code> no longer activated when hovered while moving the camera or the <code>manipulatedFrame()</code>.</li>
  <li>Calls to <code>updateGL()</code> limited to the strict minimum.</li>
  <li><a href="faq.html">FAQ page</a> splitted in two, with a new <a href="techFaq.html">technical FAQ</a>.</li>
@@ -507,7 +523,7 @@ Other modifications:
 <b>Bug fixes or improvements</b>
 <ul>
  <li>Problem with classes derived from <code>ManipulatedFrame</code> used as
- <code>MouseGrabber</code> (bugfinder Cyril).</li>
+ <code>MouseGrabber</code> (bug finder Cyril).</li>
  <li>Unclean old malloc removed from EPSRender code.</li>
  <li><code>libQGLViewer135.obj</code> error message with Visual C++ removed.</li>
 </ul>
@@ -620,8 +636,8 @@ Other modifications:
  <li>Missing includes on specific linux architechture were added.</li>
  <li>Missing display update when using <code>fastDraw()</code> fixed.</li>
  <li>Position and size of the window properly saved and restored when QGLViewer is a part of an other QWidget.</li>
- <li>Camera now correctly handles <code>KeyFrameInterpolator</code> indexes out of range (bugfinder Xadeck).</li>
- <li>No more erroneous <code>initializeGL()</code> message when several viewers are used (bugfinder Franck).</li>
+ <li>Camera now correctly handles <code>KeyFrameInterpolator</code> indexes out of range (bug finder Xadeck).</li>
+ <li>No more erroneous <code>initializeGL()</code> message when several viewers are used (bug finder Franck).</li>
 </ul>
 
 

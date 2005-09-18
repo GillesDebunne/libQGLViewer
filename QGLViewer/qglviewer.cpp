@@ -94,7 +94,7 @@ void QGLViewer::defaultConstructor()
   setDefaultShortcuts();
   setDefaultMouseBindings();
 
-  setSnapshotFilename("snapshot");
+  setSnapshotFileName("snapshot");
   initializeSnapshotFormats();
   setSnapshotCounter(0);
   setSnapshotQuality(95);
