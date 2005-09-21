@@ -2,7 +2,7 @@
 
 libName="libQGLViewer"
 version="2.1.1"
-release="2"
+release="3"
 
 version_major=`echo $version | cut -d"." -f1`
 version_minor=`echo $version | cut -d"." -f2`
@@ -400,7 +400,7 @@ for pro in "QGLViewer/QGLViewer.pro" "qglviewerplugin/designerPlugin.pro" $(ls e
 done
 
 catVersion=$(echo $version | sed s%"\."%""%g)
-sed s:"#CAT_VERSION#":"$catVersion":g examples/release.pri | sed s:"#MAJOR_NUMBER#":"$version_major":g > /tmp/release.filtered
+sed s:"%CAT_VERSION%":"$catVersion":g examples/release.pri | sed s:"%MAJOR_NUMBER%":"$version_major":g > /tmp/release.filtered
 mv /tmp/release.filtered examples/release.pri
 
 mv qglviewerplugin designerPlugin

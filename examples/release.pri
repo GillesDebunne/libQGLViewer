@@ -148,17 +148,17 @@ win32 {
     }
   }
 
-  exists( $${LIB_PATH}/QGLViewer#CAT_VERSION#.lib ) {
-    LIBS *= $${LIB_PATH}/QGLViewer#CAT_VERSION#.lib
+  exists( $${LIB_PATH}/QGLViewer%CAT_VERSION%.lib ) {
+    LIBS *= $${LIB_PATH}/QGLViewer%CAT_VERSION%.lib
   } else {
-    exists( $${LIB_PATH}/QGLViewer#MAJOR_NUMBER#.lib ) {
-      LIBS *= $${LIB_PATH}/QGLViewer#MAJOR_NUMBER#.lib
+    exists( $${LIB_PATH}/QGLViewer%MAJOR_NUMBER%.lib ) {
+      LIBS *= $${LIB_PATH}/QGLViewer%MAJOR_NUMBER%.lib
     } else {
       exists( $${LIB_PATH}/QGLViewer.lib ) {
         LIBS *= $${LIB_PATH}/QGLViewer.lib
       } else {
-        exists( $${LIB_PATH}/libQGLViewer#MAJOR_NUMBER#.a ) {
-          LIBS *= -L$${LIB_PATH} -lQGLViewer#MAJOR_NUMBER#
+        exists( $${LIB_PATH}/libQGLViewer%MAJOR_NUMBER%.a ) {
+          LIBS *= -L$${LIB_PATH} -lQGLViewer%MAJOR_NUMBER%
         }
       }
     }
