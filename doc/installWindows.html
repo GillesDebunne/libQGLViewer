@@ -23,6 +23,7 @@
 <div class="summary">
 <b>&raquo;</b> Installation using <a href="#qt3or4">Qt version 3 or 4</a><br/>
 <b>&raquo;</b> Installation using <a href="#qt2.3">Qt version 2.3</a><br/>
+<b>&raquo;</b> Installation using <a href="#mingw">MinGW and the free Qt4 version</a><br/>
 <b>&raquo;</b> Installation using <a href="#cygwin">cygwin linux emulator</a><br/>
 <b>&raquo;</b> Details on <a href="#qt">Qt installation</a><br/>
 <b>&raquo;</b> Installation of the <a href="#plugin">QGLViewer designer plugin</a><br/>
@@ -70,7 +71,7 @@ Here is a correspondence table:
 <tr style="background-color:#66a; color:#eef; text-align:center"><th>.NET</th><th>Visual Studio 6</th></tr>
 <tr style="background-color:#ddf"><td>Tools - Add-Ins manager - QtNet</td><td>Tools - Customize - Add-ins and Macro Files/QMsDev Add in</td></tr>
 <tr style="background-color:#bbd"><td>Open Qt Project</td><td>Generate Qt Project</td></tr>
-<tr style="background-color:#ddf"><td>QGLViewer#CATVERSION#.dll</td><td>QGLViewer.dll</td></tr>
+<tr style="background-color:#ddf"><td>QGLViewer#CATVERSION#.dll</td><td>QGLViewer2.dll or QGLViewer.dll</td></tr>
 <tr style="background-color:#bbd"><td>Project-Properties-C/C++-General-Additional Include Directories</td><td>Tools-Options-Directories-Include files</td></tr>
 <tr style="background-color:#ddf"><td>Project-Properties-Linker-General-Additional Library Directories</td><td>Tools-Options-Directories-Library files</td></tr>
 </table>
@@ -146,6 +147,34 @@ QApplication * qApp;
 
 This <a href="http://hohle.net/scrap_post.php?post=14">page</a> details how to patch Qt 2.3 to make it work with .NET.
 This has not yet been tested (<a href="mailto:Gilles dot Debunne at imag dot fr">feedback welcome</a>), but may avoid the previous patches/hacks.
+
+
+<a name="mingw"></a>
+<h2>Compilation and installation using MinGW</h2>
+This procedure is very similar to the one detailed in the <a href="installUnix.html#linux">linux
+section</a>. To compile the library:
+<pre>
+cd libQGLViewer-#VERSION#-#RELEASE#\QGLViewer
+qmake
+make
+</pre>
+
+Copy the resulting <code>dll</code> (create in the <code>release</code> directory) to a system
+shared directory such as <code>C:\WINDOWS\system32</code> (or <code>C:\WINNT\system32</code> with
+Windows 2000). Alternately, you can copy it to every application directory</li>
+
+<p>
+Use the same procedure to compile the examples (the <code>.exe</code> is created in <code>release</code>
+directory as well):
+</p>
+<pre>
+cd ..\examples\anyExampleDirectory
+qmake
+make
+</pre>
+
+See the <a href="#qt">Qt installation</a> section for details on Qt.
+
 
 <a name="cygwin"></a>
 <h2>Compilation and installation using cygwin</h2>

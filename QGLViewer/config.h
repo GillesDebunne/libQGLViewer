@@ -25,8 +25,6 @@
 
 // Win 32 DLL export macros
 #ifdef Q_OS_WIN32
-# include <windows.h> // Warning : windows.h must be included BEFORE gl.h
-// Test if this is needed with Qt 2.3 (not done in qgl.h). Otherwise remove.
 # ifndef M_PI
 #  define M_PI 3.14159265358979323846f
 # endif
@@ -48,8 +46,7 @@
 # define QGLVIEWER_EXPORT
 #endif
 
-// OpenGL includes (see windows.h warning above)
-// Included here and hence shared by all files that need OpenGL headers.
+// OpenGL includes - Included here and hence shared by all the files that need OpenGL headers.
 #include <qgl.h>
 
 

@@ -108,17 +108,6 @@ START="PROJECT_NUMBER         = \"Version "
 FILE="doc/Doxyfile"
 checkVersion
 
-catVersion="QGLViewer"$(echo $version | sed s%"\."%""%g)
-VERSION="$catVersion"
-START="  NUMBERED_VERSION = "
-FILE="examples/release.pri"
-checkVersion
-
-VERSION="$catVersion.lib (with Visual 6, use QGLViewer.lib instead)"
-START="#win32:LIBS \*= "
-FILE="examples/release.pri"
-checkVersion
-
 echo " - Checking file integrity"
 
 for f in `ls QGLViewer/QGLViewer.pro examples/*/*.pro examples/contribs/*/*.pro`
@@ -404,11 +393,15 @@ mv examples/html doc/examples
 
 #MSG="release.pri .." ; test `grep "\.\./\.\." examples/release.pri | wc -l` -eq 1 ; checkError
 
-for pro in "QGLViewer/QGLViewer.pro" "qglviewerplugin/designerPlugin.pro"
+for pro in "QGLViewer/QGLViewer.pro" "qglviewerplugin/designerPlugin.pro" $(ls examples/*/*.pro) $(ls examples/contribs/*/*.pro)
   do
-  sed /"NOT +IN +DISTRIBUTION +BEGIN"/,/"NOT +IN +DISTRIBUTION +END"/d $pro > /tmp/notInDistrib
+  sed /"NOT IN DISTRIBUTION BEGIN"/,/"NOT IN DISTRIBUTION END"/d $pro > /tmp/notInDistrib
   mv /tmp/notInDistrib $pro
 done
+
+catVersion=$(echo $version | sed s%"\."%""%g)
+sed s:"#CAT_VERSION#":"$catVersion":g examples/release.pri | sed s:"#MAJOR_NUMBER#":"$version_major":g > /tmp/release.filtered
+mv /tmp/release.filtered examples/release.pri
 
 mv qglviewerplugin designerPlugin
 grep -v "^include.*examples.pri" designerPlugin/designerPlugin.pro > /tmp/designer.pro
@@ -526,8 +519,8 @@ then
   cp -f $QGLViewerRootDir/QGLViewer/qglviewer.spec $rpmDir/SPECS/$libNameVersion.spec
   cd $rpmDir/SPECS/
   echo " - RPM build... (see /tmp/QGLViewer.rpmbuild)"
-  echo " - ##### Commented"
-  #rpmbuild -ba $libNameVersion.spec >& /tmp/QGLViewer.rpmbuild
+  #echo " - ##### Commented"
+  rpmbuild -ba $libNameVersion.spec >& /tmp/QGLViewer.rpmbuild
   if [ $? != 0 ]
   then
     echo "Problem in RPM creation - Abort"
@@ -593,10 +586,9 @@ mv INSTALL Install.txt
 mv LICENCE Licence.txt
 mv README Readme.txt
 
+# Add Qt 2.3 specific files
 cat /tmp/gpl-warning $QGLViewerRootDir/QGLViewer/keySequence.h   > QGLViewer/keySequence.h
 cat /tmp/gpl-warning $QGLViewerRootDir/QGLViewer/keySequence.cpp > QGLViewer/keySequence.cpp
-
-# Add Qt 2.3 specific files
 cp $QGLViewerRootDir/QGLViewer/QGLViewer.Qt2.3.pro QGLViewer/
 cp $QGLViewerRootDir/QGLViewer/VRenderInterface.Qt2.ui QGLViewer/
 cp $QGLViewerRootDir/examples/interface/viewerInterface.Qt2.ui examples/interface/

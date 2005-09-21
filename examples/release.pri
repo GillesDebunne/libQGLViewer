@@ -5,7 +5,7 @@
 # The rest of this configuration file is pretty complex since it tries to automatically
 # detect system paths and configuration. In your applications, you can probably simply use:
 #unix:LIBS *= -lQGLViewer
-#win32:LIBS *= QGLViewer211.lib (with Visual 6, use QGLViewer.lib instead)
+#win32:LIBS *= QGLViewer#CAT_VERSION#.lib (with Visual 6, use QGLViewer#MAJOR_NUMBER#.lib or QGLViewer.lib instead)
 
 # Used by Qt4 only. Adds appropriate include paths.
 QT += xml opengl
@@ -126,7 +126,7 @@ win32 {
     }
 
     win32-g++ {
-      LIB_FILE = libQGLViewer2.a
+      LIB_FILE = libQGLViewer#MAJOR_NUMBER#.a
     } else {
       LIB_FILE = QGLViewer*.lib
     }
@@ -148,15 +148,18 @@ win32 {
     }
   }
 
-  NUMBERED_VERSION = QGLViewer211
-  exists( $${LIB_PATH}/$${NUMBERED_VERSION}.lib ) {
-    LIBS *= $${LIB_PATH}/$${NUMBERED_VERSION}.lib
+  exists( $${LIB_PATH}/QGLViewer#CAT_VERSION#.lib ) {
+    LIBS *= $${LIB_PATH}/QGLViewer#CAT_VERSION#.lib
   } else {
-    exists( $${LIB_PATH}/QGLViewer.lib ) {
-      LIBS *= $${LIB_PATH}/QGLViewer.lib
+    exists( $${LIB_PATH}/QGLViewer#MAJOR_NUMBER#.lib ) {
+      LIBS *= $${LIB_PATH}/QGLViewer#MAJOR_NUMBER#.lib
     } else {
-      exists( $${LIB_PATH}/libQGLViewer2.a ) {
-        LIBS *= -L$${LIB_PATH} -lQGLViewer2
+      exists( $${LIB_PATH}/QGLViewer.lib ) {
+        LIBS *= $${LIB_PATH}/QGLViewer.lib
+      } else {
+        exists( $${LIB_PATH}/libQGLViewer#MAJOR_NUMBER#.a ) {
+          LIBS *= -L$${LIB_PATH} -lQGLViewer#MAJOR_NUMBER#
+        }
       }
     }
   }

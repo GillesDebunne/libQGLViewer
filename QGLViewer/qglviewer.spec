@@ -140,6 +140,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 
+* Wed Sep 21 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.1.1-3
+- Compilation options fixed for Visual 6. Qt2.3 patches in help window. 
+
 * Tue Sep 20 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.1.1-2
 - Compilation options fixed, especially for MinGW.
 

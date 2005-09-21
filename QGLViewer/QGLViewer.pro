@@ -165,6 +165,17 @@ irix-cc|irix-n32 {
 }
 
 
+#		--  M a c i n t o s h  --
+macx {
+  # GLUT for Macintosh architecture
+  !isEmpty( USE_GLUT ) {
+    QMAKE_LIBS_OPENGL -= -lglut
+    QMAKE_LIBS_OPENGL += -framework GLUT -lobjc
+  }
+  CONFIG -= thread
+}
+
+
 #		--  W i n d o w s  --
 win32 {
   staticlib {

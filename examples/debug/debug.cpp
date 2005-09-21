@@ -40,6 +40,8 @@ void Viewer::init()
   fr.setReferenceFrame(mf);
   center->setReferenceFrame(mf);
 
+  Quaternion r(Vec(1,1,0), M_PI/2);
+  cout << r << endl;
   setShortcut(SAVE_SCREENSHOT, Qt::ALT+Qt::Key_S);
 
   Camera autreCamera;
@@ -221,8 +223,8 @@ void Viewer::init()
   qWarning("size %dx%d", size.width(), size.height());
   glDepthFunc(GL_LEQUAL);
 
-  Quaternion r(Vec(0,0,1), M_PI);
-  cout << r << endl;
+  Quaternion www(Vec(0,0,1), M_PI);
+  cout << www << endl;
   for (int i=0; i<16; ++i)
     {
       cout << (r.matrix())[i] << " ";

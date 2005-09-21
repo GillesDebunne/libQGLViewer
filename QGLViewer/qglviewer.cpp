@@ -1724,8 +1724,6 @@ void QGLViewer::mouseDoubleClickEvent(QMouseEvent* e)
       //#CONNECTION# mousePressEvent has the same structure
       ClickActionPrivate cap;
       cap.doubleClick = true;
-      // Warning: with Qt < 3.1, the definition of Qt::KeyButtonMask is erroneous
-      // Is it really ? It seems to work with Qt 2.3 at least
 #if QT_VERSION >= 0x040000
       cap.modifiers = e->modifiers();
       cap.button = e->button();
@@ -2102,7 +2100,10 @@ QString QGLViewer::mouseString() const
  and the <a href="../keyboard.html">keyboard page</a> for details. */
 void QGLViewer::setKeyDescription(int key, QString description)
 {
+#if QT_VERSION >= 0x030000
+  // #CONNECTION# keyString. In Qt 2.3, longs modifier overlap with key codes.
   key = convertToKeyboardModifiers(key);
+#endif
   if (description.isEmpty())
     keyDescription_.remove(key);
   else
@@ -2111,7 +2112,12 @@ void QGLViewer::setKeyDescription(int key, QString description)
 
 static QString keyString(int key)
 {
+#if QT_VERSION >= 0x030000
   return QString(QKeySequence(convertToShortModifier(key)));
+#else
+  // #CONNECTION# setKeyDescription. In Qt 2.3, longs modifier overlap with key codes. 
+  return QString(QKeySequence(key));
+#endif
 }
 
 QString QGLViewer::cameraPathKeysString() const
