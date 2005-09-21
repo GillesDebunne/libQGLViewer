@@ -4,7 +4,7 @@
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_patch}
-Release:	0
+Release:	2
 
 Summary:	Qt based OpenGL generic 3D viewer library.
 License:	GPL
@@ -139,6 +139,12 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+
+* Tue Sep 20 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.1.1-2
+- Compilation options fixed, especially for MinGW.
+
+* Mon Sep 19 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.1.1-1
+- shared compilation option added for MinGW.
 
 * Sun Sep 18 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.1.1-0
 - saveSnapshot() file dialog problem fixed.

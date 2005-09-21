@@ -2,7 +2,7 @@
 
 libName="libQGLViewer"
 version="2.1.1"
-release="0"
+release="2"
 
 version_major=`echo $version | cut -d"." -f1`
 version_minor=`echo $version | cut -d"." -f2`
@@ -44,7 +44,7 @@ function checkError()
 
 function checkVersion()
 {
-  grep "^$START $VERSION" $FILE > /dev/null
+  grep "^$START$VERSION" $FILE > /dev/null
   if [[ "$?" -ne "0" ]]
   then
     echo "Version found in $FILE is not $VERSION - Patching"
@@ -108,7 +108,7 @@ START="PROJECT_NUMBER         = \"Version "
 FILE="doc/Doxyfile"
 checkVersion
 
-catVersion="QGViewer"$(echo $version | sed s%"\."%""%g)
+catVersion="QGLViewer"$(echo $version | sed s%"\."%""%g)
 VERSION="$catVersion"
 START="  NUMBERED_VERSION = "
 FILE="examples/release.pri"
@@ -433,8 +433,8 @@ do
     then
       continue
     fi
-    grep -v "^include.*examples.pri" $f | sed /"NOT +IN +DISTRIBUTION +BEGIN"/,/"NOT +IN +DISTRIBUTION +END"/d > /tmp/$f.tmp
-    cat /tmp/$f.tmp release.pri > $f
+    grep -v "^include.*examples.pri" $f | sed /"NOT +IN +DISTRIBUTION +BEGIN"/,/"NOT +IN +DISTRIBUTION +END"/d > /tmp/proPatched.tmp
+    cat /tmp/proPatched.tmp release.pri > $f
   done
   rm release.pri
 
@@ -526,8 +526,8 @@ then
   cp -f $QGLViewerRootDir/QGLViewer/qglviewer.spec $rpmDir/SPECS/$libNameVersion.spec
   cd $rpmDir/SPECS/
   echo " - RPM build... (see /tmp/QGLViewer.rpmbuild)"
-  #echo " - ##### Commented"
-  rpmbuild -ba $libNameVersion.spec >& /tmp/QGLViewer.rpmbuild
+  echo " - ##### Commented"
+  #rpmbuild -ba $libNameVersion.spec >& /tmp/QGLViewer.rpmbuild
   if [ $? != 0 ]
   then
     echo "Problem in RPM creation - Abort"
@@ -598,8 +598,8 @@ cat /tmp/gpl-warning $QGLViewerRootDir/QGLViewer/keySequence.cpp > QGLViewer/key
 
 # Add Qt 2.3 specific files
 cp $QGLViewerRootDir/QGLViewer/QGLViewer.Qt2.3.pro QGLViewer/
-cp $QGLViewerRootDir/QGLViewer/VRenderInterface.Qt2.3.ui QGLViewer/
-cp $QGLViewerRootDir/examples/interface/myInterface.Qt2.3.ui examples/interface/
+cp $QGLViewerRootDir/QGLViewer/VRenderInterface.Qt2.ui QGLViewer/
+cp $QGLViewerRootDir/examples/interface/viewerInterface.Qt2.ui examples/interface/
 
 function addNamespace()
 {
@@ -658,7 +658,7 @@ then
     cat /etc/redhat-release
     archExt=".tar.gz"
 else
-  echo "  Creating binary example package for $archExt"
+  echo " - Creating binary example package for $archExt"
 fi
 
 cp -f $exName.tar.gz $WebDir/src/$exName.$archExt

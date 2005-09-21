@@ -5,7 +5,7 @@
 # The rest of this configuration file is pretty complex since it tries to automatically
 # detect system paths and configuration. In your applications, you can probably simply use:
 #unix:LIBS *= -lQGLViewer
-#win32:LIBS *= QGViewer211.lib (with Visual 6, use QGLViewer.lib instead)
+#win32:LIBS *= QGLViewer211.lib (with Visual 6, use QGLViewer.lib instead)
 
 # Used by Qt4 only. Adds appropriate include paths.
 QT += xml opengl
@@ -108,12 +108,16 @@ unix {
 #                    Windows configuration.
 win32 {
   # Various compilation flags
-  QMAKE_CXXFLAGS = -TP -G6 -GR -GX -Zi
+  !win32-g++: QMAKE_CXXFLAGS = -TP -G6 -GR -GX -Zi
   # Optimise for speed, and expand any suitable inlines
-  QMAKE_CXXFLAGS_RELEASE = -O2 -Ob2
+  # QMAKE_CXXFLAGS_RELEASE = -O2 -Ob2
 
   # Use the Qt DLL version
   DEFINES *= QT_DLL QT_THREAD_SUPPORT
+
+  !isEmpty( QGLVIEWER_STATIC ) {
+    DEFINES *= QGLVIEWER_STATIC
+  }
 
   # Compilation from zip file : libQGLViewer is in ../..
   exists( ../../QGLViewer ) {
@@ -121,33 +125,39 @@ win32 {
       INCLUDEPATH *= ../..
     }
 
+    win32-g++ {
+      LIB_FILE = libQGLViewer2.a
+    } else {
+      LIB_FILE = QGLViewer*.lib
+    }
+
     exists( ../../QGLViewer/Debug ) {
-      exists( ../../QGLViewer/Debug/QGLViewer*.lib ) {
-        LIBPATH = ../../QGLViewer/Debug
+      exists( ../../QGLViewer/Debug/$${LIB_FILE} ) {
+        LIB_PATH = ../../QGLViewer/Debug
       }
     }
 
     exists( ../../QGLViewer/Release ) {
-      exists( ../../QGLViewer/Release/QGLViewer*.lib ) {
-        LIBPATH = ../../QGLViewer/Release
+      exists( ../../QGLViewer/Release/$${LIB_FILE} ) {
+        LIB_PATH = ../../QGLViewer/Release
       }
     }
 
-    exists( ../../QGLViewer/QGLViewer*.lib ) {
-      LIBPATH = ../../QGLViewer
+    exists( ../../QGLViewer/$${LIB_FILE} ) {
+      LIB_PATH = ../../QGLViewer
     }
   }
 
-  !isEmpty( QGLVIEWER_STATIC ) {
-    DEFINES *= QGLVIEWER_STATIC
-  }
-
-  NUMBERED_VERSION = QGViewer211
-  exists( $${LIBPATH}/$${NUMBERED_VERSION}.lib ) {
-    LIBS *= $${LIBPATH}/$${NUMBERED_VERSION}.lib
+  NUMBERED_VERSION = QGLViewer211
+  exists( $${LIB_PATH}/$${NUMBERED_VERSION}.lib ) {
+    LIBS *= $${LIB_PATH}/$${NUMBERED_VERSION}.lib
   } else {
-    exists( $${LIBPATH}/QGLViewer.lib ) {
-      LIBS *= $${LIBPATH}/QGLViewer.lib
+    exists( $${LIB_PATH}/QGLViewer.lib ) {
+      LIBS *= $${LIB_PATH}/QGLViewer.lib
+    } else {
+      exists( $${LIB_PATH}/libQGLViewer2.a ) {
+        LIBS *= -L$${LIB_PATH} -lQGLViewer2
+      }
     }
   }
 }

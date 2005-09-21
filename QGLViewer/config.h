@@ -37,7 +37,10 @@
 #   define QGLVIEWER_EXPORT  __declspec(dllimport)
 #  endif
 # endif
-# pragma warning( disable : 4251 ) // DLL interface
+# ifndef __MINGW32__
+#  pragma warning( disable : 4251 ) // DLL interface, needed with Visual 6
+#  pragma warning( disable : 4786 ) // identifier truncated to 255 in browser information (Visual 6).
+# endif
 #endif // Q_OS_WIN32
 
 // For other architectures, this macro is empty

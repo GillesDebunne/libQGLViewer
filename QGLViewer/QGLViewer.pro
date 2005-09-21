@@ -13,7 +13,7 @@
 # USE_GLUT = yes
 
 TEMPLATE = lib
-CONFIG  *= qt opengl warn_on release thread create_prl dll
+CONFIG  *= qt opengl warn_on release thread create_prl
 TARGET   = QGLViewer
 VERSION  = 2.1.1
 
@@ -167,9 +167,6 @@ irix-cc|irix-n32 {
 
 #		--  W i n d o w s  --
 win32 {
-  # Required to use dynamic_cast
-  CONFIG *= rtti
-
   staticlib {
     DEFINES *= QGLVIEWER_STATIC
   } else {
@@ -180,27 +177,29 @@ win32 {
   # Use the DLL version of Qt
   DEFINES *= QT_DLL QT_THREAD_SUPPORT
 
-  # Make sur to have C++ files, PentiumPro code, few warnings, add
+  # Required to use dynamic_cast
+  CONFIG *= rtti
+
+  # Make sure to have C++ files, PentiumPro code, few warnings, add
   # support to RTTI and Exceptions, and generate debug info "program database"
   # Any feedback welcome on these flags.
-  QMAKE_CXXFLAGS = -TP -G6 -GR -GX -Zi
+  !win32-g++: QMAKE_CXXFLAGS = -TP -G6 -GR -GX -Zi
   # Optimise for speed, and expand any suitable inlines :
-  QMAKE_CXXFLAGS_RELEASE = -O2
+  # QMAKE_CXXFLAGS_RELEASE = -O2
   # Optimise for debug, and generate browse database :
-  QMAKE_CXXFLAGS_DEBUG = -Od -FR"Debug/"
+  # !win32-g++: QMAKE_CXXFLAGS_DEBUG = -Od -FR"Debug/"
   # Make sure that link prints its arguments:
-  QMAKE_LDFLAGS += -logo
+  # QMAKE_LDFLAGS += -logo
 }
 
-
 #		--  M a c i n t o s h  --
-macx {
+macx|darwin-g++ {
   # GLUT for Macintosh architecture
   !isEmpty( USE_GLUT ) {
     QMAKE_LIBS_OPENGL -= -lglut
-    QMAKE_LIBS_OPENGL += -framework GLUT
+    QMAKE_LIBS_OPENGL += -framework GLUT -lobjc
   }
-  CONFIG -= thread
+  macx: CONFIG -= thread
 }
 
 
