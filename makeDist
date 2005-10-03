@@ -394,7 +394,7 @@ mv examples/html doc/examples
 #MSG="release.pri .." ; test `grep "\.\./\.\." examples/release.pri | wc -l` -eq 1 ; checkError
 
 for pro in "QGLViewer/QGLViewer.pro" "qglviewerplugin/designerPlugin.pro" $(ls examples/*/*.pro) $(ls examples/contribs/*/*.pro)
-  do
+do
   sed /"NOT IN DISTRIBUTION BEGIN"/,/"NOT IN DISTRIBUTION END"/d $pro > /tmp/notInDistrib
   mv /tmp/notInDistrib $pro
 done

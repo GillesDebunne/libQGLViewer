@@ -28,7 +28,7 @@ CONFIG  += qt opengl warn_on release thread
 HEADERS  = interface.h
 SOURCES  = interface.cpp main.cpp
 
-# Qt 2.3 users : uncomment next line and remove the next paragraph
+# Windows Qt 2.3 users : uncomment next line and remove the next paragraph
 #INTERFACES = viewerInterface.Qt2.ui
 
 QT_VERSION=$$[QT_VERSION]

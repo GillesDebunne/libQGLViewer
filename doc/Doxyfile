@@ -75,8 +75,8 @@ INPUT                  = ../QGLViewer
 FILE_PATTERNS          = *.h \
                          *.cpp
 RECURSIVE              = NO
-EXCLUDE                = ../QGLViewer/VRenderInterface.h \
-                         ../QGLViewer/VRenderInterface.cpp \
+EXCLUDE                = ../QGLViewer/VRenderInterface.Qt3.h \
+                         ../QGLViewer/VRenderInterface.Qt3.cpp \
                          ../QGLViewer/keySequence.h \
                          ../QGLViewer/keySequence.cpp
 EXCLUDE_SYMLINKS       = NO

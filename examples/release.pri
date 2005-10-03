@@ -126,7 +126,7 @@ win32 {
     }
 
     win32-g++ {
-      LIB_FILE = libQGLViewer#MAJOR_NUMBER#.a
+      LIB_FILE = libQGLViewer%MAJOR_NUMBER%.a
     } else {
       LIB_FILE = QGLViewer*.lib
     }
