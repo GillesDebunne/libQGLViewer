@@ -13,7 +13,7 @@
   class AgoraWindow : public QMainWindow, public Ui::AgoraWindow {};
 #else
 # if QT_VERSION >= 0x030000
-#  include "agoraWindow.h"
+#  include "agoraWindow.Qt3.h"
 # else
 //#  include "myInterface.Qt2.h"
 # endif
