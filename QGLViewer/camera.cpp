@@ -688,26 +688,26 @@ bool Camera::setRevolveAroundPointFromPixel(const QPoint& pixel)
   return found;
 }
 
-/*! Returns the ratio between pixel and OpenGL units.
+/*! Returns the ratio between pixel and OpenGL units at \p position.
 
- A line of \c n * pixelGLRatio() OpenGL units, located at position \p pos in the world coordinates
+ A line of \c n * pixelGLRatio() OpenGL units, located at \p position in the world coordinates
  system, will be projected with a length of \c n pixels on screen.
 
- Use this method to scale objects so that they have a constant pixel size on screen. The
- following code will draw a 20 pixel line, starting at sceneCenter() and always directed along the
- screen vertical direction:
+ Use this method to scale objects so that they have a constant pixel size on screen. The following
+ code will draw a 20 pixel line, starting at sceneCenter() and always directed along the screen
+ vertical direction:
  \code
  glBegin(GL_LINES);
  glVertex3fv(sceneCenter());
  glVertex3fv(sceneCenter() + 20 * pixelGLRatio(sceneCenter()) * camera()->upVector());
  glEnd();
  \endcode */
-float Camera::pixelGLRatio(const Vec& pos) const
+float Camera::pixelGLRatio(const Vec& position) const
 {
   switch (type())
     {
     case Camera::PERSPECTIVE :
-      return 2.0 * fabs((frame()->coordinatesOf(pos)).z) * tan(fieldOfView()/2.0) / screenHeight();
+      return 2.0 * fabs((frame()->coordinatesOf(position)).z) * tan(fieldOfView()/2.0) / screenHeight();
     case Camera::ORTHOGRAPHIC :
       {
 	GLdouble w, h;

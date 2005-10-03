@@ -185,7 +185,7 @@ namespace qglviewer {
     window dimensions when the Camera is attached to a QGLViewer. See also QGLWidget::height() */
     int screenHeight() const { return screenHeight_; };
     void getViewport(GLint viewport[4]) const;
-    float pixelGLRatio(const Vec& pos) const;
+    float pixelGLRatio(const Vec& position) const;
 
     /*! Returns the coefficient which is used to set zNear() when the Camera is inside the sphere
     defined by sceneCenter() and zClippingCoefficient() * sceneRadius().
