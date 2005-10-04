@@ -2,7 +2,7 @@
 
 libName="libQGLViewer"
 version="2.1.1"
-release="3"
+release="4"
 
 version_major=`echo $version | cut -d"." -f1`
 version_minor=`echo $version | cut -d"." -f2`
@@ -393,7 +393,7 @@ mv examples/html doc/examples
 
 #MSG="release.pri .." ; test `grep "\.\./\.\." examples/release.pri | wc -l` -eq 1 ; checkError
 
-for pro in "QGLViewer/QGLViewer.pro" "qglviewerplugin/designerPlugin.pro" $(ls examples/*/*.pro) $(ls examples/contribs/*/*.pro)
+for pro in "QGLViewer/QGLViewer.pro" "qglviewerplugin/designerPlugin.pro"
 do
   sed /"NOT IN DISTRIBUTION BEGIN"/,/"NOT IN DISTRIBUTION END"/d $pro > /tmp/notInDistrib
   mv /tmp/notInDistrib $pro
@@ -426,7 +426,7 @@ do
     then
       continue
     fi
-    grep -v "^include.*examples.pri" $f | sed /"NOT +IN +DISTRIBUTION +BEGIN"/,/"NOT +IN +DISTRIBUTION +END"/d > /tmp/proPatched.tmp
+    grep -v "^include.*examples.pri" $f | sed /"NOT IN DISTRIBUTION BEGIN"/,/"NOT IN DISTRIBUTION END"/d > /tmp/proPatched.tmp
     cat /tmp/proPatched.tmp release.pri > $f
   done
   rm release.pri

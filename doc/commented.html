@@ -57,8 +57,8 @@ style="color:#4444FF">:</span><span style="color:#4444FF">:</span><span
 style="color:#2040a0">draw</span><span style="color:#4444FF">(</span><span style="color:#4444FF">)</span>
 <span style="color:#4444FF"><strong>{</strong></span>
   <span style="color:#444444">// Your OpenGL 3D code goes here.</span>
-  <span style="color:#444444">// It only consists in geometry description, the</span>
-  <span style="color:#444444">// GL_MODELVIEW and GL_PROJECTION are handled by the QGLViewer.</span>
+  <span style="color:#444444">// It consists in geometry description using glBegin() ... glEnd() blocks.</span>
+  <span style="color:#444444">// Camera's GL_MODELVIEW and GL_PROJECTION are handled by the QGLViewer.</span>
 <span style="color:#4444FF"><strong>}</strong></span>
 </pre>
 
@@ -87,7 +87,7 @@ style="color:#2040a0">argv</span><span style="color:#4444FF">)</span>
   <span style="color:#2040a0">v</span>.<span style="color:#2040a0">show</span><span
   style="color:#4444FF">(</span><span style="color:#4444FF">)</span><span style="color:#4444FF">;</span>
   
-  <span style="color:#444444">// Set the viewer as the application main widget.</span>
+  <span style="color:#444444">// Set the viewer as the application main widget (to be removed with Qt4).</span>
   <span style="color:#2040a0">application</span>.<span
   style="color:#2040a0">setMainWidget</span><span style="color:#4444FF">(</span><span
   style="color:#4444FF">&amp;</span><span style="color:#2040a0">v</span><span
@@ -103,7 +103,7 @@ style="color:#2040a0">argv</span><span style="color:#4444FF">)</span>
 <p>
 
 You just have to concentrate on the scene description and on the OpenGL orders that represent it.
-All the rest comes for free : camera displacement with the mouse in revolve or walk through mode,
+All the rest comes for free: camera displacement with the mouse in revolve or fly mode,
 camera keyFrames paths, screenshots, frame per seconds display, objects of the scene that can be
 manipulated with the mouse, and <a href="features.html">much more</a>.
 

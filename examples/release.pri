@@ -5,7 +5,7 @@
 # The rest of this configuration file is pretty complex since it tries to automatically
 # detect system paths and configuration. In your applications, you can probably simply use:
 #unix:LIBS *= -lQGLViewer
-#win32:LIBS *= QGLViewer#CAT_VERSION#.lib (with Visual 6, use QGLViewer#MAJOR_NUMBER#.lib or QGLViewer.lib instead)
+#win32:LIBS *= QGLViewer%CAT_VERSION%.lib (with Visual 6, use QGLViewer%MAJOR_NUMBER%.lib or QGLViewer.lib instead)
 
 # Used by Qt4 only. Adds appropriate include paths.
 QT += xml opengl
