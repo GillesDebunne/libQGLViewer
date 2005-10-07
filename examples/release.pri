@@ -92,16 +92,6 @@ unix {
   # Intermediate files are created in an hidden folder
   MOC_DIR = .moc
   OBJECTS_DIR = .obj
-
-  # Detect Qt version
-  !exists( $$(QTDIR)/lib/libqt-mt.* ) {
-    exists( $$(QTDIR)/lib/libqt.* ) {
-      CONFIG -= thread
-      message( Using Qt non threaded version )
-    } else {
-      message( Unable to find Qt library in $$(QTDIR)/lib. Check your QTDIR )
-    }
-  }
 }
 
 

@@ -4,7 +4,7 @@
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_patch}
-Release:	4
+Release:	6
 
 Summary:	Qt based OpenGL generic 3D viewer library.
 License:	GPL
@@ -139,6 +139,12 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+
+* Fri Oct 7 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.1.1-6
+- "weak definition" error message fixed with gcc4/Qt4.
+
+* Thu Oct 6 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.1.1-5
+- Spurious QTDIR in .pro caused error messages with Qt4.
 
 * Tue Oct 4 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.1.1-4
 - Agora example fixed. Minor typos fixed.

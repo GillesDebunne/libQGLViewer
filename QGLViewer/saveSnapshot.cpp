@@ -272,18 +272,17 @@ void ProgressDialog::hideProgressDialog()
   progressDialog = NULL;
 }
 
+#if QT_VERSION >= 0x040000
+class VRenderInterface: public QDialog, public Ui::VRenderInterface
+{
+ public: VRenderInterface(QWidget *parent) : QDialog(parent) { setupUi(this); }
+};
+#endif
+
 // Pops-up a vectorial output option dialog box and save to fileName
 // Returns -1 in case of Cancel, 0 for success and (todo) error code in case of problem.
 static int saveVectorialSnapshot(const QString& fileName, QGLWidget* widget, const QString& snapshotFormat)
 {
-#if QT_VERSION >= 0x040000
-  class VRenderInterface: public QDialog, public Ui::VRenderInterface
-  {
-  public:
-    VRenderInterface(QWidget *parent) : QDialog(parent) { setupUi(this); }
-  };
-#endif
-
   static VRenderInterface* VRinterface = NULL;
     
   if (!VRinterface)

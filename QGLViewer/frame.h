@@ -30,9 +30,9 @@ namespace qglviewer {
   Many functions are provided to transform a 3D point from one coordinate system (Frame) to an
   other: see coordinatesOf(), inverseCoordinatesOf(), coordinatesOfIn(), coordinatesOfFrom()...
 
-  You may also want to transform a 3D vector, which corresponds to applying only the rotational part
-  of the frame transformation: see transformOf() and inverseTransformOf(). See the <a
-  href="../examples/frameTransform.html">frameTransform example</a> for an illustration.
+  You may also want to transform a 3D vector (such as a normal), which corresponds to applying only
+  the rotational part of the frame transformation: see transformOf() and inverseTransformOf(). See
+  the <a href="../examples/frameTransform.html">frameTransform example</a> for an illustration.
 
   The translation() and the rotation() that are encapsulated in a Frame can also be used to
   represent a \e rigid \e transformation of space. Such a transformation can also be interpreted as
