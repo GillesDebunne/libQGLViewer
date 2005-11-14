@@ -65,7 +65,7 @@ void Viewer::init()
   setHandlerKeyboardModifiers(QGLViewer::FRAME, Qt::NoModifier);
   setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::ControlModifier);
 #endif
-  
+
   initSpotLight();
 
   help();

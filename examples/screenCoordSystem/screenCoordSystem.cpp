@@ -79,7 +79,7 @@ void Viewer::draw()
     {
       glBegin(GL_POLYGON);
       proj[i] = camera()->projectedCoordinatesOf(saucerPos[i].position());
-      // The small z offset makes the arrow slightly above the soccer, so that it is always visible
+      // The small z offset makes the arrow slightly above the saucer, so that it is always visible
       glVertex3fv(proj[i] + Vec(-55, 0, -0.001));
       glVertex3fv(proj[i] + Vec(-17,-5, -0.001));
       glVertex3fv(proj[i] + Vec( -5, 0, -0.001));

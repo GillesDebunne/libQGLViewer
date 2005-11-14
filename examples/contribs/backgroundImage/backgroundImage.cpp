@@ -27,7 +27,7 @@ void Viewer::init()
 
   loadImage();
   help();
-  qWarning("fin init"); 
+  qWarning("fin init");
 }
 
 void Viewer::draw()
@@ -92,7 +92,7 @@ void Viewer::loadImage()
 #else
   QString name = QFileDialog::getOpenFileName(this, "Select an image", ".", "Images (*.png *.xpm *.jpg)");
 #endif
-    
+
   // In case of Cancel
   if (name.isEmpty())
     return;
@@ -110,7 +110,7 @@ void Viewer::loadImage()
 #else
   qWarning("Loading %s, %dx%d pixels", name.toLatin1().constData(), img.width(), img.height());
 #endif
-    
+
   // 1E-3 needed. Just try with width=128 and see !
   int newWidth  = 1<<(int)(1+log(img.width() -1+1E-3) / log(2.0));
   int newHeight = 1<<(int)(1+log(img.height()-1+1E-3) / log(2.0));

@@ -25,7 +25,7 @@ int main(int argc, char * argv[])
 #if QT_VERSION < 0x040000
   application.setMainWidget(&aw);
 #endif
-  
+
   // Run main loop.
   return application.exec();
 }

@@ -775,7 +775,7 @@ void AgoraViewer::load()
 #else
   fileName = QFileDialog::getOpenFileName(this, "Select a saved game", ".", "Agora files (*.ago);;All files (*)");
 #endif
-    
+
   // In case of Cancel
   if (fileName.isEmpty())
     return;
@@ -826,7 +826,7 @@ void AgoraViewer::saveAs()
 #else
   fileName = QFileDialog::getSaveFileName(this, "Save game", fileName, "Agora files (*.ago);;All files (*)");
 #endif
-    
+
   QFileInfo fi(fileName);
 
 #if QT_VERSION < 0x040000

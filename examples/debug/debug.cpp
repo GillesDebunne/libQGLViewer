@@ -40,15 +40,22 @@ void Viewer::init()
   fr.setReferenceFrame(mf);
   center->setReferenceFrame(mf);
 
-  Quaternion r(Vec(1,1,0), M_PI/2);
+  setManipulatedFrame(mf);
+
+  Vec v1(-3, -1, 0);
+  Vec v2(3, -1, 0);
+  Vec v3(0, 0, -3);
+  Quaternion r(Vec(0,0,1), Vec(0.3,1,0.1));
+  // Quaternion r(Vec(0,0,1), (v3-v2)^(v1-v2));
   cout << r << endl;
+  cout << (v1+v2+v3)/3.0 << endl;
   setShortcut(SAVE_SCREENSHOT, Qt::ALT+Qt::Key_S);
 
   Camera autreCamera;
   *(camera()) = autreCamera;
 
   //  Camera* frozenCamera = new Camera(*(camera()));
-  
+
   setPathKey(Qt::Key_Space, 2);
   setPathKey(Qt::Key_T, 10);
   setPathKey(-Qt::Key_F1);
@@ -65,7 +72,7 @@ void Viewer::init()
   // setPathKey(-Qt::Key_F11);
   // setPathKey(-Qt::Key_F12);
   setAddKeyFrameStateKey(Qt::ShiftButton | Qt::AltButton);
-  
+
   Vec tii = Vec();
   Frame* fr = NULL;
   AxisPlaneConstraintLeRetour* a = new AxisPlaneConstraintLeRetour();
@@ -75,8 +82,6 @@ void Viewer::init()
   a->constrainTranslation(tii, NULL);
   a->setTranslationConstraintType(AxisPlaneConstraint::Type(AxisPlaneConstraint::FREE));
   a->constrainTranslation(tii, NULL);
-
-  setManipulatedFrame(mf);
 
   setMouseTracking(true);
 
@@ -111,19 +116,6 @@ void Viewer::init()
     case AxisPlaneConstraint::FORBIDDEN : break;
     }
 
-  return;
-  Vec orig;
-  Vec v1 = q1 * orig;
-  Vec v2 = q2 * orig;
-  cout << "v2 = " << v2 << endl;
-  Quaternion q12 = q1*q2;
-  Quaternion q21 = q2*q1;
-  Vec v12 = q1 * q2 * orig;
-  Vec v21 = q2 * q1 * orig;
-  cout << "v12 =" << v12 << "  " << q1*q2*orig << endl;
-  cout << "v21 =" << v21 << "  " << q2*q1*orig << endl;
-  q1*= q2;
-  cout << "q1*=q2 " << q1 * orig << endl;
   return;
 
   setManipulatedFrame(new ManipulatedFrame());
@@ -327,6 +319,21 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 
 void Viewer::draw()
 {
+  glPushMatrix();
+  glMultMatrixd(mf->matrix());
+  QGLViewer::drawAxis(0.5);
+  glPopMatrix();
+
+  glDisable(GL_LIGHTING);
+  glBegin(GL_LINES);
+  glVertex3fv(Vec(0,0,0));
+  glVertex3fv(mf->inverseTransformOf(Vec(1,0,0)).orthogonalVec());
+  glEnd();
+  cout << mf->inverseTransformOf(Vec(1,0,0)).orthogonalVec().norm() << endl;
+  glEnable(GL_LIGHTING);
+
+  return;
+
   glPushMatrix();
   for (int i=0; i<=12; ++i)
     {

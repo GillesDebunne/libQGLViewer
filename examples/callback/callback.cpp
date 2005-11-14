@@ -4,12 +4,12 @@
 
 Scene::Scene(const QGLViewer* const v)
 {
-  // Connect the viewer signal to our draw function slot
-  connect(v, SIGNAL(drawNeeded()), this, SLOT(drawScene()));
+  // Connect the viewer signal to our draw slot.
+  connect(v, SIGNAL(drawNeeded()), this, SLOT(draw()));
 }
 
 // Draws a spiral
-void Scene::drawScene()
+void Scene::draw()
 {
   const float nbSteps = 200.0;
   glBegin(GL_QUAD_STRIP);

@@ -6,11 +6,11 @@ class QGLViewer;
 // signal slot mechanism.
 class Scene : public QObject
 {
-  Q_OBJECT        // must include this in order to use Qt signals/slots
+  Q_OBJECT
 
 public :
   Scene(const QGLViewer* const v);
 
 public slots:
-  void drawScene();
+  void draw();
 };

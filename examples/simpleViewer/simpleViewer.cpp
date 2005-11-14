@@ -8,21 +8,21 @@ void Viewer::draw()
   const float nbSteps = 200.0;
 
   glBegin(GL_QUAD_STRIP);
-  for (float i=0; i<nbSteps; ++i)
+  for (int i=0; i<nbSteps; ++i)
     {
-      float ratio = i/nbSteps;
-      float angle = 21.0*ratio;
-      float c = cos(angle);
-      float s = sin(angle);
-      float r1 = 1.0 - 0.8*ratio;
-      float r2 = 0.8 - 0.8*ratio;
-      float alt = ratio - 0.5;
-      const float nor = .5;
-      const float up = sqrt(1.0-nor*nor);
-      glColor3f(1.0-ratio, 0.2 , ratio);
+      const float ratio = i/nbSteps;
+      const float angle = 21.0f*ratio;
+      const float c = cos(angle);
+      const float s = sin(angle);
+      const float r1 = 1.0f - 0.8f*ratio;
+      const float r2 = 0.8f - 0.8f*ratio;
+      const float alt = ratio - 0.5f;
+      const float nor = 0.5f;
+      const float up = sqrt(1.0f-nor*nor);
+      glColor3f(1.0f-ratio, 0.2f , ratio);
       glNormal3f(nor*c, up, nor*s);
       glVertex3f(r1*c, alt, r1*s);
-      glVertex3f(r2*c, alt+0.05, r2*s);
+      glVertex3f(r2*c, alt+0.05f, r2*s);
     }
   glEnd();
 }
@@ -31,7 +31,7 @@ void Viewer::init()
 {
   // Restore previous viewer state.
   restoreStateFromFile();
-  
+
   // Opens help window
   help();
 }

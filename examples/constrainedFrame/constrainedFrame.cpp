@@ -76,7 +76,7 @@ void Viewer::init()
   setMouseBinding(Qt::ShiftModifier | Qt::MidButton,   QGLViewer::FRAME, QGLViewer::ZOOM,      false);
   setWheelBinding(Qt::ShiftModifier,                   QGLViewer::FRAME, QGLViewer::ZOOM,      false);
 #endif
-  
+
   setAxisIsDrawn();
 
   setKeyDescription(Qt::Key_G, "Change translation constraint direction");

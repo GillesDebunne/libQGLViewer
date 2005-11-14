@@ -199,7 +199,7 @@ void Viewer::mousePressEvent(QMouseEvent* e)
 #if QT_VERSION < 0x040000
       menu.setMouseTracking(true);
       int select = menu.exec(e->globalPos());
-      
+
       if (atLeastOne && select != -1)
 	camera()->playPath(menuMap[select]);
 #else

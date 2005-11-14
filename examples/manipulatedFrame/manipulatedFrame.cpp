@@ -40,7 +40,7 @@ void Viewer::init()
   setHandlerKeyboardModifiers(QGLViewer::FRAME,  Qt::NoModifier);
   setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::ControlModifier);
 #endif
-  
+
 #ifdef GL_RESCALE_NORMAL  // OpenGL 1.2 Only...
   glEnable(GL_RESCALE_NORMAL);
 #endif

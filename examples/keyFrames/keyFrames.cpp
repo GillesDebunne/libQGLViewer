@@ -109,7 +109,7 @@ void Viewer::draw()
 	drawAxis(0.4);
       else
 	drawAxis(0.2);
-      
+
       glPopMatrix();
     }
 }

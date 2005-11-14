@@ -11,7 +11,7 @@ int main(int argc, char** argv)
   QGLFormat format;
   format.setStereo(true);
   QGLFormat::setDefaultFormat(format);
-  
+
   Viewer v;
 
   // Make the viewer window visible on screen.

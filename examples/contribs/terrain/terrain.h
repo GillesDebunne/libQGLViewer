@@ -151,7 +151,7 @@ public:
     myDetailMap.reset( );
 #endif
   }
-  
+
   inline void DoMultitexturing( bool have )
   {	haveMultitexture= have;	}
 

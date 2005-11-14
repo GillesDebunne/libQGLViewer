@@ -8,7 +8,7 @@ public :
 #else
   Viewer(QWidget *parent);
 #endif
-  
+
 protected :
   virtual void draw();
   virtual QString helpString() const;

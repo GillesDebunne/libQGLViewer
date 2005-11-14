@@ -24,5 +24,5 @@ contains( QT_VERSION, "^4.*" ) {
 include( ../../examples.pri )
 
 # NOT IN DISTRIBUTION BEGIN
-DISTFILES *= 
+DISTFILES *=
 # NOT IN DISTRIBUTION END
