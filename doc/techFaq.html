@@ -23,11 +23,11 @@
 <div class="summary">
 <b><a href="#black-screen">&raquo;&raquo;</a></b> &nbsp; The black screen is back !<br/>
 <b><a href="#stillstrange">&raquo;&raquo;</a></b> &nbsp; It still looks strange<br/>
-<b><a href="#mouseevents">&raquo;&raquo;</a></b> &nbsp; How are mouse events interpreted ?<br/>
 <b><a href="#manipulatedFrame">&raquo;&raquo;</a></b> &nbsp; What is a ManipulatedFrame ?<br/>
 <b><a href="#framehier">&raquo;&raquo;</a></b> &nbsp; What are Frame hierarchies ?<br/>
 <b><a href="#severalmanip">&raquo;&raquo;</a></b> &nbsp; How can I use several ManipulatedFrame ?<br/>
 <b><a href="#mousegrabbers">&raquo;&raquo;</a></b> &nbsp; What are MouseGrabbers ?<br/>
+<b><a href="#mouseevents">&raquo;&raquo;</a></b> &nbsp; How are mouse events interpreted ?<br/>
 <b><a href="#mousekey">&raquo;&raquo;</a></b> &nbsp; How can I redefine the mouse/keyboard behavior ?<br/>
 <b><a href="#multiselect">&raquo;&raquo;</a></b> &nbsp; How can I select/move/edit several objects ?<br/>
 <b><a href="#severalviewers">&raquo;&raquo;</a></b> &nbsp; How can I use several viewers ?<br/>
@@ -49,33 +49,25 @@ possible reasons for your problem, as detailed in <a href="intro.html">the intro
 <i>world coordinate system</i>: a fixed coordinate system, that is viewed by a moving camera. This
 is different (but much more intuitive) from the standard camera-centered OpenGL coordinate
 system. The camera displacement and its associated projection matrix are handled by libQGLViewer:
-simply remove any camera related code from the beginning of your <code>draw()</code> function.</li>
+simply remove any camera related matrix multiplication from the beginning of your
+<code>draw()</code> function.</li>
 
-<li><i>The sceneRadius</i>: unlike lower level OpenGL APIs, libQGLViewer needs to have
-few informations on <i>what</i> is displayed. Namely, you need to provide an estimation of your
-scene radius (expressed in OpenGL units), and your scene center, if different from the world origin.
+<li><i>The sceneRadius</i>: unlike lower level OpenGL APIs, libQGLViewer needs to have few
+informations on <i>what</i> is displayed. Namely, you need to provide an estimation of your scene
+radius (expressed in OpenGL units), and your scene center (if different from the world origin).
 With these informations, libQGLViewer will be able to position the camera such that the entire scene
-is visible, making black screens ancient history. See the <a href="intro.html">principles page</a> for
-details.</li>
-</ul>
+is visible, making black screens ancient history. See the <a
+href="intro.html#sceneRadius">introduction</a> for details.</li> </ul>
 
 Press 'A' to display the world axis and double click the mouse middle button to make the camera fit
 the scene. You should at least see the axis.
 
 <a name="stillstrange"></a>
 <h2>It still looks strange</h2>
-If your are still unable to get the results you had before switching to libQGLViewer, check that
-your <code>init</code> function sets the default OpenGL state with <code>glEnable(GL_LIGHTING, GL_FOG,
-...)</code> as you did before. Also note that libQGLViewer slightly changes the default OpenGL state
-: see the <code>QGLViewer::initializeGL()</code> documentation.
-
-<a name="mouseevents"></a>
-<h2>How are mouse events interpreted ?</h2>
-The mouse events are sent to three possible receivers : the camera, the <code>manipulatedFrame</code>
-or a <code>MouseGrabber</code>, depending on the context. By default, the mouse is used to move the
-camera, as in classical 3D viewers. With a specific state key (default is <code>Control</code>), it
-is the <code>manipulatedFrame</code> that receives the mouse events. The state keys can of course
-be customized. The <code>MouseGrabber</code> is described below.
+If your are still unable to get the results you had before porting to libQGLViewer, check that your
+<code>init</code> function sets the default OpenGL state with <code>glEnable(GL_LIGHTING, GL_FOG,
+...)</code> as you did before. Also note that libQGLViewer slightly changes the default OpenGL
+state: see the <code>QGLViewer::initializeGL()</code> documentation.
 
 <a name="manipulatedFrame"></a>
 <h2>What is a ManipulatedFrame ?</h2>
@@ -104,18 +96,26 @@ any object that may grab the mouse focus. Many usages are possible, opening the 
 reactive user interfaces. Note that <code>ManipulatedFrame</code> are <code>MouseGrabbers</code>,
 see the <a href="examples/mouseGrabber.html">MouseGrabber example</a> for an illustration.
 
+<a name="mouseevents"></a>
+<h2>How are mouse events interpreted ?</h2>
+The mouse events are sent to three possible receivers: the camera, the <code>manipulatedFrame</code>
+or a <code>MouseGrabber</code>, depending on the context. By default, the mouse is used to move the
+camera, as in classical 3D viewers. With a specific state key (default is <code>Control</code>), it
+is the <code>manipulatedFrame</code> that receives the mouse events. All this can of course
+be customized. The <code>MouseGrabber::grabsMouse()</code> method is called to know when a
+<code>MouseGrabber</code> grabs mouse focus.
+
 <a name="mousekey"></a>
 <h2>How can I redefine the mouse/keyboard behavior ?</h2>
-The <a href="examples/keyboardAndMouse.html">keyboardAndMouse</a> example illustrates this in
-details. See also the <a href="mouse.html">mouse</a> and <a href="keyboard.html">keyboard</a> pages.
+See the <a href="mouse.html">mouse</a> and <a href="keyboard.html">keyboard</a> pages. The <a
+href="examples/keyboardAndMouse.html">keyboardAndMouse</a> example illustrates this in details.
 
 <a name="multiselect"></a>
 <h2>How can I select/move/edit several objects ?</h2>
-See the <a href="examples/multiSelect.html">multiSelect</a> example.
+See the <a href="examples/multiSelect.html">multiSelect</a> example for multiple selection.
 
 <a name="severalviewers"></a>
 <h2>How can I use several viewers ?</h2>
-
 Simply create them, as in the <a href="examples/multiView.html">multiView</a> example.
 
 <p>
@@ -126,13 +126,13 @@ viewers' <code>updateGL()</code> slots.
 </p>
 
 The different viewers can share their OpenGL contexts. See the <code>QGLViewer</code> constructors'
-documentations.
+documentations and the <a href="examples/multiView.html">multiView</a> example.
 
 <a name="makeCurrent"></a>
 <h2>I use several viewers and textures/display list are screwed up</h2>
-
 If your viewers do not share their OpenGL context, you have to make sure that the appropriate
-context is active when a viewer is drawn: call <code>makeCurrent()</code> to do this.
+context is active when a viewer is drawn: call <code>makeCurrent()</code> to do this. This is
+automatically done by the normal refresh loop.
 
 <a name="framerate"></a>
 <h2>How can I measure my application frame rate ?</h2>
@@ -154,8 +154,7 @@ this if needed.
 
 <a name="init"></a>
 <h2>My <code>init()</code> function is never called !</h2>
-
-First reason : you overloaded <code>initializeGL()</code> : bad idea since it is this function that
+First reason : you overloaded <code>initializeGL()</code>. Bad idea since it is this function that
 calls <code>init()</code> in QGLViewer. Move your code to <code>init()</code> and remove your
 <code>initializeGL()</code> overloading.
 <p>
@@ -167,7 +166,6 @@ into <code>init()</code>.
 
 <a name="text"></a>
 <h2>What are these strange characters at the bottom of the screen ?</h2>
-
 The <code>renderText</code> method uses display lists to display characters. If you use more than
 2000 display lists, they may overlap. See the <code>drawText</code> documentation.
 
