@@ -187,8 +187,8 @@ QGLViewer::QGLViewer(QWidget* parent, const QGLWidget* shareWidget, Qt::WFlags f
 /*! Same as QGLViewer(), but a \c QGLContext can be provided so that viewers share GL contexts, even
  with \c QGLContext sub-classes (use \p shareWidget otherwise).
 
- \note This constructor is only available with Qt versions greater or equal than 3.2. The provided
- \p context is simply ignored otherwise. */
+ \note This constructor is correctly working only with Qt versions greater or equal than 3.2. The
+ provided \p context is simply ignored otherwise. */
 QGLViewer::QGLViewer(QGLContext *context, QWidget* parent, const QGLWidget* shareWidget, Qt::WFlags flags)
   : QGLWidget(context, parent, shareWidget, flags)
 { defaultConstructor(); }
@@ -1502,13 +1502,13 @@ void QGLViewer::mousePressEvent(QMouseEvent* e)
  \code
  void Viewer::mousePressEvent(QMouseEvent* e)
  {
- 
+
    // Qt version 2 or 3 : use Qt::KeyButtonMask and Qt::MouseButtonMask to separate the modifiers
    // (Qt::ControlButton/Qt::AltButton/Qt::ShiftButton/Qt::MetaButton) from the mouse buttons
    // (Qt::LeftButton/Qt::MidButton/Qt::RightButton) in state().
    if ( ((e->state() & Qt::KeyButtonMask) == myModifiers) &&
         ((e->state() & Qt::MouseButtonMask) == myButton) )
-	
+
    // With Qt 4, use instead :
    if ((e->button() == myButton) && (e->modifiers() == myModifiers))
      myMouseBehavior = true;
@@ -1926,7 +1926,7 @@ QString QGLViewer::clickActionString(QGLViewer::ClickAction ca)
 
  \note If you use Qt version 2 or 3, the \c Modifier postfix should be replaced by \c Button in the
  examples above (\c Qt::ControlButton, \c Qt::AltButton, ...).
- 
+
  \note If you use Qt version 2 or 3, the \p buttonsBefore parameter type is actually a
  Qt::ButtonState. */
 void QGLViewer::setMouseBindingDescription(int state, QString description, bool doubleClick, QtMouseButtons buttonsBefore)
@@ -2115,7 +2115,7 @@ static QString keyString(int key)
 #if QT_VERSION >= 0x030000
   return QString(QKeySequence(convertToShortModifier(key)));
 #else
-  // #CONNECTION# setKeyDescription. In Qt 2.3, longs modifier overlap with key codes. 
+  // #CONNECTION# setKeyDescription. In Qt 2.3, longs modifier overlap with key codes.
   return QString(QKeySequence(key));
 #endif
 }
@@ -2226,7 +2226,7 @@ QString QGLViewer::keyboardString() const
   for (QMap<int, QString>::ConstIterator kb=keyDescription.begin(), endb=keyDescription.end(); kb!=endb; ++kb)
     text += tableLine(keyString(kb.key()), kb.value());
 
-  
+
   // 2 - Optional separator line
   if (!keyDescription.isEmpty())
     {
@@ -2234,7 +2234,7 @@ QString QGLViewer::keyboardString() const
       text += "<tr bgcolor=\"#aaaacc\"><td colspan=2>Standard viewer keys</td></tr>\n";
     }
 
-  
+
   // 3 - KeyboardAction bindings description
   for (QMap<KeyboardAction, int>::ConstIterator it=keyboardBinding_.begin(), end=keyboardBinding_.end(); it != end; ++it)
     if ((it.value() != 0) && ((!cameraIsInRevolveMode()) || ((it.key() != INCREASE_FLYSPEED) && (it.key() != DECREASE_FLYSPEED))))
@@ -2244,7 +2244,7 @@ QString QGLViewer::keyboardString() const
   for (QMap<int, QString>::ConstIterator kb2=keyDescription.begin(), endb2=keyDescription.end(); kb2!=endb2; ++kb2)
     text += tableLine(keyString(kb2.key()), kb2.value());
 
-  
+
   // 4 - Camera paths keys description
   const QString cpks = cameraPathKeysString();
   if (!cpks.isNull())
@@ -2342,7 +2342,7 @@ void QGLViewer::help()
 # endif
     textEdit->setText(text);
 #endif
-      
+
 #if QT_VERSION < 0x040000
     if (resize && (textEdit->heightForWidth(width) > height))
       height = textEdit->heightForWidth(width);
@@ -2395,7 +2395,7 @@ void QGLViewer::keyPressEvent(QKeyEvent *e)
       e->ignore();
       return;
     }
-    
+
   const Qt::Key key = Qt::Key(e->key());
 #if QT_VERSION >= 0x040000
   const QtKeyboardModifiers modifiers = e->modifiers();
@@ -2636,7 +2636,7 @@ void QGLViewer::setPlayPathKeyboardModifiers(QtKeyboardModifiers modifiers)
 {
   playPathKeyboardModifiers_ = convertKeyboardModifiers(modifiers);
 }
-  
+
 /*! Sets the addKeyFrameKeyboardModifiers() value. */
 void QGLViewer::setAddKeyFrameKeyboardModifiers(QtKeyboardModifiers modifiers)
 {
@@ -2834,7 +2834,7 @@ void QGLViewer::setHandlerStateKey(MouseHandler handler, int buttonState)
   qWarning("setHandlerStateKey has been renamed setHandlerKeyboardModifiers");
   setHandlerKeyboardModifiers(handler, QtKeyboardModifiers(buttonState & Qt::KeyboardModifierMask));
 }
-  
+
 void QGLViewer::setMouseStateKey(MouseHandler handler, int buttonState)
 {
   qWarning("setMouseStateKey has been renamed setHandlerKeyboardModifiers.");
@@ -2928,7 +2928,7 @@ void QGLViewer::setMouseBinding(int state, MouseHandler handler, MouseAction act
  illustration.
 
  The binding is ignored if no mouse button is specified in \p state.
-  
+
  \note If you use Qt version 2 or 3, the \p buttonsBefore is actually a Qt::ButtonState. */
 void QGLViewer::setMouseBinding(int state, ClickAction action, bool doubleClick, QtMouseButtons buttonsBefore)
 {
@@ -3362,7 +3362,7 @@ void QGLViewer::resetVisualHints()
 
  Change the modelView to place the arrow in 3D (see qglviewer::Frame::matrix() or drawArrow(const
  Vec& from, const Vec& to, float radius, int nbSubdivisions)).
- 
+
  Uses current color and does not modify the OpenGL state. */
 void QGLViewer::drawArrow(float length, float radius, int nbSubdivisions)
 {

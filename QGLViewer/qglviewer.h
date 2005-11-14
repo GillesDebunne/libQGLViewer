@@ -49,7 +49,7 @@ class QGLVIEWER_EXPORT QGLViewer : public QGLWidget
 public:
 #if QT_VERSION < 0x040000 || defined QT3_SUPPORT
   explicit QGLViewer(QWidget* parent=NULL, const char* name=0, const QGLWidget* shareWidget=0, Qt::WFlags flags=0);
-  explicit QGLViewer(const QGLFormat& format, QWidget* parent=0,const char* name=0, const QGLWidget* shareWidget=0, Qt::WFlags flags=0);
+  explicit QGLViewer(const QGLFormat& format, QWidget* parent=0, const char* name=0, const QGLWidget* shareWidget=0,Qt::WFlags flags=0);
   QGLViewer(QGLContext* context, QWidget* parent, const char* name=0, const QGLWidget* shareWidget=0, Qt::WFlags flags=0);
 #else
   explicit QGLViewer(QWidget* parent=0, const QGLWidget* shareWidget=0, Qt::WFlags flags=0);
@@ -435,7 +435,7 @@ public:
   If the file name is relative, the current working directory at the moment of the method call is
   used. Set using setSnapshotFileName(). */
   const QString& snapshotFileName() const { return snapshotFileName_; };
-#ifndef DOXYGEN 
+#ifndef DOXYGEN
   const QString& snapshotFilename() const;
 #endif
   /*! Returns the snapshot file format used by saveSnapshot().
@@ -501,7 +501,7 @@ public slots:
 #ifndef DOXYGEN
   void setSnapshotFilename(const QString& name);
 #endif
-  
+
   /*! Sets the snapshotFormat(). */
   void setSnapshotFormat(const QString& format) { snapshotFormat_ = format; };
   /*! Sets the snapshotCounter(). */

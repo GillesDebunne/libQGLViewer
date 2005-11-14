@@ -18,7 +18,7 @@ private:
     qWarning(message.latin1());
 #endif
   }
-  
+
 public:
   static float floatFromDom(const QDomElement& e, const QString& attribute, float defValue)
   {
@@ -42,7 +42,7 @@ public:
     if (isnan(value))
       warning("Warning, attribute \""+attribute+"\" initialized to Not a Number in \""+e.tagName()+"\"");
 #endif
-    
+
     return value;
   }
 

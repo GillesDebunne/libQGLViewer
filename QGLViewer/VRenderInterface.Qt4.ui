@@ -177,5 +177,38 @@
   <tabstop>sortMethod</tabstop>
  </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>SaveButton</sender>
+   <signal>released()</signal>
+   <receiver>VRenderInterface</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>16</x>
+     <y>210</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>35</x>
+     <y>176</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CancelButton</sender>
+   <signal>released()</signal>
+   <receiver>VRenderInterface</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>225</x>
+     <y>198</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>211</x>
+     <y>180</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

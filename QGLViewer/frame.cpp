@@ -685,7 +685,7 @@ Vec Frame::coordinatesOf(const Vec& src) const
 Vec Frame::inverseCoordinatesOf(const Vec& src) const
 {
   const Frame* fr = this;
-  Vec    res = src;
+  Vec res = src;
   while (fr != NULL)
     {
       res = fr->localInverseCoordinatesOf(res);
@@ -734,7 +734,7 @@ Vec Frame::coordinatesOfFrom(const Vec& src, const Frame* const from) const
 Vec Frame::coordinatesOfIn(const Vec& src, const Frame* const in) const
 {
   const Frame* fr = this;
-  Vec    res = src;
+  Vec res = src;
   while ((fr != NULL) && (fr != in))
     {
       res = fr->localInverseCoordinatesOf(res);
@@ -754,7 +754,7 @@ Vec Frame::coordinatesOfIn(const Vec& src, const Frame* const in) const
 /*! Same as coordinatesOf(), but with \c float parameters. */
 void Frame::getCoordinatesOf(const float src[3], float res[3]) const
 {
-  Vec r = coordinatesOf(Vec(src));
+  const Vec r = coordinatesOf(Vec(src));
   for (int i=0; i<3 ; ++i)
     res[i] = r[i];
 }
@@ -762,7 +762,7 @@ void Frame::getCoordinatesOf(const float src[3], float res[3]) const
 /*! Same as inverseCoordinatesOf(), but with \c float parameters. */
 void Frame::getInverseCoordinatesOf(const float src[3], float res[3]) const
 {
-  Vec r = inverseCoordinatesOf(Vec(src));
+  const Vec r = inverseCoordinatesOf(Vec(src));
   for (int i=0; i<3 ; ++i)
     res[i] = r[i];
 }
@@ -770,7 +770,7 @@ void Frame::getInverseCoordinatesOf(const float src[3], float res[3]) const
 /*! Same as localCoordinatesOf(), but with \c float parameters. */
 void Frame::getLocalCoordinatesOf(const float src[3], float res[3]) const
 {
-  Vec r = localCoordinatesOf(Vec(src));
+  const Vec r = localCoordinatesOf(Vec(src));
   for (int i=0; i<3 ; ++i)
     res[i] = r[i];
 }
@@ -778,7 +778,7 @@ void Frame::getLocalCoordinatesOf(const float src[3], float res[3]) const
   /*! Same as localInverseCoordinatesOf(), but with \c float parameters. */
 void Frame::getLocalInverseCoordinatesOf(const float src[3], float res[3]) const
 {
-  Vec r = localInverseCoordinatesOf(Vec(src));
+  const Vec r = localInverseCoordinatesOf(Vec(src));
   for (int i=0; i<3 ; ++i)
     res[i] = r[i];
 }
@@ -786,7 +786,7 @@ void Frame::getLocalInverseCoordinatesOf(const float src[3], float res[3]) const
 /*! Same as coordinatesOfIn(), but with \c float parameters. */
 void Frame::getCoordinatesOfIn(const float src[3], float res[3], const Frame* const in) const
 {
-  Vec r = coordinatesOfIn(Vec(src), in);
+  const Vec r = coordinatesOfIn(Vec(src), in);
   for (int i=0; i<3 ; ++i)
     res[i] = r[i];
 }
@@ -794,7 +794,7 @@ void Frame::getCoordinatesOfIn(const float src[3], float res[3], const Frame* co
 /*! Same as coordinatesOfFrom(), but with \c float parameters. */
 void Frame::getCoordinatesOfFrom(const float src[3], float res[3], const Frame* const from) const
 {
-  Vec r = coordinatesOfFrom(Vec(src), from);
+  const Vec r = coordinatesOfFrom(Vec(src), from);
   for (int i=0; i<3 ; ++i)
     res[i] = r[i];
 }
@@ -826,7 +826,7 @@ Vec Frame::transformOf(const Vec& src) const
 Vec Frame::inverseTransformOf(const Vec& src) const
 {
   const Frame* fr = this;
-  Vec    res = src;
+  Vec res = src;
   while (fr != NULL)
     {
       res = fr->localInverseTransformOf(res);
@@ -984,6 +984,8 @@ void Frame::initFromDOMElement(const QDomElement& element)
 
   // Reset default values. Attention: destroys constraint.
   // *this = Frame();
+  // This instead ? Better : what is not set is not changed.
+  // setPositionAndOrientation(Vec(), Quaternion());
 
   QDomElement child=element.firstChild().toElement();
   while (!child.isNull())
@@ -991,7 +993,7 @@ void Frame::initFromDOMElement(const QDomElement& element)
       if (child.tagName() == "position")
 	setPosition(Vec(child));
       if (child.tagName() == "orientation")
-	setOrientation(Quaternion(child));
+	setOrientation(Quaternion(child).normalized());
 
       child = child.nextSibling().toElement();
     }

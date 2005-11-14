@@ -311,7 +311,7 @@ void KeyFrameInterpolator::drawPath(int mask, int nbFrames, float scale)
 	  kf_[2] = keyFrame_.next();
 	  kf_[3] = keyFrame_.next();
 #endif
-	  
+
 	  bool exit = false;
 	  while (kf_[2])
 	    {

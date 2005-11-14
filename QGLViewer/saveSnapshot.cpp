@@ -213,7 +213,7 @@ static bool checkFileName(QString& fileName, QWidget* widget, const QString& sna
 	  info.setFile(fileName);
 	}
     }
-  
+
   return true;
 }
 
@@ -284,7 +284,7 @@ class VRenderInterface: public QDialog, public Ui::VRenderInterface
 static int saveVectorialSnapshot(const QString& fileName, QGLWidget* widget, const QString& snapshotFormat)
 {
   static VRenderInterface* VRinterface = NULL;
-    
+
   if (!VRinterface)
     VRinterface = new VRenderInterface(widget);
 
@@ -390,7 +390,7 @@ static int saveVectorialSnapshot(const QString& fileName, QGLWidget* widget, con
  If snapshotCounter() is negative, no number is appended to snapshotFileName() and the
  snapshotCounter() is not incremented. This is useful to force the creation of a file, overwriting
  the previous one.
- 
+
  When \p overwrite is set to \c false (default), a window asks for confirmation if the file already
  exists. In \p automatic mode, the snapshotCounter() is incremented (if positive) until a
  non-existing file name is found instead. Otherwise the file is overwritten without confirmation.
@@ -469,7 +469,7 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
 			    QMessageBox::Yes,
 			    QMessageBox::Cancel) == QMessageBox::Cancel))
       return;
-  
+
   bool saveOK;
 #ifndef NO_VECTORIAL_RENDER
   if ( (snapshotFormat() == "EPS") || (snapshotFormat() == "PS") || (snapshotFormat() == "XFIG") )
