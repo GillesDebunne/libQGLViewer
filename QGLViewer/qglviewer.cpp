@@ -839,7 +839,7 @@ void QGLViewer::drawLight(GLenum light, float scale) const
   \attention This method uses display lists to render the characters, with an index that starts at
   2000 by default (see the QGLWidget::renderText() documentation). If you use more than 2000 Display
   Lists, they may overlap. Directly use QGLWidget::renderText() in that case, with a higher \c
-  listBase parameter.
+  listBase parameter (or overload <code>fontDisplayListBase</code> with Qt4).
 
   \attention There is a problem with anti-aliased font with nVidia cards and Qt versions lower than
   3.3. Until this version, the \p fnt parameter is not taken into account to prevent a crash. It is
@@ -3705,8 +3705,10 @@ bool QGLViewer::restoreStateFromFile()
  \code
  QDomElement Viewer::domElement(const QString& name, QDomDocument& document) const
  {
+   // Creates a custom node for a light
    QDomElement de = document.createElement("Light");
    de.setAttribute("state", (lightIsOn()?"on":"off"));
+   // Note the include of the ManipulatedFrame domElement method.
    de.appendChild(lightManipulatedFrame()->domElement("LightFrame", document));
 
    // Get default state domElement and append custom node
@@ -3803,8 +3805,8 @@ QDomElement QGLViewer::domElement(const QString& name, QDomDocument& document) c
 
  See also qglviewer::Camera::initFromDOMElement(), qglviewer::ManipulatedFrame::initFromDOMElement().
 
- \note The manipulatedFrame() \e pointer is not modified by this method. If it is defined, its state
- is however restored from the \p element values. */
+ \note The manipulatedFrame() \e pointer is not modified by this method. If defined, its state is
+ simply set from the \p element values. */
 void QGLViewer::initFromDOMElement(const QDomElement& element)
 {
   const QString version = element.attribute("version");

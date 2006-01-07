@@ -174,7 +174,7 @@ void Camera::setScreenWidthAndHeight(int width, int height)
  class myCamera :: public qglviewer::Camera
  {
    virtual float Camera::zNear() const { return 0.001; };
-   virtual float Camera::zFarr() const { return 100.0; };
+   virtual float Camera::zFar() const { return 100.0; };
  }
  \endcode
 
@@ -666,7 +666,7 @@ void Camera::setRevolveAroundPoint(const Vec& rap)
   // not change when the revolveAroundPoint is changed in ORTHOGRAPHIC mode.
   const float newDist = fabs(cameraCoordinatesOf(revolveAroundPoint()).z);
   // Prevents division by zero when rap is set to camera position
-  if ((prevDist > 1E-5) && (newDist > 1E-5))
+  if ((prevDist > 1E-9) && (newDist > 1E-9))
     orthoCoef_ *= prevDist / newDist;
 }
 

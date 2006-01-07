@@ -2,7 +2,7 @@
 
 libName="libQGLViewer"
 version="2.1.1"
-release="6"
+release="8"
 
 version_major=`echo $version | cut -d"." -f1`
 version_minor=`echo $version | cut -d"." -f2`
@@ -541,6 +541,7 @@ test -d $exDir || mkdir $exDir
 rm -f $exDir/*
 
 cp $rpmDir/BUILD/$libNameVersion/QGLViewer/libQGLViewer.so.2 $exDir
+cp /usr/lib/libstdc++.so.5 $exDir
 
 BIN_EXAMPLES="simpleViewer manipulatedFrame luxo select animation"
 cd $rpmDir/BUILD/$libNameVersion/examples
@@ -566,8 +567,8 @@ echo "These examples were compiled on a Fedora Core 2 using Qt 3.3.3." >> readme
 echo "Rebuild from the sources to fit your configuration and for optimal results." >> readme.txt
 echo >> readme.txt
 echo "You have to add the current directory to your LD_LIBRARY_PATH in order to run the examples:" >> readme.txt
-echo "> export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:. (if you use bash)" >> readme.txt
-echo " (or use \"setenv LD_LIBRARY_PATH \$LD_LIBRARY_PATH:.\" with [t]csh)" >> readme.txt
+echo "> export LD_LIBRARY_PATH=.:\$LD_LIBRARY_PATH (if you use bash)" >> readme.txt
+echo " (or use \"setenv LD_LIBRARY_PATH .:\$LD_LIBRARY_PATH\" with [t]csh)" >> readme.txt
 echo >> readme.txt
 echo "Note that these examples are not designed to be impressive by themselves." >> readme.txt
 echo "What is impressive is that the library enables their creation with only few tens of lines of code !" >> readme.txt
@@ -648,11 +649,13 @@ if [[ $archExt == "" ]]
 then
     echo "Unable to detect machine architecture for example archExt"
     cat /etc/redhat-release
-    archExt=".tar.gz"
-else
-  echo " - Creating binary example package for $archExt"
+    archExt="tar.gz"
+#else
+  # echo " - Creating binary example package for $archExt"
 fi
 
+# No more distribution prefix. Add libstdc++ if needed.
+archExt="tar.gz"
 cp -f $exName.tar.gz $WebDir/src/$exName.$archExt
 
 for i in "i586" "i486" "i386"
