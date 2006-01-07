@@ -4,7 +4,7 @@
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_patch}
-Release:	6
+Release:	8
 
 Summary:	Qt based OpenGL generic 3D viewer library.
 License:	GPL
@@ -139,6 +139,12 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+
+* Mon Nov 14 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.1.1-8
+- VRender dialog bug with Qt4 fixed.
+
+* Fri Oct 21 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.1.1-7
+- API documentation restored.
 
 * Fri Oct 7 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.1.1-6
 - "weak definition" error message fixed with gcc4/Qt4.

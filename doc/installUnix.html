@@ -230,9 +230,9 @@ setenv DYLD_LIBRARY_PATH ${DYLD_LIBRARY_PATH}:${QTDIR}/lib
 setenv QMAKESPEC darwin-g++ (or macx-g++ or macx-xcode or macx-pbuilder)
 </pre>
 
-Your <code>QMAKESPEC</code> should correspond to your Qt installation : <code>macx-g++</code> for
-Qt/Mac (or <code>macx-mwerks</code> with CodeWarrior, <code>macx-pbuilder</code> with Project
-Builder) and <code>darwin-g++</code> for X11. Compile a simple Qt example to check your configuration.
+Your <code>QMAKESPEC</code> should correspond to your Qt installation : <code>macx-g++</code> (Qt/Mac),
+<code>macx-xcode</code> (XCode), <code>macx-mwerks</code> (CodeWarrior), <code>macx-pbuilder</code> (Project Builder)
+or <code>darwin-g++</code> for X11. Compile a simple Qt example to check your configuration.
 
 <p>
 If you installed <code>libQGLViewer</code> in a custom directory, add the path to this directory in
@@ -277,16 +277,15 @@ classes.
 </p>
 
 Note that <code>libQGLViewer.so</code> needs to be found by <code>designer</code> in order to load
-the plugin. If you didn't "<code>make install</code>", add the path to the <code>.so</code> (resp
-<code>.dylib</code> with Mac) in your <code>LD_LIBRARY_PATH</code>
-(resp. <code>DYLD_LIBRARY_PATH</code>) as explained in the Qt installation sections above.
+the plugin. If you didn't <code>make install</code> the library, add the path to the <code>.so</code> (resp
+<code>.dylib</code> with Mac) in your <code>LD_LIBRARY_PATH</code> (resp. <code>DYLD_LIBRARY_PATH</code>)
+as explained in the Qt installation sections above.
 
 <p>
-With Qt version 3, an alternative to this plugin is to add a "Custom Widget" using the
-<i>Tools/Custom</i> designer menu. <i>Load Descriptions...</i> and provide the
-<code>qglviewer.cw</code> custom widget description file, located in the QGLViewer header files
-directory. You can customize this description with your own signals and slots and change the header
-file path.
+With Qt version 3, an alternative to this plugin is to add a "Custom Widget" using the <i>Tools/Custom</i>
+designer menu. <i>Load Descriptions...</i> and to provide the <code>qglviewer.cw</code> custom widget 
+description file, located in the QGLViewer header files directory. You can then set the header file path to
+your customized QGLViewer and add your own signals and slots to the description. 
 </p>
 
 See the <a href="examples/interface.html">interface example</a> for an illustration of a Qt user
@@ -298,26 +297,26 @@ interface that includes a QGLViewer.
 Here are some error messages that you may encounter and the solution to the problem:
 <ul>
 
-<li><b>declaration of <code>qtObsolete</code> conflicts with previous declaration</b> : error
+<li><b>declaration of <code>qtObsolete</code> conflicts with previous declaration</b>: error
 message. See the <a href="examples/index.html#mac">mac example section</a>.</li>
 
-<li><b>uic: File generated with too recent version of Qt Designer</b> : try to change the
-<code>version=""</code> in the first line of the <code>ui</code> file.</li>
+<li><b>uic: File generated with too recent version of Qt Designer</b>: try to change the
+<code>version="..."</code> in the first line of the <code>ui</code> file.</li>
 
-<li><b>Error while loading shared libraries</b> : You must add the path to
+<li><b>Error while loading shared libraries</b>: add the path to
 <code>libQGLViewer.so</code> in your <code>LD_LIBRARY_PATH</code> (see above).</li>
 
-<li><b>Random or no display</b> : This may come from a bug in your compiler. Try to edit
+<li><b>Random or no display</b>: this may come from a bug in your compiler. Try to edit
 <code>QGLViewer.pro</code>, replace <code>release</code> by <code>debug</code> in the
 <code>CONFIG</code> line, and re-compile.</li>
 
-<li><b>lib3ds</b> : This library is needed to compile the <a
+<li><b>lib3ds</b>: this library is needed to compile the <a
 href="examples/3dsViewer.html">3dsViewer example</a>. Download the patched <a
 href="#WEBURL#/src/lib3ds-1.2.0-1.i686.rpm">lib3ds-1.2.0-1.i686.rpm</a> or the sources (<a
 href="#WEBURL#/src/lib3ds-1.2.0-1.src.rpm">lib3ds-1.2.0-1.src.rpm</a> or <a
 href="#WEBURL#/src/lib3ds-1.2.0.tar.gz">lib3ds-1.2.0.tar.gz</a>).</li>
 
-<li><b>libX3DTK</b> : This library is needed to compile the <a
+<li><b>libX3DTK</b>: this library is needed to compile the <a
 href="examples/x3dViewer.html">x3dViewer example</a>. Download the library from the
 <a href="http://artis.imag.fr/Members/Yannick.Legoc/X3D">X3DTK web site</a>.</li>
 
@@ -325,20 +324,20 @@ href="examples/x3dViewer.html">x3dViewer example</a>. Download the library from 
 compiling <code>keyFrameInterpolator.cpp</code>: include <code>frame.h</code> (see top of
 <code>keyFrameInterpolator.cpp</code>).</li>
 
-<li><b>overloading cannot distinguish from previous declaration</b> : while compiling
+<li><b>overloading cannot distinguish from previous declaration</b>: while compiling
 <code>translate</code> and <code>rotate</code> in <code>Frame.h</code>. Simply comment the
 <code>const</code> versions of these methods.</li>
 
-<li><b>cp: illegal option -- P</b> : This option is very useful but may not be available on your
+<li><b>cp: illegal option -- P</b>: this option is very useful but may not be available on your
 machine. Remove the <code>QMAKE_COPY_FILE</code> modification in <code>QGLViewer.pro</code></li>
 
-<li><b>gcc 2.95: ostream operator &lt;&lt; with <code>QString</code></b> : Uncomment the patch in
+<li><b>gcc 2.95: ostream operator &lt;&lt; with <code>QString</code></b>: uncomment the patch in
 <code>config.h</code></li>
 
-<li><b>Undefined reference to QString::QString</b>: Add/remove <code>thread</code> in the
+<li><b>Undefined reference to QString::QString</b>: add/remove <code>thread</code> in the
 <code>CONFIG</code> line of <code>QGLViewer.pro</code> and re-compile.</li>
 
-<li><b>exception handling disabled</b>: Add <code>QMAKE_CXXFLAGS *= -fexceptions</code> in <code>QGLViewer.pro</code>.</li>
+<li><b>exception handling disabled</b>: add <code>QMAKE_CXXFLAGS *= -fexceptions</code> in <code>QGLViewer.pro</code>.</li>
 
 </ul>
 

@@ -272,11 +272,13 @@ void ProgressDialog::hideProgressDialog()
   progressDialog = NULL;
 }
 
+#ifndef DOXYGEN
 #if QT_VERSION >= 0x040000
 class VRenderInterface: public QDialog, public Ui::VRenderInterface
 {
  public: VRenderInterface(QWidget *parent) : QDialog(parent) { setupUi(this); }
 };
+#endif
 #endif
 
 // Pops-up a vectorial output option dialog box and save to fileName
@@ -465,7 +467,7 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
 
   if ((fileInfo.exists()) && (!overwrite) &&
       (QMessageBox::warning(this,"Overwrite file ?",
-			    "File "+fileInfo.fileName()+" already exists.\nSave anyway ?",
+			    "File "+fileInfo.fileName()+" already exists.\nOverwrite ?",
 			    QMessageBox::Yes,
 			    QMessageBox::Cancel) == QMessageBox::Cancel))
       return;

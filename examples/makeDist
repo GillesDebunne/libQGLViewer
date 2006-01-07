@@ -522,7 +522,7 @@ write permission). If you have downloaded the tarball instead, simply go to the
 
 The optional <code>PREFIX, INCLUDE_DIR</code> and <code>LIB_DIR</code> parameters are those you used
 if you customized your <code><a href="../installUnix.html#linux">make install</a></code>. Use
-<code>QGLVIEWER_STATIC=1</code> to link with the static version of the library.
+<code>QGLVIEWER_STATIC=yes</code> to link with the static version of the library.
 These commands can also be typed in the <code>examples</code>' main directory to compile <i>all</i> the examples.
 
 <p>

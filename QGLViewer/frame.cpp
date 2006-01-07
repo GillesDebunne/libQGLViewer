@@ -993,7 +993,8 @@ void Frame::initFromDOMElement(const QDomElement& element)
       if (child.tagName() == "position")
 	setPosition(Vec(child));
       if (child.tagName() == "orientation")
-	setOrientation(Quaternion(child).normalized());
+	setOrientation(Quaternion(child));
+	// setOrientation(Quaternion(child).normalized());
 
       child = child.nextSibling().toElement();
     }
