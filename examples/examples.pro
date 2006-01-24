@@ -6,6 +6,7 @@ SUBDIRS       = animation \
 		drawLight \
 		fastDraw \
 		frameTransform \
+		frustumCulling \
 		interface \
 		keyboardAndMouse \
 		keyFrames \

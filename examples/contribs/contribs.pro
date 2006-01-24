@@ -2,6 +2,7 @@ TEMPLATE      = subdirs
 SUBDIRS       = agora \
 		anaglyph \
 		backgroundImage \
+		blobWar \
 		dvonn \
 		eventRecorder \
 		quarto \

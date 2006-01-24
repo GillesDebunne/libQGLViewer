@@ -35,7 +35,8 @@
 <b><a href="#framerate">&raquo;&raquo;</a></b> &nbsp; How can I measure my application frame rate ?<br/>
 <b><a href="#notextdisplayed">&raquo;&raquo;</a></b> &nbsp; Why is there no FPS/text displayed ?<br/>
 <b><a href="#init">&raquo;&raquo;</a></b> &nbsp; My <code>init()</code> function is never called !<br/>
-<b><a href="#text">&raquo;&raquo;</a></b> &nbsp; What are these strange characters at the bottom of the screen?<br/>
+<b><a href="#text">&raquo;&raquo;</a></b> &nbsp; What are these strange characters at the bottom of the screen ?<br/>
+<b><a href="#worldlight">&raquo;&raquo;</a></b> &nbsp; How can I define a world positioned light ?<br/>
 </div>
 
 <a name="black-screen"></a>
@@ -57,7 +58,8 @@ informations on <i>what</i> is displayed. Namely, you need to provide an estimat
 radius (expressed in OpenGL units), and your scene center (if different from the world origin).
 With these informations, libQGLViewer will be able to position the camera such that the entire scene
 is visible, making black screens ancient history. See the <a
-href="intro.html#sceneRadius">introduction</a> for details.</li> </ul>
+href="intro.html#sceneRadius">introduction</a> for details.</li>
+</ul>
 
 Press 'A' to display the world axis and double click the mouse middle button to make the camera fit
 the scene. You should at least see the axis.
@@ -78,7 +80,7 @@ objects in your scene, see the <a href="examples/manipulatedFrame.html">Manipula
 <a name="framehier"></a>
 <h2>What are Frame hierarchies ?</h2>
 The <a href="refManual/classqglviewer_1_1Frame.html"><code>Frame</code></a> class represents a
-position and orientation in 3D. These frames can be organized in a hierarchy and convenient
+position and orientation in 3D. These frames can be organized in a tree hierarchy and convenient
 conversion functions are provided. The OpenGL code should reflect this organization, as is detailed
 in the <a href="refManual/classqglviewer_1_1Frame.html#_details">Frame detailed description</a>.
 
@@ -93,17 +95,22 @@ example</a> for an illustration.
 <h2>What are MouseGrabbers ?</h2>
 <a href="refManual/classqglviewer_1_1MouseGrabber.html">MouseGrabber</a> is an empty interface for
 any object that may grab the mouse focus. Many usages are possible, opening the way to innovating
-reactive user interfaces. Note that <code>ManipulatedFrame</code> are <code>MouseGrabbers</code>,
-see the <a href="examples/mouseGrabber.html">MouseGrabber example</a> for an illustration.
+reactive user interfaces. See the <a
+href="refManual/classqglviewer_1_1MouseGrabber.html">MouseGrabber documentation for an example</a>.
+
+<p>
+Note that <code>ManipulatedFrame</code> are <code>MouseGrabbers</code>, see the <a
+href="examples/mouseGrabber.html">MouseGrabber example</a> for an illustration.
+</p>
 
 <a name="mouseevents"></a>
 <h2>How are mouse events interpreted ?</h2>
 The mouse events are sent to three possible receivers: the camera, the <code>manipulatedFrame</code>
-or a <code>MouseGrabber</code>, depending on the context. By default, the mouse is used to move the
-camera, as in classical 3D viewers. With a specific state key (default is <code>Control</code>), it
-is the <code>manipulatedFrame</code> that receives the mouse events. All this can of course
-be customized. The <code>MouseGrabber::grabsMouse()</code> method is called to know when a
-<code>MouseGrabber</code> grabs mouse focus.
+or a <code>MouseGrabber</code>, depending on the context. By default, events are send to the camera.
+With a specific state key (default is <code>Control</code>), it is the <code>manipulatedFrame</code>
+that receives the mouse events. Finally, the <code>mouseGrabber</code> grabs mouse focus when its
+<code>MouseGrabber::grabsMouse()</code> method returns <code>true</code> (typically when the mouse
+hovers). All this can of course be customized (see <a href="mouse.html">mouse page</a>).
 
 <a name="mousekey"></a>
 <h2>How can I redefine the mouse/keyboard behavior ?</h2>
@@ -148,9 +155,10 @@ display will then be updated as quickly as possible, and the frame rate will be 
 
 <a name="notextdisplayed"></a>
 <h2>Why is there no FPS/text displayed ?</h2>
-Qt has problems to display text in OpenGL on some architectures. There is a patch in the code and it
-has been solved in Qt 3.3. However, disable font antialiasing using <code>qtconfig</code> to fix
-this if needed.
+
+Qt has problems to display text in OpenGL on some architectures. This has been solved in Qt 3.3 and
+there is a patch in the code for previous versions. However, disable font antialiasing using
+<code>qtconfig</code> to fix this if needed.
 
 <a name="init"></a>
 <h2>My <code>init()</code> function is never called !</h2>
@@ -161,13 +169,33 @@ calls <code>init()</code> in QGLViewer. Move your code to <code>init()</code> an
 Second reason : you call <code>updateGL()</code> in your constructor, even indirectly. This calls
 <code>init()</code>, but at that point, virtual functions are not defined and it is the
 <code>QGLViewer::init()</code> that is called. Move all OpenGL specific code out of the constructor
-into <code>init()</code>.
+to put it in <code>init()</code>.
 </p>
 
 <a name="text"></a>
 <h2>What are these strange characters at the bottom of the screen ?</h2>
 The <code>renderText</code> method uses display lists to display characters. If you use more than
 2000 display lists, they may overlap. See the <code>drawText</code> documentation.
+
+<a name="worldlight"></a>
+<h2>How can I define a world positioned light ?</h2>
+A QGLViewer uses the default OpenGL light setup: <code>GL_LIGHT0</code> is on and placed at (0,0,0) in the
+camera coordinate system. To place a light in your scene, use <code>glLight</code> as if
+you were drawing an objet: the current modelView matrix is applied. The following code places a
+light in the world coordinate system:
+<pre>
+void Viewer::draw()
+{
+  // ModelView represents the world coordinate system at the beginning of draw()
+  static const GLfloat pos[4] = {1.5, 0.0, 0.0, 1.0};
+  glLightfv(GL_LIGHT0, GL_POSITION, pos);
+  static const GLfloat spotDir[3] = {-1.0, 0.0, 0.0};
+  glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, spotDir);
+
+  // rest of the drawing code...
+  }
+</pre>
+
 
 <p>
 Other questions can be sent by <a

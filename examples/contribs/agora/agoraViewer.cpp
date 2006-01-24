@@ -73,7 +73,7 @@ void AgoraViewer::init()
   connect(aw->editUndoAction, SIGNAL(activated()), this, SLOT(undo()));
   connect(aw->editRedoAction, SIGNAL(activated()), this, SLOT(redo()));
   connect(aw->computerBlackAction, SIGNAL(toggled(bool)), this, SLOT(toggleComputerIsBlack(bool)));
-  connect(aw->fileExitAction, SIGNAL(activated()), this, SLOT(close()));
+  connect(aw->fileExitAction, SIGNAL(activated()), aw, SLOT(close()));
   connect(aw->fileOpenAction, SIGNAL(activated()), this, SLOT(load()));
   connect(aw->fileSaveAction, SIGNAL(activated()), this, SLOT(save()));
   connect(aw->fileSaveAsAction, SIGNAL(activated()), this, SLOT(saveAs()));
@@ -832,26 +832,30 @@ void AgoraViewer::saveAs()
 #if QT_VERSION < 0x040000
   if (fi.extension().isEmpty())
 #else
-  if (fi.suffix().isEmpty())
+    if (fi.suffix().isEmpty())
 #endif
-	{
-      fileName += ".ago";
-      fi.setFile(fileName);
-    }
+      {
+	fileName += ".ago";
+	fi.setFile(fileName);
+      }
 
+#if QT_VERSION < 0x040000
   if (fi.exists())
-    if (QMessageBox::warning(this ,"Existing file",
-			     "File "+fi.fileName()+" already exists.\nSave anyway ?",
-			     QMessageBox::Yes,
-			     QMessageBox::Cancel) == QMessageBox::Cancel)
-      return;
-
-  if (!fi.isWritable())  // CHECK THIS
     {
-      QMessageBox::warning(this ,"Cannot save", "File "+fi.fileName()+" is not writeable.");
-      return;
-    }
+      if (QMessageBox::warning(this ,"Existing file",
+			       "File "+fi.fileName()+" already exists.\nSave anyway ?",
+			       QMessageBox::Yes,
+			       QMessageBox::Cancel) == QMessageBox::Cancel)
+	return;
 
+      if (!fi.isWritable())
+	{
+	  QMessageBox::warning(this ,"Cannot save", "File "+fi.fileName()+" is not writeable.");
+	  return;
+	}
+    }
+#endif
+  
   save();
 }
 

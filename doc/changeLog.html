@@ -19,6 +19,46 @@
 
 <h1>Change Log</h1>
 
+<h2>January 25th 2006 - 2.1.2</h2>
+<b>New features</b>
+<ul>
+ <li>Frustum culling methods: see...</li>
+ <li>Non-const <code>Vec::float*()</code> operator, so that <code>Vec</code> parameters can be passed to <code>float*</code> filling methods.</li>
+ <li><code>Quaternion::normalized()</code> method.</li>
+ <li><code>Camera::rightVector()</code> that completes the <code>viewDirection()</code> and
+ <code>upVector()</code> methods.</li>
+</ul>
+
+<b>Todo</b>
+<ul>
+<li>test const refe frame xadeck</li>
+<li>stats download</li>
+<li>licence page</li>
+<li>quaternion from matrix</li>
+<li>all mails</li>
+<li>manu glRead LIGHTING</li>
+<li>Private classes removed from documentation........</li>
+<li>ManipFrame pool example</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li><code>Quaternion::setFromRotatedBase()</code> renamed <code>setFromRotatedBasis()</code>.</li>
+ <li>Mouse events are now prioritarily interpreted as <code>ClickAction</code> and then passed to the
+ <code>mouseGrabber()</code> if no <code>ClickAction</code> corresponds (was the inverse).</li>
+</ul>
+
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li>Bug in <code>KeyFrameInterpolator</code> path drawing fixed (bug finder Manuel).</li>
+ <li>Camera's <code>zClippingCoefficient</code> correctly restored when <code>cameraIsEdited</code>.</li>
+ <li><code>Quaternion(from, to)</code> bug fixed for colinear vectors (bug finder Aurélien).</li>
+ <li><code>Frame's initFromDOMElement</code> normalizes the orientation.</li>
+ <li>Private classes removed from documentation........</li>
+</ul>
+
+
 <h2>September 18th 2005 - 2.1.1</h2>
 
 <b>Changes in the API</b>

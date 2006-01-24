@@ -1,0 +1,292 @@
+<ui version="4.0" >
+ <author></author>
+ <comment></comment>
+ <exportmacro></exportmacro>
+ <class>BlobWarWindow</class>
+ <widget class="QMainWindow" name="BlobWarWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>482</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>BlobWar</string>
+  </property>
+  <property name="windowIcon" >
+   <iconset/>
+  </property>
+  <widget class="QWidget" name="widget" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>29</y>
+     <width>600</width>
+     <height>453</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" >
+    <property name="margin" >
+     <number>3</number>
+    </property>
+    <property name="spacing" >
+     <number>6</number>
+    </property>
+    <item row="0" column="0" >
+     <widget class="BlobWarViewer" name="blobWarViewer" />
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>600</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="fileMenu" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>700</width>
+      <height>420</height>
+     </rect>
+    </property>
+    <property name="title" >
+     <string>&amp;File</string>
+    </property>
+    <addaction name="fileOpenAction" />
+    <addaction name="fileSaveAction" />
+    <addaction name="fileSaveAsAction" />
+    <addaction name="separator" />
+    <addaction name="fileExitAction" />
+   </widget>
+   <widget class="QMenu" name="PopupMenu" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>700</width>
+      <height>420</height>
+     </rect>
+    </property>
+    <property name="title" >
+     <string>&amp;Display</string>
+    </property>
+    <addaction name="togglePossibleMoveAction" />
+    <addaction name="toggleAnimationAction" />
+   </widget>
+   <widget class="QMenu" name="helpMenu" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>700</width>
+      <height>420</height>
+     </rect>
+    </property>
+    <property name="title" >
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="helpRulesAction" />
+    <addaction name="helpAboutAction" />
+   </widget>
+   <widget class="QMenu" name="editMenu" >
+    <property name="geometry" >
+     <rect>
+      <x>397</x>
+      <y>279</y>
+      <width>173</width>
+      <height>169</height>
+     </rect>
+    </property>
+    <property name="title" >
+     <string>&amp;Game</string>
+    </property>
+    <addaction name="gameNewGameAction" />
+    <addaction name="separator" />
+    <addaction name="gameUndoAction" />
+    <addaction name="gameRedoAction" />
+    <addaction name="separator" />
+    <addaction name="gameBlueIsHumanAction" />
+    <addaction name="gameConfigureBluePlayerAction" />
+    <addaction name="separator" />
+    <addaction name="gameRedIsHumanAction" />
+    <addaction name="gameConfigureRedPlayerAction" />
+   </widget>
+   <addaction name="fileMenu" />
+   <addaction name="editMenu" />
+   <addaction name="PopupMenu" />
+   <addaction name="helpMenu" />
+  </widget>
+  <action name="fileOpenAction" >
+   <property name="iconText" >
+    <string>Load game</string>
+   </property>
+   <property name="toolTip" >
+    <string>Load a saved game</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="fileSaveAction" >
+   <property name="iconText" >
+    <string>Save</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="fileSaveAsAction" >
+   <property name="iconText" >
+    <string>Save As</string>
+   </property>
+   <property name="shortcut" >
+    <string/>
+   </property>
+  </action>
+  <action name="fileExitAction" >
+   <property name="iconText" >
+    <string>Exit</string>
+   </property>
+   <property name="shortcut" >
+    <string>Esc</string>
+   </property>
+  </action>
+  <action name="gameUndoAction" >
+   <property name="iconText" >
+    <string>Undo</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="gameRedoAction" >
+   <property name="iconText" >
+    <string>Redo</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="helpRulesAction" >
+   <property name="iconText" >
+    <string>Rules of BlobWar</string>
+   </property>
+   <property name="shortcut" >
+    <string/>
+   </property>
+  </action>
+  <action name="helpAboutAction" >
+   <property name="iconText" >
+    <string>About</string>
+   </property>
+   <property name="shortcut" >
+    <string/>
+   </property>
+  </action>
+  <action name="gameNewGameAction" >
+   <property name="iconText" >
+    <string>New game</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="toggleAnimationAction" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="iconText" >
+    <string>Animate moves</string>
+   </property>
+  </action>
+  <action name="togglePossibleMoveAction" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Show possible moves</string>
+   </property>
+   <property name="iconText" >
+    <string>Show possible moves</string>
+   </property>
+  </action>
+  <action name="gameRedIsHumanAction" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>false</bool>
+   </property>
+   <property name="iconText" >
+    <string>Red player is human</string>
+   </property>
+  </action>
+  <action name="gameBlueIsHumanAction" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="iconText" >
+    <string>Blue player is human</string>
+   </property>
+  </action>
+  <action name="gameConfigureRedPlayerAction" >
+   <property name="enabled" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Configure red player</string>
+   </property>
+   <property name="iconText" >
+    <string>Configure red player</string>
+   </property>
+  </action>
+  <action name="gameConfigureBluePlayerAction" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string>Configure blue player</string>
+   </property>
+   <property name="iconText" >
+    <string>Configure blue player</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <pixmapfunction></pixmapfunction>
+ <customwidgets>
+  <customwidget>
+   <class>QMainWindow</class>
+   <extends></extends>
+   <header>qmainwindow.h</header>
+   <container>1</container>
+   <pixmap></pixmap>
+  </customwidget>
+  <customwidget>
+   <class>BlobWarViewer</class>
+   <extends></extends>
+   <header>blobWarViewer.h</header>
+   <container>0</container>
+   <pixmap></pixmap>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

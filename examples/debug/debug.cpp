@@ -11,6 +11,7 @@
 using namespace std;
 using namespace qglviewer;
 
+
 class MyVec
 {
 public:
@@ -35,6 +36,81 @@ Viewer::Viewer()
 
 void Viewer::init()
 {
+  qWarning("init");
+  setSceneCenter(Vec(0.7,1.3,-0.4));
+  camera()->lookAt(sceneCenter());
+  showEntireScene();
+
+  // GLdouble original[16];
+  // camera()->getModelViewMatrix(original);
+
+  GLdouble original[16] = {-0.0890988, -0.387783, 0.851131, 0, 0.264578, 0.915619, 0.362908, 0, -0.960239, -0.10614, 0.0210184, 0, 1.41122, 3.102, -26.3933, 1};
+  
+  cout << "Original" << endl;
+  for (int i=0; i<16; ++i)
+    {
+      cout << original[i] << "\t";
+      if (i%4 == 3)
+	cout << endl;
+    }
+  
+  Vec pos(original[12], original[13], original[14]);
+  
+  float upperleft[3][3];
+  for (int i=0; i<3; ++i)
+    for (int j=0; j<3; ++j)
+      // upperleft[i][j] = original[i*4+j];
+      upperleft[j][i] = original[i*4+j];
+
+  /*
+    cout << "Sub upper left 3x3" << endl;
+    for (int i=0; i<3; ++i)
+    {
+    for (int j=0; j<3; ++j)
+    cout << upperleft[i][j] << "\t";
+    cout << endl;
+    }
+  */
+  
+  Quaternion qr;
+  qr.setFromRotationMatrix(upperleft);
+  qr.normalize();
+  /*
+    float mmmm[3][3];
+    qr.getRotationMatrix(mmmm);
+
+    cout << "Celle de qr" << endl;
+
+    for (int i=0; i<3; ++i)
+    {
+    for (int j=0; j<3; ++j)
+    cout << mmmm[i][j] << "\t";
+    cout << endl;
+    }
+  */
+  // fr.setOrientation(qr.inverse());
+
+  Camera c;
+  c.setOrientation(qr);
+  c.setPosition(-qr.rotate(pos));
+  // c.frame()->setOrientation(qr.inverse());
+  
+  GLdouble result[16];
+  c.getModelViewMatrix(result);
+  //fr.getMatrix(m);
+
+  cout << endl << "Result" << endl;
+
+  for (int i=0; i<16; ++i)
+    {
+      cout << result[i] << "\t";
+      if (i%4 == 3)
+	cout << endl;
+    }
+  return;
+
+
+  
   mf = new ManipulatedFrame();
   center = new ManipulatedFrame();
   fr.setReferenceFrame(mf);
@@ -71,7 +147,7 @@ void Viewer::init()
   setPathKey(-Qt::Key_F10);
   // setPathKey(-Qt::Key_F11);
   // setPathKey(-Qt::Key_F12);
-  setAddKeyFrameStateKey(Qt::ShiftButton | Qt::AltButton);
+  // setAddKeyFrameStateKey(Qt::ShiftButton | Qt::AltButton);
 
   Vec tii = Vec();
   Frame* fr = NULL;
@@ -185,13 +261,13 @@ void Viewer::init()
   // Other additions to the document hierarchy...
 
   /*  // Save doc document
-  QFile f("test.xml");
-  if (f.open(IO_WriteOnly))
-    {
+      QFile f("test.xml");
+      if (f.open(IO_WriteOnly))
+      {
       QTextStream out(&f);
       document.save(out, 2);
       f.close();
-    }
+      }
   */
 
   return;
@@ -319,10 +395,69 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 
 void Viewer::draw()
 {
-  glPushMatrix();
-  glMultMatrixd(mf->matrix());
-  QGLViewer::drawAxis(0.5);
-  glPopMatrix();
+  // Draws a spiral
+  const float nbSteps = 500.0;
+  glBegin(GL_QUAD_STRIP);
+  for (float i=0; i<nbSteps; ++i)
+    {
+      float ratio = i/nbSteps;
+      float angle = 21.0*ratio;
+      float c = cos(angle);
+      float s = sin(angle);
+      float r1 = 1.0 - 0.8*ratio;
+      float r2 = 0.8 - 0.8*ratio;
+      float alt = ratio - 0.5;
+      const float nor = .5;
+      const float up = sqrt(1.0-nor*nor);
+      glColor3f(1-ratio, .2 , ratio);
+      glNormal3f(nor*c, up, nor*s);
+      glVertex3f(r1*c, alt, r1*s);
+      glVertex3f(r2*c, alt+0.05, r2*s);
+    }
+  glEnd();
+
+  GLdouble original[16];
+  // camera()->getModelViewMatrix(original);
+
+  glGetDoublev(GL_MODELVIEW_MATRIX, original);
+
+  // GLdouble original[16] = {-0.0890988, -0.387783, 0.851131, 0, 0.264578, 0.915619, 0.362908, 0, -0.960239, -0.10614, 0.0210184, 0, 1.41122, 3.102, -26.3933, 1};
+
+  cout << "Original" << endl;
+  for (int i=0; i<16; ++i)
+    {
+      cout << original[i] << "\t";
+      if (i%4 == 3)
+	cout << endl;
+    }
+
+  Vec pos(original[12], original[13], original[14]);
+
+  float upperleft[3][3];
+  for (int i=0; i<3; ++i)
+    for (int j=0; j<3; ++j)
+      upperleft[i][j] = original[i*4+j];
+
+  Quaternion qr;
+  qr.setFromRotationMatrix(upperleft);
+
+  Camera c;
+  c.setOrientation(qr);
+  c.setPosition(-qr.rotate(pos));
+
+  GLdouble result[16];
+  c.getModelViewMatrix(result);
+
+  cout << endl << "Result" << endl;
+
+  for (int i=0; i<16; ++i)
+    {
+      cout << result[i]-original[i] << "\t";
+      if (i%4 == 3)
+	cout << endl;
+    }
+
+  return;
 
   glDisable(GL_LIGHTING);
   glBegin(GL_LINES);
@@ -411,27 +546,6 @@ void Viewer::draw()
 
 
   return;
-
-    // Draws a spiral
-  const float nbSteps = 500.0;
-  glBegin(GL_QUAD_STRIP);
-  for (float i=0; i<nbSteps; ++i)
-    {
-      float ratio = i/nbSteps;
-      float angle = 21.0*ratio;
-      float c = cos(angle);
-      float s = sin(angle);
-      float r1 = 1.0 - 0.8*ratio;
-      float r2 = 0.8 - 0.8*ratio;
-      float alt = ratio - 0.5;
-      const float nor = .5;
-      const float up = sqrt(1.0-nor*nor);
-      glColor3f(1-ratio, .2 , ratio);
-      glNormal3f(nor*c, up, nor*s);
-      glVertex3f(r1*c, alt, r1*s);
-      glVertex3f(r2*c, alt+0.05, r2*s);
-    }
-  glEnd();
 
   return;
 
@@ -688,7 +802,6 @@ void Viewer::testGetWorldMatrix()
   cout << endl;
 }
 
-
 void Viewer::animate()
 {
   fr.rotateAroundPoint(Quaternion(Vec(0,0,1), 0.04), center->position());
@@ -729,8 +842,6 @@ void Viewer::displayText()
       // else
 	// cout << "Error " << (camera()->cameraCoordinatesOf(camera()->worldCoordinatesOf(src))-src).norm() << " ";
     // }
-
-
 
 void Viewer::select(const QMouseEvent* e)
 {

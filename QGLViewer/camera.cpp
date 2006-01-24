@@ -1733,6 +1733,8 @@ a*x + b*y + c*z + d = 0
 \endcode
 where \c a, \c b, \c c and \c d are the 4 components of each vector, in that order.
 
+See the <a href="../examples/frustumCulling.html">frustumCulling example</a> for an application.
+
 This format is compatible with the \c glClipPlane() function. One camera frustum plane can hence be
 applied in an other viewer to visualize the culling results:
 \code

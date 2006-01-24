@@ -6,10 +6,11 @@
 // Creating such a plugin is required to make designer aware of your
 // widget specific signals and slots and to create user interfaces that use it.
 
-// Change this code (see comments) to create your own designer plugin for your
-// QGLViewer derived classes.
+// Change this code to create your own designer plugin for your QGLViewer derived classes.
 
-
+// --------------------------------------------------------------------- //
+// Grep these comments in the code below and change the code accordingly //
+// --------------------------------------------------------------------- //
 
 // You may want to create an instance of your own viewer class here
 class Viewer : public QGLViewer
@@ -55,7 +56,9 @@ QGLViewerPlugin::QGLViewerPlugin(QObject *parent)
   
 QString QGLViewerPlugin::includeFile() const
 {
-  // Change this line with your custom QGLViewer path.
+  // ------------------------------------------------- //
+  // Change this line with your custom QGLViewer path. //
+  // ------------------------------------------------- //
   return QLatin1String("QGLViewer/qglviewer.h");
 }
 
@@ -76,7 +79,9 @@ QString QGLViewerPlugin::codeTemplate() const
   
 QString QGLViewerPlugin::domXml() const
 {
-  // Change the class name below for your custom QGLViewer class
+  // ----------------------------------------------------------- //
+  // Change the class name below for your custom QGLViewer class //
+  // ----------------------------------------------------------- //
   return QLatin1String("<widget class=\"QGLViewer\" name=\"viewer\">\n"
 		       " <property name=\"geometry\">\n"
 		       "  <rect>\n"
@@ -96,7 +101,9 @@ QString QGLViewerPlugin::group() const
 
 QString QGLViewerPlugin::name() const
 {
-  // Change this
+  // ----------- //
+  // Change this //
+  // ----------- //
   return QLatin1String("QGLViewer");
 }
 
