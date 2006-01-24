@@ -247,6 +247,54 @@ void KeyFrameInterpolator::deletePath()
   currentFrameValid_ = false;
 }
 
+static void drawCamera(float scale)
+{
+  glDisable(GL_LIGHTING);
+
+  const float halfHeight = scale * 0.07;
+  const float halfWidth  = halfHeight * 1.3;
+  const float dist = halfHeight / tan(M_PI/8.0);
+
+  const float arrowHeight    = 1.5f * halfHeight;
+  const float baseHeight     = 1.2f * halfHeight;
+  const float arrowHalfWidth = 0.5f * halfWidth;
+  const float baseHalfWidth  = 0.3f * halfWidth;
+
+  // Frustum outline
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  glBegin(GL_LINE_STRIP);
+  glVertex3f(-halfWidth, halfHeight,-dist);
+  glVertex3f(-halfWidth,-halfHeight,-dist);
+  glVertex3f( 0.0f, 0.0f, 0.0f);
+  glVertex3f( halfWidth,-halfHeight,-dist);
+  glVertex3f(-halfWidth,-halfHeight,-dist);
+  glEnd();
+  glBegin(GL_LINE_STRIP);
+  glVertex3f( halfWidth,-halfHeight,-dist);
+  glVertex3f( halfWidth, halfHeight,-dist);
+  glVertex3f( 0.0f, 0.0f, 0.0f);
+  glVertex3f(-halfWidth, halfHeight,-dist);
+  glVertex3f( halfWidth, halfHeight,-dist);
+  glEnd();
+
+  // Up arrow
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  // Base
+  glBegin(GL_QUADS);
+  glVertex3f(-baseHalfWidth, halfHeight,-dist);
+  glVertex3f( baseHalfWidth, halfHeight,-dist);
+  glVertex3f( baseHalfWidth, baseHeight,-dist);
+  glVertex3f(-baseHalfWidth, baseHeight,-dist);
+  glEnd();
+
+  // Arrow
+  glBegin(GL_TRIANGLES);
+  glVertex3f( 0.0f,           arrowHeight,-dist);
+  glVertex3f(-arrowHalfWidth, baseHeight, -dist);
+  glVertex3f( arrowHalfWidth, baseHeight, -dist);
+  glEnd();
+}
+
 /*! Draws the path used to interpolate the frame().
 
   \p mask controls what is drawn: if (mask & 1) (default), the position path is drawn. If (mask &
@@ -312,15 +360,8 @@ void KeyFrameInterpolator::drawPath(int mask, int nbFrames, float scale)
 	  kf_[3] = keyFrame_.next();
 #endif
 
-	  bool exit = false;
 	  while (kf_[2])
 	    {
-	      if (!kf_[3])
-		{
-		  exit = true;
-		  kf_[3] = kf_[2];
-		}
-
 	      Vec diff = kf_[2]->position() - kf_[1]->position();
 	      Vec v1 = 3.0 * diff - 2.0 * kf_[1]->tgP() - kf_[2]->tgP();
 	      Vec v2 = -2.0 * diff + kf_[1]->tgP() + kf_[2]->tgP();
@@ -334,15 +375,12 @@ void KeyFrameInterpolator::drawPath(int mask, int nbFrames, float scale)
 		  path_.push_back(fr);
 		}
 
-	      if (exit)
-		break;
-
 	      // Shift
 	      kf_[0] = kf_[1];
 	      kf_[1] = kf_[2];
 	      kf_[2] = kf_[3];
 #if QT_VERSION >= 0x040000
-	      ++index;
+	      index++;
 	      kf_[3] = (index < keyFrame_.size()) ? keyFrame_.at(index) : NULL;
 #else
 	      kf_[3] = keyFrame_.next();
@@ -391,7 +429,7 @@ void KeyFrameInterpolator::drawPath(int mask, int nbFrames, float scale)
 #else
 		  glMultMatrixd((*pnt).matrix());
 #endif
-		  if (mask & 2) Camera::drawCamera(scale);
+		  if (mask & 2) drawCamera(scale);
 		  if (mask & 4) QGLViewer::drawAxis(scale/10.0);
 		  glPopMatrix();
 		}

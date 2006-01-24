@@ -32,6 +32,17 @@ void Vec::projectOnPlane(const Vec& normal)
   *this -= (((*this)*normal) / normal.squaredNorm()) * normal;
 }
 
+Vec Vec::orthogonalVec() const
+{
+  if ((fabs(y) > fabs(x)) && (fabs(z) > fabs(x)))
+    return Vec(0.0, -z, y);
+  else
+    if ((fabs(x) > fabs(y)) && (fabs(z) > fabs(y)))
+      return Vec(-z, 0.0, x);
+    else
+      return Vec(-y, x, 0.0);
+}
+
 /*! Constructs a Vec from a \c QDomElement representing an XML code of the form \c <anyTagName
   x=".." y=".." z=".." />.
 

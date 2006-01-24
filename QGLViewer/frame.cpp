@@ -993,8 +993,7 @@ void Frame::initFromDOMElement(const QDomElement& element)
       if (child.tagName() == "position")
 	setPosition(Vec(child));
       if (child.tagName() == "orientation")
-	setOrientation(Quaternion(child));
-	// setOrientation(Quaternion(child).normalized());
+	setOrientation(Quaternion(child).normalized());
 
       child = child.nextSibling().toElement();
     }
@@ -1115,63 +1114,3 @@ void Frame::projectOnLine(const Vec& origin, const Vec& direction)
   proj.projectOnAxis(direction);
   translate(shift-proj);
 }
-
-/////////////////////////////////   DISPLAY   /////////////////////////////////
-
-
-/*!
-  Draws a visual representation of the frame constraints.
-  Size is 1.0 and glScalef should be called before. */
-/*
-void Frame::drawConstraints() const
-{
-  //    if (displayFrame)
-  //      {
-  // glPushAttrib(GL_ALL_ATTRIB_BITS);
-  // glPushMatrix();
-  // glEnable(GL_BLEND);
-  // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  // glCullFace(GL_BACK);
-  // glEnable(GL_CULL_FACE);
-
-  switch (action_)
-    {
-    case Frame::ROTATION:
-      glPushMatrix();
-      glLineWidth(3.0);
-      switch (rotConstraint_)
-	{
-	case Frame::NONE:
-	  // Draw circles around the 3 axis
-	  glColor4f(0.0,0.0,1.0,1.0);
-	  drawer_.drawCircle();
-	  glRotatef(90.0,1.0,0.0,0.0);
-	  glColor4f(0.0,1.0,0.0,1.0);
-	  drawer_.drawCircle();
-	  glRotatef(90.0,0.0,1.0,0.0);
-	  glColor4f(1.0,0.0,0.0,1.0);
-	  drawer_.drawCircle();
-	  break;
-	case Frame::WORLD_AXIS:
-	  glColor3f(1.0,1.0,0.0);
-	  glLineWidth(4.0);
-	  glRotatef(acos(rotConstraintAxis_[2])*180.0/M_PI,
-		    -rotConstraintAxis_[1],rotConstraintAxis_[0], 0.0);
-	  drawer_.drawArrow();
-	  break;
-	}
-      glPopMatrix();
-      break;
-    case Frame::ZOOM:
-      break;
-    case Frame::TRANSLATION:
-      break;
-    case Frame::NO_MOUSE_ACTION:
-      break;
-    }
-  glPopMatrix();
-  // glPopAttrib();
-  //      }
-} */
-
-

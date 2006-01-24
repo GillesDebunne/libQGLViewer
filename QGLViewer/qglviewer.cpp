@@ -549,6 +549,7 @@ void QGLViewer::setCameraIsEdited(bool edit)
   if (edit)
     {
       previousCameraZClippingCoefficient_ = camera()->zClippingCoefficient();
+      // #CONNECTION# 5.0 also used in domElement() and in initFromDOMElement().
       camera()->setZClippingCoefficient(5.0);
     }
   else
@@ -1338,6 +1339,8 @@ void QGLViewer::performClickAction(ClickAction ca, const QMouseEvent* const e)
   // Note: action that need it should updateGL().
   switch (ca)
     {
+      // # CONNECTION setMouseBinding prevents adding NO_CLICK_ACTION in clickBinding_
+      // This case should hence not be possible. Prevents unused case warning.
     case NO_CLICK_ACTION :
       break;
     case ZOOM_ON_PIXEL :
@@ -1400,53 +1403,52 @@ void QGLViewer::performClickAction(ClickAction ca, const QMouseEvent* const e)
  which is probably what is expected. */
 void QGLViewer::mousePressEvent(QMouseEvent* e)
 {
-  if (mouseGrabber())
-    {
-      if (mouseGrabberIsAManipulatedFrame_)
-	{
-	  for (QMap<int, MouseActionPrivate>::ConstIterator it=mouseBinding_.begin(), end=mouseBinding_.end(); it!=end; ++it)
+  //#CONNECTION# mouseDoubleClickEvent has the same structure
+  //#CONNECTION# mouseString() concatenates bindings description in inverse order.
+  ClickActionPrivate cap;
+  cap.doubleClick = false;
 #if QT_VERSION >= 0x040000
-	    if ((it.value().handler == FRAME) && ((it.key() & Qt::MouseButtonMask) == e->buttons()))
+  cap.modifiers = e->modifiers();
+  cap.button = e->button();
+  cap.buttonsBefore = (QtMouseButtons)(e->buttons() & ~(e->button()));
 #else
-	      if ((it.data().handler == FRAME) && ((it.key() & Qt::MouseButtonMask) == (e->stateAfter() & Qt::MouseButtonMask)))
-#endif
-		{
-		  ManipulatedFrame* mf = dynamic_cast<ManipulatedFrame*>(mouseGrabber());
-		  if (mouseGrabberIsAManipulatedCameraFrame_)
-		    {
-		      mf->ManipulatedFrame::startAction(it.value().action, it.value().withConstraint);
-		      mf->ManipulatedFrame::mousePressEvent(e, camera());
-		    }
-		  else
-		    {
-		      mf->startAction(it.value().action, it.value().withConstraint);
-		      mf->mousePressEvent(e, camera());
-		    }
-		  break;
-		}
-	}
-      else
-	mouseGrabber()->mousePressEvent(e, camera());
-      updateGL();
-    }
-  else
-    {
-      //#CONNECTION# mouseDoubleClickEvent has the same structure
-      //#CONNECTION# mouseString() concatenates bindings description in inverse order.
-      ClickActionPrivate cap;
-      cap.doubleClick = false;
-#if QT_VERSION >= 0x040000
-      cap.modifiers = e->modifiers();
-      cap.button = e->button();
-      cap.buttonsBefore = (QtMouseButtons)(e->buttons() & ~(e->button()));
-#else
-      cap.modifiers = (QtKeyboardModifiers)(e->state() & Qt::KeyboardModifierMask);
-      cap.button = (QtMouseButtons)((e->stateAfter() & Qt::MouseButtonMask) & (~(e->state() & Qt::MouseButtonMask)));
-      cap.buttonsBefore = (QtMouseButtons)(e->state() & Qt::MouseButtonMask);
+  cap.modifiers = (QtKeyboardModifiers)(e->state() & Qt::KeyboardModifierMask);
+  cap.button = (QtMouseButtons)((e->stateAfter() & Qt::MouseButtonMask) & (~(e->state() & Qt::MouseButtonMask)));
+  cap.buttonsBefore = (QtMouseButtons)(e->state() & Qt::MouseButtonMask);
 #endif
 
-      if (clickBinding_.contains(cap))
-	performClickAction(clickBinding_[cap], e);
+  if (clickBinding_.contains(cap))
+    performClickAction(clickBinding_[cap], e);
+  else
+      if (mouseGrabber())
+	{
+	  if (mouseGrabberIsAManipulatedFrame_)
+	    {
+	      for (QMap<int, MouseActionPrivate>::ConstIterator it=mouseBinding_.begin(), end=mouseBinding_.end(); it!=end; ++it)
+#if QT_VERSION >= 0x040000
+		if ((it.value().handler == FRAME) && ((it.key() & Qt::MouseButtonMask) == e->buttons()))
+#else
+		  if ((it.data().handler == FRAME) && ((it.key() & Qt::MouseButtonMask) == (e->stateAfter() & Qt::MouseButtonMask)))
+#endif
+		    {
+		      ManipulatedFrame* mf = dynamic_cast<ManipulatedFrame*>(mouseGrabber());
+		      if (mouseGrabberIsAManipulatedCameraFrame_)
+			{
+			  mf->ManipulatedFrame::startAction(it.value().action, it.value().withConstraint);
+			  mf->ManipulatedFrame::mousePressEvent(e, camera());
+			}
+		      else
+			{
+			  mf->startAction(it.value().action, it.value().withConstraint);
+			  mf->mousePressEvent(e, camera());
+			}
+		      break;
+		    }
+	    }
+	  else
+	    mouseGrabber()->mousePressEvent(e, camera());
+	  updateGL();
+	}
       else
 	{
 	  //#CONNECTION# wheelEvent has the same structure
@@ -1490,7 +1492,6 @@ void QGLViewer::mousePressEvent(QMouseEvent* e)
 	    e->ignore();
 #endif
 	}
-    }
 }
 
 /*! Overloading of the \c QWidget method.
@@ -1717,29 +1718,27 @@ void QGLViewer::wheelEvent(QWheelEvent* e)
  <a href="../mouse.html">mouse page</a>. */
 void QGLViewer::mouseDoubleClickEvent(QMouseEvent* e)
 {
-  if (mouseGrabber())
-    mouseGrabber()->mouseDoubleClickEvent(e, camera());
-  else
-    {
-      //#CONNECTION# mousePressEvent has the same structure
-      ClickActionPrivate cap;
-      cap.doubleClick = true;
+  //#CONNECTION# mousePressEvent has the same structure
+  ClickActionPrivate cap;
+  cap.doubleClick = true;
 #if QT_VERSION >= 0x040000
-      cap.modifiers = e->modifiers();
-      cap.button = e->button();
-      cap.buttonsBefore = (QtMouseButtons)(e->buttons() & ~(e->button()));
+  cap.modifiers = e->modifiers();
+  cap.button = e->button();
+  cap.buttonsBefore = (QtMouseButtons)(e->buttons() & ~(e->button()));
 #else
-      cap.modifiers = (QtKeyboardModifiers)(e->state() & Qt::KeyboardModifierMask);
-      cap.button = (QtMouseButtons)((e->stateAfter() & Qt::MouseButtonMask) & (~(e->state() & Qt::MouseButtonMask)));
-      cap.buttonsBefore = (QtMouseButtons)(e->state() & Qt::MouseButtonMask);
+  cap.modifiers = (QtKeyboardModifiers)(e->state() & Qt::KeyboardModifierMask);
+  cap.button = (QtMouseButtons)((e->stateAfter() & Qt::MouseButtonMask) & (~(e->state() & Qt::MouseButtonMask)));
+  cap.buttonsBefore = (QtMouseButtons)(e->state() & Qt::MouseButtonMask);
 #endif
-      if (clickBinding_.contains(cap))
-	performClickAction(clickBinding_[cap], e);
+  if (clickBinding_.contains(cap))
+    performClickAction(clickBinding_[cap], e);
+  else
+    if (mouseGrabber())
+      mouseGrabber()->mouseDoubleClickEvent(e, camera());
 #if QT_VERSION >= 0x030000
-      else
-	e->ignore();
+    else
+      e->ignore();
 #endif
-    }
 }
 
 /*! Sets the state of displaysInStereo(). See also toggleStereoDisplay().
@@ -2896,12 +2895,10 @@ void QGLViewer::setMouseBinding(int state, MouseHandler handler, MouseAction act
 	map.withConstraint = withConstraint;
 	state = convertToKeyboardModifiers(state);
 
-#if QT_VERSION >= 0x040000
 	mouseBinding_.remove(state);
-	mouseBinding_.insert(state, map);
-#else
-	mouseBinding_.replace(state, map);
-#endif
+
+	if (action != NO_MOUSE_ACTION)
+	  mouseBinding_.insert(state, map);
 
 	ClickActionPrivate cap;
 	cap.modifiers = QtKeyboardModifiers(state & Qt::KeyboardModifierMask);
@@ -2933,7 +2930,7 @@ void QGLViewer::setMouseBinding(int state, MouseHandler handler, MouseAction act
 void QGLViewer::setMouseBinding(int state, ClickAction action, bool doubleClick, QtMouseButtons buttonsBefore)
 {
   if ((buttonsBefore != Qt::NoButton) && !doubleClick)
-    qWarning("Button before is only meaningful when doubleClick is true in setMouseBinding().");
+    qWarning("Buttons before is only meaningful when doubleClick is true in setMouseBinding().");
   else
     if ((state & Qt::MouseButtonMask) == 0)
       qWarning("No mouse button specified in setMouseBinding");
@@ -2945,12 +2942,12 @@ void QGLViewer::setMouseBinding(int state, ClickAction action, bool doubleClick,
 	cap.button = QtMouseButtons(state & Qt::MouseButtonMask);
 	cap.doubleClick = doubleClick;
 	cap.buttonsBefore = buttonsBefore;
-#if QT_VERSION >= 0x040000
 	clickBinding_.remove(cap);
-	clickBinding_.insert(cap, action);
-#else
-	clickBinding_.replace(cap, action);
-#endif
+
+	// #CONNECTION performClickAction comment on NO_CLICK_ACTION
+	if (action != NO_CLICK_ACTION)
+	  clickBinding_.insert(cap, action);
+
 	if ((!doubleClick) && (buttonsBefore == Qt::NoButton))
 	  mouseBinding_.remove(state);
       }
@@ -2989,12 +2986,10 @@ void QGLViewer::setWheelBinding(QtKeyboardModifiers modifiers, MouseHandler hand
 	map.action  = action;
 	map.withConstraint = withConstraint;
 	modifiers = convertKeyboardModifiers(modifiers);
-#if QT_VERSION >= 0x040000
 	wheelBinding_.remove(modifiers);
-	wheelBinding_.insert(modifiers, map);
-#else
-	wheelBinding_.replace(modifiers, map);
-#endif
+
+	if (action != NO_MOUSE_ACTION)
+	  wheelBinding_.insert(modifiers, map);
       }
 }
 
@@ -3360,7 +3355,7 @@ void QGLViewer::resetVisualHints()
  \p length, \p radius and \p nbSub subdivisions define its geometry. If \p radius is negative
  (default), it is set to 0.05 * \p length.
 
- Change the modelView to place the arrow in 3D (see qglviewer::Frame::matrix() or drawArrow(const
+ Change the \c ModelView to place the arrow in 3D (see qglviewer::Frame::matrix() or drawArrow(const
  Vec& from, const Vec& to, float radius, int nbSubdivisions)).
 
  Uses current color and does not modify the OpenGL state. */
@@ -3410,6 +3405,9 @@ void QGLViewer::drawArrow(const Vec& from, const Vec& to, float radius, int nbSu
   The current color is used to draw the X, Y and Z characters at the extremities of the three
   arrows. The OpenGL state is modified: \c GL_LIGHTING and \c GL_COLOR_MATERIAL are enabled and line
   width is set to 2.0.
+
+  The original OpenGL state is not saved and restored for efficiency reasons. You can create a
+  display list using this method if needed.
 
   axisIsDrawn() uses this method to draw a representation of the world coordinate system. See also
   QGLViewer::drawArrow(). */
@@ -3765,6 +3763,7 @@ QDomElement QGLViewer::domElement(const QString& name, QDomDocument& document) c
     camera()->setZClippingCoefficient(previousCameraZClippingCoefficient_);
   de.appendChild(camera()->domElement("Camera", document));
   if (cameraIsEdited())
+    // #CONNECTION# 5.0 from setCameraIsEdited()
     camera()->setZClippingCoefficient(5.0);
 
   if (manipulatedFrame())
@@ -3816,10 +3815,11 @@ void QGLViewer::initFromDOMElement(const QDomElement& element)
 #if QT_VERSION >= 0x040000
     qWarning(QString("State file created using QGLViewer version "+version+" may not be correctly read."+QGLViewerVersionString()).toLatin1().constData());
 #else
-    qWarning("State file created using QGLViewer version "+version+" may not be correctly read.");
+  qWarning("State file created using QGLViewer version "+version+" may not be correctly read.");
 #endif
 
   QDomElement child=element.firstChild().toElement();
+  bool tmpCameraIsEdited = cameraIsEdited();
   while (!child.isNull())
     {
       if (child.tagName() == "State")
@@ -3848,9 +3848,8 @@ void QGLViewer::initFromDOMElement(const QDomElement& element)
 	  setGridIsDrawn(DomUtils::boolFromDom(child, "gridIsDrawn", false));
 	  setFPSIsDisplayed(DomUtils::boolFromDom(child, "FPSIsDisplayed", false));
 	  setZBufferIsDisplayed(DomUtils::boolFromDom(child, "zBufferIsDisplayed", false));
-	  // Possible problem here. The Camera should be restored before the Display
-	  // Its zClippingCoefficient would then be initialized before editCameraPaths sets it to 5.0
-	  setCameraIsEdited(DomUtils::boolFromDom(child, "cameraIsEdited", false));
+	  // See comment below.
+	  tmpCameraIsEdited = DomUtils::boolFromDom(child, "cameraIsEdited", false);
 	  // setTextIsEnabled(DomUtils::boolFromDom(child, "textIsEnabled", true));
 	}
 
@@ -3887,6 +3886,18 @@ void QGLViewer::initFromDOMElement(const QDomElement& element)
 	manipulatedFrame()->initFromDOMElement(child);
 
       child = child.nextSibling().toElement();
+    }
+
+  // The Camera always stores its "real" zClippingCoef in domElement(). If it is edited,
+  // its "real" coef must be saved and the coef set to 5.0, as is done in setCameraIsEdited().
+  // BUT : Camera and Display are read in an arbitrary order. We must initialize Camera's
+  // "real" coef BEFORE calling setCameraIsEdited. Hence this temp cameraIsEdited and delayed call
+  cameraIsEdited_ = tmpCameraIsEdited;
+  if (cameraIsEdited_)
+    {
+      previousCameraZClippingCoefficient_ = camera()->zClippingCoefficient();
+      // #CONNECTION# 5.0 from setCameraIsEdited.
+      camera()->setZClippingCoefficient(5.0);
     }
 }
 

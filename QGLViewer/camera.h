@@ -91,14 +91,36 @@ namespace qglviewer {
     located in the image plane, which is at a zNear() distance ahead. */
     Vec position() const { return frame()->position(); };
 
-    Vec upVector() const;
+    /*! Returns the normalized up vector of the Camera, defined in the world coordinate system.
 
-    /*! Returns the normalized view direction of the Camera (negative Z axis), defined in the world
-      coordinate system.
+    Set using setUpVector() or setOrientation(). It is orthogonal to viewDirection() and to
+    rightVector().
 
-    Change this value using setViewDirection(), lookAt() or setOrientation(). Simply returns
-    frame()->inverseTransformOf(Vec(0.0, 0.0, -1.0)). */
+    It corresponds to the Y axis of the associated frame() (actually returns
+    frame()->inverseTransformOf(Vec(0.0, 1.0, 0.0)) ). */
+    Vec upVector() const
+    {
+      return frame()->inverseTransformOf(Vec(0.0, 1.0, 0.0));
+    }
+    /*! Returns the normalized view direction of the Camera, defined in the world coordinate system.
+
+    Change this value using setViewDirection(), lookAt() or setOrientation(). It is orthogonal to
+    upVector() and to rightVector().
+
+    This corresponds to the negative Z axis of the frame() ( frame()->inverseTransformOf(Vec(0.0,
+    0.0, -1.0)) ). */
     Vec viewDirection() const { return frame()->inverseTransformOf(Vec(0.0, 0.0, -1.0)); };
+
+    /*! Returns the normalized right vector of the Camera, defined in the world coordinate system.
+
+    This vector lies in the Camera horizontal plane, directed along the X axis (orthogonal to
+    upVector() and to viewDirection()). Set using setUpVector() or setOrientation().
+
+    Simply returns frame()->inverseTransformOf(Vec(1.0, 0.0, 0.0)). */
+    Vec rightVector() const
+    {
+      return frame()->inverseTransformOf(Vec(1.0, 0.0, 0.0));
+    }
 
     /*! Returns the Camera orientation, defined in the world coordinate system.
 
@@ -211,6 +233,9 @@ namespace qglviewer {
     ...) and you may want to change this value to define more precisely the location of the clipping
     planes. See also zNearCoefficient().
 
+    For a total control on clipping planes' positions, an other option is to overload the zNear()
+    and zFar() methods.
+
     \attention When QGLViewer::cameraPathAreEdited(), this value is set to 5.0 so that the Camera
     paths are not clipped. The previous zClippingCoefficient() value is restored back when you leave
     this mode. */
@@ -219,6 +244,7 @@ namespace qglviewer {
     virtual float zNear() const;
     virtual float zFar()  const;
     virtual void getOrthoWidthHeight(GLdouble& halfWidth, GLdouble& halfHeight) const;
+    void getFrustumPlanesCoefficients(GLdouble coef[6][4]) const;
 
   public slots:
     void setType(Type type);
@@ -398,8 +424,10 @@ public slots:
     /*! @name Drawing */
     //@{
   public:
+#ifndef DOXYGEN
     static void drawCamera(float scale=1.0, float aspectRatio=1.33, float fieldOfView=M_PI/4.0);
-    virtual void draw(bool fitNearPlane=false) const;
+#endif
+    virtual void draw(bool drawFarPlane=true, float scale=1.0) const;
     //@}
 
 

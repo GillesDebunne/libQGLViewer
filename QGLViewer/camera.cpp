@@ -21,7 +21,7 @@ Camera::Camera()
   setFrame(new ManipulatedCameraFrame());
 
   // #CONNECTION# All these default values identical in initFromDOMElement.
-  
+
   // Requires fieldOfView() to define focusDistance()
   setSceneRadius(1.0);
 
@@ -988,14 +988,6 @@ void Camera::setUpVector(const Vec& up, bool noMove)
   frame()->updateFlyUpVector();
 }
 
-/*! Returns the normalized up vector of the Camera, defined in the world coordinate system.
-
- Set using setUpVector(). Simply returns frame()->inverseTransformOf(Vec(0.0, 1.0, 0.0)). */
-Vec Camera::upVector() const
-{
-  return frame()->inverseTransformOf(Vec(0.0, 1.0, 0.0));
-}
-
 /*! Sets the orientation() of the Camera using polar coordinates.
 
  \p theta rotates the Camera around its Y axis, and \e then \p phi rotates it around its X axis.
@@ -1042,7 +1034,7 @@ void Camera::setViewDirection(const Vec& direction)
     }
 
   Quaternion q;
-  q.setFromRotatedBase(xAxis, xAxis^direction, -direction);
+  q.setFromRotatedBasis(xAxis, xAxis^direction, -direction);
   frame()->setOrientationWithConstraint(q);
 }
 
@@ -1600,90 +1592,240 @@ void Camera::convertClickToLine(const QPoint& pixel, Vec& orig, Vec& dir) const
     }
 }
 
-/*! Draws a perspective Camera shape (frustum and up vector arrow).
-
-The Camera is classically looking down the negative Z axis, with an up vector along the Y axis. Its
-projection center is at coordinates (0,0,0). Modify the \c GL_MODELVIEW matrix before this method to
-place and orientate your Camera drawing. This is what is done by draw().
-
-\p scale is used to scale the drawing. A sceneRadius() value will typically give good results. The
-half height of the drawn frustum is directly proportional to \p scale. Other dimensions are inferred
-from \p aspectRatio and \p fieldOfView (expressed in radians).
-
-The current \c glColor is used for drawing. However, this method modifies the OpenGL state: \c
-GL_LIGHTING is disabled, line width is set to 1 and \c glPolygonMode is set to \c GL_FILL. Precede
-this method with a call to \c glPushAttrib() if needed. */
-void Camera::drawCamera(float scale, float aspectRatio, float fieldOfView)
+#ifndef DOXYGEN
+/*! This method has been deprecated in libQGLViewer version 2.2.0 */
+void Camera::drawCamera(float, float, float)
 {
-  glDisable(GL_LIGHTING);
-  glLineWidth(1.0);
+  qWarning("drawCamera is deprecated. Use Camera::draw() instead.");
+}
+#endif
 
-  // #CONNECTION# draw() uses this 0.07
-  const float halfHeight = scale * 0.07;
-  const float halfWidth  = halfHeight * aspectRatio;
-  const float dist = halfHeight / tan(fieldOfView/2.0);
+/*! Draws a representation of the Camera in the 3D world.
 
-  const float arrowHeight    = 1.5f * halfHeight;
-  const float baseHeight     = 1.2f * halfHeight;
-  const float arrowHalfWidth = 0.5f * halfWidth;
-  const float baseHalfWidth  = 0.3f * halfWidth;
+The near and far planes are drawn as quads, the frustum is drawn using lines and the camera up
+vector is represented by an arrow to disambiguate the drawing.
 
-  // Frustum outline
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  glBegin(GL_LINE_STRIP);
-  glVertex3f(-halfWidth, halfHeight,-dist);
-  glVertex3f(-halfWidth,-halfHeight,-dist);
-  glVertex3f( 0.0f, 0.0f, 0.0f);
-  glVertex3f( halfWidth,-halfHeight,-dist);
-  glVertex3f(-halfWidth,-halfHeight,-dist);
-  glEnd();
-  glBegin(GL_LINE_STRIP);
-  glVertex3f( halfWidth,-halfHeight,-dist);
-  glVertex3f( halfWidth, halfHeight,-dist);
-  glVertex3f( 0.0f, 0.0f, 0.0f);
-  glVertex3f(-halfWidth, halfHeight,-dist);
-  glVertex3f( halfWidth, halfHeight,-dist);
+Note that the current \c glColor and \c glPolygonMode are used to draw the near and far planes. See
+the <a href="../examples/frustumCulling.html">frustumCulling example</a> for an example of
+semi-transparent plane drawing. Similarly, the current \c glLineWidth and \c glColor is used to draw
+the frustum outline.
+
+When \p drawFarPlane is \c false, only the near plane is drawn. \p scale can be used to scale the
+drawing: a value of 1.0 (default) will draw the Camera's frustum at its actual size.
+
+This method assumes that the \c glMatrixMode is \c GL_MODELVIEW and that the current ModelView
+matrix corresponds to the world coordinate system (as it is at the beginning of QGLViewer::draw()).
+The Camera is then correctly positioned and orientated.
+
+\note The drawing of a QGLViewer's own QGLViewer::camera() should not be visible, but may create
+artefacts due to imprecisions. */
+void Camera::draw(bool drawFarPlane, float scale) const
+{
+  glPushMatrix();
+  glMultMatrixd(frame()->worldMatrix());
+
+  // 0 is the upper left coordinates of the near corner, 1 for the far one
+  Vec points[2];
+
+  points[0].z = scale * zNear();
+  points[1].z = scale * zFar();
+
+  switch (type())
+    {
+    case Camera::PERSPECTIVE:
+      {
+	points[0].y = points[0].z * tan(fieldOfView()/2.0);
+	points[0].x = points[0].y * aspectRatio();
+
+	const float ratio = points[1].z / points[0].z;
+
+	points[1].y = ratio * points[0].y;
+	points[1].x = ratio * points[0].x;
+	break;
+      }
+    case Camera::ORTHOGRAPHIC:
+      {
+	GLdouble hw, hh;
+	getOrthoWidthHeight(hw, hh);
+	points[0].x = points[1].x = scale * float(hw);
+	points[0].y = points[1].y = scale * float(hh);
+	break;
+      }
+    }
+
+  const int farIndex = drawFarPlane?1:0;
+
+  // Near and (optionally) far plane(s)
+  glBegin(GL_QUADS);
+  for (int i=farIndex; i>=0; --i)
+    {
+      glNormal3f(0.0, 0.0, (i==0)?1.0:-1.0);
+      glVertex3f( points[i].x,  points[i].y, -points[i].z);
+      glVertex3f(-points[i].x,  points[i].y, -points[i].z);
+      glVertex3f(-points[i].x, -points[i].y, -points[i].z);
+      glVertex3f( points[i].x, -points[i].y, -points[i].z);
+    }
   glEnd();
 
   // Up arrow
+  const float arrowHeight    = 1.5f * points[0].y;
+  const float baseHeight     = 1.2f * points[0].y;
+  const float arrowHalfWidth = 0.5f * points[0].x;
+  const float baseHalfWidth  = 0.3f * points[0].x;
+
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   // Base
   glBegin(GL_QUADS);
-  glVertex3f(-baseHalfWidth, halfHeight,-dist);
-  glVertex3f( baseHalfWidth, halfHeight,-dist);
-  glVertex3f( baseHalfWidth, baseHeight,-dist);
-  glVertex3f(-baseHalfWidth, baseHeight,-dist);
+  glVertex3f(-baseHalfWidth, points[0].y, -points[0].z);
+  glVertex3f( baseHalfWidth, points[0].y, -points[0].z);
+  glVertex3f( baseHalfWidth, baseHeight,  -points[0].z);
+  glVertex3f(-baseHalfWidth, baseHeight,  -points[0].z);
   glEnd();
 
   // Arrow
   glBegin(GL_TRIANGLES);
-  glVertex3f( 0.0f,           arrowHeight,-dist);
-  glVertex3f(-arrowHalfWidth, baseHeight, -dist);
-  glVertex3f( arrowHalfWidth, baseHeight, -dist);
+  glVertex3f( 0.0f,           arrowHeight, -points[0].z);
+  glVertex3f(-arrowHalfWidth, baseHeight,  -points[0].z);
+  glVertex3f( arrowHalfWidth, baseHeight,  -points[0].z);
   glEnd();
+  
+  // Frustum lines
+  switch (type())
+    {
+    case Camera::PERSPECTIVE :
+      glBegin(GL_LINES);
+      glVertex3f(0.0f, 0.0f, 0.0f);
+      glVertex3f( points[farIndex].x,  points[farIndex].y, -points[farIndex].z);
+      glVertex3f(0.0f, 0.0f, 0.0f);
+      glVertex3f(-points[farIndex].x,  points[farIndex].y, -points[farIndex].z);
+      glVertex3f(0.0f, 0.0f, 0.0f);
+      glVertex3f(-points[farIndex].x, -points[farIndex].y, -points[farIndex].z);
+      glVertex3f(0.0f, 0.0f, 0.0f);
+      glVertex3f( points[farIndex].x, -points[farIndex].y, -points[farIndex].z);
+      glEnd();
+      break;
+    case Camera::ORTHOGRAPHIC :
+      if (drawFarPlane)
+	{
+	  glBegin(GL_LINES);
+	  glVertex3f( points[0].x,  points[0].y, -points[0].z);
+	  glVertex3f( points[1].x,  points[1].y, -points[1].z);
+	  glVertex3f(-points[0].x,  points[0].y, -points[0].z);
+	  glVertex3f(-points[1].x,  points[1].y, -points[1].z);
+	  glVertex3f(-points[0].x, -points[0].y, -points[0].z);
+	  glVertex3f(-points[1].x, -points[1].y, -points[1].z);
+	  glVertex3f( points[0].x, -points[0].y, -points[0].z);
+	  glVertex3f( points[1].x, -points[1].y, -points[1].z);
+	  glEnd();
+	}
+    }
+
+  glPopMatrix();
 }
 
-/*! Draws a representation of the Camera.
 
-Simply uses drawCamera() with the actual parameters of the Camera.
+/*! Returns the 6 plane equations of the Camera frustum.
 
-This method assumes that the \c glMatrixMode is \c GL_MODELVIEW and that the modelView corresponds
-to the world coordinate system (as it is at the beginning of QGLViewer::draw()). The Camera can then
-be positioned at its actual position().
+The six 4-component vectors of \p coef respectively correspond to the left, right, near, far, top
+and bottom Camera frustum planes. Each vector holds a plane equation of the form:
+\code
+a*x + b*y + c*z + d = 0 
+\endcode
+where \c a, \c b, \c c and \c d are the 4 components of each vector, in that order.
 
-When \p fitNearPlane is \c true, the drawing is scaled so that the drawn image plane corresponds to
-the Camera zNear clipping plane. It is otherwise (default) scaled by the sceneRadius().
+This format is compatible with the \c glClipPlane() function. One camera frustum plane can hence be
+applied in an other viewer to visualize the culling results:
+\code
+ // Retrieve plance equations
+ GLdouble coef[6][4];
+ mainViewer->camera()->getFrustumPlanesCoefficients(coef);
 
-\note The drawing of a QGLViewer own QGLViewer::camera() is logically not be visible in that
-QGLViewer. */
-void Camera::draw(bool fitNearPlane) const
+ // These two additional clipping planes (which must have been enabled)
+ // will reproduce the mainViewer's near and far clipping.
+ glClipPlane(GL_CLIP_PLANE0, coef[2]);
+ glClipPlane(GL_CLIP_PLANE1, coef[3]);
+\endcode */
+void Camera::getFrustumPlanesCoefficients(GLdouble coef[6][4]) const
 {
-  glPushMatrix();
-  glMultMatrixd(frame()->worldMatrix());
-  if (fitNearPlane)
-    // #CONNECTION# drawCamera() uses this 0.07
-    Camera::drawCamera(zNear()*tan(fieldOfView()/2.0)/0.07, aspectRatio(), fieldOfView());
-  else
-    Camera::drawCamera(sceneRadius(), aspectRatio(), fieldOfView());
-  glPopMatrix();
+  // Computed once and for all
+  const Vec pos          = position();
+  const Vec viewDir      = viewDirection();
+  const Vec up           = upVector();
+  const Vec right        = rightVector();
+  const float posViewDir = pos * viewDir;
+
+  static Vec normal[6];
+  static GLdouble dist[6];
+  
+  switch (type())
+    {
+    case Camera::PERSPECTIVE :
+      {
+	const float hhfov = horizontalFieldOfView() / 2.0;
+	const float chhfov = cos(hhfov);
+	const float shhfov = sin(hhfov);
+	normal[0] = - shhfov * viewDir;
+	normal[1] = normal[0] + chhfov * right;
+	normal[0] = normal[0] - chhfov * right;
+	
+	normal[2] = -viewDir;
+	normal[3] =  viewDir;
+	
+	const float hfov = fieldOfView() / 2.0;
+	const float chfov = cos(hfov);
+	const float shfov = sin(hfov);
+	normal[4] = - shfov * viewDir;
+	normal[5] = normal[4] - chfov * up;
+	normal[4] = normal[4] + chfov * up;
+
+	for (int i=0; i<2; ++i)
+	  dist[i] = pos * normal[i];
+	for (int i=4; i<6; ++i)
+	  dist[i] = pos * normal[i];
+
+	// Natural equations are:
+	// dist[0,1,4,5] = pos * normal[0,1,4,5];
+	// dist[2] = (pos + zNear() * viewDir) * normal[2];
+	// dist[3] = (pos + zFar()  * viewDir) * normal[3];
+
+	// 2 times less computations using expanded/merged equations. Dir vectors are normalized.
+	const float posRightCosHH = chhfov * pos * right;
+	dist[0] = -shhfov * posViewDir;
+	dist[1] = dist[0] + posRightCosHH;
+	dist[0] = dist[0] - posRightCosHH;
+	const float posUpCosH = chfov * pos * up;
+	dist[4] = - shfov * posViewDir;
+	dist[5] = dist[4] - posUpCosH;
+	dist[4] = dist[4] + posUpCosH;
+	
+	break;
+      }
+    case Camera::ORTHOGRAPHIC :
+      normal[0] = -right;
+      normal[1] =  right;
+      normal[4] =  up;
+      normal[5] = -up;
+
+      GLdouble hw, hh;
+      getOrthoWidthHeight(hw, hh);
+      dist[0] = (pos - hw * right) * normal[0];
+      dist[1] = (pos + hw * right) * normal[1];
+      dist[4] = (pos + hh * up) * normal[4];
+      dist[5] = (pos - hh * up) * normal[5];
+      break;
+    }
+
+  // Front and far planes are identical for both camera types.
+  normal[2] = -viewDir;
+  normal[3] =  viewDir;
+  dist[2] = -posViewDir - zNear();
+  dist[3] =  posViewDir + zFar();
+
+  for (int i=0; i<6; ++i)
+    {
+      coef[i][0] = GLdouble(normal[i].x);
+      coef[i][1] = GLdouble(normal[i].y);
+      coef[i][2] = GLdouble(normal[i].z);
+      coef[i][3] = dist[i];
+    }
 }

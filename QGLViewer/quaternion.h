@@ -11,7 +11,7 @@ namespace qglviewer {
 
   The Quaternion is an appropriate (although not very intuitive) representation for 3D rotations and
   orientations. Many tools are provided to ease the definition of a Quaternion: see constructors,
-  setAxisAngle(), setFromRotationMatrix(), setFromRotatedBase().
+  setAxisAngle(), setFromRotationMatrix(), setFromRotatedBasis().
 
   You can apply the rotation represented by the Quaternion to 3D points using rotate() and
   inverseRotate(). See also the Frame class that represents a coordinate system and provides other
@@ -106,9 +106,10 @@ public:
   { q[0]=q0;    q[1]=q1;    q[2]=q2;    q[3]=q3; }
 
   void setFromRotationMatrix(const float m[3][3]);
-  void setFromRotatedBase(const Vec& X,
-			  const Vec& Y,
-			  const Vec& Z);
+#ifndef DOXYGEN
+  void setFromRotatedBase(const Vec& X, const Vec& Y, const Vec& Z);
+#endif
+  void setFromRotatedBasis(const Vec& X, const Vec& Y, const Vec& Z);
   //@}
 
 
@@ -200,7 +201,8 @@ public:
   /*! Normalizes the Quaternion coefficients.
 
   This method should not need to be called since we only deal with unit Quaternions. This is however
-  useful to prevent numerical drifts, especially with small rotational increments. */
+  useful to prevent numerical drifts, especially with small rotational increments. See also
+  normalized(). */
   double normalize()
   {
     const double norm = sqrt(q[0]*q[0] + q[1]*q[1] + q[2]*q[2] + q[3]*q[3]);
@@ -208,7 +210,19 @@ public:
       q[i] /= norm;
     return norm;
   }
-  //@}
+
+  /*! Returns a normalized version of the Quaternion.
+
+  See also normalize(). */
+  Quaternion normalized() const
+  {
+    double Q[4];
+    const double norm = sqrt(q[0]*q[0] + q[1]*q[1] + q[2]*q[2] + q[3]*q[3]);
+    for (int i=0; i<4; ++i)
+      Q[i] = q[i] / norm;
+    return Quaternion(Q[0], Q[1], Q[2], Q[3]);
+  }
+//@}
 
 
   /*! @name Associated matrix */

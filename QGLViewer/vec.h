@@ -99,7 +99,7 @@ public:
     return *this;
   }
 
-  /*! Set the current value. Better than using operator=() with a temporary Vec(x,y,z). */
+  /*! Set the current value. Maybe faster than using operator=() with a temporary Vec(x,y,z). */
   void setValue(float X, float Y, float Z)
   { x=X; y=Y; z=Z; }
 
@@ -147,6 +147,17 @@ public:
   glVertex3fv(pos);
   \endcode */
   operator const float*() const {
+#ifdef UNION_NOT_SUPPORTED
+    return &x;
+#else
+    return v_;
+#endif
+  }
+
+  /*! Non const conversion operator returning the memory address of the vector.
+
+  Useful to pass a Vec to a method that requires and fills a \c float*, as provided by certain libraries. */
+  operator float*() {
 #ifdef UNION_NOT_SUPPORTED
     return &x;
 #else
@@ -254,6 +265,12 @@ public:
     return a.x*b.x + a.y*b.y + a.z*b.z;
   }
 
+  /*! Cross product of the two vectors. Same as cross(). */
+  friend Vec operator^(const Vec &a, const Vec &b)
+  {
+    return cross(a,b);
+  }
+
   /*! Cross product of the two Vec. Mind the order ! */
   friend Vec cross(const Vec &a, const Vec &b)
   {
@@ -262,11 +279,9 @@ public:
 	       a.x*b.y - a.y*b.x);
   }
 
-  /*! Cross product of the two vectors. Same as cross(). */
-  friend Vec operator^(const Vec &a, const Vec &b)
-  {
-    return cross(a,b);
-  }
+  /*! Returns a Vec orthogonal to the Vec. Its norm() depends on the Vec, but is zero only for a
+  null Vec. Note that the function that associates an orthogonalVec() to a Vec is not continous. */
+  Vec orthogonalVec() const;
   //@}
 
   /*! @name Norm of the vector */

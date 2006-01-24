@@ -156,7 +156,7 @@ rm -rf $RPM_BUILD_ROOT
 - Agora example fixed. Minor typos fixed.
 
 * Wed Sep 21 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.1.1-3
-- Compilation options fixed for Visual 6. Qt2.3 patches in help window. 
+- Compilation options fixed for Visual 6. Qt2.3 patches in help window.
 
 * Tue Sep 20 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.1.1-2
 - Compilation options fixed, especially for MinGW.
@@ -171,7 +171,7 @@ rm -rf $RPM_BUILD_ROOT
 - Now runs with Qt version 2, 3 and 4. Dual licensing.
 
 * Wed Aug 10 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.0.1-0
-- Bounding box warning when viewing EPS fixed.  
+- Bounding box warning when viewing EPS fixed.
 
 * Thu Jul 25 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.0.0-5
 - Unclosed parenthesis fixed in saveSnapshot with Qt 2.3.
@@ -180,7 +180,7 @@ rm -rf $RPM_BUILD_ROOT
 - Division by 0 in manipulatedFrame fixed. terrain and agora examples fixed.
 
 * Thu Jul 7 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.0.0-3
-- Patches for Qt 3.1, 64 bits architectures and gcc 4.0 compilation. 
+- Patches for Qt 3.1, 64 bits architectures and gcc 4.0 compilation.
 
 * Wed Jun 29 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.0.0-2
 - float/double warnings fixed for .NET windows compilation.

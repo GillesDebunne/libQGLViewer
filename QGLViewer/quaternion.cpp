@@ -29,11 +29,7 @@ Quaternion::Quaternion(const Vec& from, const Vec& to)
 
       // Aligned vectors, pick any axis, not aligned with from or to
       if (axisSqNorm < epsilon)
-	{
-	  axis = Vec(1.0, 0.0, 0.0);
-	  if (axis*from < 0.1*sqrt(fromSqNorm))
-	    axis = Vec(0.0, 1.0, 0.0);
-	}
+	axis = from.orthogonalVec();
 
       double angle = asin(sqrt(axisSqNorm / (fromSqNorm * toSqNorm)));
 
@@ -81,11 +77,11 @@ Vec Quaternion::rotate(const Vec& v) const
   the three vectors of an orthogonal basis. Note that OpenGL uses a symmetric representation for its
   matrices.
 
-  setFromRotatedBase() sets a Quaternion from the three axis of a rotated frame. It actually fills
+  setFromRotatedBasis() sets a Quaternion from the three axis of a rotated frame. It actually fills
   the three columns of a matrix with these rotated basis vectors and calls this method. */
 void Quaternion::setFromRotationMatrix(const float m[3][3])
 {
-  // First, find largest diagonal in matrix:
+  // First, find largest diagonal in the matrix
   int i = 2;
   if (m[0][0] > m[1][1])
     {
@@ -104,7 +100,8 @@ void Quaternion::setFromRotationMatrix(const float m[3][3])
 
   if (m[0][0]+m[1][1]+m[2][2] > m[i][i])
     {
-      // Compute w first:
+      qWarning("w");
+      // Compute w first
       q[3] = sqrt(m[0][0]+m[1][1]+m[2][2]+1.0)/2.0;
       // And compute other values:
       q[0] = (m[2][1]-m[1][2])/(4.0*q[3]);
@@ -113,20 +110,32 @@ void Quaternion::setFromRotationMatrix(const float m[3][3])
     }
   else
     {
-      // Compute x, y, or z first:
+      qWarning("xyz around ");
+      cout << i << endl;
+      // Compute x, y, or z first
       int j = (i+1)%3;
       int k = (i+2)%3;
 
-      // Compute first value:
+      // Compute first value
       q[i] = sqrt(m[i][i]-m[j][j]-m[k][k]+1.0)/2.0;
 
-      // And the others:
+      // And the others
       q[j] = (m[i][j]+m[j][i])/(4.0*q[i]);
       q[k] = (m[i][k]+m[k][i])/(4.0*q[i]);
 
       q[3] = (m[k][j]-m[j][k])/(4.0*q[i]);
+
+      cout << "norm=" << sqrt(q[0]*q[0] + q[1]*q[1] + q[2]*q[2] + q[3]*q[3]) << endl;
     }
 }
+
+#ifndef DOXYGEN
+void Quaternion::setFromRotatedBase(const Vec& X, const Vec& Y, const Vec& Z)
+{
+  qWarning("setFromRotatedBase is deprecated, use setFromRotatedBasis instead");
+  setFromRotatedBasis(X,Y,Z);
+}
+#endif
 
 /*! Sets the Quaternion from the three rotated vectors of an orthogonal basis.
 
@@ -134,13 +143,13 @@ void Quaternion::setFromRotationMatrix(const float m[3][3])
 
   \code
   Quaternion q;
-  q.setFromRotatedBase(X, Y, Z);
+  q.setFromRotatedBasis(X, Y, Z);
   // Now q.rotate(Vec(1,0,0)) == X and q.inverseRotate(X) == Vec(1,0,0)
   // Same goes for Y and Z with Vec(0,1,0) and Vec(0,0,1).
   \endcode
 
   See also setFromRotationMatrix() and Quaternion(const Vec&, const Vec&). */
-void Quaternion::setFromRotatedBase(const Vec& X, const Vec& Y, const Vec& Z)
+void Quaternion::setFromRotatedBasis(const Vec& X, const Vec& Y, const Vec& Z)
 {
   float m[3][3];
   float normX = X.norm();
