@@ -238,7 +238,7 @@ void Frame::setFromMatrix(const GLdouble m[4][4])
  glMultMatrixd(fr.matrix());
  \endcode
 
- The advantage of this conversion is that you can then benefit from the powerful Frame
+ Using this conversion, you can benefit from the powerful Frame
  transformation methods to translate points and vectors to and from the Frame coordinate system to
  any other Frame coordinate system (including the world coordinate system). See coordinatesOf() and
  transformOf().

@@ -171,7 +171,7 @@ namespace qglviewer {
 
 
     public:
-    /*! @name Local translation and rotation */
+    /*! @name Local translation and rotation w/r reference Frame */
     //@{
     /*! Sets the translation() of the frame, locally defined with respect to the referenceFrame().
       Emits the modified() signal.
@@ -245,7 +245,7 @@ namespace qglviewer {
     //@}
 
 
-    /*! @name Frame displacements */
+    /*! @name Frame modification */
     //@{
     void translate(Vec& t);
     void translate(const Vec& t);
