@@ -3,14 +3,14 @@ set timefmt "%Y.%m"
 set format x "%b %y"
 set yrange [0:]
 
-set terminal png small color
+set terminal png small
 set output "downloads.png"
 set title "libQGLViewer downloads"
-plot "stats.txt" using 1:($2+$3) title "zip" with lines lt 10 lw 2, "stats.txt" using 1:($4) title "tar" with lines lt 4 lw 2, "stats.txt" using 1:($5+$6+$7) title "rpm" with lines lt 8 lw 2, "stats.txt" using 1:($2+$3+$4+$5+$6+$7) title "total" with lines lt 3 lw 3
+plot "stats.txt" using 1:($2+$3+$4+$5+$6+$7) title "total" with lines lt 3 lw 3, "stats.txt" using 1:($2+$3) title "zip" with lines lt 10 lw 3, "stats.txt" using 1:($4) title "tar" with lines lt 4 lw 3, "stats.txt" using 1:($5+$6+$7) title "rpm" with lines lt 8 lw 3
 
-set terminal png small color
+set terminal png small
 set output "examples.png"
 set title "libQGLViewer pre-compiled examples downloads"
-plot "stats.txt" using 1:($8>0?$8:1/0) title "windows" with lines lt 10, "stats.txt" using 1:($9>0?$9:1/0) title "mac" with lines lt 4, "stats.txt" using 1:($10>0?$10:1/0) title "linux" with lines lt 8, "stats.txt" using 1:($8+$9+$10>0?$8+$9+$10:1/0) title "total" with lines lt 3
+plot "stats.txt" using 1:($8+$9+$10>0?$8+$9+$10:1/0) title "total" with lines lt 3 lw 3, "stats.txt" using 1:($8>0?$8:1/0) title "windows" with lines lt 10 lw 3, "stats.txt" using 1:($10>0?$10:1/0) title "linux" with lines lt 8 lw 3, "stats.txt" using 1:($9>0?$9:1/0) title "mac" with lines lt 4 lw 3
 
 

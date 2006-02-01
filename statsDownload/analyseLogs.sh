@@ -15,10 +15,13 @@ do
 
   nogz=`echo $f | sed s@".gz"@@`
 
+  if [ -f $statFile ]
+  then
   if [[ `grep "^$nogz" $statFile` ]]
   then
       echo "$nogz - already computed"
       continue
+  fi
   fi
 
   if [[ "$f" != "$nogz" ]]
@@ -43,9 +46,15 @@ do
   fi
 
   line=""
+  ipAddress=$(awk '{print $2}' $output.rpm | grep "\." | wc -l)
   for t in $types
   do
+  if [ $ipAddress -eq 0 ]
+  then
+    line="$(awk 'BEGIN {SUM=0} {SUM+=$2} END {print SUM}' $output.$t)\t$line"
+  else
     line="`awk '{print $2}' $output.$t | sort -n | uniq | wc -l`\t$line"
+  fi
   done
   line="$nogz\t$line"
   echo -e $line
