@@ -5,7 +5,7 @@ TARGET   = qglviewerplugin
 QT_VERSION=$$[QT_VERSION]
 contains( QT_VERSION, "^4.*" ) {
   CONFIG += designer
-  # Documentation says $$QT_BUILD_TREE, but it does not work
+  # Documentation says $$QT_BUILD_TREE, but it does not work (Qt 4.0)
   target.path = $$[QT_INSTALL_PLUGINS]/designer
   HEADERS = qglviewerPlugin.Qt4.h
   SOURCES = qglviewerPlugin.Qt4.cpp

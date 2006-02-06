@@ -211,7 +211,7 @@ void Frame::setFromMatrix(const GLdouble m[4][4])
       return;
     }
 
-  float rot[3][3];
+  double rot[3][3];
   for (int i=0; i<3; ++i)
     {
       t_[i] = m[3][i] / m[3][3];
@@ -238,10 +238,9 @@ void Frame::setFromMatrix(const GLdouble m[4][4])
  glMultMatrixd(fr.matrix());
  \endcode
 
- Using this conversion, you can benefit from the powerful Frame
- transformation methods to translate points and vectors to and from the Frame coordinate system to
- any other Frame coordinate system (including the world coordinate system). See coordinatesOf() and
- transformOf().
+ Using this conversion, you can benefit from the powerful Frame transformation methods to translate
+ points and vectors to and from the Frame coordinate system to any other Frame coordinate system
+ (including the world coordinate system). See coordinatesOf() and transformOf().
 
  Emits the modified() signal. See also matrix(), getMatrix() and
  Quaternion::setFromRotationMatrix().
@@ -632,7 +631,7 @@ Using this method, you can create a hierarchy of Frames. This hierarchy needs to
 root is the world coordinate system (i.e. a \c NULL referenceFrame()). A warning is printed and no
 action is performed if setting \p refFrame as the referenceFrame() would create a loop in the Frame
 hierarchy (see settingAsReferenceFrameWillCreateALoop()). */
-void Frame::setReferenceFrame(Frame* const refFrame)
+void Frame::setReferenceFrame(const Frame* const refFrame)
 {
   if (settingAsReferenceFrameWillCreateALoop(refFrame))
     qWarning("Frame::setReferenceFrame would create a loop in Frame hierarchy");

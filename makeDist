@@ -1,8 +1,8 @@
 #!/bin/sh
 
 libName="libQGLViewer"
-version="2.1.1"
-release="8"
+version="2.2.0"
+release="0"
 
 version_major=`echo $version | cut -d"." -f1`
 version_minor=`echo $version | cut -d"." -f2`

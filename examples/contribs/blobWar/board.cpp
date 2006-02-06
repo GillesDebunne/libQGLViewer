@@ -1,10 +1,10 @@
 #include "board.h"
 #include <qmessagebox.h>
 
-bool Board::canBeSelected(int i, bool bluePlays)
+bool Board::canBeSelected(int i)
 {
   QPoint p = pointFromInt(i);
-  return (isValid(p) && (stateOf(p) == Board::blueColor(bluePlays)) && (pieceCanMove(p)));
+  return (isValid(p) && (stateOf(p) == Board::blueColor(bluePlays())) && (pieceCanMove(p)));
 }
 
 bool Board::isValid(const QPoint& p) const
@@ -23,27 +23,28 @@ void Board::play(const Move& m)
   if (!m.close())
     setStateOf(m.start, Board::EMPTY);
 
-  setStateOf(m.end, Board::blueColor(m.bluePlays));
+  setStateOf(m.end, Board::blueColor(bluePlays()));
   
   for (int i=-1; i<=1; ++i)
     for (int j=-1; j<=1; ++j)
       {
 	const QPoint p(m.end.x()+i, m.end.y()+j);
-	if (isValid(p) && stateOf(p) == Board::blueColor(!m.bluePlays))
-	  setStateOf(p, Board::blueColor(m.bluePlays));
+	if (isValid(p) && stateOf(p) == Board::blueColor(!bluePlays()))
+	  setStateOf(p, Board::blueColor(bluePlays()));
       }
 
-  checkNextPlayerCanPlay(m.bluePlays);
   undo_.addState(stateString());
+  bluePlays_ = !bluePlays_;
+  checkPlayerCanPlay();
 }
 
-void Board::checkNextPlayerCanPlay(bool bluePlays)
+void Board::checkPlayerCanPlay()
 {
   for (int i=0; i<sizeX_; ++i)
     for (int j=0; j<sizeY_; ++j)
       {
 	const QPoint p(i,j);
-	if (stateOf(p) == Board::blueColor(!bluePlays) && (pieceCanMove(p)))
+	if (stateOf(p) == Board::blueColor(bluePlays()) && (pieceCanMove(p)))
 	  return;
       }
 
@@ -53,7 +54,7 @@ void Board::checkNextPlayerCanPlay(bool bluePlays)
       {
 	const QPoint p(i,j);
 	if (isValid(p) && stateOf(p) == Board::EMPTY)
-	  setStateOf(p, Board::blueColor(bluePlays));
+	  setStateOf(p, Board::blueColor(!bluePlays()));
       }
 }
 
@@ -86,7 +87,7 @@ QVector<Move> Board::possibleMoves(bool bluePlays) const
 		{
 		  const QPoint e(s.x()+ii,s.y()+jj);
 		  if (isValid(e) && stateOf(e) == Board::EMPTY)
-		    res.append(Move(s, e, bluePlays));
+		    res.append(Move(s, e));
 		}
 	  }
       }
@@ -187,10 +188,12 @@ std::istream& operator>>(std::istream& in, Board& b)
   b.initFromStateString(s);
   
   in >> b.undo_;
-
+    
   if (b.undo_.isEmpty())
     b.undo_.addState(s);
-  
+
+  b.bluePlays_ = (b.undo_.nbMoves() % 2 == 1);
+
   return in;
 }
 
@@ -218,6 +221,7 @@ bool Board::undo()
     return false;
   else
     initFromStateString(state);
+  bluePlays_ = !bluePlays_;
   return true;
 }
 
@@ -228,17 +232,18 @@ bool Board::redo()
     return false;
   else
     initFromStateString(state);
+  bluePlays_ = !bluePlays_;
   return true;
 }
 
-Move Board::bestMoveNumberOfNewPieces(bool bluePlays) const
+Move Board::bestMoveNumberOfNewPieces() const
 {
   Move res;
   int bestValue = 0;
 #if QT_VERSION < 0x040000
-  QValueVector<Move> moves = possibleMoves(bluePlays);
+  QValueVector<Move> moves = possibleMoves(bluePlays());
 #else
-  QVector<Move> moves = possibleMoves(bluePlays);
+  QVector<Move> moves = possibleMoves(bluePlays());
 #endif
   for (int i=0; i<int(moves.size()); ++i)
     {
@@ -250,4 +255,17 @@ Move Board::bestMoveNumberOfNewPieces(bool bluePlays) const
 	}
     }
   return res;
+}
+
+QString Board::statusMessage() const
+{
+  const QString score = "Blue : " + QString::number(nbBlue_) + " - Red : " + QString::number(nbRed_);
+  
+  if (gameIsOver())
+      if (nbBlue_ == nbRed_)
+	return "Deuce !\n" + score;
+      else
+	return QString("The ") + ((nbBlue_>nbRed_)?"Blue":"Red") + " won !\n" + score;
+  else
+    return score + " - " + (bluePlays_?"Blue":"Red") + " plays";
 }

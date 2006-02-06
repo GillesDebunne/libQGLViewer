@@ -1,21 +1,21 @@
-# Customization of the <code>select()</code> function that enables the selection of several
-# objects.
+# Customized <code>select()</code> function that enables the selection of several objects.
 
 # Object selection is preformed using the left mouse button. Press <b>Shift</b> to add objects to
-# the selection, and <b>Control</b> to remove objects from the selection.
+# the selection, and <b>Alt</b> to remove objects from the selection.
 
-# Individual objects as well as rectangular regions can be selected (click and drag mouse). To do
-# this, the selection region size is modified and the <code>endSelection()</code> function has been
-# overloaded so that <i>all</i> the objects of the region are taken into account.
+# Individual objects (click on them) as well as rectangular regions (click and drag mouse) can be
+# selected. To do this, the selection region size is modified and the <code>endSelection()</code>
+# function has been overloaded so that <i>all</i> the objects of the region are taken into account
+# (the default implementation only selects the closest object).
 
-# Arbitrary operations can then easily be applied to the selected objects : parameter edition,
-# displacement, deletion...
+# The selected objects can then be manipulated by pressing the <b>Control</b> key. Other set
+# operations (parameter edition, deletion...) can also easily be applied to the selected objects.
 
 TEMPLATE = app
 TARGET   = multiSelect
 CONFIG  += qt opengl warn_on release thread
 
-HEADERS  = multiSelect.h
-SOURCES  = multiSelect.cpp main.cpp
+HEADERS  = multiSelect.h manipulatedFrameSetConstraint.h object.h
+SOURCES  = multiSelect.cpp manipulatedFrameSetConstraint.cpp object.cpp main.cpp
 
 include( ../examples.pri )

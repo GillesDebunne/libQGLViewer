@@ -114,7 +114,7 @@ namespace qglviewer {
     /*! Returns the normalized right vector of the Camera, defined in the world coordinate system.
 
     This vector lies in the Camera horizontal plane, directed along the X axis (orthogonal to
-    upVector() and to viewDirection()). Set using setUpVector() or setOrientation().
+    upVector() and to viewDirection()). Set using setUpVector(), lookAt() or setOrientation().
 
     Simply returns frame()->inverseTransformOf(Vec(1.0, 0.0, 0.0)). */
     Vec rightVector() const
@@ -127,6 +127,8 @@ namespace qglviewer {
     Actually returns \c frame()->orientation(). Use setOrientation(), setUpVector() or lookAt() to
     set the Camera orientation. */
     Quaternion orientation() const { return frame()->orientation(); };
+
+    void setFromModelViewMatrix(const GLdouble* const modelViewMatrix);
     void setFromProjectionMatrix(const float matrix[12]);
 
   public slots:
@@ -153,7 +155,7 @@ namespace qglviewer {
     //@}
 
 
-    /*! @name Frustum parameters */
+    /*! @name Frustum */
     //@{
   public:
     /*! Returns the Camera::Type of the Camera.
@@ -363,7 +365,6 @@ public slots:
     virtual void deletePath(int i);
     virtual void resetPath(int i);
     virtual void drawAllPaths();
-
     //@}
 
 
@@ -388,7 +389,16 @@ public slots:
 #endif
     //@}
 
+    
+    /*! @name Drawing */
+    //@{
+#ifndef DOXYGEN
+    static void drawCamera(float scale=1.0, float aspectRatio=1.33, float fieldOfView=M_PI/4.0);
+#endif
+    virtual void draw(bool drawFarPlane=true, float scale=1.0) const;
+    //@}
 
+    
     /*! @name World to Camera coordinate systems conversions */
     //@{
   public:
@@ -418,16 +428,6 @@ public slots:
     void getUnprojectedCoordinatesOf(const float src[3], float res[3], const Frame* frame=NULL) const;
     void convertClickToLine(const QPoint& pixel, Vec& orig, Vec& dir) const;
     Vec pointUnderPixel(const QPoint& pixel, bool& found) const;
-    //@}
-
-
-    /*! @name Drawing */
-    //@{
-  public:
-#ifndef DOXYGEN
-    static void drawCamera(float scale=1.0, float aspectRatio=1.33, float fieldOfView=M_PI/4.0);
-#endif
-    virtual void draw(bool drawFarPlane=true, float scale=1.0) const;
     //@}
 
 

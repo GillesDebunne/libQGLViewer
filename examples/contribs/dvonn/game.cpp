@@ -15,7 +15,7 @@ dvonn::player(Color c) throw (range_error)
   if (c==Red) throw range_error("No Red Player");
   return static_cast<Player>(c-1);
 }
-const char*
+QString
 dvonn::nameOf(const Player p)
 {
   return p==WhitePlayer?"White":"Black";
@@ -272,16 +272,20 @@ Game::getRandomMove(Player p,Game::Move& m) const
   }
   return false;
 }
-const char*
+QString
 Game::fileName() const
 {
-  return fileName_.c_str();
+  return fileName_;
 }
 bool
-Game::load(const char* fileName)
+Game::load(const QString& fileName)
 {
   fileName_ = fileName;
-  ifstream f(fileName_.c_str());
+#if QT_VERSION < 0x040000
+  ifstream f(fileName_.latin1());
+#else
+    ifstream f(fileName_.toLatin1().constData());
+#endif
   if (!f.good()) return false;
   // TODO: load here
   f.close();
@@ -291,13 +295,17 @@ Game::load(const char* fileName)
 bool
 Game::save()
 {
-  ofstream f(fileName_.c_str());
+#if QT_VERSION < 0x040000
+  std::ofstream f(fileName_.latin1());
+#else
+  std::ofstream f(fileName_.toLatin1().constData());
+#endif
   if (!f.good()) return false;
   f.close();
   return true;
 }
 bool
-Game::saveAs(const char* fileName)
+Game::saveAs(const QString& fileName)
 {
   fileName_ = fileName;
   return save();

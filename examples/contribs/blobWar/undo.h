@@ -24,6 +24,8 @@ public:
 
   bool isEmpty() const { return state_.isEmpty(); };
 
+  int nbMoves() const { return index_; };
+  
   friend std::ostream& operator<<(std::ostream& out, const Undo& u);
   friend std::istream& operator>>(std::istream& in, Undo& u);
 

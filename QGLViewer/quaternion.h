@@ -17,12 +17,10 @@ namespace qglviewer {
   inverseRotate(). See also the Frame class that represents a coordinate system and provides other
   conversion functions like Frame::coordinatesOf() and Frame::transformOf().
 
-  You can apply the Quaternion rotation to the OpenGL matrices with code like:
+  You can apply the Quaternion \c q rotation to the OpenGL matrices using:
   \code
-  Quaternion q;
   glMultMatrixd(q.matrix());
-  // or using glRotate instead:
-  glRotate(q.angle()*180.0/M_PI, q.axis().x, q.axis().y, q.axis().z);
+  // equvalent to glRotate(q.angle()*180.0/M_PI, q.axis().x, q.axis().y, q.axis().z);
   \endcode
 
   Quaternion is part of the \c qglviewer namespace, specify \c qglviewer::Quaternion or use the qglviewer
@@ -30,8 +28,8 @@ namespace qglviewer {
 
   <h3>Internal representation</h3>
 
-  The internal representation of a Quaternion corresponding to a rotation around axis \p axis, with an angle
-  \p alpha is made of four doubles q[i]:
+  The internal representation of a Quaternion corresponding to a rotation around axis \c axis, with an angle
+  \c alpha is made of four doubles q[i]:
   \code
   {q[0],q[1],q[2]} = sin(alpha/2) * {axis[0],axis[1],axis[2]}
   q[3] = cos(alpha/2)
@@ -105,10 +103,11 @@ public:
   void setValue(double q0, double q1, double q2, double q3)
   { q[0]=q0;    q[1]=q1;    q[2]=q2;    q[3]=q3; }
 
-  void setFromRotationMatrix(const float m[3][3]);
 #ifndef DOXYGEN
+  void setFromRotationMatrix(const float m[3][3]);
   void setFromRotatedBase(const Vec& X, const Vec& Y, const Vec& Z);
 #endif
+  void setFromRotationMatrix(const double m[3][3]);
   void setFromRotatedBasis(const Vec& X, const Vec& Y, const Vec& Z);
   //@}
 

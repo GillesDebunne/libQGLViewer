@@ -44,7 +44,7 @@
 "I copy-pasted my code in your <code>draw()</code> function, and the screen remains black. I hate OpenGL !"
 <br/>
 The classical OpenGL black screen is not supported by libQGLViewer. There are two
-possible reasons for your problem, as detailed in <a href="intro.html">the introduction</a>:
+possible reasons for your problem, as detailed in <a href="introduction.html">the introduction</a>:
 <ul>
 <li><i>The World coordinate system</i>: when you start drawing in <code>draw</code>, you are in the
 <i>world coordinate system</i>: a fixed coordinate system, that is viewed by a moving camera. This
@@ -58,7 +58,7 @@ informations on <i>what</i> is displayed. Namely, you need to provide an estimat
 radius (expressed in OpenGL units), and your scene center (if different from the world origin).
 With these informations, libQGLViewer will be able to position the camera such that the entire scene
 is visible, making black screens ancient history. See the <a
-href="intro.html#sceneRadius">introduction</a> for details.</li>
+href="introduction.html#sceneRadius">introduction</a> for details.</li>
 </ul>
 
 Press 'A' to display the world axis and double click the mouse middle button to make the camera fit

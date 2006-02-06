@@ -1,7 +1,22 @@
 #ifndef DVONNWINDOWIMPL_H
 #define DVONNWINDOWIMPL_H
 
-#include "dvonnwindow.h"
+#include <qglobal.h>
+
+#if QT_VERSION >= 0x040000
+# include "ui_dvonnwindow.Qt4.h"
+  class DvonnWindow : public QMainWindow, public Ui::DvonnWindow
+  {
+  public:
+    DvonnWindow() { setupUi(this); }
+  };
+#else
+# if QT_VERSION >= 0x030000
+#  include "dvonnwindow.Qt3.h"
+# else
+#  error "No designer .ui file available for Qt 2"
+# endif
+#endif
 #include "game.h"
 
 class QTextBrowser;
@@ -15,7 +30,7 @@ class DvonnWindowImpl : public DvonnWindow
 {
   Q_OBJECT
 public:
-  DvonnWindowImpl(dvonn::Game* g,QWidget* parent=NULL,const char* name="");
+  DvonnWindowImpl(dvonn::Game* g);
 public slots:
   void load();
   void save();

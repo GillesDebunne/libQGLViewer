@@ -18,10 +18,8 @@ using namespace dvonn;
 //************************************************************
 // Implementation of DvonnWindowImpl
 //************************************************************
-DvonnWindowImpl::DvonnWindowImpl(dvonn::Game* g,
-				 QWidget* parent,const char* name)
-  : DvonnWindow(parent,name),
-    game_(g)
+DvonnWindowImpl::DvonnWindowImpl(dvonn::Game* g)
+  : DvonnWindow(), game_(g)
 {
   dvonnViewer->setGame(g);
 
@@ -34,8 +32,13 @@ DvonnWindowImpl::DvonnWindowImpl(dvonn::Game* g,
   gameRandomlyMoveStackAction->setEnabled(false);
 
   rulesBrowser_ = new QTextBrowser(NULL);
+#if QT_VERSION < 0x040000
   rulesBrowser_->mimeSourceFactory()->setFilePath(QStringList()<<qApp->applicationDirPath()<<QDir(qApp->applicationDirPath()).filePath("rules/"));
   rulesBrowser_->setSource("rules/rules.html");
+#else
+  rulesBrowser_->setSearchPaths(QStringList()<<qApp->applicationDirPath()<<QDir(qApp->applicationDirPath()).filePath("rules/"));
+  rulesBrowser_->setSource(QUrl("rules/rules.html"));
+#endif
   rulesBrowser_->resize(600,600);
 
   gameUndoAction->setEnabled(false);
@@ -80,7 +83,7 @@ DvonnWindowImpl::labelFor(Phase p)
       QString score = QString("W %1 to B %2")
 	.arg(game_->score(WhitePlayer))
 	.arg(game_->score(BlackPlayer));
-    return tr("Game is over "+score);
+      return "Game is over "+score;
     }
   }
   return "";
@@ -99,13 +102,17 @@ DvonnWindowImpl::about()
 void
 DvonnWindowImpl::load()
 {
-  QString fileName = QFileDialog::getOpenFileName("",tr("Dvonn files (*.ago);;All files (*)"), this);
-
+#if QT_VERSION < 0x040000
+  QString fileName = QFileDialog::getOpenFileName("","Dvonn files (*.dvo);;All files (*)", this);
+#else
+  QString fileName = QFileDialog::getOpenFileName(this, "Select a game", "", "Dvonn files (*.dvo);;All files (*)");
+#endif
+  
   // In case of Cancel
   if (fileName.isEmpty())
     return;
 
-  game_->load(fileName.latin1());
+  game_->load(fileName);
   fileSaveAction->setEnabled(true);
   gameRandomlyFinishAction->setEnabled(game_->phase() != MovePhase);
   gameRandomlyMoveStackAction->setEnabled(game_->phase() == MovePhase);
@@ -122,9 +129,11 @@ DvonnWindowImpl::save()
 void
 DvonnWindowImpl::saveAs()
 {
-  QString fileName =
-    QFileDialog::getSaveFileName("", tr("Dvonn files (*.ago);;All files (*)"),
-				 this,game_->fileName());
+#if QT_VERSION < 0x040000
+  QString fileName = QFileDialog::getSaveFileName("", "Dvonn files (*.dvo);;All files (*)", this, game_->fileName().latin1());
+#else
+  QString fileName = QFileDialog::getSaveFileName(this, "Save game", game_->fileName(), "Dvonn files (*.dvo);;All files (*)");
+#endif
 
   // In case of Cancel
   if (fileName.isEmpty())
@@ -132,12 +141,17 @@ DvonnWindowImpl::saveAs()
 
   QFileInfo fi(fileName);
 
+#if QT_VERSION < 0x040000
   if (fi.extension().isEmpty())
+#else
+    if (fi.suffix().isEmpty())
+#endif
     {
-      fileName += ".ago";
+      fileName += ".dvo";
       fi.setFile(fileName);
     }
 
+#if QT_VERSION < 0x040000
   if (fi.exists())
     if (QMessageBox::warning(this ,tr("Existing file"),
 			     tr("File ")+fi.fileName()+tr(" already exists.\nSave anyway ?"),
@@ -151,8 +165,9 @@ DvonnWindowImpl::saveAs()
 			   tr("File ")+fi.fileName()+tr(" is not writeable."));
       return;
     }
+#endif
 
-  game_->saveAs(fileName.latin1());
+  game_->saveAs(fileName);
   fileSaveAction->setEnabled(true);
 }
 void

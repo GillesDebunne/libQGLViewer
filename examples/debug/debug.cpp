@@ -36,6 +36,7 @@ Viewer::Viewer()
 
 void Viewer::init()
 {
+  // glDisable(GL_LIGHTING);
   qWarning("init");
   setSceneCenter(Vec(0.7,1.3,-0.4));
   camera()->lookAt(sceneCenter());
@@ -45,7 +46,11 @@ void Viewer::init()
   // camera()->getModelViewMatrix(original);
 
   GLdouble original[16] = {-0.0890988, -0.387783, 0.851131, 0, 0.264578, 0.915619, 0.362908, 0, -0.960239, -0.10614, 0.0210184, 0, 1.41122, 3.102, -26.3933, 1};
-  
+
+  // GLdouble original[16] = {-0.00312821, -0.556113, 0.822875, 0, 0.0962477, 0.825286, 0.554319, 0, -0.988495, 0.085271, 0.052505, 0, 0, 0, 0, 1};
+
+  // GLdouble original[16] = {-0.00997695,     -0.55991,        0.828493,        0, 0.0969048,       0.824093,        0.558104,        0, -0.995244,       0.0858532,       0.046036,        0, 1.41122, 3.102,   -26.3933,        1};
+
   cout << "Original" << endl;
   for (int i=0; i<16; ++i)
     {
@@ -59,8 +64,8 @@ void Viewer::init()
   float upperleft[3][3];
   for (int i=0; i<3; ++i)
     for (int j=0; j<3; ++j)
-      // upperleft[i][j] = original[i*4+j];
-      upperleft[j][i] = original[i*4+j];
+      upperleft[i][j] = original[i*4+j];
+  // upperleft[j][i] = original[i*4+j];
 
   /*
     cout << "Sub upper left 3x3" << endl;
@@ -74,7 +79,20 @@ void Viewer::init()
   
   Quaternion qr;
   qr.setFromRotationMatrix(upperleft);
+  cout << "qr =\t" << qr << endl;
   qr.normalize();
+  cout << "qrN =\t" << qr << endl;
+
+  const GLdouble* qrm = qr.matrix();
+  cout << "Qr" << endl;
+  for (int i=0; i<16; ++i)
+    {
+      cout << qrm[i] << "\t";
+      if (i%4 == 3)
+	cout << endl;
+    }
+
+  //qr.normalize();
   /*
     float mmmm[3][3];
     qr.getRotationMatrix(mmmm);
@@ -99,7 +117,7 @@ void Viewer::init()
   c.getModelViewMatrix(result);
   //fr.getMatrix(m);
 
-  cout << endl << "Result" << endl;
+  cout << "Result" << endl;
 
   for (int i=0; i<16; ++i)
     {
@@ -107,6 +125,9 @@ void Viewer::init()
       if (i%4 == 3)
 	cout << endl;
     }
+
+  cout << endl;
+  
   return;
 
 
@@ -394,7 +415,7 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 
 
 void Viewer::draw()
-{
+{  
   // Draws a spiral
   const float nbSteps = 500.0;
   glBegin(GL_QUAD_STRIP);
@@ -416,6 +437,9 @@ void Viewer::draw()
     }
   glEnd();
 
+  // QGLViewer::drawAxis(0.5);
+  QGLViewer::drawGrid(0.8);
+  return;
   GLdouble original[16];
   // camera()->getModelViewMatrix(original);
 
@@ -448,7 +472,7 @@ void Viewer::draw()
   GLdouble result[16];
   c.getModelViewMatrix(result);
 
-  cout << endl << "Result" << endl;
+  cout << endl << "Difference with result" << endl;
 
   for (int i=0; i<16; ++i)
     {

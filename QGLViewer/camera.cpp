@@ -298,7 +298,7 @@ void Camera::computeProjectionMatrix() const
   const float ZNear = zNear();
   const float ZFar  = zFar();
 
-  switch (type_)
+  switch (type())
     {
     case Camera::PERSPECTIVE:
       {
@@ -479,7 +479,7 @@ void Camera::loadProjectionMatrixStereo(bool leftBuffer) const
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
 
-  switch(type_)
+  switch (type())
     {
     case Camera::PERSPECTIVE:
       // compute half width of screen,
@@ -546,17 +546,19 @@ void Camera::loadModelViewMatrixStereo(bool leftBuffer) const
 
  Calls computeProjectionMatrix() to define the Camera projection matrix.
 
- This matrix only reflects the Camera's internal parameters, and can differ from the \c
- GL_PROJECTION matrix retrieved using \c glGetFloatv(GL_PROJECTION_MATRIX, m). Note that
- QGLViewer::startScreenCoordinatesSystem() especially modifies the \c GL_PROJECTION matrix.
-
+ This matrix only reflects the Camera's internal parameters and it may differ from the \c
+ GL_PROJECTION matrix retrieved using \c glGetDoublev(GL_PROJECTION_MATRIX, m). It actually
+ represents the state of the \c GL_PROJECTION after QGLViewer::preDraw(), at the beginning of
+ QGLViewer::draw(). If you modified the \c GL_PROJECTION matrix (for instance using
+ QGLViewer::startScreenCoordinatesSystem()), the two results differ.
+ 
  The result is an OpenGL 4x4 matrix, which is given in \e column-major order (see \c glMultMatrix
  man page for details).
 
- See also getModelViewMatrix(). */
+ See also getModelViewMatrix() and setFromProjectionMatrix(). */
 void Camera::getProjectionMatrix(GLdouble m[16]) const
 {
-  // May not be needed, but easier like this.
+  // May not be needed, but easier and more robust like this.
   computeProjectionMatrix();
   for (unsigned short i=0; i<16; ++i)
     m[i] = projectionMatrix_[i];
@@ -567,7 +569,7 @@ void Camera::getProjectionMatrix(GLdouble m[16]) const
  First calls computeModelViewMatrix() to define the Camera modelView matrix.
 
  Note that this matrix is usually \e not the one you would get from a \c
- glGetFloatv(GL_MODELVIEW_MATRIX, m). This matrix actually represents the state of the \c
+ glGetDoublev(GL_MODELVIEW_MATRIX, m). It actually represents the state of the \c
  GL_MODELVIEW after QGLViewer::preDraw(), at the beginning of QGLViewer::draw(). It converts from
  the world to the Camera coordinate system. As soon as you modify the \c GL_MODELVIEW in your
  QGLViewer::draw() method, the two matrices differ.
@@ -575,7 +577,7 @@ void Camera::getProjectionMatrix(GLdouble m[16]) const
  The result is an OpenGL 4x4 matrix, which is given in \e column-major order (see \c glMultMatrix
  man page for details).
 
- See also getProjectionMatrix(). */
+ See also getProjectionMatrix() and setFromModelViewMatrix(). */
 void Camera::getModelViewMatrix(GLdouble m[16]) const
 {
   // May not be needed, but easier like this.
@@ -1052,6 +1054,40 @@ static inline unsigned int ind(unsigned int i, unsigned int j)
   return (i*4+j);
 }
 
+
+/*! Sets the Camera's position() and orientation() from an OpenGL ModelView matrix.
+
+This enables a Camera initialisation from an other OpenGL application. \p modelView is a 16 GLdouble
+vector representing a valid OpenGL ModelView matrix, such as one can get using:
+\code
+GLdouble mvm[16];
+glGetDoublev(GL_MODELVIEW_MATRIX, mvm);
+myCamera->setFromModelViewMatrix(mvm);
+\endcode
+
+After this method has been called, getModelViewMatrix() returns a matrix equivalent to \p
+modelView.
+
+Only the orientation() and position() of the Camera are modified.
+
+\note If you defined your matrix as \c GLdouble \c mvm[4][4], pass \c &(mvm[0][0]) as a
+parameter. */
+void Camera::setFromModelViewMatrix(const GLdouble* const modelViewMatrix)
+{
+  // Get upper left (rotation) matrix
+  double upperLeft[3][3];
+  for (int i=0; i<3; ++i)
+    for (int j=0; j<3; ++j)
+      upperLeft[i][j] = modelViewMatrix[i*4+j];
+
+  // Transform upperLeft into the associated Quaternion
+  Quaternion q;
+  q.setFromRotationMatrix(upperLeft);
+
+  setOrientation(q);
+  setPosition(-q.rotate(Vec(modelViewMatrix[12], modelViewMatrix[13], modelViewMatrix[14])));
+}
+
 /*! Defines the Camera position(), orientation() and fieldOfView() from a projection matrix.
 
  \p matrix has to be given in the format used by vision algorithm. It has 3 lines and 4 columns. It
@@ -1066,8 +1102,12 @@ static inline unsigned int ind(unsigned int i, unsigned int j)
  setFromProjectionMatrix(&(matrix[0][0])) if you defined your matrix as a \c float \c matrix[3][4].
 
  \attention Passing the result of getProjectionMatrix() or getModelViewMatrix() to this method is
- not possible (incompatible matrix dimensions) purposefully . \p matrix is more likely to be the
+ not possible (purposefully incompatible matrix dimensions). \p matrix is more likely to be the
  product of these two matrices, without the last line.
+
+ Use setFromModelViewMatrix() to set position() and orientation() from a \c GL_MODELVIEW matrix.
+ fieldOfView() can also be retrieved from a \e perspective \c GL_PROJECTION matrix using 2.0 *
+ atan(1.0/projectionMatrix[5]).
 
  This code was written by Sylvain Paris. */
 void Camera::setFromProjectionMatrix(const float matrix[12])
@@ -1121,7 +1161,7 @@ void Camera::setFromProjectionMatrix(const float matrix[12])
   Vec column_1 = -((column_2^line_1)^column_2);
   column_1.normalize();
 
-  float rot[3][3];
+  double rot[3][3];
   rot[0][0] = column_0[0];
   rot[1][0] = column_0[1];
   rot[2][0] = column_0[2];
@@ -1153,6 +1193,69 @@ void Camera::setFromProjectionMatrix(const float matrix[12])
   setPosition(cam_pos);
   setFieldOfView(fov);
 }
+
+
+/*
+	// persp : projectionMatrix_[0]  = f/aspectRatio();
+void Camera::setFromProjectionMatrix(const GLdouble* projectionMatrix)
+{
+  QString message;
+  if ((fabs(projectionMatrix[1]) > 1E-3) ||
+      (fabs(projectionMatrix[2]) > 1E-3) ||
+      (fabs(projectionMatrix[3]) > 1E-3) ||
+      (fabs(projectionMatrix[4]) > 1E-3) ||
+      (fabs(projectionMatrix[6]) > 1E-3) ||
+      (fabs(projectionMatrix[7]) > 1E-3) ||
+      (fabs(projectionMatrix[8]) > 1E-3) ||
+      (fabs(projectionMatrix[9]) > 1E-3))
+    message = "Non null coefficient in projection matrix - Aborting";
+  else
+    if ((fabs(projectionMatrix[11]+1.0) < 1E-5) && (fabs(projectionMatrix[15]) < 1E-5))
+      {
+	if (projectionMatrix[5] < 1E-4)
+	  message="Negative field of view in Camera::setFromProjectionMatrix";
+	else
+	  setType(Camera::PERSPECTIVE);
+      }
+    else
+      if ((fabs(projectionMatrix[11]) < 1E-5) && (fabs(projectionMatrix[15]-1.0) < 1E-5))
+	setType(Camera::ORTHOGRAPHIC);
+      else
+	message = "Unable to determine camera type in setFromProjectionMatrix - Aborting";
+
+  if (!message.isEmpty())
+    {
+      qWarning(message);
+      return;
+    }
+
+  switch (type())
+    {
+    case Camera::PERSPECTIVE:
+      {
+	setFieldOfView(2.0 * atan(1.0/projectionMatrix[5]));
+	const float far = projectionMatrix[14] / (2.0 * (1.0 + projectionMatrix[10]));
+	const float near = (projectionMatrix[10]+1.0) / (projectionMatrix[10]-1.0) * far;
+	setSceneRadius((far-near)/2.0);
+	setSceneCenter(position() + (near + sceneRadius())*viewDirection());
+	break;
+      }
+    case Camera::ORTHOGRAPHIC:
+      {
+	GLdouble w, h;
+	getOrthoWidthHeight(w,h);
+	projectionMatrix_[0]  = 1.0/w;
+	projectionMatrix_[5]  = 1.0/h;
+	projectionMatrix_[10] = -2.0/(ZFar - ZNear);
+	projectionMatrix_[11] = 0.0;
+	projectionMatrix_[14] = -(ZFar + ZNear)/(ZFar - ZNear);
+	projectionMatrix_[15] = 1.0;
+	// same as glOrtho( -w, w, -h, h, zNear(), zFar() );
+	break;
+      }
+    }
+}
+*/
 
 ///////////////////////// Camera to world transform ///////////////////////
 
@@ -1443,13 +1546,11 @@ QDomElement Camera::domElement(const QString& name, QDomDocument& document) cons
   paramNode.setAttribute("zClippingCoefficient", QString::number(zClippingCoefficient()));
   paramNode.setAttribute("orthoCoef", QString::number(orthoCoef_));
   // paramNode.setAttribute("sceneRadius", QString::number(sceneRadius()));
-  QString type = "Unknown";
-  switch (type_)
+  switch (type())
     {
-    case Camera::PERSPECTIVE  :	type = "PERSPECTIVE"; break;
-    case Camera::ORTHOGRAPHIC :	type = "ORTHOGRAPHIC"; break;
+    case Camera::PERSPECTIVE  :	paramNode.setAttribute("Type", "PERSPECTIVE"); break;
+    case Camera::ORTHOGRAPHIC :	paramNode.setAttribute("Type", "ORTHOGRAPHIC"); break;
     }
-  paramNode.setAttribute("Type", type);
   de.appendChild(paramNode);
 
   QDomElement stereoNode = document.createElement("Stereo");

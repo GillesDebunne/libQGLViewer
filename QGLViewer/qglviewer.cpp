@@ -127,7 +127,6 @@ void QGLViewer::defaultConstructor()
   // #CONNECTION# default values in initFromDOMElement()
   setAxisIsDrawn(false);
   setGridIsDrawn(false);
-  setZBufferIsDisplayed(false);
   setFPSIsDisplayed(false);
   setCameraIsEdited(false);
   setTextIsEnabled(true);
@@ -289,7 +288,7 @@ void QGLViewer::aboutQGLViewer()
   QMessageBox mb("About libQGLViewer",
 		 QString("libQGLViewer, version ")+QGLViewerVersionString()+QString(".<br>"
 		 "A versatile 3D viewer based on OpenGL and Qt.<br>"
-		 "Copyright 2002-2005 Gilles Debunne.<br>"
+		 "Copyright 2002-2006 Gilles Debunne.<br>"
 		 "<code>http://artis.imag.fr/Software/QGLViewer</code>"),
 		 QMessageBox::Information,
 		 QMessageBox::Ok,
@@ -465,8 +464,8 @@ void QGLViewer::postDraw()
   // Revolve Around Point, line when camera rolls, zoom region
   drawVisualHints();
 
-  if (gridIsDrawn()) drawGrid(camera()->sceneRadius());
-  if (axisIsDrawn()) drawAxis(camera()->sceneRadius());
+  if (gridIsDrawn()) { glLineWidth(1.0); drawGrid(camera()->sceneRadius()); }
+  if (axisIsDrawn()) { glLineWidth(2.0); drawAxis(camera()->sceneRadius()); }
 
   // FPS computation
   const unsigned int maxCounter = 20;
@@ -488,11 +487,6 @@ void QGLViewer::postDraw()
 
   if (FPSIsDisplayed()) displayFPS();
   if (displayMessage_) drawText(10, height()-10,  message_);
-  if (zBufferIsDisplayed())
-    {
-      copyBufferToTexture(GL_DEPTH_COMPONENT);
-      displayZBuffer();
-    }
 
   // Restore GL state
   glPopAttrib();
@@ -568,7 +562,6 @@ void QGLViewer::setDefaultShortcuts()
   setShortcut(DRAW_AXIS,	Qt::Key_A);
   setShortcut(DRAW_GRID,	Qt::Key_G);
   setShortcut(DISPLAY_FPS,	Qt::Key_F);
-  setShortcut(DISPLAY_Z_BUFFER,	Qt::Key_Z);
   setShortcut(ENABLE_TEXT,	Qt::SHIFT+Qt::Key_Question);
   setShortcut(EXIT_VIEWER,	Qt::Key_Escape);
   setShortcut(SAVE_SCREENSHOT,	Qt::CTRL+Qt::Key_S);
@@ -586,7 +579,6 @@ void QGLViewer::setDefaultShortcuts()
   setShortcut(DECREASE_FLYSPEED,Qt::Key_Minus);
 
   keyboardActionDescription_[DISPLAY_FPS] = 		"Toggles the display of the FPS";
-  keyboardActionDescription_[DISPLAY_Z_BUFFER] = 	"Toggles the display of the z-buffer";
   keyboardActionDescription_[SAVE_SCREENSHOT] = 	"Saves a screenshot";
   keyboardActionDescription_[FULL_SCREEN] = 		"Toggles full screen display";
   keyboardActionDescription_[DRAW_AXIS] = 		"Toggles the display of the world axis";
@@ -2476,7 +2468,6 @@ void QGLViewer::handleKeyboardAction(KeyboardAction id)
     case DRAW_AXIS :		toggleAxisIsDrawn(); break;
     case DRAW_GRID :		toggleGridIsDrawn(); break;
     case DISPLAY_FPS :		toggleFPSIsDisplayed(); break;
-    case DISPLAY_Z_BUFFER :	toggleZBufferIsDisplayed(); break;
     case ENABLE_TEXT :		toggleTextIsEnabled(); break;
     case EXIT_VIEWER :		saveStateToFileForAllViewers(); qApp->closeAllWindows(); break;
     case SAVE_SCREENSHOT :	saveSnapshot(false, false); break;
@@ -2723,7 +2714,6 @@ void QGLViewer::setKeyFrameKey(int index, int key)
 void QGLViewer::setPlayKeyFramePathStateKey(int buttonState)
 {
   qWarning("setPlayKeyFramePathStateKey has been renamed setPlayPathKeyboardModifiers.");
-  qWarning("Here.");
   setPlayPathKeyboardModifiers(QtKeyboardModifiers(buttonState & Qt::KeyboardModifierMask));
 }
 #endif
@@ -3203,12 +3193,15 @@ void QGLViewer::toggleCameraMode()
 
 /*! Sets the viewer's manipulatedFrame().
 
-Note that a qglviewer::ManipulatedCameraFrame can be set as the manipulatedFrame(): it is possible
-to manipulate the camera of a first viewer in a second viewer.
+Several objects can be manipulated simultaneously, as is done the <a
+href="../examples/multiSelect.html">multiSelect example</a>.
 
 Defining the \e own viewer's camera()->frame() as the manipulatedFrame() is possible and will result
 in a classical camera manipulation. See the <a href="../examples/luxo.html">luxo example</a> for an
-illustration. */
+illustration.
+
+Note that a qglviewer::ManipulatedCameraFrame can be set as the manipulatedFrame(): it is possible
+to manipulate the camera of a first viewer in a second viewer. */
 void QGLViewer::setManipulatedFrame(ManipulatedFrame* frame)
 {
   if (manipulatedFrame())
@@ -3355,9 +3348,9 @@ void QGLViewer::resetVisualHints()
  \p length, \p radius and \p nbSub subdivisions define its geometry. If \p radius is negative
  (default), it is set to 0.05 * \p length.
 
- Change the \c ModelView to place the arrow in 3D (see qglviewer::Frame::matrix() or drawArrow(const
- Vec& from, const Vec& to, float radius, int nbSubdivisions)).
-
+ Use drawArrow(const Vec& from, const Vec& to, float radius, int nbSubdivisions) or change the \c
+ ModelView matrix to place the arrow in 3D.
+ 
  Uses current color and does not modify the OpenGL state. */
 void QGLViewer::drawArrow(float length, float radius, int nbSubdivisions)
 {
@@ -3375,13 +3368,10 @@ void QGLViewer::drawArrow(float length, float radius, int nbSubdivisions)
   glTranslatef(0.0, 0.0, -length * (1.0 - head));
 }
 
-/*! Draws a 3D arrow between the 3D point \p from and the 3D point \p to, both defined in current
- ModelView coordinates system.
+/*! Draws a 3D arrow between the 3D point \p from and the 3D point \p to, both defined in the
+ current ModelView coordinates system.
 
- \p radius and \p nbSub subdivisions define its geometry (see drawArrow(float length, float radius,
- int nbSubdivisions)).
-
- Uses current color and does not modify the OpenGL state. */
+ See drawArrow(float length, float radius, int nbSubdivisions) for details. */
 void QGLViewer::drawArrow(const Vec& from, const Vec& to, float radius, int nbSubdivisions)
 {
   glPushMatrix();
@@ -3393,8 +3383,10 @@ void QGLViewer::drawArrow(const Vec& from, const Vec& to, float radius, int nbSu
 
 /*! Draws an XYZ axis, with a given size (default is 1.0).
 
-  The axis position and orientation depends on the current modelView matrix state. Use the following
-  code to display the current position and orientation of a qglviewer::Frame:
+  The axis position and orientation matches the current modelView matrix state: three arrows (red,
+  green and blue) of length \p length are drawn along the positive X, Y and Z directions.
+
+  Use the following code to display the current position and orientation of a qglviewer::Frame:
   \code
   glPushMatrix();
   glMultMatrixd(frame.matrix());
@@ -3402,23 +3394,22 @@ void QGLViewer::drawArrow(const Vec& from, const Vec& to, float radius, int nbSu
   glPopMatrix();
   \endcode
 
-  The current color is used to draw the X, Y and Z characters at the extremities of the three
-  arrows. The OpenGL state is modified: \c GL_LIGHTING and \c GL_COLOR_MATERIAL are enabled and line
-  width is set to 2.0.
-
-  The original OpenGL state is not saved and restored for efficiency reasons. You can create a
-  display list using this method if needed.
+  The current color and line width are used to draw the X, Y and Z characters at the extremities of
+  the three arrows. The OpenGL state is not modified by this method.
 
   axisIsDrawn() uses this method to draw a representation of the world coordinate system. See also
-  QGLViewer::drawArrow(). */
+  QGLViewer::drawArrow() and QGLViewer::drawGrid(). */
 void QGLViewer::drawAxis(float length)
 {
   const float charWidth = length / 40.0;
   const float charHeight = length / 30.0;
   const float charShift = 1.04 * length;
 
+  GLboolean lighting, colorMaterial;
+  glGetBooleanv(GL_LIGHTING, &lighting);
+  glGetBooleanv(GL_COLOR_MATERIAL, &colorMaterial);
+
   glDisable(GL_LIGHTING);
-  glLineWidth(2.0);
 
   glBegin(GL_LINES);
   // The X
@@ -3464,21 +3455,24 @@ void QGLViewer::drawAxis(float length)
   QGLViewer::drawArrow(length, 0.01*length);
   glPopMatrix();
 
-  glEnable(GL_COLOR_MATERIAL);
+  if (colorMaterial)
+    glEnable(GL_COLOR_MATERIAL);
+  if (!lighting)
+    glDisable(GL_LIGHTING);
 }
 
-/*! Draws a grid in the XY plane, centered on (0,0,0).
+/*! Draws a grid in the XY plane, centered on (0,0,0) (defined in the current coordinate system).
 
-\p size (OpenGL units) and \p nbSubdivisions define its geometry. Set the \c GL_MODELVIEW matrix to place and
-orientate the grid in 3D space. See the drawAxis() documentation.
+ \p size (OpenGL units) and \p nbSubdivisions define its geometry. Set the \c GL_MODELVIEW matrix to
+ place and orientate the grid in 3D space (see the drawAxis() documentation).
 
-\attention The OpenGL state is modified by this method: \c GL_LIGHTING is disabled and line width
-is set to 1. */
+ The OpenGL state is not modified by this method. */
 void QGLViewer::drawGrid(float size, int nbSubdivisions)
-// static void createGridDL(GLuint& dlNumber, float length=1.0f, float width=1.0f, float nbSub=10)
 {
+  GLboolean lighting;
+  glGetBooleanv(GL_LIGHTING, &lighting);
+  
   glDisable(GL_LIGHTING);
-  glLineWidth(1.0);
 
   glBegin(GL_LINES);
   for (int i=0; i<=nbSubdivisions; ++i)
@@ -3490,6 +3484,9 @@ void QGLViewer::drawGrid(float size, int nbSubdivisions)
       glVertex2f( size, pos);
     }
   glEnd();
+
+  if (lighting)
+    glEnable(GL_LIGHTING);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3737,7 +3734,6 @@ QDomElement QGLViewer::domElement(const QString& name, QDomDocument& document) c
   displayNode.setAttribute("gridIsDrawn",       (gridIsDrawn()?"true":"false"));
   displayNode.setAttribute("FPSIsDisplayed",    (FPSIsDisplayed()?"true":"false"));
   displayNode.setAttribute("cameraIsEdited",    (cameraIsEdited()?"true":"false"));
-  displayNode.setAttribute("zBufferIsDisplayed",(zBufferIsDisplayed()?"true":"false"));
   // displayNode.setAttribute("textIsEnabled",  (textIsEnabled()?"true":"false"));
   de.appendChild(displayNode);
 
@@ -3847,7 +3843,6 @@ void QGLViewer::initFromDOMElement(const QDomElement& element)
 	  setAxisIsDrawn(DomUtils::boolFromDom(child, "axisIsDrawn", false));
 	  setGridIsDrawn(DomUtils::boolFromDom(child, "gridIsDrawn", false));
 	  setFPSIsDisplayed(DomUtils::boolFromDom(child, "FPSIsDisplayed", false));
-	  setZBufferIsDisplayed(DomUtils::boolFromDom(child, "zBufferIsDisplayed", false));
 	  // See comment below.
 	  tmpCameraIsEdited = DomUtils::boolFromDom(child, "cameraIsEdited", false);
 	  // setTextIsEnabled(DomUtils::boolFromDom(child, "textIsEnabled", true));
@@ -3927,7 +3922,7 @@ bool QGLViewer::restoreFromFile(const QString& fileName)
 
 /*! Makes a copy of the current buffer into a texture.
 
- Creates a texture (when needed) and use glCopyTexSubImage2D() to directly copy the buffer in it.
+ Creates a texture (when needed) and uses glCopyTexSubImage2D() to directly copy the buffer in it.
 
  Use \p internalFormat and \p format to define the texture format and hence which and how components
  of the buffer are copied into the texture. See the glTexImage2D() documentation for details.
@@ -3944,13 +3939,33 @@ bool QGLViewer::restoreFromFile(const QString& fileName)
  Use bufferTextureMaxU() and bufferTextureMaxV() to get the upper right corner maximum u and v
  texture coordinates. Use bufferTextureId() to retrieve the id of the created texture.
 
- Once the texture is created, you will typically use it to texture a quad with (0,0) to
- (bufferTextureMaxU(), bufferTextureMaxV()) texture coordinates. Use
- startScreenCoordinatesSystem(true) to draw a quad facing the camera, with dimensions expressed in
- pixels.
+ Here is how to display a grey-level image of the z-buffer:
+ \code
+ copyBufferToTexture(GL_DEPTH_COMPONENT);
 
- Use glReadBuffer() to select which buffer is copied into the texture. See also glPixelTransfer(),
- glPixelZoom() and glCopyPixel() for pixel color transformations during copy.
+ glMatrixMode(GL_TEXTURE);
+ glLoadIdentity();
+
+ glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+ glEnable(GL_TEXTURE_2D);
+
+ startScreenCoordinatesSystem(true);
+
+ glBegin(GL_QUADS);
+ glTexCoord2f(0.0, 0.0);                                 glVertex2i(0, 0);
+ glTexCoord2f(bufferTextureMaxU(), 0.0);                 glVertex2i(width(), 0);
+ glTexCoord2f(bufferTextureMaxU(), bufferTextureMaxV()); glVertex2i(width(), height());
+ glTexCoord2f(0.0, bufferTextureMaxV());                 glVertex2i(0, height());
+ glEnd();
+
+ stopScreenCoordinatesSystem();
+ 
+ glDisable(GL_TEXTURE_2D);
+ \endcode
+ 
+ Use glReadBuffer() to select which buffer is copied into the texture. See also \c
+ glPixelTransfer(), \c glPixelZoom() and \c glCopyPixel() for pixel color transformations during
+ copy.
 
  Call makeCurrent() before this method to make the OpenGL context active if needed.
 
@@ -4004,60 +4019,9 @@ void QGLViewer::copyBufferToTexture(GLint internalFormat, GLenum format)
 	format = internalFormat;
 
       glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, bufferTextureWidth_, bufferTextureHeight_, 0, format, GL_UNSIGNED_BYTE, NULL);
-
-      // glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, bufferTextureWidth_, bufferTextureHeight_, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);// rapide gris
-      // glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, bufferTextureWidth_, bufferTextureHeight_, 0, GL_ALPHA, GL_UNSIGNED_BYTE, NULL); // gris
-      // glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, bufferTextureWidth_, bufferTextureHeight_, 0, GL_LUMINANCE, GL_FLOAT, NULL); //rapide gris
-
-
-      // glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, bufferTextureWidth_, bufferTextureHeight_, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL); //lent ok
-      // glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, bufferTextureWidth_, bufferTextureHeight_, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL); // idem
-      // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bufferTextureWidth_, bufferTextureHeight_, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL); // couleur f
-      // glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bufferTextureWidth_, bufferTextureHeight_, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);  // rapide et couleur
-
-
-      // glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, bufferTextureWidth_, bufferTextureHeight_, 0, GL_RED, GL_UNSIGNED_BYTE, NULL); //ok
-      // glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, bufferTextureWidth_, bufferTextureHeight_, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, NULL); // ok
     }
 
   glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, width(), height());
-}
-
-
-/* Displays the current z-buffer in the color buffer.
-
- Assumes copyBufferToTexture() has previously been called with a \c GL_DEPTH_COMPONENT parameter.
- Useful for debugging purposes. */
-void QGLViewer::displayZBuffer() const
-{
-  glMatrixMode(GL_TEXTURE);
-  glLoadIdentity();
-
-  startScreenCoordinatesSystem(true);
-
-  // glBind is done just before in copyBufferToTexture
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-
-  // Reset texture setup
-  glDisable(GL_TEXTURE_GEN_S);
-  glDisable(GL_TEXTURE_GEN_T);
-  glDisable(GL_TEXTURE_GEN_R);
-  glDisable(GL_TEXTURE_GEN_Q);
-
-  glEnable(GL_TEXTURE_2D);
-  glBegin(GL_QUADS);
-  glTexCoord2f(0.0, 0.0);
-  glVertex2i(0, 0);
-  glTexCoord2f(bufferTextureMaxU(), 0.0);
-  glVertex2i(width(), 0);
-  glTexCoord2f(bufferTextureMaxU(), bufferTextureMaxV());
-  glVertex2i(width(), height());
-  glTexCoord2f(0.0, bufferTextureMaxV());
-  glVertex2i(0, height());
-  glEnd();
-  glDisable(GL_TEXTURE_2D);
-
-  stopScreenCoordinatesSystem();
 }
 
 /*! Returns the texture id of the texture created by copyBufferToTexture().

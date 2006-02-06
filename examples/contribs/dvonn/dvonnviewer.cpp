@@ -40,8 +40,13 @@ namespace
 //************************************************************
 // Implementation of DvonnViewer
 //************************************************************
+#if QT_VERSION < 0x040000
 DvonnViewer::DvonnViewer(QWidget* parent, const char* name)
   : QGLViewer(parent, name),
+#else
+DvonnViewer::DvonnViewer(QWidget* parent)
+  : QGLViewer(parent),
+#endif
     game_(NULL),
     selectionMode_(-1),
     piecePicked_(false),
@@ -295,31 +300,39 @@ DvonnViewer::initViewer()
   // Limit camera rotation motion
   camera()->frame()->setConstraint(new BoardConstraint());
 
+#if QT_VERSION >= 0x040000
+# define CONTROL Qt::ControlModifier
+# define SHIFT Qt::ShiftModifier
+#else
+# define CONTROL Qt::ControlButton
+# define SHIFT Qt::ShiftButton
+#endif
+
   // Defines new bindings
   setMouseBindingDescription(Qt::LeftButton, "Moves stack");
-  setMouseBinding(Qt::ControlButton | Qt::LeftButton,CAMERA,ROTATE);
+  setMouseBinding(CONTROL | Qt::LeftButton,CAMERA,ROTATE);
   setMouseBinding(Qt::MidButton,  ZOOM_TO_FIT,true);
   setMouseBinding(Qt::RightButton,ZOOM_TO_FIT,true);
-  setMouseBinding(Qt::ControlButton | Qt::LeftButton,RAP_FROM_PIXEL,true);
-  setMouseBinding(Qt::ControlButton | Qt::RightButton, RAP_IS_CENTER, true);
+  setMouseBinding(CONTROL | Qt::LeftButton,RAP_FROM_PIXEL,true);
+  setMouseBinding(CONTROL | Qt::RightButton, RAP_IS_CENTER, true);
 
   // Disable most of the default bindings
-  setMouseBinding(Qt::ControlButton | Qt::MidButton  ,CAMERA,NO_MOUSE_ACTION);
-  setMouseBinding(Qt::ControlButton | Qt::RightButton,CAMERA,NO_MOUSE_ACTION);
+  setMouseBinding(CONTROL | Qt::MidButton  ,CAMERA,NO_MOUSE_ACTION);
+  setMouseBinding(CONTROL | Qt::RightButton,CAMERA,NO_MOUSE_ACTION);
   setMouseBinding(Qt::LeftButton,NO_CLICK_ACTION);
   setMouseBinding(Qt::LeftButton,NO_CLICK_ACTION,true);
-  setMouseBinding(Qt::ControlButton | Qt::LeftButton  | Qt::MidButton,NO_CLICK_ACTION);
-  setMouseBinding(Qt::ControlButton | Qt::RightButton | Qt::MidButton,NO_CLICK_ACTION);
+  setMouseBinding(CONTROL | Qt::LeftButton  | Qt::MidButton,NO_CLICK_ACTION);
+  setMouseBinding(CONTROL | Qt::RightButton | Qt::MidButton,NO_CLICK_ACTION);
   setMouseBinding(Qt::LeftButton  | Qt::MidButton, NO_CLICK_ACTION);
   setMouseBinding(Qt::RightButton | Qt::MidButton, NO_CLICK_ACTION);
-  setMouseBinding(Qt::ShiftButton | Qt::LeftButton,NO_CLICK_ACTION);
+  setMouseBinding(SHIFT | Qt::LeftButton,NO_CLICK_ACTION);
 
   setMouseBinding(Qt::RightButton,NO_CLICK_ACTION, true, Qt::MidButton);
   setMouseBinding(Qt::LeftButton, NO_CLICK_ACTION, true, Qt::MidButton);
   setMouseBinding(Qt::RightButton,NO_CLICK_ACTION, true, Qt::LeftButton);
   setMouseBinding(Qt::LeftButton, NO_CLICK_ACTION, true, Qt::RightButton);
 
-  setWheelBinding(Qt::ControlButton,FRAME,NO_MOUSE_ACTION);
+  setWheelBinding(CONTROL, FRAME,NO_MOUSE_ACTION);
 }
 void
 DvonnViewer::draw()
@@ -532,8 +545,12 @@ DvonnViewer::postSelection(const QPoint&)
 void
 DvonnViewer::mousePressEvent(QMouseEvent* e)
 {
+#if QT_VERSION >= 0x040000
+  if (e->button() == Qt::LeftButton)
+#else
   if (e->stateAfter() == Qt::LeftButton)
-  {
+#endif
+    {
     if (game_->phase() == RedPlacementPhase ||
 	game_->phase() == PiecePlacementPhase)
     {
@@ -604,7 +621,11 @@ DvonnViewer::mousePressEvent(QMouseEvent* e)
 void
 DvonnViewer::mouseMoveEvent(QMouseEvent* e)
 {
+#if QT_VERSION >= 0x040000
+  if ((dragToPlay_ && e->button() == Qt::LeftButton) ||
+#else
   if ((dragToPlay_ && e->stateAfter() == Qt::LeftButton) ||
+#endif
       (!dragToPlay_ && !srcPicked_ .isNull()) &&
       !camera()->frame()->isManipulated())
   {
@@ -640,7 +661,11 @@ DvonnViewer::mouseMoveEvent(QMouseEvent* e)
 void
 DvonnViewer::mouseReleaseEvent(QMouseEvent* e)
 {
+#if QT_VERSION >= 0x040000
+  if (e->button() == Qt::LeftButton)
+#else
   if (e->state() == Qt::LeftButton)
+#endif
   {
     if (dragToPlay_)
     {
@@ -681,14 +706,14 @@ DvonnViewer::commitDstPicked()
 void
 DvonnViewer::keyPressEvent(QKeyEvent* e)
 {
-  if (e->key() == Key_D && scoreT_ > 0.0f)
+  if (e->key() == Qt::Key_D && scoreT_ > 0.0f)
   {
     if (scoreTimer_->isActive())
       scoreTimer_->stop();
     else
       scoreTimer_->start(debugInterval);
   }
-  else if (e->key() == Key_T)
+  else if (e->key() == Qt::Key_T)
   {
     toggleShowStatus(!showStatus_);
   }

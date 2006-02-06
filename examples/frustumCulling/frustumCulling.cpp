@@ -13,8 +13,8 @@ void Viewer::draw()
     cullingCamera->computeFrustumPlanesEquations();
   else
     {
-      // Observer draws cullingCamera
-      glLineWidth(2.0);
+      // Observer viewer draws cullingCamera
+      glLineWidth(4.0);
       glColor4f(1.0, 1.0, 1.0, 0.5);
       cullingCamera->draw();
     }
@@ -39,7 +39,13 @@ void Viewer::init()
 QString Viewer::helpString() const
 {
   QString text("<h2>F r u s t u m C u l l i n g</h2>");
-  text += "Press <b>Escape</b> to exit the viewer.";
-  // TODO
+
+  text += "A hierarchical octree structure is clipped against a camera's frustum clipping planes, obtained ";
+  text += "using <code>getFrustumPlanesCoefficients</code>. A second viewer displays an external view of the ";
+  text += "scene that exhibits the clipping (using <code>drawCamera()</code> to display the frustum).<br><br>";
+
+  text += "This frustum culling implementation is quite naive. Many optimisation techniques are available in ";
+  text += "the litterature.";
+
   return text;
 }

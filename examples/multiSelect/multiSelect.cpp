@@ -1,27 +1,39 @@
 #include "multiSelect.h"
+#include "manipulatedFrameSetConstraint.h"
 
 using namespace qglviewer;
-using namespace std;
 
 Viewer::Viewer()
 {
   selectionMode_ = NONE;
 
-  // Fill the scene with spheres positionned on a regular grid.
-  // Consider increasing selectBufferSize() if you use more spheres.
+  // Fill the scene with objects positionned on a regular grid.
+  // Consider increasing selectBufferSize() if you use more objects.
   const int nb = 10;
   for (int i=-nb; i<=nb; ++i)
     for (int j=-nb; j<=nb; ++j)
       {
-	Sphere s;
-	s.setPos(Vec(i/float(nb), j/float(nb), 0.0f));
-	sphere_.push_back(s);
+	Object* o = new Object();
+	o->frame.setPosition(Vec(i/float(nb), j/float(nb), 0.0f));
+#if QT_VERSION < 0x040000
+	// How could they sell this ?
+	objects_.resize(objects_.size()+1);
+	objects_.insert(objects_.size()-1, o);
+#else
+	objects_.append(o);
+#endif	
       }
 }
 
 void Viewer::init()
 {
+  // A ManipulatedFrameSetConstraint will apply displacements to the selection
+  setManipulatedFrame(new ManipulatedFrame());
+  manipulatedFrame()->setConstraint(new ManipulatedFrameSetConstraint());
+  
+  // Used to display semi-transparent relection rectangle
   glBlendFunc(GL_ONE, GL_ONE);
+  
   restoreStateFromFile();
   help();
 }
@@ -32,13 +44,13 @@ QString Viewer::helpString() const
   text += "This example illustrates an application of the <code>select()</code> function that ";
   text += "enables the selection of several objects.<br><br>";
   text += "Object selection is preformed using the left mouse button. Press <b>Shift</b> to add objects ";
-  text += "to the selection, and <b>Control</b> to remove objects from the selection.<br><br>";
-  text += "Individual objects as well as rectangular regions can be selected (click and drag mouse).";
+  text += "to the selection, and <b>Alt</b> to remove objects from the selection.<br><br>";
+  text += "Individual objects (click on them) as well as rectangular regions (click and drag mouse) can be selected. ";
   text += "To do this, the selection region size is modified and the <code>endSelection()</code> function ";
   text += "has been overloaded so that <i>all</i> the objects of the region are taken into account ";
-  text += "(default implementation only selects the closest object).<br><br>";
-  text += "Arbitrary operations can then easily be applied to the selected objects : parameter edition, ";
-  text += "displacement, deletion...";
+  text += "(the default implementation only selects the closest object).<br><br>";
+  text += "The selected objects can then be manipulated by pressing the <b>Control</b> key. ";
+  text += "Other set operations (parameter edition, deletion...) can also easily be applied to the selected objects.";
   return text;
 }
 
@@ -47,25 +59,30 @@ QString Viewer::helpString() const
 
 void Viewer::draw()
 {
-  // Draw selected spheres only.
+  // Draws selected objects only.
   glColor3f(0.9, 0.3, 0.3);
 #if QT_VERSION < 0x040000
   for (QValueList<int>::const_iterator it=selection_.begin(), end=selection_.end(); it != end; ++it)
 #else
-  for (QList<int>::const_iterator it=selection_.begin(), end=selection_.end(); it != end; ++it)
+    for (QList<int>::const_iterator it=selection_.begin(), end=selection_.end(); it != end; ++it)
 #endif
-    sphere_[*it].draw();
+      objects_.at(*it)->draw();
 
-  // Draw all the spheres. Selected ones are not repainted because of GL depth test.
+  // Draws all the objects. Selected ones are not repainted because of GL depth test.
   glColor3f(0.8, 0.8, 0.8);
-#if QT_VERSION < 0x040000
-  for (QValueVector<Sphere>::const_iterator it=sphere_.begin(), end=sphere_.end(); it != end; ++it)
-#else
-  for (QList<Sphere>::const_iterator it=sphere_.begin(), end=sphere_.end(); it != end; ++it)
-#endif
-    (*it).draw();
+  for (int i=0; i<int(objects_.size()); i++)
+    objects_.at(i)->draw();
 
-  // Draw rectangular selection area. Could be done in postDraw() instead.
+  // Draws manipulatedFrame (the set's rotation center)
+  if (manipulatedFrame()->isManipulated())
+    {
+      glPushMatrix();
+      glMultMatrixd(manipulatedFrame()->matrix());
+      drawAxis(0.5);
+      glPopMatrix();
+    }
+  
+  // Draws rectangular selection area. Could be done in postDraw() instead.
   if (selectionMode_ != NONE)
     drawSelectionRectangle();
 }
@@ -75,23 +92,33 @@ void Viewer::draw()
 
 void Viewer::mousePressEvent(QMouseEvent* e)
 {
-  // Start selection. Mode is ADD with Shift key and TOGGLE with Control key.
+  // Start selection. Mode is ADD with Shift key and TOGGLE with Alt key.
   rectangle_ = QRect(e->pos(), e->pos());
+
 #if QT_VERSION < 0x040000
   if ((e->button() == Qt::LeftButton) && (e->state() == Qt::ShiftButton))
-#else
-  if ((e->button() == Qt::LeftButton) && (e->modifiers() == Qt::ShiftModifier))
-#endif
     selectionMode_ = ADD;
   else
-#if QT_VERSION < 0x040000
-    if ((e->button() == Qt::LeftButton) && (e->state() == Qt::ControlButton))
-#else
-    if ((e->button() == Qt::LeftButton) && (e->modifiers() == Qt::ControlModifier))
-#endif
+    if ((e->button() == Qt::LeftButton) && (e->state() == Qt::AltButton))
       selectionMode_ = REMOVE;
     else
-      QGLViewer::mousePressEvent(e);
+      {
+	if (e->state() == Qt::ControlButton)
+
+#else
+	
+  if ((e->button() == Qt::LeftButton) && (e->modifiers() == Qt::ShiftModifier))
+    selectionMode_ = ADD;
+  else
+    if ((e->button() == Qt::LeftButton) && (e->modifiers() == Qt::AltModifier))
+      selectionMode_ = REMOVE;
+    else
+      {
+	if (e->modifiers() == Qt::ControlModifier)      
+#endif
+	  startManipulation();
+        QGLViewer::mousePressEvent(e);
+      }
 }
 
 void Viewer::mouseMoveEvent(QMouseEvent* e)
@@ -139,14 +166,10 @@ void Viewer::mouseReleaseEvent(QMouseEvent* e)
 
 void Viewer::drawWithNames()
 {
-#if QT_VERSION < 0x040000
-  for (unsigned int i=0; i<sphere_.size(); ++i)
-#else
-  for (int i=0; i<sphere_.size(); ++i)
-#endif
+  for (int i=0; i<int(objects_.size()); i++)
     {
       glPushName(i);
-      sphere_[i].draw();
+      objects_.at(i)->draw();
       glPopName();
     }
 }
@@ -172,6 +195,26 @@ void Viewer::endSelection(const QPoint&)
 	  }
     }
   selectionMode_ = NONE;
+}
+
+void Viewer::startManipulation()
+{
+  Vec averagePosition;
+  ManipulatedFrameSetConstraint* mfsc = (ManipulatedFrameSetConstraint*)(manipulatedFrame()->constraint());
+  mfsc->clearSet();
+
+#if QT_VERSION < 0x040000
+  for (QValueList<int>::const_iterator it=selection_.begin(), end=selection_.end(); it != end; ++it)
+#else
+  for (QList<int>::const_iterator it=selection_.begin(), end=selection_.end(); it != end; ++it)
+#endif
+    {
+      mfsc->addObjectToSet(objects_[*it]);
+      averagePosition += objects_[*it]->frame.position();
+    }
+
+  if (selection_.size() > 0)
+    manipulatedFrame()->setPosition(averagePosition / selection_.size());
 }
 
 
@@ -218,17 +261,4 @@ void Viewer::drawSelectionRectangle() const
   glDisable(GL_BLEND);
   glEnable(GL_LIGHTING);
   stopScreenCoordinatesSystem();
-}
-
-
-//   T h e   S p h e r e   c l a s s
-
-void Sphere::draw() const
-{
-  static GLUquadric* quad = gluNewQuadric();
-
-  glPushMatrix();
-  glTranslatef(pos_.x, pos_.y, pos_.z);
-  gluSphere(quad, 0.03, 10, 6);
-  glPopMatrix();
 }

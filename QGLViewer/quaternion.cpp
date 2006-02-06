@@ -79,57 +79,65 @@ Vec Quaternion::rotate(const Vec& v) const
 
   setFromRotatedBasis() sets a Quaternion from the three axis of a rotated frame. It actually fills
   the three columns of a matrix with these rotated basis vectors and calls this method. */
-void Quaternion::setFromRotationMatrix(const float m[3][3])
+void Quaternion::setFromRotationMatrix(const double m[3][3])
 {
-  // First, find largest diagonal in the matrix
-  int i = 2;
-  if (m[0][0] > m[1][1])
+  // Compute one plus the trace of the matrix
+  const double onePlusTrace = 1.0 + m[0][0] + m[1][1] + m[2][2];
+
+  if (onePlusTrace > 1E-5)
     {
-      if (m[0][0] > m[2][2])
-	{
-	  i = 0;
-	}
+      // Direct computation
+      const double s = sqrt(onePlusTrace) * 2.0;
+      q[0] = (m[2][1] - m[1][2]) / s;
+      q[1] = (m[0][2] - m[2][0]) / s;
+      q[2] = (m[1][0] - m[0][1]) / s;
+      q[3] = 0.25 * s;
     }
   else
     {
-      if (m[1][1] > m[2][2])
-	{
-	  i = 1;
+      // Computation depends on major diagonal term
+      if ((m[0][0] > m[1][1])&(m[0][0] > m[2][2]))
+	{ 
+	  const double s = sqrt(1.0 + m[0][0] - m[1][1] - m[2][2]) * 2.0; 
+	  q[0] = 0.25 * s;
+	  q[1] = (m[0][1] + m[1][0]) / s; 
+	  q[2] = (m[0][2] + m[2][0]) / s; 
+	  q[3] = (m[1][2] - m[2][1]) / s;
 	}
+      else
+	if (m[1][1] > m[2][2])
+	  { 
+	    const double s = sqrt(1.0 + m[1][1] - m[0][0] - m[2][2]) * 2.0; 
+	    q[0] = (m[0][1] + m[1][0]) / s; 
+	    q[1] = 0.25 * s;
+	    q[2] = (m[1][2] + m[2][1]) / s; 
+	    q[3] = (m[0][2] - m[2][0]) / s;
+	  }
+	else
+	  { 
+	    const double s = sqrt(1.0 + m[2][2] - m[0][0] - m[1][1]) * 2.0; 
+	    q[0] = (m[0][2] + m[2][0]) / s; 
+	    q[1] = (m[1][2] + m[2][1]) / s; 
+	    q[2] = 0.25 * s;
+	    q[3] = (m[0][1] - m[1][0]) / s;
+	  }
     }
-
-  if (m[0][0]+m[1][1]+m[2][2] > m[i][i])
-    {
-      qWarning("w");
-      // Compute w first
-      q[3] = sqrt(m[0][0]+m[1][1]+m[2][2]+1.0)/2.0;
-      // And compute other values:
-      q[0] = (m[2][1]-m[1][2])/(4.0*q[3]);
-      q[1] = (m[0][2]-m[2][0])/(4.0*q[3]);
-      q[2] = (m[1][0]-m[0][1])/(4.0*q[3]);
-    }
-  else
-    {
-      qWarning("xyz around ");
-      cout << i << endl;
-      // Compute x, y, or z first
-      int j = (i+1)%3;
-      int k = (i+2)%3;
-
-      // Compute first value
-      q[i] = sqrt(m[i][i]-m[j][j]-m[k][k]+1.0)/2.0;
-
-      // And the others
-      q[j] = (m[i][j]+m[j][i])/(4.0*q[i]);
-      q[k] = (m[i][k]+m[k][i])/(4.0*q[i]);
-
-      q[3] = (m[k][j]-m[j][k])/(4.0*q[i]);
-
-      cout << "norm=" << sqrt(q[0]*q[0] + q[1]*q[1] + q[2]*q[2] + q[3]*q[3]) << endl;
-    }
+  normalize();
 }
 
 #ifndef DOXYGEN
+void Quaternion::setFromRotationMatrix(const float m[3][3])
+{
+  qWarning("setFromRotationMatrix now waits for a double[3][3] parameter");
+
+  double mat[3][3];
+  for (int i=0; i<3; ++i)
+    for (int j=0; j<3; ++j)
+      mat[i][j] = double(m[i][j]);
+
+  setFromRotationMatrix(mat);
+}
+
 void Quaternion::setFromRotatedBase(const Vec& X, const Vec& Y, const Vec& Z)
 {
   qWarning("setFromRotatedBase is deprecated, use setFromRotatedBasis instead");
@@ -151,10 +159,10 @@ void Quaternion::setFromRotatedBase(const Vec& X, const Vec& Y, const Vec& Z)
   See also setFromRotationMatrix() and Quaternion(const Vec&, const Vec&). */
 void Quaternion::setFromRotatedBasis(const Vec& X, const Vec& Y, const Vec& Z)
 {
-  float m[3][3];
-  float normX = X.norm();
-  float normY = Y.norm();
-  float normZ = Z.norm();
+  double m[3][3];
+  double normX = X.norm();
+  double normY = Y.norm();
+  double normZ = Z.norm();
 
   for (int i=0; i<3; ++i)
     {
@@ -162,6 +170,7 @@ void Quaternion::setFromRotatedBasis(const Vec& X, const Vec& Y, const Vec& Z)
       m[i][1] = Y[i] / normY;
       m[i][2] = Z[i] / normZ;
     }
+  
   setFromRotationMatrix(m);
 }
 
@@ -266,7 +275,8 @@ Quaternion::Quaternion(const QDomElement& element)
 
 /*! Returns the Quaternion associated 4x4 OpenGL rotation matrix.
 
- Use \c glMultMatrixd(q.matrix()) or \c glLoadMatrixd(q.matrix()) to apply the Quaternion rotation to the current OpenGL matrix.
+ Use \c glMultMatrixd(q.matrix()) to apply the rotation represented by Quaternion \c q to the
+ current OpenGL matrix.
 
  See also getMatrix(), getRotationMatrix() and inverseMatrix().
 

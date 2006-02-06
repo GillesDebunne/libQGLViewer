@@ -17,7 +17,7 @@
 #if QT_VERSION < 0x040000
 # include <qimage.h>
 #else
-# include <QImageReader>
+# include <QImageWriter>
 #endif
 
 #include <qfileinfo.h>
@@ -100,7 +100,7 @@ bool QGLViewer::openSnapshotFormatDialog()
 void QGLViewer::initializeSnapshotFormats()
 {
 #if QT_VERSION >= 0x040000
-  QList<QByteArray> list = QImageReader::supportedImageFormats();
+  QList<QByteArray> list = QImageWriter::supportedImageFormats();
   QStringList formatList;
   for (int i=0; i < list.size(); ++i)
     formatList << QString(list.at(i).toUpper());

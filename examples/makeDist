@@ -565,9 +565,8 @@ You can safely ignore the prebound warning. Building a prebound library creates 
 ranges. This requires further investigations and any help is more than welcome.
 
 <p>
-A <code>declaration of C function 'void qObsolete' conflicts with previous declaration</code> error
-message may appear during the examples' compilation. This seems to only happen when the include
-files are installed in <code>/usr/include</code>. Easiest patch, install somewhere else !
+If you get a <code>declaration of C function 'void qObsolete' conflicts with previous declaration</code> or a
+<code>template with C linkage</code> error message, try to install libQGLViewer somewhere else:
 </p>
 
 <pre>
@@ -578,7 +577,7 @@ make install
 </pre>
 
 Then compile the examples with the same <code>qmake INCLUDE_DIR=/usr/local/include</code> line. Any
-cleaner solution is more than welcome.
+explanation and cleaner solution is more than welcome.
 
 <p>
 See also the <a href="../installUnix.html#qt-mac">Qt-Mac</a> and <a

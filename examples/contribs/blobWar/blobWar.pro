@@ -1,8 +1,14 @@
 # Implementation of the game of <i>BlobWar</i>.
 
-# <i>BlobWar</i> is a strategy game for two players.
-# ...
+# <i>BlobWar</i> is a strategy game for two players. The rules are available in the help menu. The
+# two players can be human or computer.
 
+# Computer player programs are expected to take two parameters: a board file name and an allowed
+# time (which sign determines which player is to play). The output should be the x,y coordinates of
+# the start and end positions of the move to play.
+
+# A naive greedy program is provided. Compile it using the <code>qmake greedy.pro</code> file (type
+# <code>qmake greedy.pro ; make</code> on Unix architectures).
 
 TEMPLATE = app
 TARGET   = blobWar
@@ -23,14 +29,14 @@ DISTFILES *= Boards/*.bwb greedy.cpp greedy.pro
 
 # NOT IN DISTRIBUTION BEGIN
 DISTFILES *= blobWarWindow.Qt4.ui computerPlayerInterface.Qt4.ui
-# NOT IN DISTRIBUTION END
-
-include( ../../examples.pri )
-QT += xml opengl
-
-
 
 # JG :
+QT += xml opengl
 # ! Attention, ne pas mettre le "QGLViewer" final car les include sont de la forme "QGLViewer/toto.h"
 #INCLUDEPATH *= /path/to/QGLViewerDir
 #LIBS *= -L/le/path/vers/le.so -lQGLViewer
+
+# NOT IN DISTRIBUTION END
+
+include( ../../examples.pri )
+

@@ -22,7 +22,11 @@ class DvonnViewer : public QGLViewer
   Q_OBJECT
 
 public:
+#if QT_VERSION < 0x040000
   DvonnViewer(QWidget* parent=NULL, const char* name=0);
+#else
+  DvonnViewer(QWidget* parent=NULL);
+#endif
   ~DvonnViewer();
   void setGame(dvonn::Game* g);
   void fadeOut(const dvonn::Board::Ghosts* g);

@@ -52,7 +52,7 @@ BlobWarViewer::BlobWarViewer(QWidget* parent, const char* name)
 BlobWarViewer::BlobWarViewer(QWidget* parent)
   : QGLViewer(parent),
 #endif
-    boardFileName_("4x4.bwb"), selectedPiece_(-1), bluePlays_(true), 
+    boardFileName_("4x4.bwb"), selectedPiece_(-1),
     displayPossibleMoves_(true), animatePlays_(false)
 {  
   // QObject::connect(&kfi_[0], SIGNAL(interpolated()), this, SLOT(updateGL()));
@@ -128,10 +128,11 @@ void BlobWarViewer::newGame()
 #endif
   f >> *board_;
   f.close();
-
-  bluePlays_ = true;
-  todo : mettre blue dans board !
-  // bluePlays_ = undoIndex_%2 == 1;
+  
+  // todo :
+    // - delay avant undo
+    // - regles
+    // - animation
 
   selectedPiece_ = -1;
 
@@ -173,18 +174,6 @@ void BlobWarViewer::draw()
   board_->drawShadows();
 }
 
-void BlobWarViewer::updateStatusBar(bool displayWhoPlays) const
-{
-  QString message = board_->score();
-  if (displayWhoPlays)
-    message += " - "+colorString[bluePlays_]+" plays";
-#if QT_VERSION < 0x040000
-  ((QMainWindow*)(((QWidget*)parent())->parent()))->statusBar()->message(message);
-#else
-  ((QMainWindow*)(((QWidget*)parent())->parent()))->statusBar()->showMessage(message);
-#endif
-}
-
 // G a m e   I n t e r f a c e
 void BlobWarViewer::play(const Move& m)
 {
@@ -198,7 +187,6 @@ void BlobWarViewer::simplePlay(const Move& m)
 {
   board_->play(m);  
   updateGL();
-  bluePlays_ = !bluePlays_;
   playNextMove();
 }
 
@@ -206,14 +194,15 @@ void BlobWarViewer::playNextMove()
 {
   static const QString stateFileName = "board.bwb";
 
+  // Updates statusBar
+#if QT_VERSION < 0x040000
+  ((QMainWindow*)(((QWidget*)parent())->parent()))->statusBar()->message(board_->statusMessage());
+#else
+  ((QMainWindow*)(((QWidget*)parent())->parent()))->statusBar()->showMessage(board_->statusMessage());
+#endif
+
   if (board_->gameIsOver())
-    {
-      updateStatusBar(false);
-      if (board_->deuce())
-	QMessageBox::information(this, "Game over", "Deuce !\n"+board_->score());
-      else
-	QMessageBox::information(this, "Game over", "The "+colorString[board_->blueLeads()]+" won !\n"+board_->score());
-    }
+    QMessageBox::information(this, "Game over", board_->statusMessage());
   else
     {
       // Save board state
@@ -225,25 +214,24 @@ void BlobWarViewer::playNextMove()
       f << *board_;
       f.close();
 
-      updateStatusBar();
-      computerPlayer_[bluePlays_].play(bluePlays_, stateFileName);
+      computerPlayer_[board_->bluePlays()].play(board_->bluePlays(), stateFileName);
     }
 }
 
 void BlobWarViewer::playComputerMove(QString move, int duration)
 {
-  QString message = colorString[bluePlays_]+" program played %1 in %2 out of %3 seconds.";
-  message = message.arg(move).arg(duration/1000.0, 0, 'f', 1).arg(computerPlayer_[bluePlays_].allowedTime());
+  QString message = colorString[board_->bluePlays()]+" program played %1 in %2 out of %3 seconds.";
+  message = message.arg(move).arg(duration/1000.0, 0, 'f', 1).arg(computerPlayer_[board_->bluePlays()].allowedTime());
 #if QT_VERSION < 0x040000
   qWarning(message.latin1());
 #else
   qWarning(message.toLatin1().constData());
 #endif
-  Move m(move, bluePlays_);
+  Move m(move);
   if (m.isValid(board_))
     play(m);
   else
-    QMessageBox::warning(this, "Wrong move", "The move "+move+" is not legal for "+colorString[bluePlays_]);
+    QMessageBox::warning(this, "Wrong move", "The move "+move+" is not legal for "+colorString[board_->bluePlays()]);
 }
 
 void BlobWarViewer::animatePlay()
@@ -369,13 +357,13 @@ void BlobWarViewer::animatePlay()
 void BlobWarViewer::drawWithNames()
 {
   // Selection enabled only when the computer program is not active
-  if (!computerPlayer_[bluePlays_].isActive())
+  if (!computerPlayer_[board_->bluePlays()].isActive())
     {
       if (selectedPiece_ >= 0)
 	board_->drawPossibleDestinations(selectedPiece_, true);
   
       // Always drawned, so that a new selection can occur
-      board_->drawSelectablePieces(bluePlays_);
+      board_->drawSelectablePieces();
     }
 }
 
@@ -388,14 +376,14 @@ void BlobWarViewer::postSelection(const QPoint&)
 	    selectedPiece_ = -1;
 	else
 	  {
-	    Move m(board_, selectedPiece_, selectedName(), bluePlays_);
+	    Move m(board_, selectedPiece_, selectedName());
 	    if (m.isValid(board_))
 	      {
 		selectedPiece_ = -1;
 		play(m);
 	      }
 	    else
-	      if (board_->canBeSelected(selectedName(), bluePlays_))
+	      if (board_->canBeSelected(selectedName()))
 		  selectedPiece_ = selectedName();
 	      else
 		  selectedPiece_ = -1;
@@ -523,7 +511,6 @@ void BlobWarViewer::undo()
 {
   if (board_->undo())
     {
-      bluePlays_ = !bluePlays_;
       selectedPiece_ = -1;
       updateGL();
       playNextMove();
@@ -534,7 +521,6 @@ void BlobWarViewer::redo()
 {
   if (board_->redo())
     {
-      bluePlays_ = !bluePlays_;
       selectedPiece_ = -1;
       updateGL();
       playNextMove();

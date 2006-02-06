@@ -14,9 +14,12 @@ URL:		http://artis.imag.fr/Members/Gilles.Debunne/QGLViewer
 Buildroot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
-A versatile 3D viewer library for OpenGL application development. Features many useful classical
-functionalities such as a camera trackball, screenshot savings, stereo display, (hierarchical)
-frames that can be moved with the mouse, keyFrame interpolator...
+libQGLViewer is a C++ library based on Qt that eases the creation of OpenGL 3D viewers. It provides
+some of the typical 3D viewer functionalities, such as the possibility to move the camera using the
+mouse, which lacks in most of the other APIs. Other features include mouse manipulated frames,
+interpolated keyFrames, object selection, stereo display, screenshot saving and much more. It can be
+used by OpenGL beginners as well as to create complex applications, being fully customizable and
+easy to extend.
 
 %package devel
 Summary: The libQGLViewer header files, documentation and examples.

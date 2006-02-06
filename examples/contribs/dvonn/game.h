@@ -18,7 +18,7 @@ namespace dvonn
 
   extern Color colorOf(Player p);
   extern Player player(Color c) throw (std::range_error);
-  extern const char* nameOf(const dvonn::Player);
+  extern QString nameOf(const dvonn::Player);
   //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   // Interface of Game
   //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -50,10 +50,10 @@ namespace dvonn
     void randomlyFinishPlacement();
     bool getRandomMove(Player p,Move& m) const;
 
-    const char* fileName() const;
+    QString fileName() const;
     bool save();
-    bool saveAs(const char* fileName);
-    bool load(const char* fileName);
+    bool saveAs(const QString& fileName);
+    bool load(const QString& fileName);
 
     void undo();
     void redo();
@@ -63,7 +63,7 @@ namespace dvonn
     void switchPlayers(Player p);
     void updateHistory();
 
-    std::string                          fileName_;
+    QString                              fileName_;
     Board                                board_;
     Phase                                phase_;
     Player                               player_;

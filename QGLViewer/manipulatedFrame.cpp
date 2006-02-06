@@ -162,9 +162,9 @@ void ManipulatedFrame::spin()
 }
 
 /* spin() and spinUpdate() differ since spin can be used by itself (for instance by
-   QGLViewer::SCREEN_ROTATE) without a spun emission. Much nicer to use thew spinningQuaternion()
-   and hence spin() for these incremental updates. Nothing special to be done for continuous
-   spinning with this design. */
+   QGLViewer::SCREEN_ROTATE) without a spun emission. Much nicer to use the spinningQuaternion() and
+   hence spin() for these incremental updates. Nothing special to be done for continuous spinning
+   with this design. */
 void ManipulatedFrame::spinUpdate()
 {
   spin();

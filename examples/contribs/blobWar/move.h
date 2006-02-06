@@ -12,9 +12,9 @@ class Move
   
 public:
   Move() {};
-  Move(const QPoint& s, const QPoint& e, bool blue);
-  Move(const Board* const b, int s, int e, bool blue);
-  Move(const QString text, bool blue);
+  Move(const QPoint& s, const QPoint& e);
+  Move(const Board* const b, int s, int e);
+  Move(const QString text);
 
   bool isValid(const Board* const b) const;  
   bool close() const;
@@ -25,7 +25,6 @@ public:
 
 private:
   QPoint start, end;
-  bool bluePlays;
 };
 
 #endif // MOVE_H

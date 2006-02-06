@@ -316,7 +316,7 @@ bool Viewer::CheckExtension( char* szExtensionName )
 QString Viewer::helpString() const
 {
   QString text("<h2>T e r r a i n   V i e w e r</h2>");
-  text += "<b>Terrain-specific commands:</b><br>";
+  text += "The resolution of the terrain is dynamically updated depending on the camera position.<br>";
   text += "You can toggle the display of water (<b>W</b>), trees (<b>T</b>) and sky (<b>S</b>).<br><br>";
   text += "Press <b>X</b> to switch texturing on and off.<br>";
   text += "Press <b>O</b> to switch shading on and off.<br>";

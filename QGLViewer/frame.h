@@ -223,15 +223,15 @@ namespace qglviewer {
     public:
     /*! @name Frame hierarchy */
     //@{
-    /*! Returns the reference Frame, in which coordinates system is defined the Frame.
+    /*! Returns the reference Frame, in which coordinates system the Frame is defined.
 
-    When set, the position() and orientation() of the Frame are defined with respect to the
-    referenceFrame() coordinate system. A \c NULL referenceFrame() (default value) means that the
-    Frame is defined in the world coordinate system.
+    The translation() and rotation() of the Frame are defined with respect to the referenceFrame()
+    coordinate system. A \c NULL referenceFrame() (default value) means that the Frame is defined in
+    the world coordinate system.
 
-    The translation() and rotation() of the Frame are defined with respect to its referenceFrame(),
-    while position() and orientation() always return values expressed in the world coordinate
-    system.
+    Use position() and orientation() to recursively convert values along the referenceFrame() chain
+    and to get values expressed in the world coordinate system. The values match when the
+    referenceFrame() is \c NULL.
 
     Use setReferenceFrame() to set this value and create a Frame hierarchy. Convenient functions
     allow you to convert 3D coordinates from one Frame to an other: see coordinatesOf(),
@@ -239,8 +239,8 @@ namespace qglviewer {
 
     Vectors can also be converted using transformOf(), transformOfIn, localTransformOf() and their
     inverse functions. */
-    Frame* referenceFrame() const { return referenceFrame_; };
-    void setReferenceFrame(Frame* const refFrame);
+    const Frame* referenceFrame() const { return referenceFrame_; };
+    void setReferenceFrame(const Frame* const refFrame);
     bool settingAsReferenceFrameWillCreateALoop(const Frame* const frame);
     //@}
 
@@ -387,7 +387,7 @@ namespace qglviewer {
     Constraint* constraint_;
 
     // F r a m e   c o m p o s i t i o n
-    Frame* referenceFrame_;
+    const Frame* referenceFrame_;
   };
 
 } // namespace qglviewer

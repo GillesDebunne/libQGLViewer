@@ -38,34 +38,35 @@
 
 <h2>Presentation</h2>
 
-<p>
-libQGLViewer is a free C++ library based on Qt that enables the quick creation of OpenGL 3D viewers.
-It features a powerful camera trackball and simple applications simply require an implementation of
-the <code>draw()</code> function. It is a tool of choice for OpenGL beginners and assignments. It
-provides screenshot saving, mouse manipulated frames, stereo display, interpolated keyFrames, object
-selection, and much <a href="features.html">more</a>. It is fully customizable and easy to extend to
-create complex applications, with an optional Qt GUI.
-</p>
-
-libQGLViewer is <i>not</i> a 3D viewer that can be used directly to view 3D scenes in various
-formats. It is more likely to be the starting point for the coding of such a viewer. Since it is based
-on the Qt toolkit, it compiles on any architecture (Unix-Linux, Mac, Windows, ...). Full <a
-href="refManual/hierarchy.html">reference documentation</a> and many <a
-href="examples/index.html">examples</a> are provided.
+libQGLViewer is a C++ library based on Qt that eases the creation of OpenGL 3D viewers.
 
 <p>
-libQGLViewer is released under the terms of the GNU-GPL license. A LGPL version is available for
-commercial applications.
+It provides some of the typical 3D viewer functionalities, such as the possibility to move the
+camera using the mouse, which lacks in most of the other APIs. Other features include mouse
+manipulated frames, interpolated keyFrames, object selection, stereo display, screenshot saving and
+<a href="features.html">much more</a>. It can be used by OpenGL beginners as well as to create
+complex applications, being fully customizable and easy to extend.
 </p>
 
-Over <a href="http://artis.imag.fr/Members/Gilles.Debunne/QGLViewer/images/downloads.png">300 downloads</a> are recorded each month.
+Since it is based on the Qt toolkit, it compiles on any architecture (Unix-Linux, Mac, Windows).
+Full <a href="refManual/hierarchy.html">reference documentation</a> and many <a
+href="examples/index.html">examples</a> are provided. libQGLViewer does <i>not</i> display 3D scenes
+in various formats: It is more likely to be the starting point for the coding of such a viewer.
+
+<p>
+libQGLViewer uses <a href="http://www.trolltech.com/company/model.html">dual licensing</a>: it is
+freely available under the terms of the GNU-GPL license for open source software development, while
+commercial applications can apply for a commercial licence. Over <a
+href="http://artis.imag.fr/Software/QGLViewer/download_statistics.html">300 downloads</a> are recorded
+each month.
+</p>
 
 <h2>Short tour</h2>
 
 <ul>
 <li><a href="download.html">Download</a> and install the library.</li>
 <li>Test the <a href="examples/index.html">examples</a> (some have a <a href="download.html#examples">precompiled version</a>).</li>
-<li>Before you start coding, <a href="intro.html">discover the principles</a> of the library and <a href="commented.html">read a commented program</a>.</li>
+<li>Before you start coding, <a href="introduction.html">discover the principles</a> of the library.</li>
 <li>See the list of the <a href="features.html">different features</a> of the library.</li>
 <li>Get familiar with the default <a href="mouse.html">mouse behavior</a> and the <a href="keyboard.html">keyboard shortcuts</a>.</li>
 <li>Read the <a href="faq.html">General FAQ</a> or the <a href="techFaq.html">Technical FAQ</a> if you have questions.</li>

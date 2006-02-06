@@ -22,21 +22,20 @@ public:
   void drawShadows() const;
   void drawSelectedPiece(int piece) const;
   void drawPossibleDestinations(int piece, bool select=false) const;
-  void drawSelectablePieces(bool blue) const;
+  void drawSelectablePieces() const;
 
   void play(const Move& m);
 
   QSize size() const { return QSize(sizeX_, sizeY_); };
   
-  QString score() const { return "Blue : " + QString::number(nbBlue_) + " - Red : " + QString::number(nbRed_); };
+  QString statusMessage() const;
 
-  bool canBeSelected(int i, bool bluePlays);
+  bool canBeSelected(int i);
 
   bool isValid(const QPoint& p) const;
   
   bool gameIsOver() const;
-  bool blueLeads() const { return nbBlue_ > nbRed_; };
-  bool deuce() const { return nbBlue_ == nbRed_; };
+  bool bluePlays() const { return bluePlays_; };
 
   bool undo();
   bool redo();
@@ -46,7 +45,7 @@ public:
 #else
   QVector<Move> possibleMoves(bool bluePlays) const;
 #endif
-  Move bestMoveNumberOfNewPieces(bool bluePlays) const;
+  Move bestMoveNumberOfNewPieces() const;
 
   enum State { EMPTY, RED, BLUE, HOLE };
   State stateOf(const QPoint p) const { return (State)board_[p.x()][p.y()]; };
@@ -64,7 +63,7 @@ private:
   void resize(int sizeX, int sizeY);
   bool pieceCanMove(const QPoint& p) const;
   void setStateOf(const QPoint& p, State s);
-  void checkNextPlayerCanPlay(bool bluePlays);
+  void checkPlayerCanPlay();
   
   int intFromPoint(const QPoint& p) const { return p.x()*sizeY_ + p.y(); };
   QPoint pointFromInt(int i) const { return QPoint(i/sizeY_, i%sizeY_); };
@@ -77,6 +76,7 @@ private:
   int sizeX_, sizeY_;
   int** board_;
   int nbBlue_, nbRed_;
+  bool bluePlays_;
   Undo undo_;
 };
 

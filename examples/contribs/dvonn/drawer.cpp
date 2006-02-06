@@ -2,8 +2,7 @@
 #include <QGLViewer/qglviewer.h>
 #include <qimage.h>
 #include <qstringlist.h>
-#include <qgl.h>
-#include <GL/glu.h>
+#include <qmessagebox.h>
 
 using namespace std;
 using namespace dvonn;
@@ -216,14 +215,14 @@ namespace
     QImage img("images/"+fileName);
     if (img.isNull())
     {
-      cerr << "Unable to load texture from " << fileName << endl;
+      QMessageBox::critical(NULL, "Image not found", "Unable to load texture from "+fileName);
       exit(1); // TODO: be nicer!
     }
     // 1E-3 needed. Just try with width=128 and see !
     if ( ( img.width()  != 1<<(int)(1+log(img.width() -1+1E-3) / log(2.0)) ) ||
 	 ( img.height() != 1<<(int)(1+log(img.height()-1+1E-3) / log(2.0))) )
     {
-      cerr << "Texture dimensions are not powers of 2 in " << fileName << endl;
+      QMessageBox::critical(NULL, "Wrong image dimensions", "Texture dimensions are not powers of 2 in "+fileName);
       exit(1); // TODO: be nicer!
     }
     // cout << "Loaded "<<fileName<<endl;

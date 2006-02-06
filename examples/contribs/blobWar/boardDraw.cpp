@@ -192,13 +192,13 @@ void Board::drawPossibleDestinations(int piece, bool select) const
   glDisable(GL_BLEND);
 }
 
-void Board::drawSelectablePieces(bool blue) const
+void Board::drawSelectablePieces() const
 {
   for (int i=0; i<sizeX_; ++i)
     for (int j=0; j<sizeY_; ++j)
       {
 	QPoint p(i,j);
-	if ((stateOf(p) == Board::blueColor(blue)) && (pieceCanMove(p)))
+	if ((stateOf(p) == Board::blueColor(bluePlays())) && (pieceCanMove(p)))
 	  {
 	    glPushName((intFromPoint(p)));
 	    drawPiece(p, true);

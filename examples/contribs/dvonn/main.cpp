@@ -13,7 +13,7 @@ int main(int argc, char * argv[])
   QApplication application(argc,argv);
   Game game;
 
-  DvonnWindowImpl mainWindow(&game,NULL,"mainWindow");
+  DvonnWindowImpl mainWindow(&game);
   mainWindow.show();
 #if QT_VERSION < 0x040000
   application.setMainWidget(&mainWindow);

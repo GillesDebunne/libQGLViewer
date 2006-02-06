@@ -14,22 +14,18 @@ CONFIG  += qt opengl warn_on release thread
 HEADERS += board.h   game.h   drawer.h   dvonnviewer.h   dvonnwindowimpl.h
 SOURCES += board.cpp game.cpp drawer.cpp dvonnviewer.cpp dvonnwindowimpl.cpp main.cpp
 
-FORMS += dvonnwindow.ui
-
-# Optimization flags
-QMAKE_CXXFLAGS_RELEASE *= -O7 -funroll-all-loops -felide-constructors -fstrict-aliasing -frerun-loop-opt \
-			  -fexpensive-optimizations -fforce-addr -fforce-mem -fstrength-reduce
-
 # "make dist" additionnal files
 DISTFILES += images/*.png rules/*.png rules/rules.html
 
 QT_VERSION=$$[QT_VERSION]
 contains( QT_VERSION, "^4.*" ) {
-  warning(This example has not yet been ported to Qt4)
+  FORMS += dvonnwindow.Qt4.ui
+} else {
+  FORMS += dvonnwindow.Qt3.ui
 }
 
 include( ../../examples.pri )
 
 # NOT IN DISTRIBUTION BEGIN
-DISTFILES *=
+DISTFILES *= dvonnwindow.Qt4.ui
 # NOT IN DISTRIBUTION END

@@ -83,11 +83,6 @@ public:
   possibly displayed text, cleaning display. Default value is \c true. */
   bool textIsEnabled() const { return textIsEnabled_; };
 
-  /*! Returns \c true if a gray-scale image of the zBuffer is displayed on screen.
-
-  Set by setZBufferIsDisplayed(). Default value is \p false.*/
-  bool zBufferIsDisplayed() const { return zBufferIsDisplayed_; }
-
   /*! Returns \c true if the camera() is being edited in the viewer.
 
   Set by setCameraIsEdited() or toggleCameraIsEdited(). Default value is \p false.
@@ -108,8 +103,6 @@ public slots:
   void setFPSIsDisplayed(bool display=true) { FPSIsDisplayed_ = display; emit FPSIsDisplayedChanged(display); if (updateGLOK_) updateGL(); };
   /*! Sets the state of textIsEnabled(). Emits the textIsEnabledChanged() signal. See also toggleTextIsEnabled(). */
   void setTextIsEnabled(bool enable=true) { textIsEnabled_ = enable; emit textIsEnabledChanged(enable); if (updateGLOK_) updateGL(); };
-  /*! Sets the state of zBufferIsDisplayed(). Emits the zBufferIsDisplayedChanged() signal. See also toggleZBufferIsDisplayed(). */
-  void setZBufferIsDisplayed(bool display=true) { zBufferIsDisplayed_ = display; emit zBufferIsDisplayedChanged(display); if(updateGLOK_) updateGL(); };
   void setCameraIsEdited(bool edit=true);
 
   /*! Toggles the state of axisIsDrawn(). See also setAxisIsDrawn(). */
@@ -120,8 +113,6 @@ public slots:
   void toggleFPSIsDisplayed() { setFPSIsDisplayed(!FPSIsDisplayed()); };
   /*! Toggles the state of textIsEnabled(). See also setTextIsEnabled(). */
   void toggleTextIsEnabled() { setTextIsEnabled(!textIsEnabled()); };
-  /*! Toggles the state of zBufferIsDisplayed(). See also setZBufferIsDisplayed(). */
-  void toggleZBufferIsDisplayed() { setZBufferIsDisplayed(!zBufferIsDisplayed()); };
   /*! Toggles the state of cameraIsEdited(). See also setCameraIsEdited(). */
   void toggleCameraIsEdited() { setCameraIsEdited(!cameraIsEdited()); };
   //@}
@@ -362,7 +353,6 @@ protected:
 
 private:
   void displayFPS();
-  void displayZBuffer() const;
   /*! Vectorial rendering callback method. */
   void drawVectorial() { paintGL(); };
 
@@ -626,8 +616,6 @@ public:
   void textIsEnabledChanged(bool enabled);
   /*! This signal is emitted whenever cameraIsEdited() changes value.. */
   void cameraIsEditedChanged(bool edited);
-  /*! This signal is emitted whenever zBufferIsDisplayed() changes value.. */
-  void zBufferIsDisplayedChanged(bool displayed);
   /*! This signal is emitted whenever displaysInStereo() changes value. */
   void stereoChanged(bool on);
   /*! Signal emitted by select().
@@ -673,7 +661,7 @@ public:
 #endif
 
 public slots:
-virtual void help();
+  virtual void help();
   virtual void aboutQGLViewer();
 
 protected:
@@ -850,7 +838,7 @@ protected:
     setShortcut().
 
     See the <a href="../keyboard.html">keyboard page</a> for details. */
-  enum KeyboardAction { DRAW_AXIS, DRAW_GRID, DISPLAY_FPS, DISPLAY_Z_BUFFER, ENABLE_TEXT, EXIT_VIEWER,
+  enum KeyboardAction { DRAW_AXIS, DRAW_GRID, DISPLAY_FPS, ENABLE_TEXT, EXIT_VIEWER,
 			SAVE_SCREENSHOT, CAMERA_MODE, FULL_SCREEN, STEREO, ANIMATION, HELP, EDIT_CAMERA,
 			MOVE_CAMERA_LEFT, MOVE_CAMERA_RIGHT, MOVE_CAMERA_UP, MOVE_CAMERA_DOWN,
 			INCREASE_FLYSPEED, DECREASE_FLYSPEED };
@@ -1073,7 +1061,6 @@ private:
   bool axisIsDrawn_;	// world axis
   bool gridIsDrawn_;	// world XY grid
   bool FPSIsDisplayed_;	// Frame Per Seconds
-  bool zBufferIsDisplayed_; // Grey level z-buffer
   bool textIsEnabled_;	// drawText() actually draws text or not
   bool stereo_;		// stereo display
   bool fullScreen_;	// full screen mode

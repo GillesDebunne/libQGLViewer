@@ -10,9 +10,7 @@ int main (int, char ** argv)
   file >> board;
   file.close();
 
-  bool bluePlays = atof(argv[2]) > 0;
-
-  std::cout << board.bestMoveNumberOfNewPieces(bluePlays);
+  std::cout << board.bestMoveNumberOfNewPieces();
 
   return 0;
 }

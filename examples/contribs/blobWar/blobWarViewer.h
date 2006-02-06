@@ -63,7 +63,6 @@ private :
   // G a m e   p l a y
   void selectBoardFileName();
   void playNextMove();
-  void updateStatusBar(bool displayWhoPlays = true) const;
   
   // C o m p u t e r   p l a y e r s
   void configurePlayer(bool blue);
@@ -76,7 +75,6 @@ private :
   Board* board_;  
   QString boardFileName_;
   int selectedPiece_;
-  bool bluePlays_;
 
   // D i s p l a y   F l a g s
   bool displayPossibleMoves_;

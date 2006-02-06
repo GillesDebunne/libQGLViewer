@@ -3,18 +3,17 @@
 #include "qstringlist.h"
 #include "qregexp.h"
 
-Move::Move(const QPoint& s, const QPoint& e, bool blue)
-  : start(s), end(e), bluePlays(blue)
+Move::Move(const QPoint& s, const QPoint& e)
+  : start(s), end(e)
 {}
 
-Move::Move(const Board* const b, int s, int e, bool blue)
+Move::Move(const Board* const b, int s, int e)
 {
   start = b->pointFromInt(s);
   end   = b->pointFromInt(e);
-  bluePlays = blue;
 }
 
-Move::Move(const QString text, bool blue)
+Move::Move(const QString text)
 {
 #if QT_VERSION < 0x040000
   QStringList list = QStringList::split(QRegExp("\\D"), text);
@@ -24,8 +23,6 @@ Move::Move(const QString text, bool blue)
 
   start = QPoint(list[0].toInt(), list[1].toInt());
   end = QPoint(list[2].toInt(), list[3].toInt());
-  
-  bluePlays = blue;
 }
 
 bool Move::isValid(const Board* const b) const
@@ -35,7 +32,7 @@ bool Move::isValid(const Board* const b) const
 	  abs(start.x()-end.x()) <= 2 &&
 	  abs(start.y()-end.y()) <= 2 &&
 	  start != end &&
-	  b->stateOf(start)==Board::blueColor(bluePlays) &&
+	  b->stateOf(start)==Board::blueColor(b->bluePlays()) &&
 	  b->stateOf(end)==Board::EMPTY);
 }
 
@@ -53,7 +50,7 @@ int Move::numberOfNewPieces(const Board& b) const
     for (int j=-1; j<=1; ++j)
       {
 	const QPoint p(end.x()+i, end.y()+j);
-	if (b.isValid(p) && b.stateOf(p) == Board::blueColor(!bluePlays))
+	if (b.isValid(p) && b.stateOf(p) == Board::blueColor(!b.bluePlays()))
 	  res++;
       }
 
