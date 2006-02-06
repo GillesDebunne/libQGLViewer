@@ -143,6 +143,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 
+* Wed Feb 8 2006 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.0-0
+- New Camera methods, new examples, many major improvements and bug fixes.
+
 * Mon Nov 14 2005 Gilles Debunne <Gilles.Debunne@imag.fr> 2.1.1-8
 - VRender dialog bug with Qt4 fixed.
 

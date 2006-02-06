@@ -13,7 +13,6 @@
 TEMPLATE = app
 TARGET   = blobWar
 CONFIG  += qt opengl warn_on release thread
-VERSION  = 1.2
 
 HEADERS += blobWarViewer.h board.h move.h computerPlayer.h undo.h
 SOURCES += main.cpp blobWarViewer.cpp board.cpp boardDraw.cpp move.cpp computerPlayer.cpp undo.cpp
@@ -29,13 +28,6 @@ DISTFILES *= Boards/*.bwb greedy.cpp greedy.pro
 
 # NOT IN DISTRIBUTION BEGIN
 DISTFILES *= blobWarWindow.Qt4.ui computerPlayerInterface.Qt4.ui
-
-# JG :
-QT += xml opengl
-# ! Attention, ne pas mettre le "QGLViewer" final car les include sont de la forme "QGLViewer/toto.h"
-#INCLUDEPATH *= /path/to/QGLViewerDir
-#LIBS *= -L/le/path/vers/le.so -lQGLViewer
-
 # NOT IN DISTRIBUTION END
 
 include( ../../examples.pri )

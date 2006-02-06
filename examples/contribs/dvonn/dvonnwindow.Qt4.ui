@@ -1,0 +1,455 @@
+<ui version="4.0" >
+ <author></author>
+ <comment></comment>
+ <exportmacro></exportmacro>
+ <class>DvonnWindow</class>
+ <widget class="QMainWindow" name="DvonnWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>942</width>
+    <height>812</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Dvonn</string>
+  </property>
+  <property name="windowIcon" >
+   <iconset/>
+  </property>
+  <widget class="QWidget" name="widget" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>29</y>
+     <width>942</width>
+     <height>783</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" >
+    <property name="margin" >
+     <number>10</number>
+    </property>
+    <property name="spacing" >
+     <number>6</number>
+    </property>
+    <item row="0" column="0" >
+     <widget class="DvonnViewer" name="dvonnViewer" />
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>942</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="File" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>700</width>
+      <height>420</height>
+     </rect>
+    </property>
+    <property name="title" >
+     <string>&amp;File</string>
+    </property>
+    <addaction name="fileOpenAction" />
+    <addaction name="fileSaveAction" />
+    <addaction name="fileSaveAsAction" />
+    <addaction name="separator" />
+    <addaction name="filePrintAction" />
+    <addaction name="separator" />
+    <addaction name="fileExitAction" />
+   </widget>
+   <widget class="QMenu" name="Game" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>700</width>
+      <height>420</height>
+     </rect>
+    </property>
+    <property name="title" >
+     <string>&amp;Game</string>
+    </property>
+    <addaction name="gameUndoAction" />
+    <addaction name="gameRedoAction" />
+    <addaction name="separator" />
+    <addaction name="gameNewGameAction" />
+    <addaction name="gameRandomlyFinishAction" />
+    <addaction name="gameRandomlyMoveStackAction" />
+    <addaction name="separator" />
+    <addaction name="easyAction" />
+    <addaction name="averageAction" />
+    <addaction name="difficultAction" />
+    <addaction name="separator" />
+   </widget>
+   <widget class="QMenu" name="Options" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>700</width>
+      <height>420</height>
+     </rect>
+    </property>
+    <property name="title" >
+     <string>Options</string>
+    </property>
+    <addaction name="displayTogglePossDestAction" />
+    <addaction name="displayToggleShowLabelsAction" />
+    <addaction name="displayToggleDragToPlayAction" />
+    <addaction name="optionsAnimate_playsAction" />
+   </widget>
+   <widget class="QMenu" name="Help" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>700</width>
+      <height>420</height>
+     </rect>
+    </property>
+    <property name="title" >
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="helpHelpAction" />
+    <addaction name="separator" />
+    <addaction name="helpMouseBindingsAction" />
+    <addaction name="helpAboutAction" />
+   </widget>
+   <addaction name="File" />
+   <addaction name="Game" />
+   <addaction name="Options" />
+   <addaction name="Help" />
+  </widget>
+  <action name="fileOpenAction" >
+   <property name="icon" >
+    <iconset>image2</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Load game</string>
+   </property>
+   <property name="iconText" >
+    <string>Load game</string>
+   </property>
+   <property name="toolTip" >
+    <string>Load a saved game</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="fileSaveAction" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="icon" >
+    <iconset>image3</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Save</string>
+   </property>
+   <property name="iconText" >
+    <string>Save</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="fileSaveAsAction" >
+   <property name="text" >
+    <string>Save &amp;As...</string>
+   </property>
+   <property name="iconText" >
+    <string>Save As</string>
+   </property>
+   <property name="shortcut" >
+    <string/>
+   </property>
+  </action>
+  <action name="filePrintAction" >
+   <property name="icon" >
+    <iconset>image4</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Print...</string>
+   </property>
+   <property name="iconText" >
+    <string>Print</string>
+   </property>
+   <property name="shortcut" >
+    <string/>
+   </property>
+  </action>
+  <action name="fileExitAction" >
+   <property name="text" >
+    <string>E&amp;xit</string>
+   </property>
+   <property name="iconText" >
+    <string>Exit</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="gameUndoAction" >
+   <property name="icon" >
+    <iconset>image5</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Undo</string>
+   </property>
+   <property name="iconText" >
+    <string>Undo</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Z</string>
+   </property>
+  </action>
+  <action name="gameRedoAction" >
+   <property name="icon" >
+    <iconset>image6</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Redo</string>
+   </property>
+   <property name="iconText" >
+    <string>Redo</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Y</string>
+   </property>
+  </action>
+  <action name="helpHelpAction" >
+   <property name="text" >
+    <string>Rules of Dvonn</string>
+   </property>
+   <property name="iconText" >
+    <string>Rules of Dvonn</string>
+   </property>
+  </action>
+  <action name="helpAboutAction" >
+   <property name="text" >
+    <string>&amp;About...</string>
+   </property>
+   <property name="iconText" >
+    <string>About</string>
+   </property>
+   <property name="shortcut" >
+    <string/>
+   </property>
+  </action>
+  <action name="gameNewGameAction" >
+   <property name="text" >
+    <string>&amp;New Game</string>
+   </property>
+   <property name="iconText" >
+    <string>New Game</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="displayTogglePossDestAction" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Show &amp;possible plays</string>
+   </property>
+   <property name="iconText" >
+    <string>Show &amp;possible plays</string>
+   </property>
+  </action>
+  <action name="displayToggleTexturesAction" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Use &amp;textures</string>
+   </property>
+   <property name="iconText" >
+    <string>Use textures</string>
+   </property>
+  </action>
+  <action name="displayToggleLightsAction" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>&amp;Spot light</string>
+   </property>
+   <property name="iconText" >
+    <string>Spot light</string>
+   </property>
+  </action>
+  <action name="gameRandomlyFinishAction" >
+   <property name="text" >
+    <string>Randomly &amp;finish placement</string>
+   </property>
+   <property name="iconText" >
+    <string>Randomly &amp;finish placement</string>
+   </property>
+   <property name="shortcut" >
+    <string>R</string>
+   </property>
+  </action>
+  <action name="displayToggleDragToPlayAction" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>&amp;Drag to play</string>
+   </property>
+   <property name="iconText" >
+    <string>Drag to play</string>
+   </property>
+  </action>
+  <action name="displayToggleShowLabelsAction" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string>Show &amp;Labels</string>
+   </property>
+   <property name="iconText" >
+    <string>Show Labels</string>
+   </property>
+  </action>
+  <action name="gameRandomlyMoveStackAction" >
+   <property name="text" >
+    <string>Rand&amp;omly move Stack</string>
+   </property>
+   <property name="iconText" >
+    <string>Randomly move Stack</string>
+   </property>
+   <property name="shortcut" >
+    <string>Shift+R</string>
+   </property>
+  </action>
+  <action name="displayToggleShowAnimationAction" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Show an&amp;imation</string>
+   </property>
+   <property name="iconText" >
+    <string>Show animation</string>
+   </property>
+  </action>
+  <action name="helpMouseBindingsAction" >
+   <property name="text" >
+    <string>&amp;Mouse bindings</string>
+   </property>
+   <property name="iconText" >
+    <string>&amp;Mouse bindings</string>
+   </property>
+  </action>
+  <action name="optionsAnimate_playsAction" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Animate plays</string>
+   </property>
+   <property name="iconText" >
+    <string>Animate plays</string>
+   </property>
+  </action>
+  <actiongroup name="levelActionGroup" >
+   <action name="easyAction" >
+    <property name="checkable" >
+     <bool>true</bool>
+    </property>
+    <property name="checked" >
+     <bool>true</bool>
+    </property>
+    <property name="enabled" >
+     <bool>false</bool>
+    </property>
+    <property name="text" >
+     <string>&amp;Easy</string>
+    </property>
+    <property name="iconText" >
+     <string>Easy</string>
+    </property>
+   </action>
+   <action name="averageAction" >
+    <property name="checkable" >
+     <bool>true</bool>
+    </property>
+    <property name="enabled" >
+     <bool>false</bool>
+    </property>
+    <property name="text" >
+     <string>&amp;Average</string>
+    </property>
+    <property name="iconText" >
+     <string>&amp;Average</string>
+    </property>
+   </action>
+   <action name="difficultAction" >
+    <property name="checkable" >
+     <bool>true</bool>
+    </property>
+    <property name="enabled" >
+     <bool>false</bool>
+    </property>
+    <property name="text" >
+     <string>&amp;Difficult</string>
+    </property>
+    <property name="iconText" >
+     <string>Difficult</string>
+    </property>
+   </action>
+  </actiongroup>
+ </widget>
+ <layoutdefault spacing="6" margin="11" />
+ <pixmapfunction></pixmapfunction>
+ <customwidgets>
+  <customwidget>
+   <class>DvonnViewer</class>
+   <extends></extends>
+   <header>dvonnviewer.h</header>
+   <container>0</container>
+   <pixmap></pixmap>
+  </customwidget>
+  <customwidget>
+   <class>QMainWindow</class>
+   <extends></extends>
+   <header>qmainwindow.h</header>
+   <container>1</container>
+   <pixmap></pixmap>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
