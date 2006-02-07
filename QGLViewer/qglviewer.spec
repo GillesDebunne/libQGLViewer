@@ -58,6 +58,7 @@ cd QGLViewer
 qmake
 make %{?_smp_mflags}
 make staticlib
+make clean
 
 %install
 rm -rf $RPM_BUILD_ROOT

@@ -257,6 +257,12 @@ then
   exit
 fi
 
+if [ ! -f $HOME/QGLViewer/libQGLViewer.so ]
+then
+  echo " - You need to compile the library first (for qmake) - Aborting"
+  exit
+fi
+
  
 ##################################################################
 ############            Collecting  sources            ###########
@@ -417,6 +423,8 @@ do
     do
     tar -xzf $f
     rm $f
+    # Bug in qmake include files
+
   done
   
   # Modify examples' .pro
@@ -433,6 +441,9 @@ do
 
   cd -
 done
+
+#qmake bug with includes from remote directories
+rm examples/contribs/*/release.pri
 
 # GPL warning
 for f in `find . -name '*.h' -o -name '*.cpp'`
