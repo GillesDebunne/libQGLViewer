@@ -1,6 +1,5 @@
 #include "Vector2.h"
 #include "Vector3.h"
-#include "Functions.h"
 #include <math.h>
 
 #ifdef WIN32
@@ -99,4 +98,3 @@ Vector2 Vector2::maxi(const Vector2& v1,const Vector2& v2)
   return Vector2(max(v1[0],v2[0]),max(v1[1],v2[1])) ;
 }
 
-const Vector2 Vector2::inf = Vector2(FLT_MAX, FLT_MAX) ;

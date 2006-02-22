@@ -1057,7 +1057,7 @@ void gpc_free_polygon(gpc_polygon *p)
   p->num_contours= 0;
 }
 
-
+/* Unused and fscanf creates compilation warnings
 void gpc_read_polygon(FILE *fp, int read_hole_flags, gpc_polygon *p)
 {
   int c, v;
@@ -1074,7 +1074,7 @@ void gpc_read_polygon(FILE *fp, int read_hole_flags, gpc_polygon *p)
     if (read_hole_flags)
       fscanf(fp, "%d", &(p->hole[c]));
     else
-      p->hole[c]= FALSE; /* Assume all contours to be external */
+      p->hole[c]= FALSE; // Assume all contours to be external
 
     MALLOC(p->contour[c].vertex, p->contour[c].num_vertices
            * sizeof(gpc_vertex), "vertex creation", gpc_vertex);
@@ -1083,7 +1083,7 @@ void gpc_read_polygon(FILE *fp, int read_hole_flags, gpc_polygon *p)
                             &(p->contour[c].vertex[v].y));
   }
 }
-
+*/
 
 void gpc_write_polygon(FILE *fp, int write_hole_flags, gpc_polygon *p)
 {

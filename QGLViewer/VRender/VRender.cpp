@@ -66,7 +66,8 @@ void vrender::VectorialRender(RenderCB render_callback, void *callback_params, V
 			LINE_EGALITY_EPS 	= 2.0/(1 << depth_bits) ;
 		}
 #endif
-		vparams.size() = max(int(returned),vparams.size()) ;
+		if (returned > vparams.size())
+		    vparams.size() = returned;
 #ifdef _VRENDER_DEBUG
 		cout << "Size = " << vparams.size() << ", returned=" << returned << endl ;
 #endif
