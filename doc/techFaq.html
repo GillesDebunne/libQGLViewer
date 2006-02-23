@@ -181,7 +181,7 @@ The <code>renderText</code> method uses display lists to display characters. If 
 <h2>How can I define a world positioned light ?</h2>
 A QGLViewer uses the default OpenGL light setup: <code>GL_LIGHT0</code> is on and placed at (0,0,0) in the
 camera coordinate system. To place a light in your scene, use <code>glLight</code> as if
-you were drawing an objet: the current modelView matrix is applied. The following code places a
+you were drawing an object: the current modelView matrix is applied. The following code places a
 light in the world coordinate system:
 <pre>
 void Viewer::draw()

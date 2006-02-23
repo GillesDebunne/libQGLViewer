@@ -96,7 +96,7 @@ versions 2.x</a>.
 <ul>
  <li><code>setMouseBindingDescription</code> parameters reordered.</li>
  <li><code>startScreenCoordinatesSystem</code> z mapping now ranges in [0.0, 1.0[ (was [1.0, -1.0]).</li>
- <li>Frame alignement (left and right buttons double click) are now filtered by constraints.</li>
+ <li>Frame alignment (left and right buttons double click) are now filtered by constraints.</li>
  <li>Double click events are disabled in fly camera mode.</li>
  <li><code>Vec::projectOnAxis()</code> no longer requires a normalized axis.</li>
 </ul>
@@ -117,7 +117,7 @@ versions 2.x</a>.
 <h2>November 23rd, 2004 - 1.3.9-2</h2>
 <b>New features</b>
 <ul>
- <li>New <code>QGLViewer::sizeHint()</code> method returns prefered viewer size (600x400).</li>
+ <li>New <code>QGLViewer::sizeHint()</code> method returns preferred viewer size (600x400).</li>
 </ul>
 
 <b>Bug fixes or improvements</b>
@@ -168,7 +168,7 @@ versions 2.x</a>.
 
 <b>Bug fixes or improvements</b>
 <ul>
- <li>Adding or deleting a camera keyframe shorlty displays a feedback message.</li>
+ <li>Adding or deleting a camera keyframe shortly displays a feedback message.</li>
  <li>Default snapshot image quality was increased to 95 (see <code>setSnapshotQuality()</code>).</li>
  <li>Camera holds its projection matrix, which makes <code>projectedCoordinatesOf()</code> faster and more versatile.</li>
  <li>Crash with anti-aliased font with nVidia cards fixed (once again, but now for good).</li>
@@ -182,7 +182,7 @@ versions 2.x</a>.
 <h2>June 7th, 2004 - 1.3.8-3</h2>
 <b>Changes in the API</b>
 <ul>
- <li><code>QAccel</code> abandonned : user defined key bindings are prioritary.</li>
+ <li><code>QAccel</code> abandoned : user defined key bindings have the priority.</li>
  <li><code>setKeyboardAccelerator()</code> and <code>setKeyDescription()</code> take an <code>int</code> as parameter instead of a <code>QKeySequence</code>.</li>
  <li><code>keyboardAccelerator()</code> logically returns an <code>int</code> accordingly.</li>
  <li><code>Frame::referenceFrame()</code> (and related methods) are now <code>const</code>.</li>
@@ -282,7 +282,7 @@ versions 2.x</a>.
 
 <b>Bug fixes or improvements</b>
 <ul>
- <li>The Qt 2.3 version (free win32 Qt version) is (almost) fully functionnal.</li>
+ <li>The Qt 2.3 version (free win32 Qt version) works (almost) completely.</li>
  <li>Some typos in the documentation were fixed.</li>
  <li>Patch for <code>&lt;&lt;</code> operator with gcc 2.96 (bug finder Ranjith).</li>
 </ul>
@@ -299,7 +299,7 @@ versions 2.x</a>.
 <ul>
  <li>The <code>spinned(), manipulated()</code> and <code>interpolated()</code> signals are no longer
  connected to <b>all</b> the viewers <code>updateGL()</code> slots.<br/>
- If you use several viewers, you should now explicitely make these connections.
+ If you use several viewers, you should now explicitly make these connections.
  See the signals' documentations for details.</li>
  <li>The <code>ManipulatedFrame::mouseMotion</code> enum (ROTATE, ZOOM,...) is renamed <code>QGLViewer::mouseAction</code>.</li>
  <li><code>drawText()</code> made <code>public</code>.</li>
@@ -311,7 +311,7 @@ versions 2.x</a>.
  <li>The <code>Quaternion(from,to)</code> constructor had a bug (bug finders Marc and Tanguy).</li>
  <li><code>MouseGrabber</code> no longer activated when hovered while moving the camera or the <code>manipulatedFrame()</code>.</li>
  <li>Calls to <code>updateGL()</code> limited to the strict minimum.</li>
- <li><a href="faq.html">FAQ page</a> splitted in two, with a new <a href="techFaq.html">technical FAQ</a>.</li>
+ <li><a href="faq.html">FAQ page</a> split in two, with a new <a href="techFaq.html">technical FAQ</a>.</li>
 </ul>
 
 <h2>December 24th, 2003 - 1.3.5-8</h2>
@@ -468,7 +468,7 @@ versions 2.x</a>.
  <li>Segmentation fault when exiting fixed.</li>
  <li>Frustum modification minimized when switching between PERSPECTIVE and ORTHO camera type.</li>
  <li>Disabled shortcuts no longer appear in help window.</li>
- <li>Missing includes on specific linux architechture were added.</li>
+ <li>Missing includes on specific linux architecture were added.</li>
  <li>Missing display update when using <code>fastDraw()</code> fixed.</li>
  <li>Position and size of the window properly saved and restored when QGLViewer is a part of an other QWidget.</li>
  <li>Camera now correctly handles <code>KeyFrameInterpolator</code> indexes out of range (bug finder Xadeck).</li>
@@ -584,8 +584,8 @@ versions 2.x</a>.
 <b>Bug fixes or improvement</b>
 <ul>
 <li>Camera <code>zNear() and zFar()</code> are more tightly (a factor 2) set from <code>sceneRadius()</code>.</li>
-<li>Camera <code>zNear() and zFar()</code> are canged to display path when <code>cameraPathIsEdited()</code>.</li>
-<li>A <code>#define QGLVIEWER_VERSION 0x010301</code> added. Allows <code>#if QGLVIEWER_VERSION &lt; Ox010300 ... #endif</code>.</li>
+<li>Camera <code>zNear() and zFar()</code> are changed to display path when <code>cameraPathIsEdited()</code>.</li>
+<li>A <code>#define QGLVIEWER_VERSION 0x010301</code> added. Allows <code>#if QGLVIEWER_VERSION &lt; Ox010300 ... #endif</code> conditional code.</li>
 <li><code>make install</code> creates links to libraries instead of copies.</li>
 <li><code>Quaternion</code> internal representation switched from <code>float</code> to <code>double</code> because of precision problems with very small rotations (bug finder Christof).</li>
 </ul>
@@ -749,8 +749,8 @@ implement selection, see the <a href="examples/select.html">select example</a>.<
 
 <b>Bug fixes or improvement</b>
 <ul>
-<li>Frame spinning threshold was flawed. Unwanted spinnings should no longer occur.</li>
-<li>Camera translation is infered from <code>revolveAroundPoint()</code>. Should fix problems with small objects in large scene.</li>
+<li>Frame spinning threshold was flawed. Unwanted spins should no longer occur.</li>
+<li>Camera translation is inferred from <code>revolveAroundPoint()</code>. Should fix problems with small objects in large scene.</li>
 <li><code>libGLcore</code> has been removed from the rpm dependencies.</li>
 </ul>
 

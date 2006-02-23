@@ -61,7 +61,11 @@ BlobWarViewer::BlobWarViewer(QWidget* parent)
     connect(&(computerPlayer_[i]), SIGNAL(moveMade(QString, int)), this, SLOT(playComputerMove(QString, int)));
 
   // Red player is computer
+ #ifdef Q_OS_WIN32
+  computerPlayer_[0].setProgramFileName("release\\greedy.exe");
+ #else
   computerPlayer_[0].setProgramFileName("greedy");
+#endif
   computerPlayer_[0].setIsActive(true);
 }
 

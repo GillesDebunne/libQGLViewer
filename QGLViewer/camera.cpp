@@ -1883,8 +1883,8 @@ void Camera::getFrustumPlanesCoefficients(GLdouble coef[6][4]) const
 
 	for (int i=0; i<2; ++i)
 	  dist[i] = pos * normal[i];
-	for (int i=4; i<6; ++i)
-	  dist[i] = pos * normal[i];
+	for (int j=4; j<6; ++j)
+	  dist[j] = pos * normal[j];
 
 	// Natural equations are:
 	// dist[0,1,4,5] = pos * normal[0,1,4,5];

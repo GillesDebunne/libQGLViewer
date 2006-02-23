@@ -9,6 +9,8 @@
 using namespace vrender;
 using namespace std;
 
+const Vector2 Vector2::inf(FLT_MAX, FLT_MAX);
+
 //! Default constructor
 Vector2::Vector2 ()
 {

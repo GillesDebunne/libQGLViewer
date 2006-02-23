@@ -23,10 +23,10 @@ namespace qglviewer {
  \class QGLViewer qglviewer.h QGLViewer/qglviewer.h
 
  It features many classical viewer functionalities, such as a camera trackball, manipulated objects,
- snapshot saving and much <a href="../features.html">more</a>. Its main goal is to enable the very
- fast development of new 3D applications.
+ snapshot saving and much <a href="../features.html">more</a>. Its main goal is to ease the development
+of new 3D applications.
 
- New users should read the <a href="../intro.html">introduction page</a> to get familiar with
+ New users should read the <a href="../introduction.html">introduction page</a> to get familiar with
  important notions such as sceneRadius(), sceneCenter() and the world coordinate system. Try the
  numerous simple <a href="../examples/index.html">examples</a> to discover the possibilities and
  understand how it works.
@@ -34,10 +34,9 @@ namespace qglviewer {
  <h3>Usage</h3>
 
  To use a QGLViewer, derive you viewer class from the QGLViewer and overload its draw() virtual
- method. See the <a href="../commented.html">commented code</a> of the <a
- href="../examples/simpleViewer.html">simpleViewer example</a> for details.
+ method. See the <a href="../examples/simpleViewer.html">simpleViewer example</a> for an illustration.
 
- An other option is to connect your drawing methods to the signals emitted by the QGLViewer (clean
+ An other option is to connect your drawing methods to the signals emitted by the QGLViewer (Qt's
  callback mechanism). See the <a href="../examples/callback.html">callback example</a> for a
  complete implementation.
 

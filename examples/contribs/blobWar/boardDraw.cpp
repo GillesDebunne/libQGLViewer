@@ -200,7 +200,7 @@ void Board::drawSelectablePieces() const
 	QPoint p(i,j);
 	if ((stateOf(p) == Board::blueColor(bluePlays())) && (pieceCanMove(p)))
 	  {
-	    glPushName((intFromPoint(p)));
+	    glPushName(intFromPoint(p));
 	    drawPiece(p, true);
 	    drawSquare(p);
 	    glPopName();

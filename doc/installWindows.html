@@ -32,12 +32,12 @@
 <a name="qt3or4"></a>
 <h2>Compilation and installation using Qt version 3 or 4</h2>
 <ol>
-<li>Make sure Qt is installed on your machine, and recognized as an add-in in .NET (see the <i>Tools Add-In
+<li>Make sure Qt is correctly installed on your machine, and recognized as an add-in in .NET (see the <i>Tools Add-In
 manager</i> <span style="color:red">*</span> menu)</li>
 
 <li>Download and unzip the sources : <a href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.zip">libQGLViewer-#VERSION#-#RELEASE#.zip</a></li>
 
-<li>Start .NET and use the <i>Open Qt project</i> <span style="color:red">*</span> icon to open <code>QGLViewer/QGLViewer.pro</code></li>
+<li>Use the <i>Open Qt project</i> <span style="color:red">*</span> icon in .NET to open <code>QGLViewer/QGLViewer.pro</code></li>
 
 <li>Visual Studio 6.0 only : Use <i>File-Open workspace</i> to open the <code>.dsp</code> generated
 file, and select <i>Release</i> as the <i>Build/Active Configuration</i></li>
@@ -80,25 +80,23 @@ Here is a correspondence table:
 <a name="qt2.3"></a>
 <h2>Using the free Qt 2.3 version</h2>
 
-The 2.3 version of Qt is no longer supported by Trolltech, and it does not give a correct picture of
-the actual Qt functionalities. libQGLViewer is however fully functional with Qt 2.3 and you can
-download and install the <a href="ftp://ftp.trolltech.com/qt/non-commercial/QtWin230-NonCommercial.exe">free
-Qt 2.3 version</a>. Note that Qt should <i>not</i> be installed in a directory whose name contains
-spaces (such as <code>Program Files</code>). See the <a href="#qt">Qt installation section</a> for details.
-You also need to download and install the <a href="http://www.xmission.com/~nate/glut.html">GLUT library</a>
-as explained above.
+The free <a href="ftp://ftp.trolltech.com/qt/non-commercial/QtWin230-NonCommercial.exe">Qt 2.3</a> version 
+is no longer supported by Trolltech, and it does not give a correct picture of
+the actual Qt functionalities. libQGLViewer is however fully functional with this Qt version.
+Note that Qt should <i>not</i> be installed in a directory whose name contains
+spaces (such as <code>Program Files</code>). You also need to download and install the 
+<a href="http://www.xmission.com/~nate/glut.html">GLUT library</a> as explained above.
 
 <p>
-As an alternative, you can use the free Qt 4 GPL version, available on the <a
-href="http://www.trolltech.com/download/qt/windows.html">Trolltech web site</a>. It uses the MinGW
-compiler and is not directly usable with Visual Studio. 
+See the <a href="#qt">Qt installation section</a> for details on the Qt installation and other Qt versions
+(especially the free Qt 4 GPL version).
 </p>
 
 To compile with Qt 2.3, follow the installation procedure described above but open
 <code>QGLViewer.Qt2.3.pro</code> instead in step 3.</li>
 
 <p>
-If you use Visual 6:
+With Visual Studio 6:
 </p>
 <ul>
 <li>If no <code>Project created</code> dialog is displayed when you open <code>QGLViewer.pro</code>,
@@ -112,9 +110,14 @@ exceptions and dynamic casts.</li>
 <li>You may be prompted with <code>illegal call</code> error messages during the compilation of
 <code>className()</code> in moc files. Simply remove the first <code>qglviewer::</code> just after
 <code>strcmp(</code> and recompile.</li>
+
+<a name="mocbug"></a>
+<li>A <a href="http://www.trolltech.com/developer/tasktracker.html?id=104327+&method=entry">moc bug</a> in Qt 4.1.1
+generates a <code>error C2061: syntax error : identifier 'KeyFrameInterpolator'</code> error message. Simply replace
+<code>const(*)</code> by <code>const(*)</code> in the moc file to fix this (thanks Juergen).</li>
 </ul>
 
-
+<!--
 If you use .NET (Thanks to Lionel for these tricks):
 <ul>
 <li>Generate the <code>.dsp</code> file using:
@@ -147,25 +150,27 @@ QApplication * qApp;
 </ul>
 
 This <a href="http://hohle.net/scrap_post.php?post=14">page</a> details how to patch Qt 2.3 to make it work with .NET.
-This has not yet been tested (<a href="mailto:Gilles dot Debunne at imag dot fr">feedback welcome</a>), but may avoid the previous patches/hacks.
-
+This has not yet been tested (<a href="mailto:Gilles dot Debunne at imag dot fr">feedback welcome</a>), but may
+avoid the previous patches/hacks. An alternative is to use the Qt4 version.
+-->
 
 <a name="mingw"></a>
 <h2>Compilation and installation using MinGW</h2>
-This procedure is very similar to the one detailed in the <a href="installUnix.html#linux">linux
-section</a>. To compile the library:
+MinGW is the windows port of the GNU g++ compiler which is optionally installed with the free Qt 4 version. The 
+installation procedure is very similar to the one detailed in the <a href="installUnix.html#linux">linux
+section</a>. Use the "Qt 4.x command prompt" installed in the Start menu and type:
 <pre>
 cd libQGLViewer-#VERSION#-#RELEASE#\QGLViewer
 qmake
 make
 </pre>
 
-Copy the resulting <code>dll</code> (create in the <code>release</code> directory) to a system
+Copy the resulting <code>dll</code> (created in the <code>Release</code> directory) to a system
 shared directory such as <code>C:\WINDOWS\system32</code> (or <code>C:\WINNT\system32</code> with
 Windows 2000). Alternately, you can copy it to every application directory</li>
 
 <p>
-Use the same procedure to compile the examples (the <code>.exe</code> is created in the <code>release</code>
+Use the same procedure to compile the examples (the <code>.exe</code> is created in the <code>Release</code>
 directory as well):
 </p>
 <pre>
@@ -174,7 +179,7 @@ qmake
 make
 </pre>
 
-See the <a href="#qt">Qt installation</a> section for details on Qt.
+See also the details on <a href="#qt">Qt installation</a>.
 
 
 <a name="cygwin"></a>
@@ -200,21 +205,20 @@ details.
 <a name="qt"></a>
 <h2><img src="images/qt.png" width="38" height="40" align="middle" alt="Qt"/> &nbsp; Qt installation</h2>
 
-Download Qt from the <a href="http://www.trolltech.com/developer/download/">Trolltech web site</a>.
+Qt can be downloaded from the <a href="http://www.trolltech.com/developer/download/">Trolltech web site</a>.
 
 <p>
-This <a href="http://hohle.net/scrap_post.php?post=14">page</a> details how to patch <a
-href="ftp://ftp.trolltech.com/qt/non-commercial/QtWin230-NonCommercial.exe">Qt 2.3</a> to make it
-work with .NET.
+The latest Qt 4.x version is especially available for free for open source development. It comes with the
+<href=#mingw">MinGW compiler</a> that can be used with the <a href="http://www.bloodshed.net/devcpp.html">Dev-C++</a> IDE.
+Use these <a href="http://sourceforge.net/project/qtwin/">unofficial patches</a> to integrate it into Visual Studio.
 </p>
-
-Visual Studio 6 users must check the <i>Tools/Customize/Add-ins and Macro Files/QMsDev Add in</i> box
-in order to use Qt with Visual Studio 6.
 
 <p>
-There are also <a href="http://sourceforge.net/project/showfiles.php?group_id=49109">unofficial patches</a>
-to integrate the non-commercial Qt 4 version into Visual Studio.
+The <a href="ftp://ftp.trolltech.com/qt/non-commercial/QtWin230-NonCommercial.exe">Qt 2.3</a> version can also
+be downloaded (see <a href="http://hohle.net/scrap_post.php?post=14">patches</a> for .NET integration).
 </p>
+
+Visual Studio 6 users must check the <i>Tools/Customize/Add-ins and Macro Files/QMsDev Add in</i> box.
 
 
 <a name="plugin"></a>

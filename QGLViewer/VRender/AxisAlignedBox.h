@@ -27,7 +27,7 @@ namespace vrender
 	typedef AxisAlignedBox< Vector3 > AxisAlignedBox_xyz ;
 
 	template<class T> AxisAlignedBox<T>::AxisAlignedBox()
-		: _min(T::inf), _max(-T::inf)
+	: _min(T::inf), _max(-T::inf)
 	{
 	}
 

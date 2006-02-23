@@ -1,10 +1,10 @@
 %define version_major 2
-%define version_minor 1
-%define version_patch 1
+%define version_minor 2
+%define version_patch 0
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_patch}
-Release:	8
+Release:	2
 
 Summary:	Qt based OpenGL generic 3D viewer library.
 License:	GPL
@@ -59,6 +59,10 @@ qmake
 make %{?_smp_mflags}
 make staticlib
 make clean
+#cd ../designerPlugin
+#qmake
+#make %{?_smp_mflags}
+
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -94,11 +98,15 @@ ln -s libQGLViewer.so.%{version} $RPM_BUILD_ROOT%{libDir}/libQGLViewer.so
 for dir in $(find examples -type d)
 do
   %{__install} -d $RPM_BUILD_ROOT%{docDir}/$dir
-  for file in $(find $dir -type f -maxdepth 1)
+  for file in $(find $dir -maxdepth 1 -type f)
   do
     %{__install} --mode=644 $file $RPM_BUILD_ROOT%{docDir}/$dir
   done
 done
+
+# Which ROBUST path should be used ?
+#%{__install} -d /usr/lib/qt4/plugins/designer/
+#%{__install} --mode=644 designerPlugin/*.so /usr/lib/qt4/plugins/designer/
 
 %post -p /sbin/ldconfig
 
@@ -143,6 +151,12 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+
+* Thu Feb 23 2006 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.0-2
+- Truncation warnings on windows fixed, patch for a moc bug with Qt 4.1.1 on VC 6 (thanks Juergen). 
+
+* Wed Feb 22 2006 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.0-1
+- Warning with Qt 2.3 fixed. Selection problem with certain compilers fixed on BlobWar example. 
 
 * Wed Feb 8 2006 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.0-0
 - New Camera methods, new examples, many major improvements and bug fixes.

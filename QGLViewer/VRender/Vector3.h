@@ -3,6 +3,10 @@
 
 #include <stdexcept>
 
+#ifndef FLT_MAX
+# define FLT_MAX 9.99E20f
+#endif
+
 namespace vrender
 {
   class NVector3;

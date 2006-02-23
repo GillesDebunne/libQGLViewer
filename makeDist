@@ -2,7 +2,7 @@
 
 libName="libQGLViewer"
 version="2.2.0"
-release="0"
+release="2"
 
 version_major=`echo $version | cut -d"." -f1`
 version_minor=`echo $version | cut -d"." -f2`
@@ -257,7 +257,7 @@ then
   exit
 fi
 
-if [ ! -f $HOME/QGLViewer/libQGLViewer.so ]
+if [ ! -f $HOME/QGLViewer/QGLViewer/libQGLViewer.so ]
 then
   echo " - You need to compile the library first (for qmake) - Aborting"
   exit

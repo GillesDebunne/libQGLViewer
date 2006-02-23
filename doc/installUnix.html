@@ -40,14 +40,14 @@ Directly install the <a href="http://blabluga.hell.pl/QGLViewer/">Debian package
 rpm -Uvh <a href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.i586.rpm">libQGLViewer-#VERSION#-#RELEASE#.i586.rpm</a> <a href="#WEBURL#/src/libQGLViewer-devel-#VERSION#-#RELEASE#.i586.rpm">libQGLViewer-devel-#VERSION#-#RELEASE#.i586.rpm</a>
 </pre>
 
-You should re-compile for optimal results:
+Re-compile the RPM for optimal results or if you have a different configuration:
 <pre>
 rpmbuild --rebuild <a href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.src.rpm">libQGLViewer-#VERSION#-#RELEASE#.src.rpm</a>
 cd /usr/src/RPM/RPMS/i586/ (or /usr/src/redhat/RPMS/i586, see the rpmbuild last log lines)
 rpm -Uvh libQGLViewer-*#VERSION#-#RELEASE#.i?86.rpm
 </pre>
 
-or using the source tarball:
+or directly use the source tarball:
 <pre>
 tar -xzf <a href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.tar.gz">libQGLViewer-#VERSION#-#RELEASE#.tar.gz</a>
 cd libQGLViewer-#VERSION#-#RELEASE#/QGLViewer
@@ -56,20 +56,10 @@ make
 make install
 </pre>
 
+<p>
 You need root privileges to install the library, since default install paths are system directories.
+</p>
 
-<br/>
-<br/>
-
-<h3>Compilation of the examples</h3>
-Once the library is compiled, <a href="examples/index.html#linux">compile the examples</a>:
-<pre>
-cd ../examples
-qmake
-make
-</pre>
-
-<br/>
 
 <h3>Custom installation</h3>
 The following files are installed:
@@ -103,15 +93,19 @@ INCLUDE_DIR    PREFIX/include
 DOC_DIR        PREFIX/share/doc
 </pre>
 
-Use the same <code>qmake</code> parameters when you compile the examples.
-
-<p>
 If your Qt version is lower than 3.1, you need to link with the <code>glut</code> library: uncomment
-a line in <code>QGLViewer.pro</code> as explained there.<br/
+a line in <code>QGLViewer.pro</code> as explained there.<br/>
 <code>glut</code> can be installed from the <code>freeglut-devel</code> rpm or using <code>apt-get
 install libglut3-dev</code>.
-</p>
 
+
+<h3>Next steps</h3>
+Once the library is compiled, you can <a href="examples/index.html#linux">compile the examples</a>.
+
+<p>
+You may also want to install the <a href="#plugin">libQGLViewer designer plugin</a> (especially Qt4 users) to
+easily create user interfaces using designer.
+</p>
 
 
 

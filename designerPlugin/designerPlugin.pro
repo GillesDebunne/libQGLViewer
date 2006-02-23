@@ -1,4 +1,5 @@
 TEMPLATE = lib
+CONFIG  -= debug 
 CONFIG  *= qt opengl warn_on release thread dll rtti plugin
 TARGET   = qglviewerplugin
 

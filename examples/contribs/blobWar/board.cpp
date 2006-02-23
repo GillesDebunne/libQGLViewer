@@ -99,8 +99,8 @@ bool Board::pieceCanMove(const QPoint& p) const
   for (int i=-2; i<=2; ++i)
     for (int j=-2; j<=2; ++j)
       {
-	const QPoint p(p.x()+i,p.y()+j);
-	if (isValid(p) && stateOf(p) == Board::EMPTY)
+	const QPoint q(p.x()+i,p.y()+j);
+	if (isValid(q) && stateOf(q) == Board::EMPTY)
 	  return true;
       }
   return false;

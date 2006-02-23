@@ -7,7 +7,7 @@
 # time (which sign determines which player is to play). The output should be the x,y coordinates of
 # the start and end positions of the move to play.
 
-# A naive greedy program is provided. Compile it using the <code>qmake greedy.pro</code> file (type
+# A naive greedy program is provided. Compile it using the <code>greedy.pro</code> file (type
 # <code>qmake greedy.pro ; make</code> on Unix architectures).
 
 TEMPLATE = app

@@ -10,6 +10,8 @@
 using namespace vrender;
 using namespace std;
 
+const Vector3 Vector3::inf(FLT_MAX, FLT_MAX, FLT_MAX); 
+
 Vector3::Vector3 ()
 {
   _xyz[0] = 0.0;

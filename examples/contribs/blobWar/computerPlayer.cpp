@@ -39,16 +39,10 @@ ComputerPlayer::ComputerPlayer()
   
 void ComputerPlayer::selectProgram()
 {
-  QString initialValue;
-  if (programFileName().isEmpty())
-    initialValue = "greedy";
-  else
-    initialValue = programFileName();
-
 #if QT_VERSION < 0x040000
-  QString fileName = QFileDialog::getOpenFileName(initialValue, "Computer programs (*)", NULL);
+  QString fileName = QFileDialog::getOpenFileName(programFileName(), "Computer programs (*)", NULL);
 #else
-  QString fileName = QFileDialog::getOpenFileName(NULL, "Select a computer program", initialValue, "Computer programs (*)");
+  QString fileName = QFileDialog::getOpenFileName(NULL, "Select a computer program", programFileName(), "Computer programs (*)");
 #endif
 
   if (!fileName.isEmpty())

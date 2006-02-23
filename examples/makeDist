@@ -22,6 +22,7 @@ done
 test -d $OUTPUT_DIR || mkdir -p $OUTPUT_DIR
 
 # which highlight >& /dev/null
+export PATH=$PATH:$HOME/Bin/bin
 which source-highlight >& /dev/null
 if [ $? != 0 ]
 then
@@ -449,8 +450,8 @@ href="../download.html#examples">pre-compiled</a> version of these is available 
 
 </p>
 
-New developers should first read the <a href="../intro.html">introduction page</a> and the <a
-href="../commented.html">commented example</a> to understand the philosophy of the library.
+New developers should first read the <a href="../introduction.html">introduction page</a> to understand
+the philosophy of the library.
 
 
 <a name="basic"></a>
@@ -538,7 +539,7 @@ flavors):
 </pre>
 
 Some configurations may require you to add <code>LIBS *= -lXi</code> in the <code>.pro</code> file.
-Debian users may have to replace <code>-lQGLViewer-2</code> by <code>-lQGLViewer</code> (change the
+Debian users may have to replace <code>-lQGLViewer</code> by <code>-lQGLViewer-2</code> (change the
 <code>Makefile</code> or create a link on <code>libQGLViewer.so</code> in your lib directory).
 
 <p>

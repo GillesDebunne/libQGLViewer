@@ -13,9 +13,10 @@
 # USE_GLUT = yes
 
 TEMPLATE = lib
+CONFIG  -= debug
 CONFIG  *= qt opengl warn_on release thread create_prl
 TARGET   = QGLViewer
-VERSION  = 2.1.1
+VERSION  = 2.2.0
 
 HEADERS  = qglviewer.h \
 	   camera.h \
@@ -248,7 +249,6 @@ contains( DEFINES, NO_VECTORIAL_RENDER ) {
   HEADERS *= \
 	VRender/AxisAlignedBox.h \
 	VRender/Exporter.h \
-	VRender/Functions.h \
 	VRender/gpc.h \
 	VRender/NVector3.h \
 	VRender/Optimizer.h \

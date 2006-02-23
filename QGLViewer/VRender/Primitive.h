@@ -2,7 +2,6 @@
 #define _PRIMITIVE_H_
 
 #include <vector>
-#include "Functions.h"
 #include "AxisAlignedBox.h"
 #include "Vector3.h"
 #include "NVector3.h"

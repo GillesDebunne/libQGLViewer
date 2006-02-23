@@ -12,7 +12,7 @@
 TEMPLATE = lib
 CONFIG  *= qt opengl warn_on release thread dll
 TARGET   = QGLViewer
-VERSION  = 2.1.1
+VERSION  = 2.2.0
 
 HEADERS  = qglviewer.h \
 	   camera.h \
@@ -73,7 +73,6 @@ SOURCES  *= \
 HEADERS  *= \
         VRender/AxisAlignedBox.h \
         VRender/Exporter.h \
-        VRender/Functions.h \
         VRender/gpc.h \
         VRender/NVector3.h \
         VRender/Optimizer.h \

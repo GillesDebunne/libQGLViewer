@@ -59,7 +59,7 @@ namespace qglviewer {
   orientation()) definitions is used in all the methods' names and should be sufficient to prevent
   ambiguities. These notions are obviously identical when the referenceFrame() is \c NULL, i.e. when
   the Frame is defined in the world coordinate system (the one you are in at the beginning of the
-  QGLViewer::draw() method, see the <a href="../intro.html">introduction page</a>).
+  QGLViewer::draw() method, see the <a href="../introduction.html">introduction page</a>).
 
   Frames can hence easily be organized in a tree hierarchy, which root is the world coordinate
   system. A loop in the hierarchy would result in an inconsistent (multiple) Frame definition.
