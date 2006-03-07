@@ -58,6 +58,7 @@ std::ostream& operator<<(std::ostream& out, const Undo& u)
 std::istream& operator>>(std::istream& in, Undo& u)
 {
   u.state_.clear();
+  u.index_ = u.maxIndex_ = 0;
   in >> u.index_ >> u.maxIndex_;
 
   char str[10000];

@@ -62,7 +62,7 @@ You need root privileges to install the library, since default install paths are
 
 
 <h3>Custom installation</h3>
-The following files are installed:
+With the rpm or when using <code>make install</code>, the following files are installed:
 <ul>
 <li>The library (<code>libQGLViewer-#VERSION#.so</code> and <code>libQGLViewer-#VERSION#.a</code>) in <code>/usr/lib</code></li>
 <li>The header files and designer plugin code in <code>/usr/include/QGLViewer</code></li>
@@ -241,7 +241,22 @@ If you installed <code>libQGLViewer</code> in a custom directory, add the path t
 <a name="plugin"></a>
 <h2><img src="images/qt.png" width="38" height="40" align="middle" alt="Qt"/> Installation of the designer plugin</h2>
 
-This installation is optional. To compile and install the QGLViewer designer plugin, simply do:
+The designer plugin installation is optional. It eases the creation of user interfaces that feature
+a QGLViewer using Qt's designer. It adds a QGLViewer icon in the designer's <code>Display
+Widgets</code> tab:
+
+<p>
+ &nbsp; &nbsp; &nbsp; &nbsp; <img src="images/designerplugin.jpg" width="638" height="222" align="middle" alt="Designer plugin" />
+</p> 
+
+When added to your interface, the widget displays the standard spiral, which can be manipulated when
+you test it. All the viewers' signals and slots are available and can be connected to your
+interface. Start from this code to create your own designer plugin for your derived QGLViewer
+classes.
+
+<p>
+To compile and install the QGLViewer designer plugin, simply do:
+</p>
 
 <pre>
 cd designerPlugin
@@ -251,23 +266,16 @@ make install
 </pre>
 
 The <code>designerPlugin</code> directory is located in the tarball root directory or in
-<code>/usr/include/QGLViewer/designerPlugin</code> if you installed QGLViewer from the RPM. The
-<code>make install</code> step requires root privileges since the plugin is installed in
-<code>QTDIR/plugins/designer</code>, which is usually a system directory.
+<code>/usr/include/QGLViewer/designerPlugin</code> if you installed QGLViewer from the RPM.
 
 <p>
-Such a plugin eases the creation of user interfaces that feature a QGLViewer using designer. It
-adds a QGLViewer icon in the designer's &nbsp; <code>Display Widgets</code> tab:
+By default, the plugin is installed in <code>QTDIR/plugins/designer</code> which is usually a system
+directory. The <code>make install</code> step hence requires root privileges. With Qt4, you can
+customize the plugin installation path using the <code>qmake PREFIX=...</code> syntax instead. Do
+not forget to add this path to your <code>QT_PLUGIN_PATH</code> variable so that designer can find
+the plugin.
 </p>
 
- &nbsp; &nbsp; &nbsp; &nbsp; <img src="images/designerplugin.jpg" width="638" height="222" align="middle" alt="Designer plugin" /><br/>
-
-<p>
-When added to your interface, the widget displays the standard spiral, which can be manipulated when
-you test it. All the viewers' signals and slots are available and can be connected to your
-interface. Start from this code to create your own designer plugin for your derived QGLViewer
-classes.
-</p>
 
 Note that <code>libQGLViewer.so</code> needs to be found by <code>designer</code> in order to load
 the plugin. If you didn't <code>make install</code> the library, add the path to the <code>.so</code> (resp

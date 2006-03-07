@@ -53,7 +53,13 @@ public:
   QString stateString() const;
   void initFromStateString(const QString& s);
 
+  // Used for animation
+  void doNotDrawPiece(const QPoint& p) { board_[p.x()][p.y()] = Board::EMPTY; };
+  void doDrawPiece(const QPoint& p) { board_[p.x()][p.y()] = blueColor(bluePlays_); };
+  void drawFlippingPieces(const QPoint& p, bool flip) const;
+  
   static State blueColor(bool blue) { return blue?Board::BLUE:Board::RED; };
+  static void drawPiece(bool blue);
 
   // Input-Output
   friend std::ostream& operator<<(std::ostream& out, const Board& p);

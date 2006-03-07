@@ -152,6 +152,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 
+* Wed Mar 8 2006 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.1-0
+- Minor bug fixes in saveSnapshot. Designer plugin installation directory can now be changed.
+
 * Thu Feb 23 2006 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.0-2
 - Truncation warnings on windows fixed, patch for a moc bug with Qt 4.1.1 on VC 6 (thanks Juergen). 
 

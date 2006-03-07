@@ -8,6 +8,8 @@ using namespace std;
 ///////////////////////   V i e w e r  ///////////////////////
 void Viewer::init()
 {
+  connect(this, SIGNAL(drawFinished(bool)), SLOT(saveSnapshot(bool, bool)));
+
   restoreStateFromFile();
   glDisable(GL_LIGHTING);
   nbPart_ = 2000;

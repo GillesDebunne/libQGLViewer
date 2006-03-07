@@ -221,24 +221,27 @@ be downloaded (see <a href="http://hohle.net/scrap_post.php?post=14">patches</a>
 Visual Studio 6 users must check the <i>Tools/Customize/Add-ins and Macro Files/QMsDev Add in</i> box.
 
 
+
+
 <a name="plugin"></a>
 <h2><img src="images/qt.png" width="38" height="40" align="middle" alt="Qt"/> Installation of the designer plugin</h2>
 
-The compilation and installation of the QGLViewer designer plugin is optional. Open the
-<code>designerPlugin.pro</code> file to create your workspace. Compile it and install the resulting
-library in <code>$QTDIR\plugins\designer</code> (may require administrator privileges).
+The compilation and installation of the QGLViewer designer plugin is optional. Such a plugin eases
+the creation of user interfaces that feature a QGLViewer using designer. It makes a GLViewer icon
+appear in the designer's <code>Display</code> widget tab, as a standard Qt widget:
 
 <p>
-Such a plugin eases the creation of user interfaces that feature a QGLViewer using designer. It
-makes a GLViewer icon appear in the designer's <code>Display</code> widget tab, as a standard Qt
-widget. When added to your user interface, the widget displays the standard spiral, which can be
-manipulated when you test your interface (using <code>Ctrl+T</code> or <code>Ctrl+R</code> with Qt 4).
+ &nbsp; &nbsp; &nbsp; &nbsp; <img src="images/designerplugin.jpg" width="638" height="222" align="middle" alt="Designer plugin" />
 </p>
 
- &nbsp; &nbsp; &nbsp; &nbsp; <img src="images/designerplugin.jpg" width="638" height="222" align="middle" alt="Designer plugin" /><br/>
+When added to your user interface, the widget displays the standard spiral, which can be manipulated
+when you test your interface (using <code>Ctrl+T</code> or <code>Ctrl+R</code> with Qt 4). All the
+viewers' signals and slots are available and can be connected to the rest of your interface.
 
 <p>
-All the viewers' signals and slots are available and can be connected to the rest of your interface.
+To compile the plugin, open the <code>designerPlugin.pro</code> file to create your workspace.
+Compile and install the resulting library in <code>$QTDIR\plugins\designer</code> (may require
+administrator privileges).
 </p>
 
 Start from this code to create your own designer plugin for your derived QGLViewer classes. See the

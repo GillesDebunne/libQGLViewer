@@ -20,15 +20,15 @@ void Board::play(const Move& m)
       return;
     }
 
-  if (!m.close())
-    setStateOf(m.start, Board::EMPTY);
+  if (!m.isClose())
+    setStateOf(m.start(), Board::EMPTY);
 
-  setStateOf(m.end, Board::blueColor(bluePlays()));
+  setStateOf(m.end(), Board::blueColor(bluePlays()));
   
   for (int i=-1; i<=1; ++i)
     for (int j=-1; j<=1; ++j)
       {
-	const QPoint p(m.end.x()+i, m.end.y()+j);
+	const QPoint p(m.end().x()+i, m.end().y()+j);
 	if (isValid(p) && stateOf(p) == Board::blueColor(!bluePlays()))
 	  setStateOf(p, Board::blueColor(bluePlays()));
       }

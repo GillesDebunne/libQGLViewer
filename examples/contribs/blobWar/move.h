@@ -7,9 +7,7 @@
 class Board;
 
 class Move
-{
-  friend class Board;
-  
+{  
 public:
   Move() {};
   Move(const QPoint& s, const QPoint& e);
@@ -17,14 +15,17 @@ public:
   Move(const QString text);
 
   bool isValid(const Board* const b) const;  
-  bool close() const;
+  bool isClose() const;
 
   int numberOfNewPieces(const Board& b) const;
 
   friend std::ostream& operator<<(std::ostream& out, const Move& m);
 
+  const QPoint& start() const { return start_; }
+  const QPoint& end() const { return end_; }
+
 private:
-  QPoint start, end;
+  QPoint start_, end_;
 };
 
 #endif // MOVE_H

@@ -6,6 +6,7 @@
 #include "computerPlayer.h"
 
 class Board;
+class QTimer;
 
 class BlobWarViewer : public QGLViewer
 {
@@ -28,6 +29,7 @@ public slots:
   void newGame();
   void undo();
   void redo();
+  void finalizeUndoRedo();
   void bluePlayerIsHuman(bool on);
   void redPlayerIsHuman(bool on);
   void configureBluePlayer();
@@ -52,8 +54,10 @@ protected :
   void play(const Move& m);
 
 private slots:
-  void simplePlay(const Move& m);
+  void simplePlay();
+  void flipColor();
   void playComputerMove(QString move, int duration);
+  void playNextMove();
 
 private :
   // I n i t i a l i z a t i o n
@@ -62,7 +66,6 @@ private :
 
   // G a m e   p l a y
   void selectBoardFileName();
-  void playNextMove();
   
   // C o m p u t e r   p l a y e r s
   void configurePlayer(bool blue);
@@ -72,33 +75,20 @@ private :
   void animatePlay();
 
   // G a m e   v a r i a b l e s
-  Board* board_;  
+  Board* board_;
+  ComputerPlayer computerPlayer_[2];
   QString boardFileName_;
   int selectedPiece_;
 
   // D i s p l a y   F l a g s
   bool displayPossibleMoves_;
-  bool animatePlays_;
-    
-  ComputerPlayer computerPlayer_[2];
-  
-  /*
-    qglviewer::KeyFrameInterpolator kfi_[16];
-    std::vector<int> revoStart_, revoEnd_, swapArrival_;
-  */
-  /*
-    struct Undo
-    {
-    Undo() {};
-    // Undo(const Play& play, const BlobWar_t& blobWar);
-    // Position pos1,    pos2;
-    // Pile     before1, before2;
-    // Pile     after1,  after2;
-    };
-    std::vector<Undo> history_;
-    void updateUndoHistory(bool before);
-    unsigned int undoIndex_, maxUndoIndex_;
-  */
+  bool animatePlays_;    
+
+  // A n i m a t i o n
+  qglviewer::KeyFrameInterpolator* kfi_;
+  Move currentMove_;
+  int animationStep_;
+  QTimer* undoTimer_;
 };
 
 #endif // BLOBWAR_VIEWER_H

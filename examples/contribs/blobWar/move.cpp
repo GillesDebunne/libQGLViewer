@@ -3,14 +3,17 @@
 #include "qstringlist.h"
 #include "qregexp.h"
 
+#include "QGLViewer/keyFrameInterpolator.h"
+using namespace qglviewer;
+
 Move::Move(const QPoint& s, const QPoint& e)
-  : start(s), end(e)
+  : start_(s), end_(e)
 {}
 
 Move::Move(const Board* const b, int s, int e)
 {
-  start = b->pointFromInt(s);
-  end   = b->pointFromInt(e);
+  start_ = b->pointFromInt(s);
+  end_   = b->pointFromInt(e);
 }
 
 Move::Move(const QString text)
@@ -21,24 +24,24 @@ Move::Move(const QString text)
   QStringList list = text.split(QRegExp("\\D"), QString::SkipEmptyParts);
 #endif
 
-  start = QPoint(list[0].toInt(), list[1].toInt());
-  end = QPoint(list[2].toInt(), list[3].toInt());
+  start_ = QPoint(list[0].toInt(), list[1].toInt());
+  end_ = QPoint(list[2].toInt(), list[3].toInt());
 }
 
 bool Move::isValid(const Board* const b) const
 {
-  return (b->isValid(start) &&
-	  b->isValid(end) &&
-	  abs(start.x()-end.x()) <= 2 &&
-	  abs(start.y()-end.y()) <= 2 &&
-	  start != end &&
-	  b->stateOf(start)==Board::blueColor(b->bluePlays()) &&
-	  b->stateOf(end)==Board::EMPTY);
+  return (b->isValid(start()) &&
+	  b->isValid(end()) &&
+	  abs(start().x()-end().x()) <= 2 &&
+	  abs(start().y()-end().y()) <= 2 &&
+	  start() != end() &&
+	  b->stateOf(start())==Board::blueColor(b->bluePlays()) &&
+	  b->stateOf(end())==Board::EMPTY);
 }
 
-bool Move::close() const
+bool Move::isClose() const
 {
-  QPoint delta = start - end;
+  QPoint delta = start() - end();
   return (abs(delta.x()) < 2) && (abs(delta.y())<2);
 }
 
@@ -49,20 +52,20 @@ int Move::numberOfNewPieces(const Board& b) const
   for (int i=-1; i<=1; ++i)
     for (int j=-1; j<=1; ++j)
       {
-	const QPoint p(end.x()+i, end.y()+j);
+	const QPoint p(end().x()+i, end().y()+j);
 	if (b.isValid(p) && b.stateOf(p) == Board::blueColor(!b.bluePlays()))
 	  res++;
       }
 
-  if (close())
+  if (isClose())
     res++;
-  
+
   return res;
 }
 
 std::ostream& operator<<(std::ostream& out, const Move& m)
 {
-  out << "(" << m.start.x() << "," << m.start.y() << ") -> (" << m.end.x() << ","<< m.end.y() << ")" << std::endl;
+  out << "(" << m.start().x() << "," << m.start().y() << ") -> (" << m.end().x() << ","<< m.end().y() << ")" << std::endl;
   return out;
 }
 

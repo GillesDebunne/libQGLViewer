@@ -6,7 +6,6 @@ using namespace qglviewer;
 
 void Board::draw() const
 {
-  glEnable(GL_LIGHTING);
   for (int i=0; i<sizeX_; ++i)
     for (int j=0; j<sizeY_; ++j)
       {
@@ -109,18 +108,32 @@ void Board::drawSquare(const QPoint& p)
   glPopMatrix();
 }
 
-static qglviewer::Vec posOf(const QPoint& p)
-{
-  return qglviewer::Vec(p.x()+0.5,p.y()+0.5,0.0);
-}
+static qglviewer::Vec posOf(const QPoint& p) { return qglviewer::Vec(p.x()+0.5,p.y()+0.5,0.0); };
 
 void Board::drawPiece(const QPoint& p, bool blue)
 {
-  static GLUquadric* quadric = gluNewQuadric();
-
   glPushMatrix();
   Vec pos = posOf(p);
   glTranslatef(pos.x, pos.y, pos.z);
+  drawPiece(blue);
+  glPopMatrix();
+}
+
+void Board::drawFlippingPieces(const QPoint& p, bool flip) const
+{
+  for (int i=-1; i<=1; ++i)
+    for (int j=-1; j<=1; ++j)
+      {
+	const QPoint q(p.x()+i, p.y()+j);
+	if (isValid(q) && stateOf(q) == Board::blueColor(!bluePlays()))
+	  drawPiece(q, flip ^ bluePlays());
+      }
+}
+
+void Board::drawPiece(bool blue)
+{
+  static GLUquadric* quadric = gluNewQuadric();
+
   if (blue)
     glColor3f(0.4, 0.4, 1.0);
   else
@@ -128,7 +141,6 @@ void Board::drawPiece(const QPoint& p, bool blue)
   gluCylinder(quadric, 0.3, 0.2, 0.6, 12, 1);
   glTranslatef(0.0f, 0.0f, 0.6f);
   gluDisk(quadric, 0.0, 0.2, 12, 1);
-  glPopMatrix();
 }
 
 void Board::drawShadow(const QPoint& p)

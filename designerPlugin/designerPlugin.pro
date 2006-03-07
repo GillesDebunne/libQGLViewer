@@ -5,13 +5,27 @@ TARGET   = qglviewerplugin
 
 QT_VERSION=$$[QT_VERSION]
 contains( QT_VERSION, "^4.*" ) {
+  isEmpty( PREFIX ) {
+    PREFIX=$$[QT_INSTALL_PLUGINS]
+  } else {
+    message(Custom libQGLViewer designer plugin installation path.)
+    message(Do not forget to add $${PREFIX} to your QT_PLUGIN_PATH variable.)
+  }
+} else {
+  isEmpty( PREFIX ) {
+    PREFIX=$(QTDIR)/plugins
+  } else {
+    error(Custom libQGLViewer designer plugin installation path not supported with Qt3.)
+  }
+}
+
+target.path = $${PREFIX}/designer
+
+contains( QT_VERSION, "^4.*" ) {
   CONFIG += designer
-  # Documentation says $$QT_BUILD_TREE, but it does not work (Qt 4.0)
-  target.path = $$[QT_INSTALL_PLUGINS]/designer
   HEADERS = qglviewerPlugin.Qt4.h
   SOURCES = qglviewerPlugin.Qt4.cpp
 } else {
-  target.path = $(QTDIR)/plugins/designer
   HEADERS = qglviewerPlugin.Qt3.h
   SOURCES = qglviewerPlugin.Qt3.cpp
 }

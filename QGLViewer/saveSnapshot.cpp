@@ -63,12 +63,6 @@ const QString& QGLViewer::snapshotFilename() const
   qWarning("snapshotFilename is deprecated. Use snapshotFileName() (uppercase N) instead.");
   return snapshotFileName();
 }
-
-void QGLViewer::setSnapshotFilename(const QString& name)
-{
-  qWarning("setSnapshotFilename is deprecated. Use setSnapshotFileName() (uppercase N) instead.");
-  setSnapshotFileName(name);
-}
 #endif
 
 
@@ -448,10 +442,17 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
       const QString baseName = fileInfo.baseName();
       QString count;
       count.sprintf("%.04d", snapshotCounter_++);
+      QString suffix;
 #if QT_VERSION >= 0x040000
-      fileInfo.setFile(fileInfo.absolutePath()+ '/' + baseName + '-' + count + '.' + fileInfo.completeSuffix());
-#else
-      fileInfo.setFile(fileInfo.dirPath()+ '/' + baseName + '-' + count + '.' + fileInfo.extension());
+      suffix = fileInfo.suffix();
+      if (suffix.isEmpty())
+	suffix = extension[snapshotFormat()];
+      fileInfo.setFile(fileInfo.absolutePath()+ '/' + baseName + '-' + count + '.' + suffix);
+#else      
+      suffix = fileInfo.extension();
+      if (suffix.isEmpty())
+	suffix = extension[snapshotFormat()];
+      fileInfo.setFile(fileInfo.dirPath()+ '/' + baseName + '-' + count + '.' + suffix);
 #endif
 
       if (!overwrite)
@@ -459,7 +460,7 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
 	  {
 	    count.sprintf("%.04d", snapshotCounter_++);
 #if QT_VERSION >= 0x040000
-	    fileInfo.setFile(fileInfo.absolutePath() + '/' +baseName + '-' + count + '.' + fileInfo.completeSuffix());
+	    fileInfo.setFile(fileInfo.absolutePath() + '/' +baseName + '-' + count + '.' + fileInfo.suffix());
 #else
 	    fileInfo.setFile(fileInfo.dirPath() + '/' + baseName + '-' + count + '.' + fileInfo.extension());
 #endif

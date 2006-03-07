@@ -6,6 +6,8 @@
 #include <qfileinfo.h>
 #include <qfiledialog.h>
 #include <qstatusbar.h>
+#include <qtextedit.h>
+#include <qtimer.h>
 
 #if QT_VERSION >= 0x040000
 # include "ui_blobWarWindow.Qt4.h"
@@ -45,6 +47,7 @@ public:
 };
 
 
+
 #if QT_VERSION < 0x040000
 BlobWarViewer::BlobWarViewer(QWidget* parent, const char* name)
   : QGLViewer(parent, name),
@@ -53,10 +56,19 @@ BlobWarViewer::BlobWarViewer(QWidget* parent)
   : QGLViewer(parent),
 #endif
     boardFileName_("4x4.bwb"), selectedPiece_(-1),
-    displayPossibleMoves_(true), animatePlays_(false)
-{  
-  // QObject::connect(&kfi_[0], SIGNAL(interpolated()), this, SLOT(updateGL()));
-  // QObject::connect(&kfi_[0], SIGNAL(endReached()), this, SLOT(simplePlay()));
+    displayPossibleMoves_(true), animatePlays_(true), animationStep_(0)
+{
+  kfi_ = new KeyFrameInterpolator(new Frame());
+  
+  QObject::connect(kfi_, SIGNAL(interpolated()), this, SLOT(updateGL()));
+  QObject::connect(kfi_, SIGNAL(endReached()), this, SLOT(flipColor()));
+
+  undoTimer_ = new QTimer();
+#if QT_VERSION >= 0x040000
+  undoTimer_->setSingleShot(true);
+#endif
+  QObject::connect(undoTimer_, SIGNAL(timeout()), this, SLOT(playNextMove()));
+    
   for (int i=0; i<2; ++i)
     connect(&(computerPlayer_[i]), SIGNAL(moveMade(QString, int)), this, SLOT(playComputerMove(QString, int)));
 
@@ -132,11 +144,6 @@ void BlobWarViewer::newGame()
 #endif
   f >> *board_;
   f.close();
-  
-  // todo :
-    // - delay avant undo
-    // - regles
-    // - animation
 
   selectedPiece_ = -1;
 
@@ -166,6 +173,19 @@ void BlobWarViewer::fitCameraToBoard()
 // D r a w i n g  f u n c t i o n s
 void BlobWarViewer::draw()
 {
+  glEnable(GL_LIGHTING);
+  
+  if (animationStep_ > 0)
+    {
+      glPushMatrix();
+      glMultMatrixd(kfi_->frame()->matrix());
+      Board::drawPiece(board_->bluePlays());
+      glPopMatrix();
+
+      if (animationStep_ > 1)
+	board_->drawFlippingPieces(currentMove_.end(), animationStep_%2);
+    }
+
   board_->draw();
 
   if (selectedPiece_ >= 0)
@@ -181,15 +201,19 @@ void BlobWarViewer::draw()
 // G a m e   I n t e r f a c e
 void BlobWarViewer::play(const Move& m)
 {
+  currentMove_ = m;
   if (animatePlays_)
     animatePlay();
   else
-    simplePlay(m);
+    simplePlay();
 }
 
-void BlobWarViewer::simplePlay(const Move& m)
+void BlobWarViewer::simplePlay()
 {
-  board_->play(m);  
+  if ((!currentMove_.isClose()) && (animatePlays_))
+    board_->doDrawPiece(currentMove_.start());
+
+  board_->play(currentMove_);  
   updateGL();
   playNextMove();
 }
@@ -240,128 +264,47 @@ void BlobWarViewer::playComputerMove(QString move, int duration)
 
 void BlobWarViewer::animatePlay()
 {
-  /*
-  float start = 0.0;
-  float end = 0.8;
-  // int hpops = higherPieceOnPosition(play_.depart());
-  // int hpope = higherPieceOnPosition(play_.arrivee());
-  // revoStart_.clear();
-  // revoEnd_.clear();
-  // swapArrival_.clear();
+  kfi_->deletePath();
+  // Cut/pasted from board posOf(). Not shared to prevent QGLViewer dependency in board.h
 
-  if (hpops < 0)
-    cerr << "Internal error" << endl;
-
-  int nbKfi = 0;
-  if (play_.dessus())
+  if (currentMove_.isClose())
     {
-      for (int i=0; i<16; ++i)
-	if ((piece_[i].square == play_.arrivee()) && (piece_[i].isBlack != piece_[hpops].isBlack) && (piece_[hpops].isBlack != piece_[hpope].isBlack))
-	  {
-	    // piece_[i].isBlack = piece_[hpops].isBlack;
-	    nbKfi++;
-	    kfi_[nbKfi].deletePath();
-	    kfi_[nbKfi].setFrame(&piece_[i].frame);
-	    kfi_[nbKfi].addKeyFrame(piece_[i].frame, 0.0);
-	    Frame midFrame(piece_[i].frame.position()+Vec(0.0, 0.0, 4*pieceHeight*(piece_[i].level+2)),
-			   Quaternion(Vec(1.0, 0.0, 0.0), 2.0));
-	    kfi_[nbKfi].addKeyFrame(midFrame, 0.3);
-	    Frame endFrame(piece_[i].frame.position()+Vec(0.0, 0.0, pieceHeight),
-			   Quaternion(Vec(1.0, 0.0, 0.0), M_PI));
-	    kfi_[nbKfi].addKeyFrame(endFrame, 0.6);
-	    start = 0.6;
-	    swapArrival_.push_back(i);
-	  }
+      kfi_->addKeyFrame(Frame(Vec(currentMove_.start().x()+0.5,currentMove_.start().y()+0.5,0.0), Quaternion()));
+      kfi_->addKeyFrame(Frame(Vec(currentMove_.end().x()+0.5,currentMove_.end().y()+0.5,0.0), Quaternion()));
     }
   else
     {
-      for (int i=0; i<16; ++i)
-	if (piece_[i].square == play_.arrivee())
-	  {
-	    nbKfi++;
-	    kfi_[nbKfi].deletePath();
-	    kfi_[nbKfi].setFrame(&piece_[i].frame);
-	    kfi_[nbKfi].addKeyFrame(piece_[i].frame, 0.0);
-	    Frame midFrame, endFrame;
-	    if ((blobWar.ArriveeRevolution(play_)) && (piece_[i].isBlack != piece_[hpops].isBlack))
-	      {
-		midFrame = Frame(piece_[i].frame.position()+Vec(0.0, 0.0, 3.0*pieceHeight*(piece_[i].level+2)),
-				 Quaternion(Vec(1.0, 0.0, 0.0), 2.0));
-		endFrame = Frame(piece_[i].frame.position()+Vec(0.0, 0.0, 2.0*pieceHeight),
-				 Quaternion(Vec(1.0, 0.0, 0.0), M_PI));
-		revoEnd_.push_back(i);
-		// piece_[i].isBlack = piece_[hpops].isBlack;
-	      }
-	    else
-	      {
-		midFrame.setPosition(piece_[i].frame.position()+Vec(0.0, 0.0, 3.0*pieceHeight*(piece_[i].level+2)));
-		endFrame.setPosition(piece_[i].frame.position()+Vec(0.0, 0.0, pieceHeight));
-	      }
-	    kfi_[nbKfi].addKeyFrame(midFrame, 0.4);
-	    kfi_[nbKfi].addKeyFrame(endFrame, 1.0);
-	    end = 1.0;
-	  }
+      kfi_->addKeyFrame(Frame(Vec(currentMove_.start().x()+0.5,currentMove_.start().y()+0.5,0.0), Quaternion()));
+      kfi_->addKeyFrame(Frame(Vec((currentMove_.start().x()+currentMove_.end().x()+1.0)/2.0,
+				(currentMove_.start().y()+currentMove_.end().y()+1.0)/2.0,1.0), Quaternion()), 0.6);
+      kfi_->addKeyFrame(Frame(Vec(currentMove_.end().x()+0.5,currentMove_.end().y()+0.5,0.0), Quaternion()), 1.2);
     }
+  
+  if (!currentMove_.isClose())
+    board_->doNotDrawPiece(currentMove_.start());
 
-  // Revolution on starting case
-  if (blobWar.DepartRevolution(play_))
-    for (int i=0; i<16; ++i)
-      if ((piece_[i].square == play_.depart()) && (i!=hpops) && (piece_[i].isBlack == piece_[hpops].isBlack))
-	{
-	  nbKfi++;
-	  kfi_[nbKfi].deletePath();
-	  kfi_[nbKfi].setFrame(&piece_[i].frame);
-	  kfi_[nbKfi].addKeyFrame(piece_[i].frame, 0.0);
-	  kfi_[nbKfi].addKeyFrame(piece_[i].frame, 0.6);
-	  Frame midFrame(piece_[i].frame.position()+Vec(0.0, 0.0, 3.0*pieceHeight*(piece_[i].level+2)),
-			 Quaternion(Vec(1.0, 0.0, 0.0), 2.0));
-	  Frame endFrame(piece_[i].frame.position()+Vec(0.0, 0.0, pieceHeight),
-			 Quaternion(Vec(1.0, 0.0, 0.0), M_PI));
-
-	  // piece_[i].isBlack = !piece_[hpops].isBlack;
-	  kfi_[nbKfi].addKeyFrame(midFrame, 0.9);
-	  kfi_[nbKfi].addKeyFrame(endFrame, 1.5);
-	  end = 1.5;
-	  revoStart_.push_back(i);
-	}
-
-  if (!revoStart_.empty())   QTimer::singleShot(900 , this, SLOT(swapRevoStartColor()));
-  if (!revoEnd_.empty())     QTimer::singleShot(400 , this, SLOT(swapRevoEndColor()));
-  if (!swapArrival_.empty()) QTimer::singleShot(300 , this, SLOT(swapArrivalColor()));
-
-  // Selected piece
-  kfi_[0].deletePath();
-  kfi_[0].setFrame(&piece_[hpops].frame);
-  Frame arrival;
-  if ((hpope >= 0) && (play_.dessus()))
-    arrival.setPosition(piece_[hpope].frame.position() + Vec(0.0, 0.0, pieceHeight));
-  else
-    arrival.setPosition(casePosition[play_.arrivee()]);
-
-  Vec mid(0.5 * (piece_[hpops].frame.position() + arrival.position()));
-  mid.z = max(piece_[hpops].frame.position().z, arrival.position().z) + 2.0 * pieceHeight;
-  const Frame intermediate(mid, Quaternion());
-
-  kfi_[0].addKeyFrame(piece_[higherPieceOnPosition(play_.depart())].frame, 0.0);
-  kfi_[0].addKeyFrame(piece_[higherPieceOnPosition(play_.depart())].frame, start);
-  kfi_[0].addKeyFrame(intermediate, start+0.3);
-  kfi_[0].addKeyFrame(arrival, start+0.8);
-  kfi_[0].addKeyFrame(arrival, start+end);
-
-  for (int i=1; i<=nbKfi; ++i)
-    kfi_[i].startInterpolation();
-  kfi_[0].startInterpolation();
-  */
+  animationStep_ = 1;
+  kfi_->startInterpolation();
 }
 
-
-
+void BlobWarViewer::flipColor()
+{
+  updateGL();
+  
+  if (animationStep_++ < 10)
+    QTimer::singleShot(100, this, SLOT(flipColor()));
+  else
+    {
+      animationStep_ = 0;
+      simplePlay();
+    }
+}
 
 // M o v e   S e l e c t i o n
 void BlobWarViewer::drawWithNames()
 {
   // Selection enabled only when the computer program is not active
-  if (!computerPlayer_[board_->bluePlays()].isActive())
+  if ((!computerPlayer_[board_->bluePlays()].isActive()) && (animationStep_ ==0))
     {
       if (selectedPiece_ >= 0)
 	board_->drawPossibleDestinations(selectedPiece_, true);
@@ -513,22 +456,25 @@ void BlobWarViewer::configurePlayer(bool blue)
 // U n d o   a n d   R e do
 void BlobWarViewer::undo()
 {
-  if (board_->undo())
-    {
-      selectedPiece_ = -1;
-      updateGL();
-      playNextMove();
-    }
+  if ((animationStep_==0) && (board_->undo()))
+    finalizeUndoRedo();
 }
 
 void BlobWarViewer::redo()
 {
-  if (board_->redo())
-    {
-      selectedPiece_ = -1;
-      updateGL();
-      playNextMove();
-    }
+  if ((animationStep_==0) && (board_->redo()))
+    finalizeUndoRedo();
+}
+
+void BlobWarViewer::finalizeUndoRedo()
+{
+  selectedPiece_ = -1;
+  updateGL();
+#if QT_VERSION < 0x040000
+  undoTimer_->start(1000, true);
+#else
+  undoTimer_->start(1000);
+#endif
 }
 
 void BlobWarViewer::about()
@@ -538,5 +484,22 @@ void BlobWarViewer::about()
 
 void BlobWarViewer::displayRules()
 {
-  QMessageBox::about(this, "B l o b W a r", "Rules will soon be available");
+  static QTextEdit* te;
+
+  static const QString rules = "<b>B l o b   W a r</b><br><br>" \
+    "Blob war is a strategy game for two players.<br><br>" \
+    "The goal is to have the maximum number of pieces when the board is full.<br><br>" \
+    "A piece can be moved on a empty square at a distance of one (i.e. adjacent) or two squares. " \
+    "If the distance is one, the piece is cloned, otherwise it jumps to its destination.<br><br>" \
+    "In both cases, all the pieces located in the neighborhood of the destination square change their color " \
+    "to that of the current player.<br><br>" \
+    "Enjoy !";
+  
+  if (!te)
+    {
+      te = new QTextEdit(rules);
+      te->resize(500,300);
+    }
+  
+  te->show();
 }

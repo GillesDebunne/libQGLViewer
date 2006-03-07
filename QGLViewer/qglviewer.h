@@ -475,10 +475,13 @@ public:
 #if QT_VERSION >= 0x030000 // Hack to fool moc 2.3. Mind the order !
 public slots:
 #else
+// Qt3's moc does not define QT_VERSION and is fooled too. Let's help him ! 
+// MOC_SKIP_BEGIN
 public:
+// MOC_SKIP_END. 
 #endif
   // Qt 2.3 does not support double default value parameters in slots.
-  // This method is hence no declared as a slot with Qt 2.3.
+  // This method is hence not declared as a slot with Qt 2.3.
   // If you want to make saveSnapshot() a slot, only leave "public slots" in the above block
   // and uncomment the following line (and comment the next one)
   //void saveSnapshot(bool automatic, bool overwrite=false);
@@ -487,9 +490,6 @@ public:
 public slots:
   void saveSnapshot(const QString& fileName, bool overwrite=false);
   void setSnapshotFileName(const QString& name);
-#ifndef DOXYGEN
-  void setSnapshotFilename(const QString& name);
-#endif
 
   /*! Sets the snapshotFormat(). */
   void setSnapshotFormat(const QString& format) { snapshotFormat_ = format; };
