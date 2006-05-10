@@ -215,6 +215,14 @@ macx|darwin-g++ {
 }
 
 
+#		--  I m a g e I n t e r f a c e  --
+QT_VERSION=$$[QT_VERSION]
+contains( QT_VERSION, "^4.*" ) {
+  FORMS *= ImageInterface.Qt4.ui
+} else {
+  FORMS *= ImageInterface.Qt3.ui
+}
+
 #		--  V e c t o r i a l   R e n d e r i n g  --
 # In case of compilation troubles with vectorial rendering, uncomment this line
 # DEFINES *= NO_VECTORIAL_RENDER
@@ -222,7 +230,6 @@ macx|darwin-g++ {
 contains( DEFINES, NO_VECTORIAL_RENDER ) {
   message( Vectorial rendering disabled )
 } else {
-  QT_VERSION=$$[QT_VERSION]
   contains( QT_VERSION, "^4.*" ) {
     FORMS *= VRenderInterface.Qt4.ui
   } else {

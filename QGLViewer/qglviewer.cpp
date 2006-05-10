@@ -152,26 +152,7 @@ void QGLViewer::defaultConstructor()
   previousBufferTextureInternalFormat_ = 0;
 }
 
-#if QT_VERSION < 0x040000 || defined QT3_SUPPORT
-QGLViewer::QGLViewer(QWidget *parent, const char *name, const QGLWidget* shareWidget, Qt::WFlags flags)
-  : QGLWidget(parent, name, shareWidget, flags)
-{ defaultConstructor(); }
-
-QGLViewer::QGLViewer(const QGLFormat& format, QWidget *parent, const char *name, const QGLWidget* shareWidget, Qt::WFlags flags)
-  : QGLWidget(format, parent, name, shareWidget, flags)
-{ defaultConstructor(); }
-
-QGLViewer::QGLViewer(QGLContext* context, QWidget* parent, const char* name, const QGLWidget* shareWidget, Qt::WFlags flags)
-# if QT_VERSION >= 0x030200
-  : QGLWidget(context, parent, name, shareWidget, flags) {
-# else
-  : QGLWidget(parent, name, shareWidget, flags) {
-    Q_UNUSED(context);
-# endif
-  defaultConstructor();
-}
-#else // Qt >= 4 and no QT3_SUPPORT
-
+#if QT_VERSION >= 0x040000
 /*! Constructor. See \c QGLWidget documentation for details.
 
  All viewer parameters (display flags, scene parameters, associated objects...) are set to their default values. See
