@@ -6,6 +6,8 @@
 # else
 #  if QT_VERSION >= 0x030000
 #   include "VRenderInterface.Qt3.h"
+#   include <qcheckbox.h>
+#   include <qcombobox.h>
 #  else
 #   include "VRenderInterface.Qt2.h"
 #  endif
@@ -18,6 +20,8 @@
 #else
 # if QT_VERSION >= 0x030000
 #  include "ImageInterface.Qt3.h"
+#  include <qspinbox.h>
+#  include <qcheckbox.h>
 # else
 #  include "ImageInterface.Qt2.h"
 # endif
@@ -232,7 +236,7 @@ public:
   static void hideProgressDialog();
 
 private:
-    static QProgressDialog* progressDialog;
+  static QProgressDialog* progressDialog;
 };
 
 QProgressDialog* ProgressDialog::progressDialog = NULL;
@@ -371,55 +375,65 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
   if (!imageInterface)
     imageInterface = new ImageInterface(this);
 
-  // imageInterface->imgWidth->setValue(width());
-  // imageInterface->imgHeight->setValue(height());
-  imageInterface->imgWidth->setValue(2*width());
-  imageInterface->imgHeight->setValue(2*height());
+  // 1 means never set
+  //if (imageInterface->imgWidth->value() == 1)
+  imageInterface->imgWidth->setValue(width());
+  //if (imageInterface->imgHeight->value() == 1)
+  imageInterface->imgHeight->setValue(height());
   imageInterface->imgQuality->setValue(snapshotQuality());
 
   if (imageInterface->exec() == QDialog::Rejected)
     return true;
 
-  setSnapshotQuality(imageInterface->imgQuality->value());
-  bool expand = imageInterface->expandFrustum->isChecked();
-  double oversampling = imageInterface->oversampling->value();
+  // Hide Closed dialog
+  qApp->processEvents();
   
-  makeCurrent();
-
+  setSnapshotQuality(imageInterface->imgQuality->value());
+  
   QColor previousBGColor = backgroundColor();
   if (imageInterface->whiteBackground->isChecked())
     setBackgroundColor(Qt::white);
 
-  int newWidth = imageInterface->imgWidth->value();
-  int newHeight = imageInterface->imgHeight->value();
+  QSize finalSize(imageInterface->imgWidth->value(), imageInterface->imgHeight->value());
+
+  double oversampling = imageInterface->oversampling->value();
+  QSize subSize(int(this->width()/oversampling), int(this->height()/oversampling));
 
   double aspectRatio = width() / static_cast<double>(height());
-  double newAspectRatio = newWidth / static_cast<double>(newHeight);
+  double newAspectRatio = finalSize.width() / static_cast<double>(finalSize.height());
 
   double zNear = camera()->zNear();
   double zFar = camera()->zFar();
 
   double xMin, yMin;
-  if ((expand && (newAspectRatio>aspectRatio)) || (!expand && (newAspectRatio<aspectRatio)))
-    {
-      yMin = zNear * tan(camera()->fieldOfView() / 2.0);
-      xMin = newAspectRatio * yMin;
-    }
+  bool expand = imageInterface->expandFrustum->isChecked();
+  if (camera()->type() == qglviewer::Camera::PERSPECTIVE)
+    if ((expand && (newAspectRatio>aspectRatio)) || (!expand && (newAspectRatio<aspectRatio)))
+      {
+	yMin = zNear * tan(camera()->fieldOfView() / 2.0);
+	xMin = newAspectRatio * yMin;
+      }
+    else
+      {
+	xMin = zNear * tan(camera()->fieldOfView() / 2.0) * aspectRatio;
+	yMin = xMin / newAspectRatio;
+      }
   else
     {
-      xMin = zNear * tan(camera()->fieldOfView() / 2.0) * aspectRatio;
-      yMin = xMin / newAspectRatio;
+      camera()->getOrthoWidthHeight(xMin, yMin);
+      if ((expand && (newAspectRatio>aspectRatio)) || (!expand && (newAspectRatio<aspectRatio)))
+	xMin = newAspectRatio * yMin;
+      else
+	yMin = xMin / newAspectRatio;
     }
-
+  
 #if QT_VERSION >= 0x040000
-  QImage image(newWidth, newHeight, QImage::Format_ARGB32);
-  QImage subimage((int)(width()/oversampling), (int)(height()/oversampling), QImage::Format_ARGB32);
+  QImage image(finalSize.width(), finalSize.height(), QImage::Format_ARGB32);
 #else
-  QImage image(newWidth, newHeight, 32);
-  QImage subimage(int(width()/oversampling), int(height()/oversampling), 32);
+  QImage image(finalSize.width(), finalSize.height(), 32);
 #endif
 
-  if (image.isNull() || subimage.isNull())
+  if (image.isNull())
     {
       QMessageBox::warning(this, "Image saving error",
 			   "Unable to create resulting image",
@@ -427,37 +441,77 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
       return false;
     }
 
-  double deltaX = 2.0 * xMin * subimage.width() / newWidth;
-  double deltaY = 2.0 * yMin * subimage.height() / newHeight;
+  // ProgressDialog::showProgressDialog(this);
 
-  //ProgressDialog::showProgressDialog(this);
-  imageInterface->close();
-  qApp->processEvents();
-  raise();
-  qApp->processEvents();
+  double deltaX = 2.0 * xMin * subSize.width() / finalSize.width();
+  double deltaY = 2.0 * yMin * subSize.height() / finalSize.height();
 
-  int count = 0;
-  for (double x=-xMin; x<xMin; x+=deltaX)
-    for (double y=-yMin; y<yMin; y+=deltaY)
+  int nbX = finalSize.width() / subSize.width();
+  int nbY = finalSize.height() / subSize.height();
+
+  // Extra subimage on the border if needed
+  if (nbX * subSize.width() < finalSize.width())
+    nbX++;
+  if (nbY * subSize.height() < finalSize.height())
+    nbY++;
+
+  makeCurrent();
+
+  int count=0;
+  for (int i=0; i<nbX; i++)
+    for (int j=0; j<nbY; j++)
       {
-	cout << "x=" << x << " y=" << y << endl;
 	preDraw();
+	// Change projection matrix
 	glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-	glFrustum(x, x+deltaX, y, y+deltaY, zNear, zFar);
+	glLoadIdentity();
+	if (camera()->type() == qglviewer::Camera::PERSPECTIVE)
+	  glFrustum(-xMin + i*deltaX, -xMin + (i+1)*deltaX, yMin - (j+1)*deltaY, yMin - j*deltaY, zNear, zFar);
+	else
+	  glOrtho(-xMin + i*deltaX, -xMin + (i+1)*deltaX, yMin - (j+1)*deltaY, yMin - j*deltaY, zNear, zFar);
 	glMatrixMode(GL_MODELVIEW);
+	  
 	draw();
 	postDraw();
-	hide();
-	qApp->processEvents();
-	// show();
-	// qApp->processEvents();
-	raise();
-	qApp->processEvents();
-	//	updateProgress(float progress, const std::string& stepString);
 
-	QImage img = grabFrameBuffer(true);
-	img.save(("mos-"+QString::number(count++)+".jpg"), snapshotFormat().toLatin1().constData(), snapshotQuality());
+	// ProgressDialog::hideProgressDialog();
+	// qApp->processEvents();
+
+	QImage snapshot = grabFrameBuffer(true);
+
+	// ProgressDialog::showProgressDialog(this);
+	// ProgressDialog::updateProgress(count / (float)(nbX*nbY),
+	// "Generating image ["+QString::number(count)+"/"+QString::number(nbX*nbY)+"]");
+	// qApp->processEvents();
+
+#if QT_VERSION >= 0x040000
+	QImage subImage = snapshot.scaled(subSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+	// QImage subImage = snapshot.scaled(subSize, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+	// snapshot.save(("img-"+QString::number(i)+"_"+QString::number(j)+"o.jpg"),
+	// snapshotFormat().toLatin1().constData(), snapshotQuality());
+	// subImage.save(("img-"+QString::number(i)+"_"+QString::number(j)+".jpg"),
+	// snapshotFormat().toLatin1().constData(), snapshotQuality());
+#else
+	QImage subImage = snapshot.scale(subSize, QImage::ScaleFree);
+	// snapshot.save(("img-"+QString::number(i)+"_"+QString::number(j)+"o.jpg"), snapshotFormat(), snapshotQuality());
+	// subImage.save(("img-"+QString::number(i)+"_"+QString::number(j)+".jpg"), snapshotFormat(), snapshotQuality());
+#endif
+
+	// Copy subImage in image
+	for (int ii=0; ii<subSize.width(); ii++)
+	  {
+	    int fi = i*subSize.width() + ii;
+	    if (fi == image.width())
+	      break;
+	    for (int jj=0; jj<subSize.height(); jj++)
+	      {
+		int fj = j*subSize.height() + jj;
+		if (fj == image.height())
+		  break;
+		image.setPixel(fi, fj, subImage.pixel(ii,jj));
+	      }
+	  }
+	count++;
       }
   
 #if QT_VERSION >= 0x040000
@@ -466,13 +520,13 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
   bool saveOK = image.save(fileName, snapshotFormat(), snapshotQuality());
 #endif
 
-  //ProgressDialog::hideProgressDialog();
+  // ProgressDialog::hideProgressDialog();
 
-#if QT_VERSION < 0x030000
-  setCursor(Qt::arrowCursor);
-#else
-  setCursor(QCursor(Qt::ArrowCursor));
-#endif
+  // #if QT_VERSION < 0x030000
+  // setCursor(Qt::arrowCursor);
+  // #else
+  // setCursor(QCursor(Qt::ArrowCursor));
+  // #endif
 
   if (imageInterface->whiteBackground->isChecked())
     setBackgroundColor(previousBGColor);

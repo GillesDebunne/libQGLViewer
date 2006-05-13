@@ -1,10 +1,10 @@
 %define version_major 2
 %define version_minor 2
-%define version_patch 0
+%define version_patch 2
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_patch}
-Release:	2
+Release:	0
 
 Summary:	Qt based OpenGL generic 3D viewer library.
 License:	GPL
@@ -151,6 +151,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+
+* Wed May 14 2006 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.2-0
+- Snapshot can be created at an arbitrary size with optional oversampling anti-aliassing.
 
 * Wed Mar 8 2006 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.1-0
 - Minor bug fixes in saveSnapshot. Designer plugin installation directory can now be changed.

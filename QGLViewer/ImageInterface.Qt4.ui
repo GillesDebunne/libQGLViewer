@@ -36,7 +36,7 @@
      <item>
       <widget class="QLabel" name="label_2" >
        <property name="text" >
-        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;/head>&lt;body style=" white-space: pre-wrap; font-family:MS Shell Dlg; font-size:8.25pt; font-weight:400; font-style:normal; text-decoration:none;">&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:8pt;">Width&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+        <string>&lt;html>&lt;head>&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; />&lt;/head>&lt;body style=&quot; white-space: pre-wrap; font-family:MS Shell Dlg; font-size:8.25pt; font-weight:400; font-style:normal; text-decoration:none;&quot;>&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;>&lt;span style=&quot; font-size:8pt;&quot;>Width&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
        </property>
       </widget>
      </item>
@@ -49,12 +49,9 @@
         <string> px</string>
        </property>
        <property name="maximum" >
-        <number>9999</number>
+        <number>32000</number>
        </property>
        <property name="minimum" >
-        <number>1</number>
-       </property>
-       <property name="value" >
         <number>1</number>
        </property>
       </widget>
@@ -75,7 +72,7 @@
      <item>
       <widget class="QLabel" name="label_3" >
        <property name="text" >
-        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;/head>&lt;body style=" white-space: pre-wrap; font-family:MS Shell Dlg; font-size:8.25pt; font-weight:400; font-style:normal; text-decoration:none;">&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">Height&lt;/p>&lt;/body>&lt;/html></string>
+        <string>&lt;html>&lt;head>&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; />&lt;/head>&lt;body style=&quot; white-space: pre-wrap; font-family:MS Shell Dlg; font-size:8.25pt; font-weight:400; font-style:normal; text-decoration:none;&quot;>&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;>Height&lt;/p>&lt;/body>&lt;/html></string>
        </property>
       </widget>
      </item>
@@ -88,12 +85,9 @@
         <string> px</string>
        </property>
        <property name="maximum" >
-        <number>9999</number>
+        <number>32000</number>
        </property>
        <property name="minimum" >
-        <number>1</number>
-       </property>
-       <property name="value" >
         <number>1</number>
        </property>
       </widget>
@@ -111,7 +105,7 @@
      <item>
       <widget class="QLabel" name="label_4" >
        <property name="text" >
-        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;/head>&lt;body style=" white-space: pre-wrap; font-family:MS Shell Dlg; font-size:8.25pt; font-weight:400; font-style:normal; text-decoration:none;">&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">Image quality&lt;/p>&lt;/body>&lt;/html></string>
+        <string>&lt;html>&lt;head>&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; />&lt;/head>&lt;body style=&quot; white-space: pre-wrap; font-family:MS Shell Dlg; font-size:8.25pt; font-weight:400; font-style:normal; text-decoration:none;&quot;>&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;>Image quality&lt;/p>&lt;/body>&lt;/html></string>
        </property>
       </widget>
      </item>
@@ -122,6 +116,9 @@
        </property>
        <property name="maximum" >
         <number>100</number>
+       </property>
+       <property name="minimum" >
+        <number>0</number>
        </property>
       </widget>
      </item>
@@ -151,14 +148,14 @@
      <item>
       <widget class="QLabel" name="label" >
        <property name="text" >
-        <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;/head>&lt;body style=" white-space: pre-wrap; font-family:MS Shell Dlg; font-size:8.25pt; font-weight:400; font-style:normal; text-decoration:none;">&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">Oversampling&lt;/p>&lt;/body>&lt;/html></string>
+        <string>&lt;html>&lt;head>&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; />&lt;/head>&lt;body style=&quot; white-space: pre-wrap; font-family:MS Shell Dlg; font-size:8.25pt; font-weight:400; font-style:normal; text-decoration:none;&quot;>&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;>Oversampling&lt;/p>&lt;/body>&lt;/html></string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QDoubleSpinBox" name="oversampling" >
        <property name="toolTip" >
-        <string>Antialias image (when larger then 1.0)</string>
+        <string>Antialiases image (when larger then 1.0)</string>
        </property>
        <property name="prefix" >
         <string>x </string>
@@ -167,7 +164,7 @@
         <number>1</number>
        </property>
        <property name="maximum" >
-        <double>16</double>
+        <double>64</double>
        </property>
        <property name="minimum" >
         <double>0.1</double>
@@ -198,7 +195,7 @@
    <item>
     <widget class="QCheckBox" name="whiteBackground" >
      <property name="toolTip" >
-      <string>Replace current background color by white</string>
+      <string>Use white as background color</string>
      </property>
      <property name="text" >
       <string>Use white background</string>
@@ -277,8 +274,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>278</x>
-     <y>253</y>
+     <x>135</x>
+     <y>184</y>
     </hint>
     <hint type="destinationlabel" >
      <x>96</x>
@@ -293,8 +290,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>369</x>
-     <y>253</y>
+     <x>226</x>
+     <y>184</y>
     </hint>
     <hint type="destinationlabel" >
      <x>179</x>

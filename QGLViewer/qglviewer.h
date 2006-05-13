@@ -61,8 +61,10 @@ public:
 # if QT_VERSION >= 0x030200
   : QGLWidget(context, parent, name, shareWidget, flags) {
 # else
+// MOC_SKIP_BEGIN
   : QGLWidget(parent, name, shareWidget, flags) {
     Q_UNUSED(context);
+// MOC_SKIP_END
 # endif
   defaultConstructor(); }
 #endif
@@ -170,7 +172,7 @@ public:
 public slots:
 /*! Sets the backgroundColor() of the viewer and calls \c qglClearColor(). See also
   setForegroundColor(). */
-void setBackgroundColor(const QColor& color) { backgroundColor_=color; qglClearColor(color); };
+  void setBackgroundColor(const QColor& color) { backgroundColor_=color; qglClearColor(color); };
   /*! Sets the foregroundColor() of the viewer, used to draw visual hints. See also setBackgroundColor(). */
   void setForegroundColor(const QColor& color) { foregroundColor_ = color; };
   //@}
@@ -202,11 +204,11 @@ public:
   qglviewer::Vec sceneCenter() const { return camera()->sceneCenter(); }
 
 public slots:
-/*! Sets the sceneRadius().
+  /*! Sets the sceneRadius().
 
-The camera() qglviewer::Camera::flySpeed() is set to 1% of this value by this method. Simple
-wrapper around camera()->setSceneRadius(). */
-void setSceneRadius(float radius) { camera()->setSceneRadius(radius); }
+  The camera() qglviewer::Camera::flySpeed() is set to 1% of this value by this method. Simple
+  wrapper around camera()->setSceneRadius(). */
+  void setSceneRadius(float radius) { camera()->setSceneRadius(radius); }
 
   /*! Sets the sceneCenter(), defined in world coordinates.
 
@@ -249,7 +251,7 @@ public:
   qglviewer::ManipulatedFrame* manipulatedFrame() const { return manipulatedFrame_; };
 
 public slots:
-void setCamera(qglviewer::Camera* const camera);
+  void setCamera(qglviewer::Camera* const camera);
   void setManipulatedFrame(qglviewer::ManipulatedFrame* frame);
   //@}
 
@@ -258,21 +260,21 @@ void setCamera(qglviewer::Camera* const camera);
   //@{
 public:
   /*! Returns the current qglviewer::MouseGrabber, or \c NULL if no qglviewer::MouseGrabber
-    currently grabs mouse events.
+  currently grabs mouse events.
 
-    When qglviewer::MouseGrabber::grabsMouse(), the different mouse events are sent to the
-    mouseGrabber() instead of their usual targets (camera() or manipulatedFrame()).
+  When qglviewer::MouseGrabber::grabsMouse(), the different mouse events are sent to the
+  mouseGrabber() instead of their usual targets (camera() or manipulatedFrame()).
 
-    See the qglviewer::MouseGrabber documentation for details on MouseGrabber's mode of operation.
+  See the qglviewer::MouseGrabber documentation for details on MouseGrabber's mode of operation.
 
-    In order to use MouseGrabbers, you need to enable mouse tracking (so that mouseMoveEvent() is
-    called even when no mouse button is pressed). Add this line in init() or in your viewer
-    constructor:
-    \code
-    setMouseTracking(true);
-    \endcode
-    Note that mouse tracking is disabled by default. Use QWidget::hasMouseTracking() to
-    retrieve current state. */
+  In order to use MouseGrabbers, you need to enable mouse tracking (so that mouseMoveEvent() is
+  called even when no mouse button is pressed). Add this line in init() or in your viewer
+  constructor:
+  \code
+  setMouseTracking(true);
+  \endcode
+  Note that mouse tracking is disabled by default. Use QWidget::hasMouseTracking() to
+  retrieve current state. */
   qglviewer::MouseGrabber* mouseGrabber() const { return mouseGrabber_; };
 
   void setMouseGrabberIsEnabled(const qglviewer::MouseGrabber* const mouseGrabber, bool enabled=true);
@@ -495,7 +497,7 @@ public slots:
 // Qt3's moc does not define QT_VERSION and is fooled too. Let's help him ! 
 // MOC_SKIP_BEGIN
 public:
-// MOC_SKIP_END. 
+// MOC_SKIP_END
 #endif
   // Qt 2.3 does not support double default value parameters in slots.
   // This method is hence not declared as a slot with Qt 2.3.
@@ -517,7 +519,7 @@ public slots:
   bool openSnapshotFormatDialog();
 
 private:
-	bool saveImageSnapshot(const QString& fileName);
+  bool saveImageSnapshot(const QString& fileName);
   //@}
 
 
@@ -800,7 +802,7 @@ public:
   GLuint* selectBuffer() { return selectBuffer_; };
 
 public slots:
-virtual void select(const QMouseEvent* event);
+  virtual void select(const QMouseEvent* event);
   virtual void select(const QPoint& point);
 
   void setSelectBufferSize(int size);
@@ -877,7 +879,7 @@ public:
   QtKeyboardModifiers playPathKeyboardModifiers() const;
 
 public slots:
-void setShortcut(KeyboardAction action, int key);
+  void setShortcut(KeyboardAction action, int key);
 #ifndef DOXYGEN
   void setKeyboardAccelerator(KeyboardAction action, int key);
 #endif
@@ -920,10 +922,10 @@ public:
 #endif
 
   /*! Defines the possible actions that can be binded to a mouse motion (a click, followed by a
-    mouse displacement).
+  mouse displacement).
 
-    These actions may be binded to the camera() or to the manipulatedFrame() (see QGLViewer::MouseHandler) using
-    setMouseBinding(). */
+  These actions may be binded to the camera() or to the manipulatedFrame() (see QGLViewer::MouseHandler) using
+  setMouseBinding(). */
   enum MouseAction { NO_MOUSE_ACTION,
 		     ROTATE, ZOOM, TRANSLATE,
 		     MOVE_FORWARD, LOOK_AROUND, MOVE_BACKWARD,
@@ -945,7 +947,7 @@ public:
   int wheelButtonState(MouseHandler handler, MouseAction action, bool withConstraint=true) const;
 
 public slots:
-void setMouseBinding(int state, MouseHandler handler, MouseAction action, bool withConstraint=true);
+  void setMouseBinding(int state, MouseHandler handler, MouseAction action, bool withConstraint=true);
 #if QT_VERSION < 0x030000
   // Two slots cannot have the same name or two default parameters with Qt 2.3.
 public:
@@ -975,7 +977,7 @@ public:
   virtual QDomElement domElement(const QString& name, QDomDocument& document) const;
 
 public slots:
-virtual void initFromDOMElement(const QDomElement& element);
+  virtual void initFromDOMElement(const QDomElement& element);
   virtual void saveStateToFile(); // cannot be const because of QMessageBox
   virtual bool restoreStateFromFile();
 
@@ -1007,17 +1009,17 @@ private:
   //@{
 public:
   /*! Returns a \c QList (see Qt documentation) that contains pointers to all the created
-    QGLViewers.
+  QGLViewers.
 
-    Can be useful to apply a method or to connect a signal to all the viewers.
+  Can be useful to apply a method or to connect a signal to all the viewers.
 
-    \attention With Qt version 3, this method returns a \c QPtrList instead. Use a \c QPtrListIterator
-    to iterate on the list:
-    \code
-    QPtrListIterator<QGLViewer> it(QGLViewer::QGLViewerPool());
-    for (QGLViewer* viewer; (viewer = it.current()) != NULL; ++it)
-    connect(myObject, SIGNAL(mySignal), viewer, SLOT(updateGL()));
-    \endcode */
+  \attention With Qt version 3, this method returns a \c QPtrList instead. Use a \c QPtrListIterator
+  to iterate on the list:
+  \code
+  QPtrListIterator<QGLViewer> it(QGLViewer::QGLViewerPool());
+  for (QGLViewer* viewer; (viewer = it.current()) != NULL; ++it)
+  connect(myObject, SIGNAL(mySignal), viewer, SLOT(updateGL()));
+  \endcode */
 #if QT_VERSION >= 0x040000
   static const QList<QGLViewer*>& QGLViewerPool() { return QGLViewer::QGLViewerPool_; };
 #else
@@ -1026,11 +1028,11 @@ public:
 
 
   /*! Returns the index of the QGLViewer \p viewer in the QGLViewerPool(). This index in unique and
-    can be used to identify the different created QGLViewers (see stateFileName() for an application
-    example).
+  can be used to identify the different created QGLViewers (see stateFileName() for an application
+  example).
 
-    When a QGLViewer is deleted, the following QGLViewers' indexes are shifted down. Returns -1 if the
-    QGLViewer could not be found (which should not be possible). */
+  When a QGLViewer is deleted, the following QGLViewers' indexes are shifted down. Returns -1 if the
+  QGLViewer could not be found (which should not be possible). */
 #if QT_VERSION >= 0x040000
   static int QGLViewerIndex(const QGLViewer* const viewer) { return QGLViewer::QGLViewerPool_.indexOf(const_cast<QGLViewer*>(viewer)); };
 #else
@@ -1046,13 +1048,13 @@ public:
   virtual void drawVisualHints();
 
 public slots:
-virtual void resetVisualHints();
+  virtual void resetVisualHints();
   //@}
 #endif
 
 private slots:
-// Patch for a Qt bug with fullScreen on startup
-void delayedFullScreen() { move(prevPos_); setFullScreen(); };
+  // Patch for a Qt bug with fullScreen on startup
+  void delayedFullScreen() { move(prevPos_); setFullScreen(); };
   void hideMessage();
 
 private:
