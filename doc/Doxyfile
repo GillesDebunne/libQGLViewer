@@ -77,9 +77,12 @@ FILE_PATTERNS          = *.h \
 RECURSIVE              = NO
 EXCLUDE                = ../QGLViewer/VRenderInterface.Qt3.h \
                          ../QGLViewer/VRenderInterface.Qt3.cpp \
-                         ../QGLViewer/keySequence.h \
-                         ../QGLViewer/keySequence.cpp \
+			 ../QGLViewer/ImageInterface.Qt3.h \
+                         ../QGLViewer/ImageInterface.Qt3.cpp \
 			 ../QGLViewer/ui_VRenderInterface.Qt4.h
+			 ../QGLViewer/ui_ImageInterface.Qt4.h \
+                         ../QGLViewer/keySequence.h \
+                         ../QGLViewer/keySequence.cpp
 EXCLUDE_SYMLINKS       = NO
 EXCLUDE_PATTERNS       = 
 EXAMPLE_PATH           = 
