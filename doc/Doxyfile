@@ -79,7 +79,7 @@ EXCLUDE                = ../QGLViewer/VRenderInterface.Qt3.h \
                          ../QGLViewer/VRenderInterface.Qt3.cpp \
 			 ../QGLViewer/ImageInterface.Qt3.h \
                          ../QGLViewer/ImageInterface.Qt3.cpp \
-			 ../QGLViewer/ui_VRenderInterface.Qt4.h
+			 ../QGLViewer/ui_VRenderInterface.Qt4.h \
 			 ../QGLViewer/ui_ImageInterface.Qt4.h \
                          ../QGLViewer/keySequence.h \
                          ../QGLViewer/keySequence.cpp
