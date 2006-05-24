@@ -2,7 +2,7 @@
 
 libName="libQGLViewer"
 version="2.2.2"
-release="0"
+release="1"
 
 version_major=`echo $version | cut -d"." -f1`
 version_minor=`echo $version | cut -d"." -f2`
@@ -172,7 +172,7 @@ then
     test -d $WebDir/examples || rm -rf $WebDir/examples
     mkdir -p $WebDir/examples
     cp html/*.html $WebDir/examples
-  cd -
+  cd - > /dev/null
 
   cd doc
     echo " - Filtering doc"
@@ -193,7 +193,7 @@ then
     cp -r refManual $WebDir
     #cp -r man $WebDir
     #cd latex ; make clear ; make pdf > /dev/null ; cp refman.pdf $WebDir/qglviewer.pdf
-  cd -
+  cd - > /dev/null
 
   # cd QGLViewer
     # echo " - Making CVS index..."
@@ -285,9 +285,9 @@ make -f Makefile.gcc3 dist
 rm Makefile.gcc3
 
 mv QGLViewer.tar.gz $tmpDir
-cd -
+cd - > /dev/null
 
-cd examples ; makeDist ; cd -
+cd examples ; makeDist ; cd - > /dev/null
 tar -cf Examples.tar examples/examples.pro examples/contribs/contribs.pro examples/release.pri examples/html
 EXAMPLES_SKIPPED_DIRS="attic contribs debug html CVS"
 for f in `cd examples ; ls`
@@ -312,12 +312,11 @@ do
     echo "No example $f.pro file - Aborting"
     exit
   fi
-
   cd examples/$f
   qmake
   make dist
   mv $f.tar.gz ..
-  cd -
+  cd - > /dev/null 
   tar -rf Examples.tar examples/$f.tar.gz
   rm examples/$f.tar.gz
 done
@@ -346,7 +345,7 @@ do
   qmake
   make dist
   mv $f.tar.gz ..
-  cd -
+  cd - > /dev/null
   tar -rf Examples.tar examples/contribs/$f.tar.gz
   rm examples/contribs/$f.tar.gz
 done
@@ -361,7 +360,7 @@ cd doc
     echo "Unable to find filteredHTML directory in doc - Aborting"
     exit
   fi
-cd -
+cd - > /dev/null
 tar -czf Doc.tar.gz doc/$filteredHTML doc/qglviewer.css doc/refManual doc/images/*jpg doc/images/*png doc/images/*ico doc/qglviewer.cw
 # tar -czf Doc.tar.gz doc/$filteredHTML doc/*.css doc/refManual doc/man/man3/QGLViewer.3 doc/man/man3/qglviewer_* doc/images doc/qglviewer.cw
 mv Doc.tar.gz $tmpDir
@@ -370,7 +369,7 @@ cd designerPlugin
 qmake
 make dist
 mv qglviewerplugin.tar.gz $tmpDir
-cd -
+cd - > /dev/null
 
 ##################################################################
 ############            Filtering  sources            ############
@@ -439,7 +438,7 @@ do
   done
   rm release.pri
 
-  cd -
+  cd - > /dev/null
 done
 
 #qmake bug with includes from remote directories
@@ -478,7 +477,7 @@ cd doc
     sed s%" <span class=\"search\".*</span>"%""% $f > $f.tmp
     mv $f.tmp $f
   done
-cd -
+cd - > /dev/null
 
 echo " - All files set in $tmpDir"
 #exit
@@ -563,7 +562,7 @@ do
   qmake INCLUDE_DIR=../.. LIB_DIR=../../QGLViewer >& /dev/null
   make > /dev/null
   cp $e $exDir
-  cd -
+  cd - > /dev/null
 done
 
 cd $exDir
@@ -651,6 +650,11 @@ then
   archExt="fc2.tar.gz"
 fi
 
+if [[ `grep "Fedora Core release 4" /etc/redhat-release` ]]
+then
+  archExt="fc4.tar.gz"
+fi
+
 if [[ `grep "Mandrake Linux release 9.1" /etc/redhat-release` ]]
 then
   archExt="mdk9.1.tar.gz"
@@ -689,7 +693,7 @@ fi
 cd $WebDir/src
 rm md5sum.txt
 md5sum `find . -type f | sort` > md5sum.txt
-cd -
+cd - > /dev/null
 exit
 fi # $1=rpm
 

@@ -1,4 +1,4 @@
-#include "qgl.h"
+#include <qgl.h>
 #include "object.h"
 
 using namespace qglviewer;

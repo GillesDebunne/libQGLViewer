@@ -83,3 +83,5 @@ then
 fi
 
 cp downloads.png examples.png $ImgDir
+touch $WebDir/download_statistics.html
+touch ../doc/download_statistics.html

@@ -5,7 +5,6 @@
 
 #include <QGLViewer/qglviewer.h>
 #include <math.h>
-#include <GL/gl.h>
 #include <qcolor.h>
 
 #define WATER_RESOLUTION 60

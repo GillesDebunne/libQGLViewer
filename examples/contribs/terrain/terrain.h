@@ -5,7 +5,6 @@
 #define __TERRAIN_H__
 
 #include <stdlib.h>
-#include <GL/gl.h>
 #include <qimage.h>
 #include <QGLViewer/qglviewer.h>	//pour qglwidget
 

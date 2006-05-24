@@ -167,7 +167,8 @@ make
 
 Copy the resulting <code>dll</code> (created in the <code>Release</code> directory) to a system
 shared directory such as <code>C:\WINDOWS\system32</code> (or <code>C:\WINNT\system32</code> with
-Windows 2000). Alternately, you can copy it to every application directory</li>
+Windows 2000). Alternately, you can copy it to every application directory. Use <code>qmake "CONFIG+=staticlib"</code>
+to create a static library instead.
 
 <p>
 Use the same procedure to compile the examples (the <code>.exe</code> is created in the <code>Release</code>

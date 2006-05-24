@@ -81,7 +81,7 @@ instead.
 Optional <code>qmake</code> parameters let you customize your <code>make install</code> target installation directories:
 </p>
 <pre>
-qmake [PREFIX=...] [INCLUDE_DIR=...] [LIB_DIR=...] [DOC_DIR=...]
+qmake [PREFIX=...] [INCLUDE_DIR=...] [LIB_DIR=...] [DOC_DIR=...] ["CONFIG+=staticlib"]
 </pre>
 
 A typical usage would be <code>qmake PREFIX=$HOME</code>. Default values are:
@@ -161,10 +161,17 @@ href="#linux">Linux section</a>:
 <pre>
 tar -xzf <a href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.tar.gz">libQGLViewer-#VERSION#-#RELEASE#.tar.gz</a>
 cd libQGLViewer-#VERSION#-#RELEASE#/QGLViewer
-qmake
+qmake INCLUDE_DIR=/usr/local/include (for instance, see below) 
 make
 make install
 </pre>
+
+<p>
+There is an include mismatch when the library is installed in <code>/usr/lib</code> (default) which results
+in a <code>template with C linkage</code> error message. That's why you need to customize the <code>INCLUDE_DIR</code>.
+I unfortunately do not have a mac at hand to investigate. Let me know if you try. Do not forget to use the same 
+<code>qmake</code> line when you compile the examples.
+</p>
 
 See the <a href="#linux">Linux section</a> for details and install paths customization. Once the
 library is installed, <a href="examples/index.html#mac">compile the examples</a> and test them:

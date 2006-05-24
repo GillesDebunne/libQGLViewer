@@ -79,7 +79,7 @@ unix {
   OBJECTS_DIR = .obj
 
   # NOT IN DISTRIBUTION BEGIN
-  DISTFILES *= VRenderInterface.Qt4.ui
+  DISTFILES *= VRenderInterface.Qt4.ui ImageInterface.Qt4.ui
 
   QT_VERSION=$$[QT_VERSION]
   contains( QT_VERSION, "^4.*" ) {

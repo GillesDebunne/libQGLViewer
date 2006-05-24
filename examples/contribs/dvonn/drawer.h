@@ -5,7 +5,7 @@
 
 #include <QGLViewer/vec.h>
 #include <qstring.h>
-#include <GL/gl.h>
+#include <qgl.h>
 #include <map>
 
 class QGLViewer;
