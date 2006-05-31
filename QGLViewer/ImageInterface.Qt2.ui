@@ -1,0 +1,372 @@
+<!DOCTYPE UI><UI>
+<class>ImageInterface</class>
+<widget>
+    <class>QDialog</class>
+    <property stdset="1">
+        <name>name</name>
+        <cstring>ImageInterface</cstring>
+    </property>
+    <property stdset="1">
+        <name>geometry</name>
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>239</width>
+            <height>184</height>
+        </rect>
+    </property>
+    <property stdset="1">
+        <name>caption</name>
+        <string>Image settings</string>
+    </property>
+    <property stdset="1">
+        <name>icon</name>
+        <pixmap>image0</pixmap>
+    </property>
+    <vbox>
+        <property stdset="1">
+            <name>margin</name>
+            <number>11</number>
+        </property>
+        <property stdset="1">
+            <name>spacing</name>
+            <number>6</number>
+        </property>
+        <widget>
+            <class>QLayoutWidget</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>Layout1</cstring>
+            </property>
+            <hbox>
+                <property stdset="1">
+                    <name>margin</name>
+                    <number>0</number>
+                </property>
+                <property stdset="1">
+                    <name>spacing</name>
+                    <number>6</number>
+                </property>
+                <widget>
+                    <class>QLabel</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>TextLabel1</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>text</name>
+                        <string>Width</string>
+                    </property>
+                </widget>
+                <widget>
+                    <class>QSpinBox</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>imgWidth</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>suffix</name>
+                        <string> px</string>
+                    </property>
+                    <property stdset="1">
+                        <name>maxValue</name>
+                        <number>32000</number>
+                    </property>
+                    <property stdset="1">
+                        <name>minValue</name>
+                        <number>1</number>
+                    </property>
+                    <property>
+                        <name>toolTip</name>
+                        <string>Width of the image (in pixels)</string>
+                    </property>
+                </widget>
+                <widget>
+                    <class>QLabel</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>TextLabel2</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>text</name>
+                        <string>Height</string>
+                    </property>
+                </widget>
+                <widget>
+                    <class>QSpinBox</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>imgHeight</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>suffix</name>
+                        <string> px</string>
+                    </property>
+                    <property stdset="1">
+                        <name>maxValue</name>
+                        <number>32000</number>
+                    </property>
+                    <property stdset="1">
+                        <name>minValue</name>
+                        <number>1</number>
+                    </property>
+                    <property>
+                        <name>toolTip</name>
+                        <string>Height of the image (in pixels)</string>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget>
+            <class>QLayoutWidget</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>Layout5</cstring>
+            </property>
+            <hbox>
+                <property stdset="1">
+                    <name>margin</name>
+                    <number>0</number>
+                </property>
+                <property stdset="1">
+                    <name>spacing</name>
+                    <number>6</number>
+                </property>
+                <widget>
+                    <class>QLabel</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>TextLabel3</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>text</name>
+                        <string>Image quality</string>
+                    </property>
+                </widget>
+                <widget>
+                    <class>QSpinBox</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>imgQuality</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>maxValue</name>
+                        <number>100</number>
+                    </property>
+                    <property>
+                        <name>toolTip</name>
+                        <string>Between 0 (smallest files) and 100 (highest quality)</string>
+                    </property>
+                </widget>
+                <spacer>
+                    <property>
+                        <name>name</name>
+                        <cstring>Spacer2</cstring>
+                    </property>
+                    <property>
+                        <name>orientation</name>
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property>
+                        <name>sizeType</name>
+                        <enum>Expanding</enum>
+                    </property>
+                    <property>
+                        <name>sizeHint</name>
+                        <size>
+                            <width>20</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+            </hbox>
+        </widget>
+        <widget>
+            <class>QLayoutWidget</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>Layout4</cstring>
+            </property>
+            <hbox>
+                <property stdset="1">
+                    <name>margin</name>
+                    <number>0</number>
+                </property>
+                <property stdset="1">
+                    <name>spacing</name>
+                    <number>6</number>
+                </property>
+                <widget>
+                    <class>QLabel</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>TextLabel4</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>text</name>
+                        <string>Oversampling</string>
+                    </property>
+                </widget>
+                <widget>
+                    <class>QSpinBox</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>oversampling</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>prefix</name>
+                        <string>x </string>
+                    </property>
+                    <property stdset="1">
+                        <name>maxValue</name>
+                        <number>64</number>
+                    </property>
+                    <property stdset="1">
+                        <name>minValue</name>
+                        <number>1</number>
+                    </property>
+                    <property stdset="1">
+                        <name>value</name>
+                        <number>1</number>
+                    </property>
+                    <property>
+                        <name>toolTip</name>
+                        <string>Antialiases image (when larger then 1.0)</string>
+                    </property>
+                </widget>
+                <spacer>
+                    <property>
+                        <name>name</name>
+                        <cstring>Spacer1</cstring>
+                    </property>
+                    <property>
+                        <name>orientation</name>
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property>
+                        <name>sizeType</name>
+                        <enum>Expanding</enum>
+                    </property>
+                    <property>
+                        <name>sizeHint</name>
+                        <size>
+                            <width>20</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+            </hbox>
+        </widget>
+        <widget>
+            <class>QCheckBox</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>whiteBackground</cstring>
+            </property>
+            <property stdset="1">
+                <name>text</name>
+                <string>Use white background</string>
+            </property>
+            <property>
+                <name>toolTip</name>
+                <string>Use white as background color</string>
+            </property>
+        </widget>
+        <widget>
+            <class>QCheckBox</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>expandFrustum</cstring>
+            </property>
+            <property stdset="1">
+                <name>text</name>
+                <string>Expand frustum if needed</string>
+            </property>
+            <property>
+                <name>toolTip</name>
+                <string>When image aspect ratio differs from viewer's one, expand frustum as needed. Fits inside current frustum otherwise</string>
+            </property>
+        </widget>
+        <widget>
+            <class>QLayoutWidget</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>Layout3</cstring>
+            </property>
+            <hbox>
+                <property stdset="1">
+                    <name>margin</name>
+                    <number>0</number>
+                </property>
+                <property stdset="1">
+                    <name>spacing</name>
+                    <number>6</number>
+                </property>
+                <spacer>
+                    <property>
+                        <name>name</name>
+                        <cstring>Spacer3</cstring>
+                    </property>
+                    <property>
+                        <name>orientation</name>
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property>
+                        <name>sizeType</name>
+                        <enum>Expanding</enum>
+                    </property>
+                    <property>
+                        <name>sizeHint</name>
+                        <size>
+                            <width>20</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget>
+                    <class>QPushButton</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>PushButton1</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>text</name>
+                        <string>OK</string>
+                    </property>
+                </widget>
+                <widget>
+                    <class>QPushButton</class>
+                    <property stdset="1">
+                        <name>name</name>
+                        <cstring>PushButton2</cstring>
+                    </property>
+                    <property stdset="1">
+                        <name>text</name>
+                        <string>Cancel</string>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+    </vbox>
+</widget>
+<images>
+    <image>
+        <name>image0</name>
+        <data format="XPM.GZ" length="2977">789c5d95596fe3460cc7dff3298cf02d28b8d2cc680e147dc87d67e36cce2dfa408da49ccee99c45bf7b25d28bd2458cc03f91e2f99ff1b7a5d1f9e1fe68e9dbc2cb94a6d77994afe879b4d4bc4e269f7ffef5c7df0b8b65352a7dff7123b3f8dbc22284511e1d3cdcb70360a900ee351c6837a3a15640efdaf2ac03ec69cbaa86efdaed495b5e35380d530d571abc2e67ae02ed06371a0e35aceb689bdaa20ba54ec3967e674d5b5674801fda0db4dbb5b67c6a68358c75343d44d049516f0e75a170a9616e3a5997f3a603cc29e44383ae9ae6fa79d06e73abdfd530d170a4e144c35cd5a82d173aa99e01341aac769bd3b5de1ce8c1c39c904883d60e9eea775eb4452745ad6bd033003d6bd23b25bd7a38d6d1e69a3bd716bd469c6b4e9f53d4b21cebc304cb3d80b5c646e138b02f4ce93cf32373a88abae648b7038764820dcc1573e7abba63ff34702c0c55fc3e1e32d7c9d49979381390ca40b9e0a63f988d49a5d85f844347cc74c5ecaa14d81ff6997dec72c9fc259c6c5d3197ccc13a2ffead70ac1ae187193799eb8715e6187326cebfc15cc758379cff92b9092e72ffd009479278c4f349ad6f7c627b313059efa365be6076c924d9c41d73a81acff1f19d39b97e82eccff9899cf592ef88b97675e0fb1b89394713391fde08f7f1e5fd9f33b6c4f3c1f519e7ecb8de4fe6d6849219ae855de9659f833ca136be09b28f1d665b45993fb23e6a579581e3133257a1df0033d75f7b67acf4ffca1cfafd493f63e6e85bd11b1e33b775d948fe33e6ce7751f433a81d72118ac8767a622e638edc2ff1feb335a160fde13673156d92fea6cc217489e7453c8f5c271b65bf9bcc6dd5af88fd87df3a684a2a444fc87a6e4cf224f6cd19279243cbe7a7f1361bde0f71be2659534a7dace75e6cc6cb3e587f6de1ca92e7413c9fd6f6eb9279733f6d657221fa62bdb4a18f27f3e6f3d736b10da21f3e0f6d6b4d21f37b148e49f44213e6ae2aacf07061405798ae10bd2f0bfbe498a96636c15462673d75d6da22321f087be3e43c39e6ca39e91ff83ee8bcf346f60fccc19685ecb310fe950f4e99636fe7f8d408c718e47deebfebe72976e0fd7664b3cc173e845d51ca7e76847de9e47e20e1f0eb7c9d0847efe5bee2f3d7d55567e5febb158e71663f134e49f4063ccf2e9349855ca6fa0f01096bccfdb7065becb4075ee2155ee30ddee21d4e7abec7077c140fccf8d4ff7fc6179ce22bbee13b7ef4fc895fb82cf737aee25aff641d377013b7701b7770b7e73ddcc703f6f88e8738c623fc81c77882a77886e778da7b5ce04f94935ba2418b0e2bf47dbe8011136e8da7800020bba82143032d7470d93fbf826bb8196a835bb88389fcdcc03d3cc0233cc133bcc0145e873ae10ddee1033ea517f88265588155588375d880cd611ab005dbb003bb338f3dd88703f80e87308623f8d13f398613388533ccbf2606e770013fa180120c47b0e0a0023f9efe375308102111128ca7445453a6865aed411d5dd2155df7df6ee896ee6842f7c373bd177aa0477aa2677aa129bdd2db906ddea3f779a70ffaa42f5aa6155a9567fff358a375daa04dda1a2a9879fcf3fbc2bff8bdc86c</data>
+    </image>
+</images>
+<connections>
+    <connection>
+        <sender>PushButton1</sender>
+        <signal>clicked()</signal>
+        <receiver>ImageInterface</receiver>
+        <slot>accept()</slot>
+    </connection>
+    <connection>
+        <sender>PushButton2</sender>
+        <signal>clicked()</signal>
+        <receiver>ImageInterface</receiver>
+        <slot>reject()</slot>
+    </connection>
+</connections>
+</UI>
