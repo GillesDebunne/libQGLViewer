@@ -48,20 +48,20 @@ function updateDoc()
     done
 
     echo " - Changing header menus"
-    # for f in `ls *.html *.php`
-      # do
-      # awk '/^<a class="qindex/ { gsub(" \\| ", ""); print }' $f > /tmp/header
-      # sed s%"href=\"index.html\">Main"%"href=\"../index.html\">Main"% /tmp/header | sed s%"<a class=\"qindex\" href=\"globals.html\">File&nbsp;Members</a>"%% | sed s%"<a class=\"qindex\" href=\"namespaces.html\">Namespace List</a>"%% | sed s%"<a class=\"qindex\" href=\"annotated.*File&nbsp;List</a>"%% | sed s%"<a class=\"qindex\" href=\"globals.html\">File&nbsp;Members</a>"%% | sed s%"Class&nbsp;Members"%"All\&nbsp;Functions"% | sed s%"/a>"%"/a>\n"%g > /tmp/header.filtered
-      # sed /"^<a class=\"qindex"/d $f | sed "/^<div class=\"qindex.*search.php/r /tmp/header.filtered" > $f.tmp
-      # awk '/^<div class="nav">/ {skip=1; next} {if (skip) {skip=0; next} else print }' $f.tmp > $f
-      # rm $f.tmp
-    # done
+     for f in `ls *.html *.php`
+     do
+       awk '/^<a class="qindex/ { gsub(" \\| ", ""); print }' $f > /tmp/header
+       sed s%"href=\"index.html\">Main"%"href=\"../index.html\">Main"% /tmp/header | sed s%"<a class=\"qindex\" href=\"globals.html\">File&nbsp;Members</a>"%% | sed s%"<a class=\"qindex\" href=\"namespaces.html\">Namespace List</a>"%% | sed s%"<a class=\"qindex\" href=\"annotated.*File&nbsp;List</a>"%% | sed s%"<a class=\"qindex\" href=\"globals.html\">File&nbsp;Members</a>"%% | sed s%"Class&nbsp;Members"%"All\&nbsp;Functions"% | sed s%"/a>"%"/a>\n"%g > /tmp/header.filtered
+       sed /"^<a class=\"qindex"/d $f | sed "/^<div class=\"qindex.*search.php/r /tmp/header.filtered" > $f.tmp
+       awk '/^<div class="nav">/ {skip=1; next} {if (skip) {skip=0; next} else print }' $f.tmp > $f
+       rm $f.tmp
+     done
 
-    for f in $(ls *.html)
-    do
-	awk -f ../tabs.awk $f > /tmp/tabs
-	mv /tmp/tabs $f
-    done
+#    for f in $(ls *.html)
+#    do
+#	awk -f ../tabs.awk $f > /tmp/tabs
+#	mv /tmp/tabs $f
+#    done
     
     echo " - Removing auto-links"
     for f in `ls class*.html | grep -v -- "-members.html"`
