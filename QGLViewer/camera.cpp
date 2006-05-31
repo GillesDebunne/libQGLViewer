@@ -1310,9 +1310,9 @@ void Camera::getViewport(GLint viewport[4]) const
  for instance), make sure the Camera matrices are updated before calling this method. Call
  computeModelViewMatrix() and computeProjectionMatrix() to do so.
 
- This method is not computationally optimized. If you call it several times with no change in the
- matrices, you should precompute the entire projection matrix (modelview, projection and then
- viewport) to speed-up the queries. */
+ If you call this method several times with no change in the matrices, consider precomputing the
+ projection times modelview matrix to save computation time if required (\c P x \c M in the \c
+ gluProject man page). */
 Vec Camera::projectedCoordinatesOf(const Vec& src, const Frame* frame) const
 {
   GLdouble x,y,z;

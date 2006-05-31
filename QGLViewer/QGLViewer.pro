@@ -13,7 +13,6 @@
 # USE_GLUT = yes
 
 TEMPLATE = lib
-CONFIG  -= debug
 CONFIG  *= qt opengl warn_on release thread create_prl
 TARGET   = QGLViewer
 VERSION  = 2.2.2

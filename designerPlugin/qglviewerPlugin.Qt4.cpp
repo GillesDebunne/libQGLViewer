@@ -12,7 +12,10 @@
 // Grep these comments in the code below and change the code accordingly //
 // --------------------------------------------------------------------- //
 
-// You may want to create an instance of your own viewer class here
+
+// -------------------------------------------------------- //
+// Change the base class name, as well as the include above //
+// -------------------------------------------------------- //
 class Viewer : public QGLViewer
 {
 public:
@@ -195,4 +198,4 @@ QIcon QGLViewerPlugin::icon() const
   return QIcon(QPixmap(qglviewer_icon));
 }
 
-Q_EXPORT_PLUGIN(QGLViewerPlugin)
+Q_EXPORT_PLUGIN2(QGLViewerPlugin, QGLViewerPlugin)

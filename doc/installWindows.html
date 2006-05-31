@@ -102,6 +102,9 @@ With Visual Studio 6:
 <li>If no <code>Project created</code> dialog is displayed when you open <code>QGLViewer.pro</code>,
 try to restart Visual Studio with Administrator privileges.</li>
 
+<li>Edit <code>qglviewer.h</code> and remove the word <i>slots</i> before
+<code>saveSnapshot()</code> as explained around line 515.</li>
+
 <li>Before compilation, add <code>/GX /GR</code> in <i>Project-Settings-C-C++, Project Options</i> for
 exceptions and dynamic casts.</li>
 
@@ -114,7 +117,7 @@ exceptions and dynamic casts.</li>
 <a name="mocbug"></a>
 <li>A <a href="http://www.trolltech.com/developer/tasktracker.html?id=104327+&method=entry">moc bug</a> in Qt 4.1.1
 generates a <code>error C2061: syntax error : identifier 'KeyFrameInterpolator'</code> error message. Simply replace
-<code>const(*)</code> by <code>const(*)</code> in the moc file to fix this (thanks Juergen).</li>
+<code>const(*)</code> by <code>const*</code> in the moc file to fix this (thanks Juergen).</li>
 </ul>
 
 <!--
@@ -209,14 +212,14 @@ details.
 Qt can be downloaded from the <a href="http://www.trolltech.com/developer/download/">Trolltech web site</a>.
 
 <p>
-The latest Qt 4.x version is especially available for free for open source development. It comes with the
+The latest Qt 4 version is available for free for open source development. It comes with the
 <href=#mingw">MinGW compiler</a> that can be used with the <a href="http://www.bloodshed.net/devcpp.html">Dev-C++</a> IDE.
 Use these <a href="http://sourceforge.net/project/qtwin/">unofficial patches</a> to integrate it into Visual Studio.
 </p>
 
 <p>
 The <a href="ftp://ftp.trolltech.com/qt/non-commercial/QtWin230-NonCommercial.exe">Qt 2.3</a> version can also
-be downloaded (see <a href="http://hohle.net/scrap_post.php?post=14">patches</a> for .NET integration).
+be used (see <a href="http://hohle.net/scrap_post.php?post=14">patches</a> for .NET integration).
 </p>
 
 Visual Studio 6 users must check the <i>Tools/Customize/Add-ins and Macro Files/QMsDev Add in</i> box.
@@ -241,8 +244,9 @@ viewers' signals and slots are available and can be connected to the rest of you
 
 <p>
 To compile the plugin, open the <code>designerPlugin.pro</code> file to create your workspace.
-Compile and install the resulting library in <code>$QTDIR\plugins\designer</code> (may require
-administrator privileges).
+Compile and install the resulting library in <code>$QTDIR\plugins\designer</code> and/or
+<code>C:\Program Files\Trolltech\Qt VS Integration\plugins</code> to use it with Visual Studio
+integrated designer (may require administrator privileges).
 </p>
 
 Start from this code to create your own designer plugin for your derived QGLViewer classes. See the

@@ -2,7 +2,7 @@
 
 libName="libQGLViewer"
 version="2.2.2"
-release="1"
+release="2"
 
 version_major=`echo $version | cut -d"." -f1`
 version_minor=`echo $version | cut -d"." -f2`
@@ -601,6 +601,7 @@ mv README Readme.txt
 cat /tmp/gpl-warning $QGLViewerRootDir/QGLViewer/keySequence.h   > QGLViewer/keySequence.h
 cat /tmp/gpl-warning $QGLViewerRootDir/QGLViewer/keySequence.cpp > QGLViewer/keySequence.cpp
 cp $QGLViewerRootDir/QGLViewer/QGLViewer.Qt2.3.pro QGLViewer/
+cp $QGLViewerRootDir/QGLViewer/ImageInterface.Qt2.ui QGLViewer/
 cp $QGLViewerRootDir/QGLViewer/VRenderInterface.Qt2.ui QGLViewer/
 cp $QGLViewerRootDir/examples/interface/viewerInterface.Qt2.ui examples/interface/
 

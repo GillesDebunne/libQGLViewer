@@ -38,7 +38,7 @@ function updateDoc()
     done
 
     sed s%"This inheritance.*alphabetically:"%% hierarchy.html > /tmp/hierarchy.html
-    cp /tmp/hierarchy.html hierarchy.html
+    mv /tmp/hierarchy.html hierarchy.html
 
     echo " - Changing QGLViewer:: enums"
     for f in $(ls class*.html)

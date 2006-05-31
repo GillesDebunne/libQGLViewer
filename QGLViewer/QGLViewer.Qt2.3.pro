@@ -47,11 +47,13 @@ DEFINES *= QT_DLL QT_THREAD_SUPPORT
 # Creates a lib and a dll instead of a static lib
 DEFINES *= CREATE_QGLVIEWER_DLL
 
+INTERFACES *= ImageInterface.Qt2.ui
+
 # Uncomment this line and remove the rest of the file if you encounter
 # compilation problems with the vectorial rendering code.
 # DEFINES *= NO_VECTORIAL_RENDER
 
-INTERFACES = VRenderInterface.Qt2.ui
+INTERFACES *= VRenderInterface.Qt2.ui
 
 SOURCES  *= \
         VRender/BackFaceCullingOptimizer.cpp \

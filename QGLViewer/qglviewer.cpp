@@ -2717,7 +2717,7 @@ void QGLViewer::setPlayKeyFramePathStateKey(int buttonState)
  setHandlerKeyboardModifiers(QGLViewer::FRAME,  Qt::NoModifier);
  \endcode
  you will have to press the \c Alt key while pressing mouse buttons in order to move the camera(),
- while no key will be needed to move the associated manipulatedFrame().
+ while no key will be needed to move the manipulatedFrame().
 
  This method has a very basic implementation: every action binded to \p handler has its keyboard
  modifier replaced by \p modifiers. If \p handler had some actions binded to different modifiers,
@@ -2741,8 +2741,8 @@ void QGLViewer::setPlayKeyFramePathStateKey(int buttonState)
  \endcode
 
  \note If you use Qt version 2 or 3, \p modifiers is actually a \c Qt::ButtonState. The \c Modifier
- postfix is replaced by \c Button in the enums' names (\c Qt::ControlButton, \c Qt::AltButton,
- Qt::ShiftButton, Qt::MetaButton). */
+ sufix is replaced by \c Button in the enums' names (\c Qt::ControlButton, \c Qt::AltButton,
+ \c Qt::ShiftButton and \c Qt::MetaButton). */
 void QGLViewer::setHandlerKeyboardModifiers(MouseHandler handler, QtKeyboardModifiers modifiers)
 {
   QMap<int, MouseActionPrivate> newMouseBinding;
@@ -2791,7 +2791,7 @@ void QGLViewer::setHandlerKeyboardModifiers(MouseHandler handler, QtKeyboardModi
       }
     else
       newClickBinding_[cb.key()] = cb.value();
-
+  
   mouseBinding_ = newMouseBinding;
   wheelBinding_ = newWheelBinding;
   clickBinding_ = newClickBinding_;

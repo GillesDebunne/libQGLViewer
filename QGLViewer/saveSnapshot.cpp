@@ -4,10 +4,10 @@
 # if QT_VERSION >= 0x040000
 #  include "ui_VRenderInterface.Qt4.h"
 # else
+#  include <qcheckbox.h>
+#  include <qcombobox.h>
 #  if QT_VERSION >= 0x030000
 #   include "VRenderInterface.Qt3.h"
-#   include <qcheckbox.h>
-#   include <qcombobox.h>
 #  else
 #   include "VRenderInterface.Qt2.h"
 #  endif
@@ -18,10 +18,10 @@
 #if QT_VERSION >= 0x040000
 # include "ui_ImageInterface.Qt4.h"
 #else
+# include <qspinbox.h>
+# include <qcheckbox.h>
 # if QT_VERSION >= 0x030000
 #  include "ImageInterface.Qt3.h"
-#  include <qspinbox.h>
-#  include <qcheckbox.h>
 # else
 #  include "ImageInterface.Qt2.h"
 # endif
@@ -292,8 +292,13 @@ static int saveVectorialSnapshot(const QString& fileName, QGLWidget* widget, con
   static VRenderInterface* VRinterface = NULL;
 
   if (!VRinterface)
+#if QT_VERSION >= 0x030000
     VRinterface = new VRenderInterface(widget);
+#else
+    VRinterface = new VRenderInterface(widget, "", true); // Make the dialog modal
+#endif
 
+  
   // Configure interface according to selected snapshotFormat
   if (snapshotFormat == "XFIG")
     {
@@ -373,7 +378,11 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
   static ImageInterface* imageInterface = NULL;
 
   if (!imageInterface)
+#if QT_VERSION >= 0x030000
     imageInterface = new ImageInterface(this);
+#else
+    imageInterface = new ImageInterface(this, "", true);  // Make the dialog modal
+#endif
 
   // 1 means never set
   //if (imageInterface->imgWidth->value() == 1)
@@ -486,15 +495,12 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
 
 #if QT_VERSION >= 0x040000
 	QImage subImage = snapshot.scaled(subSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-	// QImage subImage = snapshot.scaled(subSize, Qt::IgnoreAspectRatio, Qt::FastTransformation);
-	// snapshot.save(("img-"+QString::number(i)+"_"+QString::number(j)+"o.jpg"),
-	// snapshotFormat().toLatin1().constData(), snapshotQuality());
-	// subImage.save(("img-"+QString::number(i)+"_"+QString::number(j)+".jpg"),
-	// snapshotFormat().toLatin1().constData(), snapshotQuality());
 #else
+# if QT_VERSION >= 0x030000
 	QImage subImage = snapshot.scale(subSize, QImage::ScaleFree);
-	// snapshot.save(("img-"+QString::number(i)+"_"+QString::number(j)+"o.jpg"), snapshotFormat(), snapshotQuality());
-	// subImage.save(("img-"+QString::number(i)+"_"+QString::number(j)+".jpg"), snapshotFormat(), snapshotQuality());
+# else
+	QImage subImage = snapshot.smoothScale(subSize.width(), subSize.height());
+# endif
 #endif
 
 	// Copy subImage in image

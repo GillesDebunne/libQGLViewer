@@ -36,7 +36,7 @@ convenient as a 3D/OpenGL pedagogical tool.
 
 The core of the library is the <code>QGLViewer</code> class, which opens an OpenGL window with your
 3D geometry inside, and lets you move the camera using the mouse. <code>QGLViewer</code> actually
-inherits from the Qt's <code>QGLWidget</code> class (use the Qt <code>assistant</code> to see its
+inherits from the Qt's <code>QGLWidget</code> class (use Qt's <code>assistant</code> to see its
 documentation).
 
 <p>
@@ -66,7 +66,7 @@ style="color:#2040a0">draw</span><span style="color:#4444FF">(</span><span style
 <span style="color:#4444FF"><strong>{</strong></span>
   <span style="color:#444444">// Your OpenGL 3D code goes here.</span>
   <span style="color:#444444">// It consists in geometry description using glBegin() ... glEnd() blocks.</span>
-  <span style="color:#444444">// Camera's GL_MODELVIEW and GL_PROJECTION are handled by the QGLViewer.</span>
+  <span style="color:#444444">// Camera's GL_MODELVIEW and GL_PROJECTION matrices are handled by the QGLViewer.</span>
 <span style="color:#4444FF"><strong>}</strong></span>
 </pre>
 
@@ -76,15 +76,16 @@ href="examples/simpleViewer.html">simpleViewer</a> example.
 
 <p>
 An other useful method that can be overloaded is <code>init()</code>, which is called once before the first
-display: this is where your OpenGL initialization code goes.
+display. This is where your OpenGL initialization code goes (camera placement, scene initialization,
+display lists creation...).
 </p>
 
-libQGLViewer is more than this: it provides useful tools (a Camera class, key frame interpolation,
-manipulated frames...) that simplify the implementation of your viewer's specific features. See the
-complete <a href="refManual/hierarchy.html">documentation</a> for details.
+libQGLViewer also provides useful tools (a Camera class, key frame interpolation, manipulated
+frames...) that simplify the implementation of your viewer's specific features. See the complete <a
+href="refManual/hierarchy.html">documentation</a> for details.
 
 <p>
-Your viewer can also be embedded in a Qt interface, using all the Qt widgets to create a complete
+Your viewer can also be embedded in a Qt interface, using other Qt widgets to create a complete
 multi-platform application. Instead of deriving from <code>QGLViewer</code>, you can also use the Qt
 signal-slot mechanism and connect your drawing method to the signals emitted by an instance of
 <code>QGLViewer</code>. See the <a href="examples/callback.html">callback example</a> for details.
@@ -93,10 +94,14 @@ signal-slot mechanism and connect your drawing method to the signals emitted by 
 <h2>Camera and world coordinate system</h2>
 
 When you start giving OpenGL orders in your <code>draw()</code> function, you are implicitly located
-at the origin of the so-called <i>world coordinate system</i>. In <code>libQGLViewer</code>, the
-<code>Camera</code> is an "object" located in this virtual world, that displays it and can be moved
-with the mouse. Press 'A' to draw the axis of this world coordinate system. This conception is
+at the origin of the so-called <i>world coordinate system</i>.
+
+<p>
+In <code>libQGLViewer</code>, the
+<code>Camera</code> is an "object" located in this virtual world, that displays it and that can be
+moved with the mouse. Press 'A' to draw the axis of this world coordinate system. This approach is
 different (but much more intuitive) from the original camera-centered OpenGL coordinate system.
+</p>
 
 <a name="sceneRadius"></a>
 <h2>Scene radius and center</h2>

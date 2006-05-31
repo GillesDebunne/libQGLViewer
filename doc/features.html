@@ -24,7 +24,7 @@ Most of the viewer's functionalities are illustrated by an example, that is refe
 
 <h2>Main features</h2>
 <ul>
-<li>A camera trackball to easily move the camera is the scene (explorer or walk through mode)
+<li>A camera trackball to easily move the camera in the scene (explorer or walkthrough mode)
 <a href="examples/simpleViewer.html">
 <img src="images/sphere.png" width="14"height="14" alt="simpleViewer example"/></a>
 <a href="examples/callback.html">
@@ -51,6 +51,13 @@ Most of the viewer's functionalities are illustrated by an example, that is refe
 <img src="images/sphere.png" width="14" height="14" alt="keyFrames example"/></a>
 <a href="examples/simpleViewer.html">
 <img src="images/sphere.png" width="14" height="14" alt="simpleViewer example"/></a></li>
+
+<li>Simple object selection using mouse
+<a href="examples/select.html">
+<img src="images/sphere.png" width="14" height="14" alt="select example"/></a>
+<a href="examples/multiSelect.html">
+<img src="images/sphere.png" width="14" height="14" alt="multiSelect example"/></a></li>
+
 
 <li>Screenshot saving in different file formats (jpg, png, bmp...), including vectorial rendering (eps, ps, xfig)
 <a href="examples/simpleViewer.html">
@@ -80,13 +87,13 @@ Most of the viewer's functionalities are illustrated by an example, that is refe
 <a href="examples/screenCoordSystem.html">
 <img src="images/sphere.png" width="14" height="14" alt="screenCoordSystem example"/></a></li>
 
-<li>Extendable displacement constraints that can be applied on those frames
+<li>Extendable displacement constraints that can be applied on frames
 <a href="examples/constrainedFrame.html">
 <img src="images/sphere.png" width="14" height="14" alt="constrainedFrame example"/></a>
 <a href="examples/constrainedCamera.html">
 <img src="images/sphere.png" width="14" height="14" alt="constrainedCamera example"/></a></li>
 
-<li>Viewer state is saved and can be restored at each new start
+<li>Viewer state is saved and can be restored at each application start
 <a href="examples/simpleViewer.html">
 <img src="images/sphere.png" width="14"height="14" alt="simpleViewer example"/></a></li>
 
@@ -118,14 +125,16 @@ Most of the viewer's functionalities are illustrated by an example, that is refe
 </ul>
 
 <h2>Philosophy</h2>
+
 Classical 3D viewer features are directly available, so that you can quickly start the development
 of a new application, focussing on <i>what</i> is drawn instead of <i>how</i> to make the computer
 draw it.
-<br/>
-All these functions are very easy to use in your application code. For instance,
-if you find that you need to move an object of your scene with the mouse, at most 4 lines of code
-need to be added.
-<br/>
+
+<p>
+All these functions are very easy to use in your application code. Adding code to select scene
+objects and then manipulate them using the mouse can be done in 5 minutes.
+</p>
+
 See the different <a href="examples/index.html">examples</a> to get an more precise idea.
 
 

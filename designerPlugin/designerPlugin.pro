@@ -20,9 +20,10 @@ contains( QT_VERSION, "^4.*" ) {
 }
 
 target.path = $${PREFIX}/designer
+INSTALLS += target
 
 contains( QT_VERSION, "^4.*" ) {
-  CONFIG += designer
+  CONFIG *= designer debug_and_release
   HEADERS = qglviewerPlugin.Qt4.h
   SOURCES = qglviewerPlugin.Qt4.cpp
 } else {
@@ -30,7 +31,6 @@ contains( QT_VERSION, "^4.*" ) {
   SOURCES = qglviewerPlugin.Qt3.cpp
 }
 
-INSTALLS += target
 
 include( ../examples/examples.pri )
 
