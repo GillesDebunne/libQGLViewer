@@ -16,7 +16,7 @@ fi
 ########################################
 function updateDoc()
 {
-    # doxygen Doxyfile
+    doxygen Doxyfile
     echo " - Extracting cw files"
     cwExtractor
     cd refManual

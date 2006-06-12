@@ -4,7 +4,7 @@
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_patch}
-Release:	2
+Release:	3
 
 Summary:	Qt based OpenGL generic 3D viewer library.
 License:	GPL
@@ -151,6 +151,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Mon Jun 7 2006 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.2-3
+- Path in examples' .pro for minGW debug compilation.
+
 * Mon May 29 2006 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.2-2
 - Documentation problem fixed. Compiles with Qt 2.3.
 

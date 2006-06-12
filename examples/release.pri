@@ -116,7 +116,7 @@ win32 {
     }
 
     win32-g++ {
-      LIB_FILE = libQGLViewer%MAJOR_NUMBER%.a
+      LIB_FILE = libQGLViewer*%MAJOR_NUMBER%.a
     } else {
       LIB_FILE = QGLViewer*.lib
     }
@@ -149,7 +149,12 @@ win32 {
       } else {
         exists( $${LIB_PATH}/libQGLViewer%MAJOR_NUMBER%.a ) {
           LIBS *= -L$${LIB_PATH} -lQGLViewer%MAJOR_NUMBER%
-        }
+        } else {
+          exists( $${LIB_PATH}/libQGLViewerd%MAJOR_NUMBER%.a ) {
+            LIBS *= -L$${LIB_PATH} -lQGLViewerd%MAJOR_NUMBER%
+          } else {
+	    error( Unable to find $${LIB_FILE}. )
+	}
       }
     }
   }
