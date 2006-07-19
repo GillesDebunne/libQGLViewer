@@ -104,11 +104,11 @@ void LocalConstraint::constrainTranslation(Vec& translation, Frame* const frame)
     case AxisPlaneConstraint::FREE:
       break;
     case AxisPlaneConstraint::PLANE:
-      proj = frame->orientation().rotate(translationConstraintDirection());
+      proj = frame->rotation().rotate(translationConstraintDirection());
       translation.projectOnPlane(proj);
       break;
     case AxisPlaneConstraint::AXIS:
-      proj = frame->orientation().rotate(translationConstraintDirection());
+      proj = frame->rotation().rotate(translationConstraintDirection());
       translation.projectOnAxis(proj);
       break;
     case AxisPlaneConstraint::FORBIDDEN:

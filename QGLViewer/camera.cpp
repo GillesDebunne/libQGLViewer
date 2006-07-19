@@ -820,6 +820,26 @@ void Camera::interpolateToFitScene()
   interpolationKfi_->startInterpolation();
 }
 
+
+/*! Smoothly interpolates the Camera on a KeyFrameInterpolator path so that it goes to \p fr.
+ 
+  \p fr is expressed in world coordinates. \p duration tunes the interpolation speed (default is
+  1 second).
+  
+  See also interpolateToFitScene() and interpolateToZoomOnPixel(). */
+void Camera::interpolateTo(const Frame& fr, float duration)
+{
+  if (interpolationKfi_->interpolationIsStarted())
+    interpolationKfi_->stopInterpolation();
+
+  interpolationKfi_->deletePath();
+  interpolationKfi_->addKeyFrame(*(frame()));
+  interpolationKfi_->addKeyFrame(fr, duration);
+
+  interpolationKfi_->startInterpolation();
+}
+
+
 /*! Returns the coordinates of the 3D point located at pixel (x,y) on screen.
 
  Calls a \c glReadPixel to get the pixel depth and applies an unprojectedCoordinatesOf() to the

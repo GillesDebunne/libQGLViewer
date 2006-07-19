@@ -68,8 +68,14 @@ the scene. You should at least see the axis.
 <h2>It still looks strange</h2>
 If your are still unable to get the results you had before porting to libQGLViewer, check that your
 <code>init</code> function sets the default OpenGL state with <code>glEnable(GL_LIGHTING, GL_FOG,
-...)</code> as you did before. Also note that libQGLViewer slightly changes the default OpenGL
-state: see the <code>QGLViewer::initializeGL()</code> documentation.
+...)</code> as you did before.
+
+<p>
+Also note that libQGLViewer slightly changes the default OpenGL
+state (see the <code>QGLViewer::initializeGL()</code> documentation): <code>GL_LIGHTING</code>, 
+<code>GL_LIGHT0</code>, <code>GL_DEPTHTEST</code> and <code>GL_COLORMATERIAL</code> are enabled.
+Disable them in your <code>init()</code> method if desired.
+</p>
 
 <a name="manipulatedFrame"></a>
 <h2>What is a ManipulatedFrame ?</h2>

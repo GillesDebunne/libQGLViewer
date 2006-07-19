@@ -81,7 +81,7 @@ instead.
 Optional <code>qmake</code> parameters let you customize your <code>make install</code> target installation directories:
 </p>
 <pre>
-qmake [PREFIX=...] [INCLUDE_DIR=...] [LIB_DIR=...] [DOC_DIR=...] ["CONFIG+=staticlib"]
+qmake [PREFIX=...] [INCLUDE_DIR=...] [LIB_DIR=...] [DOC_DIR=...] [QGLVIEWER_STATIC=yes]
 </pre>
 
 A typical usage would be <code>qmake PREFIX=$HOME</code>. Default values are:
@@ -93,11 +93,14 @@ INCLUDE_DIR    PREFIX/include
 DOC_DIR        PREFIX/share/doc
 </pre>
 
+The <code>QGLVIEWER_STATIC</code> qmake option will compile a static version of the library.
+
+<p>
 If your Qt version is lower than 3.1, you need to link with the <code>glut</code> library: uncomment
 a line in <code>QGLViewer.pro</code> as explained there.<br/>
 <code>glut</code> can be installed from the <code>freeglut-devel</code> rpm or using <code>apt-get
 install libglut3-dev</code>.
-
+</p>
 
 <h3>Next steps</h3>
 Once the library is compiled, you can <a href="examples/index.html#linux">compile the examples</a>.

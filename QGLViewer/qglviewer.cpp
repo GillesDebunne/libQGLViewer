@@ -1080,7 +1080,8 @@ void QGLViewer::startAnimation()
 void QGLViewer::stopAnimation()
 {
   animationStarted_ = false;
-  killTimer(animationTimerId_);
+  if (animationTimerId_ != 0)
+    killTimer(animationTimerId_);
 }
 
 /*! Overloading of the \c QWidget method.

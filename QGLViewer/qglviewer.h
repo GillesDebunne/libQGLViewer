@@ -208,13 +208,13 @@ public slots:
 
   The camera() qglviewer::Camera::flySpeed() is set to 1% of this value by this method. Simple
   wrapper around camera()->setSceneRadius(). */
-  void setSceneRadius(float radius) { camera()->setSceneRadius(radius); }
+  virtual void setSceneRadius(float radius) { camera()->setSceneRadius(radius); }
 
   /*! Sets the sceneCenter(), defined in world coordinates.
 
   \attention The qglviewer::Camera::revolveAroundPoint() is set to the sceneCenter() value by this
   method. */
-  void setSceneCenter(const qglviewer::Vec& center) { camera()->setSceneCenter(center); }
+  virtual void setSceneCenter(const qglviewer::Vec& center) { camera()->setSceneCenter(center); }
 
   /*! Convenient way to call setSceneCenter() and setSceneRadius() from a (world axis aligned) bounding box of the scene.
 

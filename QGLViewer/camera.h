@@ -152,6 +152,7 @@ namespace qglviewer {
     void centerScene();
     void interpolateToZoomOnPixel(const QPoint& pixel);
     void interpolateToFitScene();
+    void interpolateTo(const Frame& fr, float duration);
     //@}
 
 

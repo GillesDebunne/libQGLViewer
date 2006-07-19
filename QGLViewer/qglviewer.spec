@@ -1,10 +1,10 @@
 %define version_major 2
 %define version_minor 2
-%define version_patch 2
+%define version_patch 3
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_patch}
-Release:	3
+Release:	0
 
 Summary:	Qt based OpenGL generic 3D viewer library.
 License:	GPL
@@ -151,6 +151,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Wed Jul 12 2006 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.3-0
+- Camera::interpolateTo(). Constraint bug fix. 
+
 * Mon Jun 7 2006 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.2-3
 - Path in examples' .pro for minGW debug compilation.
 
