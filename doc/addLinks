@@ -1,0 +1,53 @@
+#!/bin/sh
+
+if [[ $# == 0 ]]
+then
+  echo "Usage : $0 [-path path] dir [dirs]"
+  echo "Input file names are files with a prepended ."
+  exit
+fi
+
+if [[ ! -f allFunctions.sed ]]
+then
+  echo "allFunctions.sed file not found, aborting"
+  exit
+fi
+
+path=""
+
+while [ -n "$1" ]
+do
+  if [[ "$1" == "-path" ]]
+  then
+    shift
+    path=$1
+  else
+    fileList=""
+    if [ ! -d $1 ]
+    then
+      echo "$1 is not a directory"
+      exit
+    fi
+
+    for f in `ls -1 $1/.*.html`
+    do
+      if [ ! -f $f ]
+      then
+        echo "Source $f is not a file, aborting"
+        exit
+      fi
+
+      result=`echo $f | sed s:"^$1/\.":"":`
+      
+      if [ allFunctions.sed -nt $f -o ! -f $1/$result ]
+      then
+        echo "  Add links to $1 $result"
+        sed -f allFunctions.sed $f | sed s:"#PATH#":"$path/":g > $1/$result
+      else
+        echo "  No link added to $result, exist and up to date"
+      fi
+    done
+  fi
+  shift
+done
+
