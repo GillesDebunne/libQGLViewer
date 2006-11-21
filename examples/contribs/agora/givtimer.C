@@ -1,5 +1,5 @@
 // ==========================================================================
-// $Source$
+// $Source: /home/artis/debunne/CVS/QGLViewer/examples/contribs/agora/givtimer.C,v $
 // Copyright(c)'94-97 by Givaro Team
 // see the copyright file.
 // Authors: T. Gautier

@@ -1,7 +1,7 @@
 #ifndef _TIMER_H_
 #define _TIMER_H_
 // ==========================================================================
-// $Source$
+// $Source: /home/artis/debunne/CVS/QGLViewer/examples/contribs/agora/givtimer.h,v $
 // Copyright(c)'94-97 by Givaro Team
 // see the copyright file.
 // Authors: T. Gautier
