@@ -37,7 +37,8 @@ manager</i> <span style="color:red">*</span> menu)</li>
 
 <li>Download and unzip the sources : <a href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.zip">libQGLViewer-#VERSION#-#RELEASE#.zip</a></li>
 
-<li>Use the <i>Open Qt project</i> <span style="color:red">*</span> icon in .NET to open <code>QGLViewer/QGLViewer.pro</code></li>
+<li>Use the <i>Open Qt project</i> <span style="color:red">*</span> icon in .NET to open <code>QGLViewer/QGLViewer.pro</code>
+(first add <code>QGLVIEWER_STATIC=yes</code> at the beginning of the <code>.pro</code> to create a static lib).</li>
 
 <li>Visual Studio 6.0 only : Use <i>File-Open workspace</i> to open the <code>.dsp</code> generated
 file, and select <i>Release</i> as the <i>Build/Active Configuration</i></li>
@@ -58,9 +59,6 @@ the paths to GLUT in your <code>Include</code> and <code>Library</code>
 <i>Project-Properties</i><span style="color:red">*</span>, and copy <code>glut32.dll</code> in a
 library directory (as in item 6 above).
 </p>
-
-Add <code>staticlib</code> in the <code>CONFIG</code> line of <code>QGLViewer.pro</code> to compile
-a static library instead of a dll.
 
 <p>
 <span style="color:red">*</span> Names are given in .NET standards, and differ from those of Visual 6.
@@ -170,7 +168,7 @@ make
 
 Copy the resulting <code>dll</code> (created in the <code>Release</code> directory) to a system
 shared directory such as <code>C:\WINDOWS\system32</code> (or <code>C:\WINNT\system32</code> with
-Windows 2000). Alternately, you can copy it to every application directory. Use <code>qmake "CONFIG+=staticlib"</code>
+Windows 2000). Alternately, you can copy it to every application directory. Use <code>qmake "QGLVIEWER_STATIC=yes"</code>
 to create a static library instead.
 
 <p>
@@ -209,12 +207,12 @@ details.
 <a name="qt"></a>
 <h2><img src="images/qt.png" width="38" height="40" align="middle" alt="Qt"/> &nbsp; Qt installation</h2>
 
-Qt can be downloaded from the <a href="http://www.trolltech.com/developer/download/">Trolltech web site</a>.
+Qt can be downloaded from the <a href="http://www.trolltech.com/products/qt/downloads">Trolltech web site</a>.
 
 <p>
 The latest Qt 4 version is available for free for open source development. It comes with the
 <href=#mingw">MinGW compiler</a> that can be used with the <a href="http://www.bloodshed.net/devcpp.html">Dev-C++</a> IDE.
-Use these <a href="http://sourceforge.net/project/qtwin/">unofficial patches</a> to integrate it into Visual Studio.
+Use these <a href="http://sourceforge.net/projects/qtwin/">unofficial patches</a> to integrate it into Visual Studio.
 </p>
 
 <p>
@@ -231,7 +229,7 @@ Visual Studio 6 users must check the <i>Tools/Customize/Add-ins and Macro Files/
 <h2><img src="images/qt.png" width="38" height="40" align="middle" alt="Qt"/> Installation of the designer plugin</h2>
 
 The compilation and installation of the QGLViewer designer plugin is optional. Such a plugin eases
-the creation of user interfaces that feature a QGLViewer using designer. It makes a GLViewer icon
+the creation of user interfaces that feature a QGLViewer using designer. It makes a QGLViewer icon
 appear in the designer's <code>Display</code> widget tab, as a standard Qt widget:
 
 <p>
@@ -244,9 +242,11 @@ viewers' signals and slots are available and can be connected to the rest of you
 
 <p>
 To compile the plugin, open the <code>designerPlugin.pro</code> file to create your workspace.
-Compile and install the resulting library in <code>$QTDIR\plugins\designer</code> and/or
+Compile and install the resulting plugin library in <code>$QTDIR\plugins\designer</code> and/or
 <code>C:\Program Files\Trolltech\Qt VS Integration\plugins</code> to use it with Visual Studio
-integrated designer (may require administrator privileges).
+integrated designer (may require administrator privileges). Note that you also have to install 
+the QGLViewer dll in <code>system32</code> (as described above). Note that this procedure seems
+to not be sufficient on certain configurations, any explanation is more than welcome.
 </p>
 
 Start from this code to create your own designer plugin for your derived QGLViewer classes. See the

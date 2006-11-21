@@ -26,6 +26,8 @@ ostream& operator<<(ostream& o, const MyVec& v)
 Viewer::Viewer()
   : QGLViewer()
 {
+qglviewer::Vec z(0,0,1);
+    cout << " vec " << z << " ortho " << z.orthogonalVec() << endl; // write "vec 0  0       1 ortho -0      0       0" 
   // qobj = new QObj();
   // connect(&(camera()->frame), SIGNAL(modified()), qobj, SLOT(slotMod()));
   // connect(&(camera()->frame), SIGNAL(manipulated()), qobj, SLOT(slotMan()));
@@ -36,6 +38,7 @@ Viewer::Viewer()
 
 void Viewer::init()
 {
+return;
   // glDisable(GL_LIGHTING);
   qWarning("init");
   setSceneCenter(Vec(0.7,1.3,-0.4));
@@ -190,193 +193,6 @@ void Viewer::init()
 
   if (!restoreStateFromFile())
     qWarning("problem during restoreStateFromFile");
-
-  // const Vec orig = Vec(1,0,0);
-  const Vec v=Quaternion::randomQuaternion() * Vec(0,0,1);
-  const Quaternion q=Quaternion::randomQuaternion();
-  cout << "q.rotate(v) = " << q.rotate(v) << " " << q*v << endl;
-  cout << "q.inverseRotate(v) = " << q.inverseRotate(v) << endl;
-  cout << "q.inverse().rotate(v) = " << (q.inverse()).rotate(v) << endl;
-
-  Frame* f1 = new Frame();
-  Frame* f2 = new Frame();
-  f2->setReferenceFrame(f1);
-  f2->referenceFrame()->translate(Vec(0,0,1));
-
-
-  WorldConstraint wc;
-  switch(wc.translationConstraintType())
-    {
-    case AxisPlaneConstraint::FREE : break;
-    case AxisPlaneConstraint::AXIS : break;
-    case AxisPlaneConstraint::PLANE : break;
-    case AxisPlaneConstraint::FORBIDDEN : break;
-    }
-
-  return;
-
-  setManipulatedFrame(new ManipulatedFrame());
-
-  QFont font;
-  qWarning("%d %d", font.pointSize(), font.pixelSize());
-
-  qWarning("Modif default");
-
-  MyVec myVec;
-  setSceneCenter(Vec(myVec));
-
-  Vec nn(5,8,-9);
-  nn.projectOnPlane(Vec(0,0,4));
-  cout << "Plane = " << nn << endl;
-
-  const float* ffv = (const float*)(camera()->revolveAroundPoint());
-  // const float fv[3] = (const float*)(camera()->revolveAroundPoint());
-  // cout << " fv = " << fv[0] << "  " << fv[1] << "  " << fv[2] << endl;
-  cout << " ffv = " << ffv[0] << "  " << ffv[1] << "  " << ffv[2] << endl;
-
-  float e = 3.0;
-  ffv = &e;
-
-  // ffv[0] = 4.0; // no
-
-  Vec totoool;
-  // glVertex3fv(totoool.address());
-  // float* const r;
-  // r = &e;
-
-  QApplication::setFont(QFont("Helvetica", 8));
-  QFont font2;
-  qWarning("%d %d", font2.pointSize(), font2.pixelSize());
-
-
-  // qWarning("Creation de t");
-  // Vec t(0.0,1.1,2.2);
-  // std::cout << "t=" << t << std::endl;
-
-  // qWarning("Constr de recopie");
-  // Vec copy(t);
-  // std::cout << "copy=" << copy << std::endl;
-
-  // qWarning("Const via le signe =");
-  // Vec equal = t;
-  // std::cout << "equal=" << equal << std::endl;
-
-  // qWarning("A partir d'un float");
-  // float w[3] = {1.1, 2.2, 3.3};
-  // Vec e = Vec(w);
-  // std::cout << "e=" << e << std::endl;
-
-  // qWarning("Fin");
-  float t[3];
-  cout << "t=" << t << endl;
-  MyVec eeee;
-  cout << "eee=" << eeee << endl;
-
-
-  Vec sunPos;
-  QDomDocument document("myDocument");
-  QDomElement sunElement = document.createElement("Sun");
-  document.appendChild(sunElement);
-  sunElement.setAttribute("brightness", 10000);
-  sunElement.appendChild(sunPos.domElement("sunPosition", document));
-  // Other additions to the document hierarchy...
-
-  /*  // Save doc document
-      QFile f("test.xml");
-      if (f.open(IO_WriteOnly))
-      {
-      QTextStream out(&f);
-      document.save(out, 2);
-      f.close();
-      }
-  */
-
-  return;
-  cout << "debut init pos : " << camera()->position() << endl;
-  // Load DOM from file
-  /*
-    QDomDocument doc;
-    QFile f("test.xml");
-    if (f.open(IO_ReadOnly))
-    {
-    doc.setContent(&f);
-    f.close();
-    }
-    // Parse the DOM tree
-    QDomElement main = doc.documentElement();
-    Vec v(main);
-    cout << v << endl;
-  */
-
-  QSize size = sizeHint();
-  qWarning("size %dx%d", size.width(), size.height());
-  glDepthFunc(GL_LEQUAL);
-
-  Quaternion www(Vec(0,0,1), M_PI);
-  cout << www << endl;
-  for (int i=0; i<16; ++i)
-    {
-      cout << (r.matrix())[i] << " ";
-      if (i%4 == 3)
-	cout << endl;
-
-    }
-  cout << endl;
-
-  // cout << "id = " << Quaternion(Vec(0.0, 0.0, 1.0), Vec(0.0, 0.0, 1.0)) << endl;
-  // cout << "inv = " << Quaternion(Vec(0.0, 0.0, 1.0), Vec(0.0, 0.0, -1.0)) << endl;
-  // cout << "res = " << Quaternion(Vec(0.0, 0.0, 1.0), Vec(0.0, 0.0, -1.0))*Vec(0.0, 0.0, 1.0) << endl;
-
-  cout << "apres rff pos : " << camera()->position() << endl;
-
-  // glEnable(GL_CULL_FACE);
-
-  setSceneRadius(1.0);
-  // setDrawAxis();
-
-  // setManipulatedFrame(new ManipulatedCameraFrame());
-  setManipulatedFrame(new ManipulatedFrame());
-
-  // glDisable(GL_LIGHTING);
-  // setSceneCenter(0,2,0);
-  // camera()->setRevolveAroundPoint(Vec(0,1,0));
-  // camera()->setPosition(1,1,3);
-  // camera()->setRevolveAroundPoint(Vec(1,0,0));
-  // camera()->frame()->setSpinningSensitivity(0.3);
-  camera()->setType(Camera::ORTHOGRAPHIC);
-  cout << "apres ORTHO pos : " << camera()->position() << endl;
-  camera()->showEntireScene();
-  cout << "apres sec pos : " << camera()->position() << endl;
-
-  glPolygonMode(GL_FRONT,GL_FILL);
-
-  // WorldConstraint* wc = new WorldConstraint();
-  // wc->setRotationConstraintType(AxisPlaneConstraint::FORBIDDEN);
-  // camera()->frame()->setConstraint(wc);
-
-  setSnapshotFilename("toto");
-  setSnapshotCounter(123);
-  setSnapshotFormat("PPM");
-
-  // setBackgroundColor(0.1, 0.9, 0.2);
-  // setForegroundColor(0.8, 0.2, 0.2);
-  // camera()->setMode(ManipulatedFrame::FLY);
-  // cout << "end of debug viewer init" << endl;
-
-  // setMouseBinding(Qt::LeftButton,  CAMERA, ManipulatedFrame::SCREEN_ROTATE);
-  // setMouseBinding(Qt::RightButton, CAMERA, ManipulatedFrame::ROTATE);
-
-  cout << "avant supvect up= " << camera()->upVector() << endl;
-  cout << "avant supvect vd= " << camera()->viewDirection() << endl;
-  camera()->setUpVector(Vec(0, 0, 1));
-  cout << "apres supvect pos : " << camera()->position() << endl;
-
-  camera()->setPosition(Vec(0, -1, 0.5));
-  cout << "apres setpos : " << camera()->position() << endl;
-  camera()->lookAt(Vec(0, 0, 0.5));
-  cout << "apres lookat  : " << camera()->position() << endl;
-  cout << "pos : " << camera()->position() << endl;
-  cout << "vd  : " << camera()->viewDirection() << endl;
 }
 
 void Viewer::keyPressEvent(QKeyEvent *e)
@@ -416,6 +232,7 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 
 void Viewer::draw()
 {  
+return;
   // Draws a spiral
   const float nbSteps = 500.0;
   glBegin(GL_QUAD_STRIP);

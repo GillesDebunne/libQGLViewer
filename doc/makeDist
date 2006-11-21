@@ -32,7 +32,8 @@ function updateDoc()
     for f in $(ls functions_*.html)
     do
       newName=$(echo $f | sed s%"_func"%%)
-      grep -v "^Here is a list" $f | sed s%"functions_func"%"functions"%g > $newName-bis
+#      grep -v "^Here is a list" $f | sed s%"functions_func"%"functions"%g > $newName-bis
+      grep -v "^Here is a list" $f | sed s%"functions_func"%"functions"%g | sed s%"| <a[^>]*>Variables</a>"%""%g | sed s%"| <a[^>]*>Related&nbsp;Functions</a>"%""%g | sed s%"<a[^>]*>All</a> |"%""%g > $newName-bis
       rm -r $f
       mv $newName-bis $newName
     done

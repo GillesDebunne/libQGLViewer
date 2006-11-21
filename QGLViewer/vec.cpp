@@ -34,10 +34,10 @@ void Vec::projectOnPlane(const Vec& normal)
 
 Vec Vec::orthogonalVec() const
 {
-  if ((fabs(y) > fabs(x)) && (fabs(z) > fabs(x)))
+  if ((fabs(y) >= fabs(x)) && (fabs(z) >= fabs(x)))
     return Vec(0.0, -z, y);
   else
-    if ((fabs(x) > fabs(y)) && (fabs(z) > fabs(y)))
+    if ((fabs(x) >= fabs(y)) && (fabs(z) >= fabs(y)))
       return Vec(-z, 0.0, x);
     else
       return Vec(-y, x, 0.0);

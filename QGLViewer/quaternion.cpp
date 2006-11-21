@@ -147,7 +147,7 @@ void Quaternion::setFromRotatedBase(const Vec& X, const Vec& Y, const Vec& Z)
 
 /*! Sets the Quaternion from the three rotated vectors of an orthogonal basis.
 
-  The three vectors do not have to be normalized but must be orthogonal.
+  The three vectors do not have to be normalized but must be orthogonal and direct (X^Y=k*Z, with k>0).
 
   \code
   Quaternion q;

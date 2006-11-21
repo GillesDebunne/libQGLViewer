@@ -178,6 +178,8 @@ void Camera::setScreenWidthAndHeight(int width, int height)
  }
  \endcode
 
+ See the <a href="../examples/standardCamera.html">standardCamera example</a> for an application.
+
  \attention The value is always positive although the clipping plane is positioned at a negative z
  value in the Camera coordinate system. This follows the \c gluPerspective standard. */
 float Camera::zNear() const
@@ -266,7 +268,8 @@ float Camera::distanceToSceneCenter() const
  When zooming on the object, the Camera is translated forward \e and its frustum is narrowed, making
  the object appear bigger on screen, as intuitively expected.
 
- Overload this method to change this behavior if desired. */
+ Overload this method to change this behavior if desired, as is done in the 
+ <a href="../examples/standardCamera.html">standardCamera example</a>. */
 void Camera::getOrthoWidthHeight(GLdouble& halfWidth, GLdouble& halfHeight) const
 {
   const float dist = orthoCoef_ * fabs(cameraCoordinatesOf(revolveAroundPoint()).z);
@@ -1724,7 +1727,8 @@ void Camera::drawCamera(float, float, float)
 /*! Draws a representation of the Camera in the 3D world.
 
 The near and far planes are drawn as quads, the frustum is drawn using lines and the camera up
-vector is represented by an arrow to disambiguate the drawing.
+vector is represented by an arrow to disambiguate the drawing. See the 
+<a href="../examples/standardCamera.html">standardCamera example</a> for an illustration.
 
 Note that the current \c glColor and \c glPolygonMode are used to draw the near and far planes. See
 the <a href="../examples/frustumCulling.html">frustumCulling example</a> for an example of
@@ -1739,7 +1743,7 @@ matrix corresponds to the world coordinate system (as it is at the beginning of 
 The Camera is then correctly positioned and orientated.
 
 \note The drawing of a QGLViewer's own QGLViewer::camera() should not be visible, but may create
-artefacts due to imprecisions. */
+artefacts due to numerical imprecisions. */
 void Camera::draw(bool drawFarPlane, float scale) const
 {
   glPushMatrix();

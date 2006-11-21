@@ -3327,7 +3327,7 @@ void QGLViewer::resetVisualHints()
 
 /*! Draws a 3D arrow along the positive Z axis.
 
- \p length, \p radius and \p nbSub subdivisions define its geometry. If \p radius is negative
+ \p length, \p radius and \p nbSubdivisions define its geometry. If \p radius is negative
  (default), it is set to 0.05 * \p length.
 
  Use drawArrow(const Vec& from, const Vec& to, float radius, int nbSubdivisions) or change the \c

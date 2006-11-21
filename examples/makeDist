@@ -134,9 +134,9 @@ EOF
   echo "  <img src=\"../images/$name.jpg\" width=\"330\" height=\"228\" alt=\"$name\"/>" >> $output
   echo -e "</center>\n" >> $output
 
-  awk 'BEGIN { p=0; print "<p>"; }
-       /^#/    { if (p==2) print "<p>"; print substr($0, 2); p=1; next; }
-       /^ *$/  { if (p==1) print "</p>"; p=2; }
+  awk 'BEGIN { p=0; }
+       /^#/    { if (p==0) print "<p>"; print substr($0, 2); p=1; next; }
+       /^ *$/  { if (p==1) print "</p>"; p=0; }
        /^ *\w/ { print "\n"; exit; }' $name/$name.pro >> $output
 
   fileList=""
@@ -358,7 +358,7 @@ function makeExampleCell()
       exit
   fi
 
-  text=`awk 'BEGIN { p = 0; } /^#/    { print substr($0, 2); p=1; next; } /^ *$/  { exit; }' $dir$name/$name.pro`
+  text=`awk 'BEGIN { p = 0; } /^#/ { print substr($0, 2); p=1; next; } { if (p==1) exit; }' $dir$name/$name.pro`
 
   if [ "$dir" == "" ]
   then

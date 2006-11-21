@@ -46,7 +46,7 @@ namespace qglviewer {
   playPath() to make the Camera follow the path (default shortcut is F[1-12]). See the <a
   href="../keyboard.html">keyboard page</a> for details on key customization.
 
-  Use cameraCoordinatesOf() ans worldCoordinatesOf() to convert to and from the Camera frame()
+  Use cameraCoordinatesOf() and worldCoordinatesOf() to convert to and from the Camera frame()
   coordinate system. projectedCoordinatesOf() and unprojectedCoordinatesOf() will convert from
   screen to 3D coordinates. convertClickToLine() is very useful for analytical object selection.
 
@@ -87,7 +87,7 @@ namespace qglviewer {
     Use setPosition() to set the Camera position. Other convenient methods are showEntireScene() or
     fitSphere(). Actually returns \c frame()->position().
 
-    This position corresponds to the projection center of a Camera::PERSPECTIVE Camera. It it not
+    This position corresponds to the projection center of a Camera::PERSPECTIVE Camera. It is not
     located in the image plane, which is at a zNear() distance ahead. */
     Vec position() const { return frame()->position(); };
 
@@ -226,8 +226,8 @@ namespace qglviewer {
     float zNearCoefficient() const { return zNearCoef_; };
     /*! Returns the coefficient used to position the near and far clipping planes.
 
-    The near (resp. far) clipping plane is positioned at a distance equal to zClippingCoefficient()
-    * sceneRadius() in front of (resp. behind) the sceneCenter(). This garantees an optimal use of
+    The near (resp. far) clipping plane is positioned at a distance equal to zClippingCoefficient() *
+    sceneRadius() in front of (resp. behind) the sceneCenter(). This garantees an optimal use of
     the z-buffer range and minimizes aliasing. See the zNear() and zFar() documentations.
 
     Default value is square root of 3.0 (so that a cube of size sceneRadius() is not clipped).
@@ -237,7 +237,7 @@ namespace qglviewer {
     planes. See also zNearCoefficient().
 
     For a total control on clipping planes' positions, an other option is to overload the zNear()
-    and zFar() methods.
+    and zFar() methods. See the <a href="../examples/standardCamera.html">standardCamera example</a>.
 
     \attention When QGLViewer::cameraPathAreEdited(), this value is set to 5.0 so that the Camera
     paths are not clipped. The previous zClippingCoefficient() value is restored back when you leave

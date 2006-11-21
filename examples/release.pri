@@ -153,7 +153,8 @@ win32 {
           exists( $${LIB_PATH}/libQGLViewerd%MAJOR_NUMBER%.a ) {
             LIBS *= -L$${LIB_PATH} -lQGLViewerd%MAJOR_NUMBER%
           } else {
-	    error( Unable to find $${LIB_FILE}. )
+            error( Unable to find $${LIB_FILE}. )
+	  }
 	}
       }
     }

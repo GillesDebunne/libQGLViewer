@@ -4,7 +4,7 @@
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_patch}
-Release:	0
+Release:	1
 
 Summary:	Qt based OpenGL generic 3D viewer library.
 License:	GPL
@@ -151,6 +151,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Wed Jul 26 2006 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.3-1
+- Missing brace in .pro added.
+
 * Wed Jul 12 2006 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.3-0
 - Camera::interpolateTo(). Constraint bug fix. 
 

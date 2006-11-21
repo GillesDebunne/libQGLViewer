@@ -4,7 +4,7 @@
 # Project related configuration options
 #---------------------------------------------------------------------------
 PROJECT_NAME           = libQGLViewer
-PROJECT_NUMBER         = "Version 2.2.3-0"
+PROJECT_NUMBER         = "Version 2.2.3-1"
 OUTPUT_DIRECTORY       = .
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English

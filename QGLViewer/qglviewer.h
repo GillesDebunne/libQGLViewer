@@ -817,18 +817,21 @@ protected:
   \code
   void Viewer::drawWithNames()
   {
-  for (int i=0; i<nbObjects; ++i)
-  {
-  glPushName(i);
-  object(i)->draw();
-  glPopName();
-  }
+    for (int i=0; i<nbObjects; ++i)
+    {
+      glPushName(i);
+      object(i)->draw();
+      glPopName();
+    }
   }
   \endcode
 
   The resulting selected name is computed by endSelection(), which setSelectedName() to the integer
   id pushed by this method (a value of -1 means no selection). Use selectedName() to update your
-  selection, probably in the postSelection() method. */
+  selection, probably in the postSelection() method.
+
+  \attention If your selected objects are points, do not use \c glBegin(GL_POINTS); and \c glVertex3fv()
+  in the above \c draw() method (not compatible with raster mode): use \c glRasterPos3fv() instead. */
   virtual void drawWithNames() {};
   virtual void endSelection(const QPoint& point);
   /*! This method is called at the end of the select() procedure. It should finalize the selection
