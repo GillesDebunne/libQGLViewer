@@ -165,7 +165,7 @@ irix-cc|irix-n32 {
 }
 
 
-#		--  M a c i n t o s h  --
+#		--  M a c O S X  --
 macx {
   # GLUT for Macintosh architecture
   !isEmpty( USE_GLUT ) {
@@ -203,13 +203,14 @@ win32 {
   # QMAKE_LDFLAGS += -logo
 }
 
-#		--  M a c i n t o s h  --
+#		--  M a c O S X  --
 macx|darwin-g++ {
   # GLUT for Macintosh architecture
   !isEmpty( USE_GLUT ) {
     QMAKE_LIBS_OPENGL -= -lglut
     QMAKE_LIBS_OPENGL += -framework GLUT -lobjc
   }
+  # Qt3 only
   macx: CONFIG -= thread
 }
 

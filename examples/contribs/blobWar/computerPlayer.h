@@ -13,6 +13,7 @@ class ComputerPlayer : public QObject
   
 public:
   ComputerPlayer();
+  ~ComputerPlayer();
   
   bool isActive() const { return isActive_; }
   void setIsActive(bool on);

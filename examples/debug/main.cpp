@@ -3,7 +3,6 @@
 
 int main(int argc, char** argv)
 {
-  // Read command lines arguments.
   QApplication application(argc,argv);
 
   // Instantiate the viewer.
@@ -11,13 +10,15 @@ int main(int argc, char** argv)
   Viewer* v2 = new Viewer();
 
   // Make the viewer window visible on screen.
-  // v.show();
-  //v2->show();
+  // viewer.show();
+  v2->show();
 
 #if QT_VERSION < 0x040000
   // Set the viewer as the application main widget.
   // application.setMainWidget(&v);
   //application.setMainWidget(v2);
+#else
+  setWindowTitle("debug");
 #endif
 
   // Run main loop.

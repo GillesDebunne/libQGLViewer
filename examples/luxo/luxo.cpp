@@ -11,14 +11,14 @@ QString Viewer::helpString() const
   QString text("<h2>L u x o  ©</h2>");
   text += "This example illustrates several functionnalities of QGLViewer, ";
   text += "showing how easy it is to create a moderately complex application.<br><br>";
-  text += "The famous luxo® lamp (©Pixar) can interactively be manipulated ";
+  text += "The famous luxo lamp (©Pixar) can interactively be manipulated ";
   text += "with the mouse. <b>Shift</b> left click on an a part of the lamp to select it, ";
   text += "and then move it with the mouse. Press the <b>Control</b> key or select the background ";
   text += "to move the camera instead.<br><br>";
-  text += "A simpler object selection example is given in <i>select</i>, ";
-  text += "a simpler frame displacement example is given in <i>manipulatedFrame</i>. ";
-  text += "a simpler constrained frame example is given in <i>constrainedFrame</i> ";
-  text += "and a multi-object selection process is illustrated in <i>multiSelect</i>.<br><br>";
+  text += "A simpler object selection example is given in the <i>select</i> example. ";
+  text += "A simpler frame displacement example is available in <i>manipulatedFrame</i> and ";
+  text += "a simpler constrained frame example is illustrated in <i>constrainedFrame</i>. ";
+  text += "See <i>multiSelect</i> for a multi-object selection example.<br><br>";
   text += "Feel free to use this code as the starting point of a multiple frame manipulation application.";
   return text;
 }

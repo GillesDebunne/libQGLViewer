@@ -596,7 +596,7 @@ void EventRecorder::openReplayInterfaceWindow()
 
   if (replayInterface_->exec() == QDialog::Accepted)
     {
-      qglviewer()->setSnapshotFilename(replayInterface_->snapshotFileName->text());
+      qglviewer()->setSnapshotFileName(replayInterface_->snapshotFileName->text());
       qglviewer()->setSnapshotFormat(replayInterface_->fileFormat->currentText());
       qglviewer()->setSnapshotCounter(replayInterface_->firstNumber->value());
       qglviewer()->setSnapshotQuality(replayInterface_->imageQuality->value());

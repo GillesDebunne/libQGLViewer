@@ -4,7 +4,6 @@
 
 int main(int argc, char** argv)
 {
-  // Read command lines arguments.
   QApplication application(argc,argv);
 
   // Create Splitters
@@ -21,12 +20,15 @@ int main(int argc, char** argv)
   Viewer front (s,2,vSplit2, &side);
   Viewer persp (s,3,vSplit2, &side);
 
-  // Set main QSplitter as the main widget.
-  hSplit->show();
+  
 #if QT_VERSION < 0x040000
   application.setMainWidget(hSplit);
+#else
+  hSplit->setWindowTitle("multiView");
 #endif
 
-  // Run main loop.
+  // Set main QSplitter as the main widget.
+  hSplit->show();
+
   return application.exec();
 }

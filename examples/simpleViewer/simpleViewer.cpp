@@ -40,8 +40,8 @@ QString Viewer::helpString() const
 {
   QString text("<h2>S i m p l e V i e w e r</h2>");
   text += "Use the mouse to move the camera around the object. ";
-  text += "You can respectively revolve around, zoom and translate with the three buttons. ";
-  text += "Left and middle buttons pressed together rotate around the camera z axis<br><br>";
+  text += "You can respectively revolve around, zoom and translate with the three mouse buttons. ";
+  text += "Left and middle buttons pressed together rotate around the camera view direction axis<br><br>";
   text += "Pressing <b>Alt</b> and one of the function keys (<b>F1</b>..<b>F12</b>) defines a camera keyFrame. ";
   text += "Simply press the function key again to restore it. Several keyFrames define a ";
   text += "camera path. Paths are saved when you quit the application and restored at next start.<br><br>";

@@ -150,6 +150,10 @@ void QGLViewer::defaultConstructor()
   bufferTextureHeight_ = 0;
   previousBufferTextureFormat_ = 0;
   previousBufferTextureInternalFormat_ = 0;
+
+#if QT_VERSION >= 0x040000
+  setAttribute(Qt::WA_NoSystemBackground);
+#endif
 }
 
 #if QT_VERSION >= 0x040000
@@ -626,7 +630,7 @@ void QGLViewer::setDefaultMouseBindings()
       setMouseBinding(modifiers | Qt::RightButton, mh, TRANSLATE);
 
       setMouseBinding(modifiers | Qt::LeftButton  | Qt::MidButton,  mh, SCREEN_ROTATE);
-      setMouseBinding(modifiers | Qt::RightButton | Qt::MidButton,  mh, SCREEN_TRANSLATE);
+      // 2.2.4 setMouseBinding(modifiers | Qt::RightButton | Qt::MidButton,  mh, SCREEN_TRANSLATE);
 
       setWheelBinding(modifiers, mh, ZOOM);
     }
@@ -1542,9 +1546,8 @@ void QGLViewer::mouseMoveEvent(QMouseEvent* e)
 	  if (hasMouseTracking())
 	    {
 #if QT_VERSION >= 0x040000
-	      for (int i=0; i < MouseGrabber::MouseGrabberPool().size(); ++i)
+	      foreach (MouseGrabber* mg, MouseGrabber::MouseGrabberPool())
 		{
-		  MouseGrabber* mg = MouseGrabber::MouseGrabberPool().at(i);
 #else
 	      QPtrListIterator<MouseGrabber> it(MouseGrabber::MouseGrabberPool());
 	      for (MouseGrabber* mg; (mg = it.current()); ++it)
@@ -1841,9 +1844,10 @@ QString QGLViewer::mouseActionString(QGLViewer::MouseAction ma)
     case QGLViewer::MOVE_FORWARD : 	return QString("Moves forward");
     case QGLViewer::LOOK_AROUND : 	return QString("Looks around");
     case QGLViewer::MOVE_BACKWARD : 	return QString("Moves backward");
-    case QGLViewer::SCREEN_ROTATE : 	return QString("Screen rotates");
+    case QGLViewer::SCREEN_ROTATE : 	return QString("Rotates on screen");
     case QGLViewer::ROLL :		return QString("Rolls");
-    case QGLViewer::SCREEN_TRANSLATE : 	return QString("Screen translates");
+    case QGLViewer::DRIVE :		return QString("Drives");
+    case QGLViewer::SCREEN_TRANSLATE : 	return QString("Horizontally/Vertically translates");
     case QGLViewer::ZOOM_ON_REGION : 	return QString("Zooms on region for");
     }
   return QString::null;
@@ -3143,7 +3147,7 @@ void QGLViewer::toggleCameraMode()
       setMouseBinding(modifiers | Qt::RightButton, CAMERA, MOVE_BACKWARD);
 
       setMouseBinding(modifiers | Qt::LeftButton  | Qt::MidButton,  CAMERA, ROLL);
-      setMouseBinding(modifiers | Qt::RightButton | Qt::MidButton,  CAMERA, SCREEN_TRANSLATE);
+      // 2.2.4 setMouseBinding(modifiers | Qt::RightButton | Qt::MidButton,  CAMERA, SCREEN_TRANSLATE);
 
       setMouseBinding(Qt::LeftButton,  NO_CLICK_ACTION, true);
       setMouseBinding(Qt::MidButton,   NO_CLICK_ACTION, true);
@@ -3159,7 +3163,7 @@ void QGLViewer::toggleCameraMode()
       setMouseBinding(modifiers | Qt::RightButton, CAMERA, TRANSLATE);
 
       setMouseBinding(modifiers | Qt::LeftButton  | Qt::MidButton,  CAMERA, SCREEN_ROTATE);
-      setMouseBinding(modifiers | Qt::RightButton | Qt::MidButton,  CAMERA, SCREEN_TRANSLATE);
+      // 2.2.4 setMouseBinding(modifiers | Qt::RightButton | Qt::MidButton,  CAMERA, SCREEN_TRANSLATE);
 
       setMouseBinding(Qt::LeftButton,  ALIGN_CAMERA,      true);
       setMouseBinding(Qt::MidButton,   SHOW_ENTIRE_SCENE, true);
@@ -3479,9 +3483,8 @@ void QGLViewer::drawGrid(float size, int nbSubdivisions)
 void QGLViewer::saveStateToFileForAllViewers()
 {
 #if QT_VERSION >= 0x040000
-  for (int i=0; i<QGLViewer::QGLViewerPool().size(); ++i)
+  foreach (QGLViewer* viewer, QGLViewer::QGLViewerPool())
     {
-      QGLViewer* viewer = QGLViewer::QGLViewerPool().at(i);
 #else
   QPtrListIterator<QGLViewer> it(QGLViewer::QGLViewerPool());
   for (QGLViewer* viewer; (viewer = it.current()) != 0; ++it)

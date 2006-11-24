@@ -167,7 +167,7 @@ namespace qglviewer {
     /*! Returns the mouse wheel sensitivity.
 
     Default value is 1.0. A higher value will make the wheel action more efficient (usually meaning
-    a faster zoom).
+    a faster zoom). Use a negative value to invert the zoom in and out directions.
 
     See also setWheelSensitivity(), translationSensitivity(), rotationSensitivity() and
     spinningSensitivity(). */

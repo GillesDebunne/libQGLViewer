@@ -107,6 +107,9 @@ QString Viewer::helpString() const
   QString text("<h2>D r a w L i g h t</h2>");
   text += "The <i>drawLight()</i> function displays a representation of the OpenGL lights ";
   text += "of your scene. This is convenient for debugging your light setup.<br><br>";
-  text += "Hover over the two point lights to manipulate them using the mouse.";
+  text += "This scene features a directionnal ligth (arrow), a spot light (cone) and a point ";
+  text += "light source (sphere). The representation color, position and shape matches the light setup.<br><br>";
+  text += "Hover over the point light or the spot light to manipulate it using the mouse (right ";
+  text += "button translates and left button rotates).";
   return text;
 }

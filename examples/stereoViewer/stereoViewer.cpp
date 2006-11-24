@@ -17,9 +17,11 @@ void Viewer::init()
 QString Viewer::helpString() const
 {
   QString text("<h2>S t e r e o V i e w e r</h2>");
-  text += "You can display in stereo with no change to your application, provided that your hardware supports stereo display<br><br>";
+  text += "You can display in stereo with no change to your application, provided that your hardware supports stereo display.<br><br>";
+  
   text += "If you get a <b>Stereo not supported on this display</b> error message, check that ";
   text += "your machine supports stereo (search for quad-buffer in <i>glxinfo</i> and find stereo glasses !).<br><br>";
+  
   text += "You can then toggle the stereo display by pressing <b>S</b> in any application.";
   return text;
 }

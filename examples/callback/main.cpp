@@ -1,7 +1,7 @@
+#include "callback.h"
 #include <QGLViewer/qglviewer.h>
 #include <qapplication.h>
 #include <qmessagebox.h>
-#include "callback.h"
 
 using namespace std;
 
@@ -19,28 +19,26 @@ void help()
 
 int main(int argc, char** argv)
 {
-  // Read command lines arguments.
   QApplication application(argc,argv);
 
   // Instantiate the viewer.
-  QGLViewer v;
-
-  // Make the viewer window visible on screen.
-  v.show();
+  QGLViewer viewer;
 
   // Restore the previous viewer state.
-  v.restoreStateFromFile();
+  viewer.restoreStateFromFile();
 
   // Create a scene, giving a pointer to the associated viewer.
-  Scene s(&v);
+  Scene s(&viewer);
 
 #if QT_VERSION < 0x040000
-  // Set the viewer as the application main widget.
   application.setMainWidget(&v);
+#else
+  viewer.setWindowTitle("callback");
 #endif
 
   help();
 
-  // Run main loop.
+  viewer.show();
+
   return application.exec();
 }

@@ -169,10 +169,12 @@ public:
   inline bool LoadTile( TEXTURETYPE type, char* filename )
   {	return textures.data[type].load( filename ); }
 
-  inline void UnloadTile( TEXTURETYPE type )
+  inline void UnloadTile(TEXTURETYPE type)
   {
 #if QT_VERSION < 0x040000
     textures.data[type].reset();
+#else
+    Q_UNUSED(type)
 #endif
   }
 

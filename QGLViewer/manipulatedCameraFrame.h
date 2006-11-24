@@ -126,11 +126,13 @@ namespace qglviewer {
 
   private:
     void updateFlyUpVector();
+    Quaternion turnQuaternion(int x, const Camera* const camera);
     Quaternion pitchYawQuaternion(int x, int y, const Camera* const camera);
 
   private:
     // Fly mode data
     float flySpeed_;
+    float driveSpeed_;
     Vec flyUpVector_;
     QTimer flyTimer_;
 

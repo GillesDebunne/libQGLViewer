@@ -400,12 +400,17 @@ void KeyFrameInterpolator::drawPath(int mask, int nbFrames, float scale)
       if (mask & 1)
 	{
 	  glBegin(GL_LINE_STRIP);
-#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
+#if QT_VERSION >= 0x040000
+	  foreach (Frame fr, path_)
+	    glVertex3fv(fr.position());
+#else
+# if QT_VERSION < 0x030000
 	  for (int i=0; i < path_.size(); ++i)
 	    glVertex3fv((path_.at(i)).position());
-#else
+# else
 	  for (QValueVector<Frame>::const_iterator pnt=path_.begin(), end=path_.end(); pnt!=end; ++pnt)
 	    glVertex3fv((*pnt).position());
+# endif
 #endif
 	  glEnd();
 	}
@@ -415,19 +420,27 @@ void KeyFrameInterpolator::drawPath(int mask, int nbFrames, float scale)
 	  if (nbFrames > nbSteps)
 	    nbFrames = nbSteps;
 	  float goal = 0.0f;
-#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
-	  for (int i=0; i < path_.size(); ++i)
+#if QT_VERSION >= 0x040000
+	  foreach (Frame fr, path_)
 #else
-	    for (QValueVector<Frame>::const_iterator pnt=path_.begin(), end=path_.end(); pnt!=end; ++pnt)
+# if QT_VERSION < 0x030000
+	  for (int i=0; i < path_.size(); ++i)
+# else
+	  for (QValueVector<Frame>::const_iterator pnt=path_.begin(), end=path_.end(); pnt!=end; ++pnt)
+# endif
 #endif
 	      if ((count++) >= goal)
 		{
 		  goal += nbSteps / static_cast<float>(nbFrames);
 		  glPushMatrix();
-#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
-		  glMultMatrixd((path_.at(i)).matrix());
+#if QT_VERSION >= 0x040000
+		  glMultMatrixd(fr.matrix());
 #else
+# if QT_VERSION < 0x030000
+		  glMultMatrixd((path_.at(i)).matrix());
+# else
 		  glMultMatrixd((*pnt).matrix());
+# endif
 #endif
 		  if (mask & 2) drawCamera(scale);
 		  if (mask & 4) QGLViewer::drawAxis(scale/10.0);
@@ -682,13 +695,11 @@ QDomElement KeyFrameInterpolator::domElement(const QString& name, QDomDocument& 
   QDomElement de = document.createElement(name);
   int count = 0;
 #if QT_VERSION >= 0x040000
-  for (int i=0; i<keyFrame_.size(); ++i)
-    {
-      KeyFrame* kf = keyFrame_.at(i);
+  foreach (KeyFrame* kf, keyFrame_)
 #else
   for (KeyFrame* kf = keyFrame_.first(); kf; kf = keyFrame_.next() )
-    {
 #endif
+    {
       Frame fr(kf->position(), kf->orientation());
       QDomElement kfNode = fr.domElement("KeyFrame", document);
       kfNode.setAttribute("index", QString::number(count));

@@ -28,7 +28,7 @@ contains( QT_VERSION, "^4.*" ) {
 DISTFILES += wood.png
 
 QMAKE_CXXFLAGS_RELEASE *= -O7 -funroll-all-loops -felide-constructors -fstrict-aliasing -frerun-loop-opt \
-			  -fexpensive-optimizations -fforce-addr -fforce-mem -fstrength-reduce
+			  -fexpensive-optimizations -fforce-addr -fstrength-reduce
 
 include( ../../examples.pri )
 

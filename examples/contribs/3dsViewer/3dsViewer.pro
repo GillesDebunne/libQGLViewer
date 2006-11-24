@@ -22,9 +22,19 @@ TARGET   = 3dsViewer
 CONFIG  += qt opengl warn_on release thread
 
 # Set these paths according to your configuration
-# INCLUDEPATH *= /Path/To/3DS/HeaderFiles
-# unix: LIBS  *= -L/Path/To/3DS/library
-unix: LIBS *= -l3ds
+# Use qmake 3DS_INCLUDE_DIR=... 3DS_LIB_DIR=...
+!isEmpty( 3DS_INCLUDE_DIR ) {
+  INCLUDEPATH *= $${3DS_INCLUDE_DIR}
+}
+!isEmpty( 3DS_LIB_DIR ) {
+  LIBS *= -L$${3DS_LIB_DIR}
+}
+!isEmpty( 3DS_LIB_A ) {
+  LIBS *= $${3DS_LIB_A}
+} else {
+  LIBS *= -l3ds
+}
+
 # win32:LIBS  *= C:\code\lib\lib3ds.lib
 
 HEADERS  = 3dsViewer.h

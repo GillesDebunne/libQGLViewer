@@ -69,6 +69,7 @@ void Viewer::loadFile()
   float min[3], max[3];
   lib3ds_file_bounding_box(file, min, max);
   setSceneBoundingBox(Vec(min), Vec(max));
+  
   if (!file->cameras)
     camera()->showEntireScene();
   else

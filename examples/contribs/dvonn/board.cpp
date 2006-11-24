@@ -60,8 +60,7 @@ Piece::Piece(Color c)
   : color_(c)
 {
 }
-ostream&
-::operator<<(ostream& s,const Piece& p)
+ostream& operator<<(ostream& s,const Piece& p)
 {
   static const char* v[nbColors] = { "R","W","B" };
   return s<<v[p.color()];
@@ -92,8 +91,7 @@ Stack::onTop() const
 Stack::Stack()
 {
 }
-ostream&
-::operator<<(ostream& s,const Stack& t)
+ostream& operator<<(ostream& s,const Stack& t)
 {
   s<<(t.hasRed()?'*':' ')<<t.size();
   if (t.hasPieces()) s<<(*t.onTop()); else s<<' ';
@@ -442,8 +440,7 @@ Board::Coord::operator<(const Board::Coord other) const
 {
   return x_ < other.x_ || (x_ == other.x_ && y_ < other.y_);
 }
-ostream&
-::operator<<(ostream& s,const Board::Coord c)
+ostream& operator<<(ostream& s,const Board::Coord c)
 {
   return s<<'['<<((char) (c.x()+(int) 'A'))<<c.y()<<']';
 }
@@ -522,8 +519,7 @@ Board::ConstStackHandle::null()
 {
   return ConstStackHandle();
 }
-ostream&
-::operator<<(ostream& s,const dvonn::Board::ConstStackHandle& h)
+ostream& operator<<(ostream& s,const dvonn::Board::ConstStackHandle& h)
 {
   if (h) return s<<'('<<h.stackCoord()<<" : "<<(*h)<<')';
 

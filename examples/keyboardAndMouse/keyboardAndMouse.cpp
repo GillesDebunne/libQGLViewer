@@ -223,7 +223,8 @@ QString Viewer::helpString() const
   text += "If you want to define <b>new</b> key or mouse actions, overload <code>keyPressEvent()</code> and/or ";
   text += "<code>mouse(Press|Move|Release)Event()</code> to define and bind your own new actions. ";
   text += "Use <code>setKeyDescription()</code> and <code>setMouseBindingDescription()</code> to add a description of your bindings in the help window.<br><br>";
-  text += "See those tabs in this help window for the complete current bindings description.<br><br>";
+  text += "In this example, we defined the <b>F</b> and <b>W</b> keys and the right mouse button opens a popup menu. ";
+  text += "See the keyboard and mouse tabs in this help window for the complete bindings description.<br><br>";
   text += "By the way, exit shortcut has been binded to <b>Ctrl+Q</b>.";
   return text;
 }

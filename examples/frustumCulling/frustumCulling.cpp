@@ -40,9 +40,9 @@ QString Viewer::helpString() const
 {
   QString text("<h2>F r u s t u m C u l l i n g</h2>");
 
-  text += "A hierarchical octree structure is clipped against a camera's frustum clipping planes, obtained ";
-  text += "using <code>getFrustumPlanesCoefficients</code>. A second viewer displays an external view of the ";
-  text += "scene that exhibits the clipping (using <code>drawCamera()</code> to display the frustum).<br><br>";
+  text += "A hierarchical octree structure is clipped against the camera's frustum clipping planes, obtained ";
+  text += "using <code>getFrustumPlanesCoefficients</code>. A second viewer uses <code>drawCamera()</code> to ";
+  text += "display an external view of the first viewer's camera.<br><br>";
 
   text += "This frustum culling implementation is quite naive. Many optimisation techniques are available in ";
   text += "the litterature.";

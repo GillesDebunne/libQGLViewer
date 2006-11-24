@@ -1,14 +1,12 @@
 #include "frustumCulling.h"
 #include "cullingCamera.h"
 #include "box.h"
-
 #include <qapplication.h>
 
 using namespace qglviewer;
 
 int main(int argc, char** argv)
 {
-  // Read command lines arguments.
   QApplication application(argc,argv);
 
   // Create octree AABBox hierarchy
@@ -17,16 +15,16 @@ int main(int argc, char** argv)
   Box::Root->buildBoxHierarchy(4);
 
   // Instantiate the two viewers.
-  Viewer v, observer;
+  Viewer viewer, observer;
 
   // Give v a cullingCamera;
-  Camera* c = v.camera();
+  Camera* c = viewer.camera();
   CullingCamera* cc = new CullingCamera();
-  v.setCamera(cc);
+  viewer.setCamera(cc);
   delete c;
   
   // Both viewers share the culling camera
-  v.setCullingCamera(cc);
+  viewer.setCullingCamera(cc);
   observer.setCullingCamera(cc);
 
   // Place observer 
@@ -35,18 +33,21 @@ int main(int argc, char** argv)
   observer.showEntireScene();
 
   // Make sure every culling Camera movement updates the outer viewer
-  QObject::connect(v.camera()->frame(), SIGNAL(manipulated()), &observer, SLOT(updateGL()));
-  QObject::connect(v.camera()->frame(), SIGNAL(spun()), &observer, SLOT(updateGL()));
+  QObject::connect(viewer.camera()->frame(), SIGNAL(manipulated()), &observer, SLOT(updateGL()));
+  QObject::connect(viewer.camera()->frame(), SIGNAL(spun()), &observer, SLOT(updateGL()));
 
-  // Show the viewers' windows.
-  v.show();
-  observer.show();
 
 #if QT_VERSION < 0x040000
   // Set the viewer as the application main widget.
   application.setMainWidget(&v);
+#else
+  viewer.setWindowTitle("frustumCulling");
+  observer.setWindowTitle("scene observer");
 #endif
 
-  // Run main loop.
+  // Show the viewers' windows.
+  viewer.show();
+  observer.show();
+
   return application.exec();
 }

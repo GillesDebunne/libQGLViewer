@@ -279,8 +279,6 @@ public:
 	       a.x*b.y - a.y*b.x);
   }
 
-  /*! Returns a Vec orthogonal to the Vec. Its norm() depends on the Vec, but is zero only for a
-  null Vec. Note that the function that associates an orthogonalVec() to a Vec is not continous. */
   Vec orthogonalVec() const;
   //@}
 

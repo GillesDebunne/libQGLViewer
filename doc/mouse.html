@@ -222,19 +222,33 @@ the <code>Mouse</code> tab of the help window (press <code>H</code> for help).
   </tr>
   
   <tr bgcolor="#C0C0F0">
-    <td><code><b>LOOK_AROUND</b></code></td>
-    <td><code><b>CAMERA</b></code></td>
-    <td>Change the viewing direction. The camera position is not modified.</td>
-    <td>&nbsp;</td>
-  </tr>
-  
-  <tr>
     <td><code><b>MOVE_BACKWARD</b></code></td>
     <td><code><b>CAMERA</b></code></td>
     <td>Same as <code>MOVE_FORWARD</code> but backward.</td>
     <td>&nbsp;</td>
   </tr>
   
+  <tr>
+    <td><code><b>DRIVE</b></code></td>
+    <td><code><b>CAMERA</b></code></td>
+    <td>Mouse up/down goes forward/backward proportionally to <code>flySpeed()</code> while left/right turns.</td>
+    <td>&nbsp;</td>
+  </tr>
+  
+  <tr bgcolor="#C0C0F0">
+    <td><code><b>LOOK_AROUND</b></code></td>
+    <td><code><b>CAMERA</b></code></td>
+    <td>Change the viewing direction. The camera position is not modified.</td>
+    <td>&nbsp;</td>
+  </tr>
+
+  <tr>
+    <td><code><b>ROLL</b></code></td>
+    <td><code><b>CAMERA</b></code></td>
+    <td>Rolls camera according to horizontal mouse displacement.</td>
+    <td>Left and middle buttons (fly mode only)</td>
+  </tr>
+
   <tr bgcolor="#C0C0F0">
     <td rowspan="2"><code><b>SCREEN_ROTATE</b></code></td>
     <td><code><b>CAMERA</b></code></td>
@@ -246,30 +260,23 @@ the <code>Mouse</code> tab of the help window (press <code>H</code> for help).
     <td><code><b>FRAME</b></code></td>
     <td>Control + Left and middle buttons</td>
   </tr>
-  
+    
   <tr>
-    <td><code><b>ROLL</b></code></td>
-    <td><code><b>CAMERA</b></code></td>
-    <td>Rolls camera according to horizontal mouse displacement.</td>
-    <td>Left and middle buttons (fly mode only)</td>
-  </tr>
-  
-  <tr bgcolor="#C0C0F0">
     <td rowspan="2"><code><b>SCREEN_TRANSLATE</b></code></td>
     <td><code><b>CAMERA</b></code></td>
-    <td rowspan="2">Translates purely horizontally or vertically on screen.</td>
+    <td rowspan="2">Translates purely horizontally or vertically wrt screen.</td>
     <td>Middle and right buttons</td>
   </tr>
   
-  <tr bgcolor="#C0C0F0">
+  <tr>
     <td><code><b>FRAME</b></code></td>
     <td>Control + Middle and right buttons</td>
   </tr>
 
-  <tr>
+  <tr bgcolor="#C0C0F0">
     <td><code><b>ZOOM_ON_REGION</b></code></td>
     <td><code><b>CAMERA</b></code></td>
-    <td>Draws a rectangular region on screen and zoom on it.</td>
+    <td>Draws a rectangular region on screen and zooms on it.</td>
     <td>Shift + Middle button</td>
   </tr>
   

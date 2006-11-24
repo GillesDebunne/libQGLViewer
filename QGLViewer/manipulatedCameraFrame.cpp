@@ -66,6 +66,9 @@ void ManipulatedCameraFrame::flyUpdate()
       translate(localInverseTransformOf(flyDisp));
       break;
     default:
+    case QGLViewer::DRIVE:
+      flyDisp.z = flySpeed() * driveSpeed_;
+      translate(localInverseTransformOf(flyDisp));
       break;
     }
 
@@ -155,6 +158,7 @@ void ManipulatedCameraFrame::startAction(int ma, bool withConstraint)
     {
     case QGLViewer::MOVE_FORWARD:
     case QGLViewer::MOVE_BACKWARD:
+    case QGLViewer::DRIVE:
 #if QT_VERSION >= 0x040000
       flyTimer_.setSingleShot(false);
 #endif
@@ -199,20 +203,31 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 	break;
       }
 
-    case QGLViewer::MOVE_BACKWARD:
-      {
-	Quaternion rot = pitchYawQuaternion(event->x(), event->y(), camera);
-	rotate(rot);
-	translate(inverseTransformOf(Vec(0.0, 0.0, flySpeed())));
-	break;
-      }
-
     case QGLViewer::MOVE_FORWARD:
       {
 	Quaternion rot = pitchYawQuaternion(event->x(), event->y(), camera);
 	rotate(rot);
 	//#CONNECTION# wheelEvent MOVE_FORWARD case
-	translate(inverseTransformOf(Vec(0.0, 0.0, -flySpeed())));
+	// actual translation is made in flyUpdate().
+	//translate(inverseTransformOf(Vec(0.0, 0.0, -flySpeed())));
+	break;
+      }
+
+    case QGLViewer::MOVE_BACKWARD:
+      {
+	Quaternion rot = pitchYawQuaternion(event->x(), event->y(), camera);
+	rotate(rot);
+	// actual translation is made in flyUpdate().
+	//translate(inverseTransformOf(Vec(0.0, 0.0, flySpeed())));
+	break;
+      }
+
+    case QGLViewer::DRIVE:
+      {
+	Quaternion rot = turnQuaternion(event->x(), camera);
+	rotate(rot);
+	// actual translation is made in flyUpdate().
+	driveSpeed_ = 0.01 * (event->y() - pressPos_.y());
 	break;
       }
 
@@ -317,7 +332,7 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
   terminated. */
 void ManipulatedCameraFrame::mouseReleaseEvent(QMouseEvent* const event, Camera* const camera)
 {
-  if ((action_ == QGLViewer::MOVE_FORWARD) || (action_ == QGLViewer::MOVE_BACKWARD))
+  if ((action_ == QGLViewer::MOVE_FORWARD) || (action_ == QGLViewer::MOVE_BACKWARD) || (action_ == QGLViewer::DRIVE))
     flyTimer_.stop();
 
   if (action_ == QGLViewer::ZOOM_ON_REGION)
@@ -382,6 +397,12 @@ void ManipulatedCameraFrame::wheelEvent(QWheelEvent* const event, Camera* const 
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+
+/*! Returns a Quaternion that is a rotation around current camera Y, proportionnal to the horizontal mouse position. */
+Quaternion ManipulatedCameraFrame::turnQuaternion(int x, const Camera* const camera)
+{
+  return Quaternion(Vec(0.0, 1.0, 0.0), rotationSensitivity()*(prevPos_.x()-x)/camera->screenWidth());
+}
 
 /*! Returns a Quaternion that is the composition of two rotations, inferred from the
   mouse pitch (X axis) and yaw (flyUpVector() axis). */

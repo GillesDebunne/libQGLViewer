@@ -316,7 +316,7 @@ static int saveVectorialSnapshot(const QString& fileName, QGLWidget* widget, con
 
   vrender::VRenderParams vparams;
 #if QT_VERSION >= 0x040000
-  vparams.setFilename(fileName.toLatin1().data());
+  vparams.setFilename(fileName.toLatin1().constData());
 #else
   vparams.setFilename(fileName);
 #endif

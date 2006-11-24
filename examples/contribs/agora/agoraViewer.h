@@ -15,8 +15,12 @@ class AgoraViewer : public QGLViewer
   Q_OBJECT
 
 public:
-  AgoraViewer(QWidget* parent=NULL, const char* name=0);
-
+#if QT_VERSION<0x040000
+  AgoraViewer(QWidget* parent=NULL, const char* name=NULL);
+#else
+  AgoraViewer(QWidget* parent=NULL);
+#endif
+  
  public slots:
  // F i l e   m e n u
  void load();

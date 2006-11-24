@@ -107,13 +107,13 @@ QString Viewer::helpString() const
   text += "This example illustrates the use of <i>MouseGrabber</i>, which is an abstract ";
   text += "class for objects that react (usually when the mouse hovers over them).<br><br>";
   text += "Define new camera paths (or positions) using <b>Alt</b>+[<b>F1</b>-<b>F12</b>]. ";
-  text += "New <i>MouseGrabbers</i> are created and displayed in the left corner. ";
-  text += "Note how they react to the mouse, and click them to play the associated path.<br><br>";
+  text += "New <i>MouseGrabbers</i> are then created and displayed in the upper left corner. ";
+  text += "Note how they react when the mouse hovers, and click them to play the associated path.<br><br>";
   text += "<i>ManipulatedFrame</i>, such as the ones which define the spirals' positions, are ";
   text += "also <i>MouseGrabbers</i>. When the mouse is close to the spiral center, the <i>ManipulatedFrame</i> ";
   text += "will grab to mouse click (as if the <b>Control</b> key was pressed). This is very convenient ";
   text += "to intuitively move scene objects (such as lights) without any key or GUI interaction.<br><br>";
-  text += "Note that <code>setMouseTracking()</code> must be enabled to enable <i>MouseGrabbers</i>.";
+  text += "Note that <code>setMouseTracking()</code> must be enabled to use <i>MouseGrabbers</i>.";
   return text;
 }
 

@@ -22,10 +22,11 @@
 using namespace std;
 using namespace qglviewer;
 
-AgoraViewer::AgoraViewer(QWidget* parent, const char* name)
 #if QT_VERSION < 0x040000
+  AgoraViewer::AgoraViewer(QWidget* parent,  const char* name)
   : QGLViewer(parent, name),
 #else
+  AgoraViewer::AgoraViewer(QWidget* parent)
   : QGLViewer(parent),
 #endif
     computerIsBlack_(true), selectedPiece_(-1),

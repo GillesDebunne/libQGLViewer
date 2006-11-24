@@ -21,26 +21,30 @@
 <img src="images/windows.png" width="55" height="54" align="middle" alt="windows"/> Windows</h1>
 
 <div class="summary">
-<b>&raquo;</b> Installation using <a href="#qt3or4">Qt version 3 or 4</a><br/>
-<b>&raquo;</b> Installation using <a href="#qt2.3">Qt version 2.3</a><br/>
-<b>&raquo;</b> Installation using <a href="#mingw">MinGW and the free Qt4 version</a><br/>
-<b>&raquo;</b> Installation using <a href="#cygwin">cygwin linux emulator</a><br/>
-<b>&raquo;</b> Details on <a href="#qt">Qt installation</a><br/>
-<b>&raquo;</b> Installation of the <a href="#plugin">QGLViewer designer plugin</a><br/>
+Select your configuration in this list:<br/>
+<b>&nbsp; &nbsp; &raquo;</b> <a href="#qtVisual">Visual Studio</a><br/>
+<b>&nbsp; &nbsp; &raquo;</b> <a href="#mingw">MinGW and the free Qt4 version</a><br/>
+<b>&nbsp; &nbsp; &raquo;</b> <a href="#qt2.3">Qt version 2.3</a><br/>
+<b>&nbsp; &nbsp; &raquo;</b> <a href="#cygwin">Cygwin linux emulator</a><br/>
+See also details on the <a href="#plugin">QGLViewer designer plugin</a> installation.<br/>
+Qt can be downloaded from the <a href="http://www.trolltech.com/products/qt/downloads">Trolltech web site</a>.
 </div>
 
-<a name="qt3or4"></a>
-<h2>Compilation and installation using Qt version 3 or 4</h2>
-<ol>
-<li>Make sure Qt is correctly installed on your machine, and recognized as an add-in in .NET (see the <i>Tools Add-In
-manager</i> <span style="color:red">*</span> menu)</li>
 
-<li>Download and unzip the sources : <a href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.zip">libQGLViewer-#VERSION#-#RELEASE#.zip</a></li>
+<a name="qtVisual"></a>
+<h2>Compilation and installation using Visual Studio</h2>
 
-<li>Use the <i>Open Qt project</i> <span style="color:red">*</span> icon in .NET to open <code>QGLViewer/QGLViewer.pro</code>
-(first add <code>QGLVIEWER_STATIC=yes</code> at the beginning of the <code>.pro</code> to create a static lib).</li>
+These instructions are for Qt version 3 or 4. They require a Qt integration into Visual Studio
+(available with the commercial Qt license): see the <i>Tools Add-In manager</i> <span style="color:red">*</span> menu.
+You can also patch the open source Qt4 version as is <a href="http://qtnode.net/wiki/Qt4_with_Visual_Studio">detailed here</a>.
 
-<li>Visual Studio 6.0 only : Use <i>File-Open workspace</i> to open the <code>.dsp</code> generated
+<ul>
+<li>Download and unzip <a href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.zip">libQGLViewer-#VERSION#-#RELEASE#.zip</a>.</li>
+
+<li>Use the <i>Open Qt project</i> <span style="color:red">*</span> icon in .NET to open
+<code>QGLViewer/QGLViewer.pro</code><br/>
+With the patched Qt version, run <code>qmake QGLViewer.pro</code> instead and open the generated <code>vcproj</code> file.<br/>
+Visual Studio 6.0 only : Use <i>File-Open workspace</i> to open the <code>.dsp</code> generated
 file, and select <i>Release</i> as the <i>Build/Active Configuration</i></li>
 
 <li>Compile the library</li>
@@ -50,15 +54,18 @@ directory, such as <code>C:\WINDOWS\system32</code> (or <code>C:\WINNT\system32<
 2000). Alternately, you can copy it to every application directory</li>
 
 <li><a href="examples/index.html#windows">Compile the examples</a> to discover the library</li>
-</ol>
+</ul>
 
 <p>
+To create a static version of the QGLViewer library, add <code>QGLVIEWER_STATIC=yes</code> at the
+beginning of the <code>.pro</code> file before you open it.
+</p>
+
 If your Qt version is lower than 3.1, you have to install the <a
 href="http://www.xmission.com/~nate/glut.html">GLUT library</a> in order to have text display. Add
 the paths to GLUT in your <code>Include</code> and <code>Library</code>
 <i>Project-Properties</i><span style="color:red">*</span>, and copy <code>glut32.dll</code> in a
-library directory (as in item 6 above).
-</p>
+library directory (as detailed 6 above).
 
 <p>
 <span style="color:red">*</span> Names are given in .NET standards, and differ from those of Visual 6.
@@ -75,23 +82,53 @@ Here is a correspondence table:
 </table>
 
 
+<a name="mingw"></a> <h2>Compilation and installation using MinGW</h2>
+
+MinGW is the windows port of the GNU g++ compiler. It can optionally be installed with the free open
+source Qt 4 version as is detailed in these <a href="http://qtnode.net/wiki/Qt4_on_Windows">instructions</a>.
+
+<p>
+The installation procedure is very similar to the one detailed in the <a href="installUnix.html#linux">linux
+section</a>. Download and unzip <a
+href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.zip">libQGLViewer-#VERSION#-#RELEASE#.zip</a>
+and then use the "Qt 4.x command prompt" installed in the Start menu and type:
+</p>
+<pre>
+cd \path\to\libQGLViewer-#VERSION#-#RELEASE#\QGLViewer
+qmake
+make
+</pre>
+
+Copy the resulting <code>dll</code> (created in the <code>Release</code> directory) to a system
+shared directory such as <code>C:\WINDOWS\system32</code> (or <code>C:\WINNT\system32</code> with
+Windows 2000). Alternately, you can copy it to every application directory. Use <code>qmake "QGLVIEWER_STATIC=yes"</code>
+to create a static library instead.
+
+<p>
+Use the same procedure to compile the examples (the resulting <code>.exe</code> is created in the <code>Release</code>
+directory as well):
+</p>
+<pre>
+cd ..\examples\anyExampleDirectory
+qmake
+make
+</pre>
+
+
 <a name="qt2.3"></a>
 <h2>Using the free Qt 2.3 version</h2>
 
+<p>
 The free <a href="ftp://ftp.trolltech.com/qt/non-commercial/QtWin230-NonCommercial.exe">Qt 2.3</a> version 
 is no longer supported by Trolltech, and it does not give a correct picture of
 the actual Qt functionalities. libQGLViewer is however fully functional with this Qt version.
 Note that Qt should <i>not</i> be installed in a directory whose name contains
 spaces (such as <code>Program Files</code>). You also need to download and install the 
 <a href="http://www.xmission.com/~nate/glut.html">GLUT library</a> as explained above.
-
-<p>
-See the <a href="#qt">Qt installation section</a> for details on the Qt installation and other Qt versions
-(especially the free Qt 4 GPL version).
 </p>
 
 To compile with Qt 2.3, follow the installation procedure described above but open
-<code>QGLViewer.Qt2.3.pro</code> instead in step 3.</li>
+<code>QGLViewer.Qt2.3.pro</code> instead.</li>
 
 <p>
 With Visual Studio 6:
@@ -155,34 +192,6 @@ This has not yet been tested (<a href="mailto:Gilles dot Debunne at imag dot fr"
 avoid the previous patches/hacks. An alternative is to use the Qt4 version.
 -->
 
-<a name="mingw"></a>
-<h2>Compilation and installation using MinGW</h2>
-MinGW is the windows port of the GNU g++ compiler which is optionally installed with the free Qt 4 version. The 
-installation procedure is very similar to the one detailed in the <a href="installUnix.html#linux">linux
-section</a>. Use the "Qt 4.x command prompt" installed in the Start menu and type:
-<pre>
-cd libQGLViewer-#VERSION#-#RELEASE#\QGLViewer
-qmake
-make
-</pre>
-
-Copy the resulting <code>dll</code> (created in the <code>Release</code> directory) to a system
-shared directory such as <code>C:\WINDOWS\system32</code> (or <code>C:\WINNT\system32</code> with
-Windows 2000). Alternately, you can copy it to every application directory. Use <code>qmake "QGLVIEWER_STATIC=yes"</code>
-to create a static library instead.
-
-<p>
-Use the same procedure to compile the examples (the <code>.exe</code> is created in the <code>Release</code>
-directory as well):
-</p>
-<pre>
-cd ..\examples\anyExampleDirectory
-qmake
-make
-</pre>
-
-See also the details on <a href="#qt">Qt installation</a>.
-
 
 <a name="cygwin"></a>
 <h2>Compilation and installation using cygwin</h2>
@@ -207,7 +216,6 @@ details.
 <a name="qt"></a>
 <h2><img src="images/qt.png" width="38" height="40" align="middle" alt="Qt"/> &nbsp; Qt installation</h2>
 
-Qt can be downloaded from the <a href="http://www.trolltech.com/products/qt/downloads">Trolltech web site</a>.
 
 <p>
 The latest Qt 4 version is available for free for open source development. It comes with the

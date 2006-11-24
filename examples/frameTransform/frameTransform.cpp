@@ -52,12 +52,12 @@ QString Viewer::helpString() const
 {
   QString text("<h2>F r a m e T r a n s f o r m</h2>");
   text += "This example illustrates how easy it is to switch between the camera and ";
-  text += "the world coordinate systems : using the <i>camera()->cameraCoordinatesOf()</i> ";
+  text += "the world coordinate systems using the <i>camera()->cameraCoordinatesOf()</i> ";
   text += "and <i>camera::worldCoordinatesOf()</i> functions.<br><br>";
   text += "You can create your own hierarchy of local coordinates systems and each of ";
   text += "them can be manipulated with the mouse (see the <i>manipulatedFrame</i> and <i>luxo</i> examples). ";
-  text += "Standard functions allow you to convert from any local frame to an other, ";
-  text += "the world/camera relation presented here simply being one of its illustration.<br><br>";
+  text += "Standard functions allow you to convert from any local frame to any other, ";
+  text += "the world/camera conversion presented here simply being an illustration.<br><br>";
   text += "See <i>examples/frameTransform.html</i> for an explanation of the meaning of these weird lines.";
   return text;
 }

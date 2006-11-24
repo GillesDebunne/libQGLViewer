@@ -109,11 +109,11 @@ void Viewer::keyPressEvent(QKeyEvent *e)
       QGLViewer::keyPressEvent(e);
     }
 
-  Vec dir(0.0,0.0,0.0);
+  Vec dir(0.0, 0.0, 0.0);
   dir[transDir] = 1.0;
   constraints[activeConstraint]->setTranslationConstraintDirection(dir);
 
-  dir = Vec(0.0,0.0,0.0);
+  dir = Vec(0.0, 0.0, 0.0);
   dir[rotDir] = 1.0;
   constraints[activeConstraint]->setRotationConstraintDirection(dir);
 
@@ -122,25 +122,25 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 
 void Viewer::displayType(const AxisPlaneConstraint::Type type, const int x, const int y, const char c)
 {
-  char text[12];
+  QString text;
   switch (type)
     {
-    case AxisPlaneConstraint::FREE:  sprintf(text, "FREE (%c)", c);  break;
-    case AxisPlaneConstraint::PLANE: sprintf(text, "PLANE (%c)", c); break;
-    case AxisPlaneConstraint::AXIS:  sprintf(text, "AXIS (%c)", c);  break;
-    case AxisPlaneConstraint::FORBIDDEN:   sprintf(text, "FORBIDDEN (%c)", c);   break;
+    case AxisPlaneConstraint::FREE:  text = QString("FREE (%1)").arg(c);  break;
+    case AxisPlaneConstraint::PLANE: text = QString("PLANE (%1)").arg(c); break;
+    case AxisPlaneConstraint::AXIS:  text = QString("AXIS (%1)").arg(c); break;
+    case AxisPlaneConstraint::FORBIDDEN: text = QString("FORBIDDEN (%1)").arg(c); break;
     }
   drawText(x, y, text);
 }
 
 void Viewer::displayDir(const unsigned short dir, const int x, const int y, const char c)
 {
-  char text[6];
+  QString text;
   switch (dir)
     {
-    case 0:  sprintf(text, "X (%c)", c);  break;
-    case 1:  sprintf(text, "Y (%c)", c);  break;
-    case 2:  sprintf(text, "Z (%c)", c);  break;
+    case 0: text = QString("X (%1)").arg(c); break;
+    case 1: text = QString("Y (%1)").arg(c); break;
+    case 2: text = QString("Z (%1)").arg(c); break;
     }
   drawText(x, y, text);
 }
@@ -153,7 +153,7 @@ void Viewer::displayText()
   displayDir(transDir, 190, height()-30, 'G');
   displayType(constraints[activeConstraint]->translationConstraintType(), 10, height()-60, 'T');
 
-  drawText(width()-220,height()-30, "ROTATION");
+  drawText(width()-220,height()-30, "ROTATION :");
   displayDir(rotDir, width()-100, height()-30, 'D');
   displayType(constraints[activeConstraint]->rotationConstraintType(), width()-220, height()-60, 'R');
 
@@ -162,6 +162,8 @@ void Viewer::displayText()
     case 0 : drawText(20,20, "Constraint direction defined w/r to WORLD (SPACE)"); break;
     case 1 : drawText(20,20, "Constraint direction defined w/r to CAMERA (SPACE)"); break;
     }
+  
+  glEnable(GL_LIGHTING);
 }
 
 QString Viewer::helpString() const

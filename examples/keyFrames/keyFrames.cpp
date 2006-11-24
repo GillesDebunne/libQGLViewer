@@ -47,7 +47,7 @@ Viewer::Viewer()
 QString Viewer::helpString() const
 {
   QString text("<h2>K e y F r a m e s</h2>");
-  text += "A frame is animated using a <i>KeyFrameInterpolator</i> which holds an interpolated path defined by key frames. ";
+  text += "A <i>KeyFrameInterpolator</i> holds an interpolated path defined by key frames. ";
   text += "It can then smoothly make its associed frame follow that path. Key frames can interactively be manipulated, even ";
   text += "during interpolation.<br><br>";
   text += "Note that the camera holds 12 such keyFrameInterpolators, binded to F1-F12. Press <b>Alt+Fx</b> to define new key ";

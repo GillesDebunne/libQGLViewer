@@ -14,7 +14,7 @@ class GLView : public QGLViewer
 {
   Q_OBJECT
 public:
-  GLView( QWidget* parent, const char* name ): QGLViewer( parent, name ) {}
+  GLView(QWidget* parent) : QGLViewer(parent) {}
 
   virtual void init();
   virtual void setPieces(SetOfPiece *sop) { setofpiece=sop; };
@@ -41,7 +41,7 @@ class GLViewPieces : public GLView
 {
   Q_OBJECT
 public:
-  GLViewPieces( QWidget* parent, const char* name ): GLView( parent, name ) {}
+  GLViewPieces(QWidget* parent) : GLView(parent) {}
 
 protected:
   virtual void draw();
@@ -62,7 +62,7 @@ class GLViewJeu : public GLView
   Q_OBJECT
 
 public:
-  GLViewJeu( QWidget* parent, const char* name ): GLView( parent, name ) {}
+  GLViewJeu(QWidget* parent) : GLView(parent) {}
   ~GLViewJeu() { glDeleteLists(plateau, 1); }
 
   void reset() { jeu.init(); }

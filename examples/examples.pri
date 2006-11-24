@@ -17,5 +17,5 @@ contains( QT_VERSION, "^4\..*" ) {
   OBJECTS_DIR = .obj
 }
 
-include (../../Code/simpleOutput.prf )
-CONFIG += simpleOutput.prf moc resource
+#include (../../Code/simpleOutput.prf )
+#CONFIG += simpleOutput.prf moc resource

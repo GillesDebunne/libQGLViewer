@@ -11,22 +11,24 @@
 # if QT_VERSION >= 0x030000
 #  include "agoraWindow.Qt3.h"
 # else
-//#  include "myInterface.Qt2.h"
+#  error "No .ui file available for Qt 2"
 # endif
 #endif
 
 int main(int argc, char * argv[])
 {
-  // Read command lines arguments.
   QApplication application(argc,argv);
 
   AgoraWindow aw;
-  aw.show();
+  
 #if QT_VERSION < 0x040000
   application.setMainWidget(&aw);
+#else
+  aw.setWindowTitle("agora");
 #endif
 
-  // Run main loop.
+  aw.show();
+
   return application.exec();
 }
 

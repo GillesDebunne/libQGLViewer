@@ -98,12 +98,12 @@ QString Viewer::helpString() const
   QString text("<h2>S t a n d a r d C a m e r a</h2>");
   text += "An overloaded <code>Camera</code> class is used, that reproduces the 'standard' OpenGL settings.<br><br>";
 
-  text += "The near and (resp. far) planes distances are set to a very small (resp. very large) value. ";
-  text += "With the orthographic type, the frustum dimensions are fixed. Use <code>Shift</code> and the mouse wheel to change them.<br><br>";
+  text += "With this camera, the near and (resp. far) plane distance is set to a very small (resp. very large) value. ";
+  text += "With the orthographic camera type, the frustum dimensions are fixed. Use <code>Shift</code> and the mouse wheel to change them.<br><br>";
 
-  text += "On the other hand, the QGLViewer camera fits near and far distances to the scene radius. ";
+  text += "On the other hand, the QGLViewer camera fits the near and far distances to the scene radius. ";
   text += "Fine tuning is available using <code>zClippingCoefficient()</code> and <code>zNearCoefficient()</code>. ";
-  text += "Visual results do not seem to be impacted by the zBuffer range.<br>";
+  text += "However, visual results do not seem to be impacted by this zBuffer fitted range.<br><br>";
   text += "The QGLViewer camera also adapts the orthographic frustum dimensions to the distance to the <code>revolveAroundPoint()</code> to mimic a perspective camera. ";
   text += "Since this behavior may not be needed, this example shows how to override it.<br><br>";
 

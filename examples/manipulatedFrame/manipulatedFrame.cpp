@@ -41,6 +41,7 @@ void Viewer::init()
   setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::ControlModifier);
 #endif
 
+  setMouseBinding(Qt::LeftButton, FRAME, DRIVE);
 #ifdef GL_RESCALE_NORMAL  // OpenGL 1.2 Only...
   glEnable(GL_RESCALE_NORMAL);
 #endif
@@ -84,12 +85,13 @@ void Viewer::draw()
 QString Viewer::helpString() const
 {
   QString text("<h2>M a n i p u l a t e d F r a m e</h2>");
-  text += "A <i>ManipulatedFrame</i> converts mouse gestures into <i>Frame</i> displacements.<br><br>";
+  text += "A <i>ManipulatedFrame</i> converts mouse gestures into <i>Frame</i> displacements. ";
+  text += "In this example, such an object defines the position of the spiral that can hence be manipulated.<br><br>";
   text += "Adding two lines of code will then allow you to move the objects of ";
   text += "your scene using the mouse. The button bindings of the <i>ManipulatedFrame</i> ";
   text += "are the same than for the camera. Spinning is possible.<br><br>";
   text += "Default key bindings have been changed in this example : press <b>Control</b> ";
-  text += "while moving the mouse to move the camera.";
+  text += "while moving the mouse to move the camera instead of the ManipulatedFrame.";
   return text;
 }
 

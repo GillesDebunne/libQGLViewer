@@ -23,11 +23,37 @@ ostream& operator<<(ostream& o, const MyVec& v)
   return o << "Je suis un MyVec" << v[0];
 }
 
+static Vec orthogonal(Vec v)
+{
+  float n = 0.5 * v.norm(); // less than 1/sqrt(3)
+  if ((fabs(v.y) > n) && (fabs(v.z) > n))
+    return Vec(0.0, -v.z, v.y);
+  else
+    if ((fabs(v.x) > n) && (fabs(v.z) > n))
+      return Vec(-v.z, 0.0, v.x);
+    else
+      return Vec(-v.y, v.x, 0.0);
+}
+
 Viewer::Viewer()
   : QGLViewer()
 {
-qglviewer::Vec z(0,0,1);
-    cout << " vec " << z << " ortho " << z.orthogonalVec() << endl; // write "vec 0  0       1 ortho -0      0       0" 
+  for (int j=-1; j<2; j+=2) {
+    for (int i=0; i<8; i++) {
+      qglviewer::Vec z((i%2==0?0:j),(i%4==0?0:j),(i%2==1?0:j));
+      cout << " vec " << z << " ortho " << z.orthogonalVec() << " \t." << z*z.orthogonalVec()  << " \t." << z.orthogonalVec().norm() << endl; // write "vec 0  0       1 ortho -0      0       0"
+    }
+  }
+
+  cout << endl;
+  
+  for (int j=-1; j<2; j+=2) {
+    for (int i=0; i<8; i++) {
+      qglviewer::Vec z((i%2==0?0:j),(i%4==0?0:j),(i%2==1?0:j));
+      cout << " vec " << z << " ortho " << orthogonal(z) << " \t." << z*orthogonal(z) << " \t." << orthogonal(z).norm() << endl;
+    }
+  }
+
   // qobj = new QObj();
   // connect(&(camera()->frame), SIGNAL(modified()), qobj, SLOT(slotMod()));
   // connect(&(camera()->frame), SIGNAL(manipulated()), qobj, SLOT(slotMan()));
@@ -37,7 +63,7 @@ qglviewer::Vec z(0,0,1);
 }
 
 void Viewer::init()
-{
+{  
 return;
   // glDisable(GL_LIGHTING);
   qWarning("init");

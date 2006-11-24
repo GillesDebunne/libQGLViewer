@@ -18,20 +18,17 @@
 
 int main(int argc, char** argv)
 {
-  // Read command lines arguments.
   QApplication application(argc,argv);
 
-  // Instantiate the interface.
   ViewerInterface vi;
 
-  // Make the viewer interface window visible on screen.
-  vi.show();
-
 #if QT_VERSION < 0x040000
-  // Set the viewer as the application main widget.
   application.setMainWidget(&vi);
+#else
+  vi.setWindowTitle("interface");
 #endif
 
-  // Run main loop.
+  vi.show();
+
   return application.exec();
 }

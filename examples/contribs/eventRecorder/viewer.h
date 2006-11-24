@@ -1,5 +1,7 @@
 #include <QGLViewer/qglviewer.h>
 
+class EventRecorder;
+
 class Viewer : public QGLViewer
 {
   Q_OBJECT

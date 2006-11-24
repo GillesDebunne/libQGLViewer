@@ -1,5 +1,5 @@
-#include "dvonnwindowimpl.h"
 #include "dvonnviewer.h"
+#include "dvonnwindowimpl.h"
 #include "game.h"
 #include <qapplication.h>
 #include <qmenubar.h>
@@ -9,17 +9,19 @@ using namespace dvonn;
 
 int main(int argc, char * argv[])
 {
-  // Read command lines arguments.
   QApplication application(argc,argv);
-  Game game;
 
+  Game game;
   DvonnWindowImpl mainWindow(&game);
-  mainWindow.show();
+  
 #if QT_VERSION < 0x040000
   application.setMainWidget(&mainWindow);
+#else
+  mainWindow.setWindowTitle("dvonn");
 #endif
 
-  // Run main loop.
+  mainWindow.show();
+
   return application.exec();
 }
 

@@ -46,7 +46,7 @@ Quarto::Quarto( QWidget* parent,  const char* name, WFlags fl )
   GLFrameJeu->setFrameStyle( QFrame::Sunken | QFrame::Panel );
   GLFrameJeu->setLineWidth( 2 );
   // Create our OpenGL widget
-  vuePlateau = new GLViewJeu( GLFrameJeu, "glplateau");
+  vuePlateau = new GLViewJeu( GLFrameJeu );
   HLayout1 = new QHBoxLayout( GLFrameJeu, 2, 2, "HLayout1"  );
   HLayout1->addWidget( vuePlateau );
   // Ajout au tableau de fenetres
@@ -96,7 +96,7 @@ Quarto::Quarto( QWidget* parent,  const char* name, WFlags fl )
   GLFramePieces->setFrameStyle( QFrame::Sunken | QFrame::Panel );
   GLFramePieces->setLineWidth( 2 );
   // Create our OpenGL widget
-  vuePieces = new GLViewPieces( GLFramePieces, "glpieces");
+  vuePieces = new GLViewPieces( GLFramePieces );
   HLayout4 = new QHBoxLayout( GLFramePieces, 2, 2, "HLayout4"  );
   HLayout4->addWidget( vuePieces );
   // Ajout au tableau de fenetres

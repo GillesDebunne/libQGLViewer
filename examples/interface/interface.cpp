@@ -41,7 +41,8 @@ void Viewer::draw()
 QString Viewer::helpString() const
 {
   QString text("<h2>I n t e r f a c e</h2>");
-  text += "A GUI can be added to a QGLViewer widget using Qt's <i>designer</i>.<br><br>";
+  text += "A GUI can be added to a QGLViewer widget using Qt's <i>designer</i>. Signals and slots ";
+  text += "can then be connected to and from the viewer.<br><br>";
   text += "You can install the QGLViewer designer plugin to make the QGLViewer appear as a ";
   text += "standard Qt widget in the designers' widget tabs. See installation pages for details.<br><br>";
   text += "An other option (with Qt version 2 or 3) is to add a <i>Custom Widget</i> in designer. ";

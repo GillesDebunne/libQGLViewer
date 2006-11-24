@@ -109,10 +109,10 @@ QString Viewer::helpString() const
 {
   QString text("<h2>S e l e c t</h2>");
   text += "Left click while pressing the <b>Shift</b> key to select an object of the scene.<br><br>";
-  text += "You only have to define the <i>drawWithNames</i> function to add object selection in your viewer. ";
-  text += "Selection is performed using the OpenGL <i>GL_SELECT</i> render mode.<br><br>";
   text += "A line is drawn between the selected point and the camera selection position. ";
   text += "using <i>convertClickToLine()</i>, a useful function for analytical intersections.<br><br>";
+  text += "To add object selection in your viewer, all you need to do is to define the <i>drawWithNames</i> function. ";
+  text += "It gives a name to each selectable object and selection is then performed using the OpenGL <i>GL_SELECT</i> render mode.<br><br>";
   text += "Feel free to cut and paste this implementation in your own applications.";
   return text;
 }

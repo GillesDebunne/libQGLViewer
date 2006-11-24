@@ -603,9 +603,9 @@ public:
   connect(viewer, SIGNAL(drawFinished(bool)), SLOT(saveSnapshot(bool)));
   \endcode
 
-  The \p dummy bool variable is always \c true and has been added so that the signal can be
+  The \p automatic bool variable is always \c true and has been added so that the signal can be
   connected to saveSnapshot() with an \c automatic value set to \c true. */
-  void drawFinished(bool dummy);
+  void drawFinished(bool automatic);
 
   /*! Signal emitted by the default animate() method.
 
@@ -922,7 +922,7 @@ public:
   enum MouseAction { NO_MOUSE_ACTION,
 		     ROTATE, ZOOM, TRANSLATE,
 		     MOVE_FORWARD, LOOK_AROUND, MOVE_BACKWARD,
-		     SCREEN_ROTATE, ROLL,
+		     SCREEN_ROTATE, ROLL, DRIVE,
 		     SCREEN_TRANSLATE, ZOOM_ON_REGION };
 
 #ifdef DOXYGEN

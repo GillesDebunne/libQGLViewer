@@ -36,7 +36,12 @@ ComputerPlayer::ComputerPlayer()
 
   setAllowedTime(3);
 }
-  
+
+ComputerPlayer::~ComputerPlayer()
+{
+  delete interface_;
+}
+
 void ComputerPlayer::selectProgram()
 {
 #if QT_VERSION < 0x040000
@@ -101,7 +106,6 @@ void ComputerPlayer::play(bool blue, const QString& stateFileName)
       if (fi.exists())
 	if (fi.isExecutable())
 	  {
-	    
 #if QT_VERSION < 0x040000
 	    process_ = new QProcess(programFileName());
 	    process_->addArgument(stateFileName);
@@ -140,6 +144,10 @@ void ComputerPlayer::readFromStdout()
 #else
   QString result = QString((process_->readAllStandardOutput()).trimmed());
 #endif
-  delete process_;
   emit moveMade(result, duration);
+#if QT_VERSION < 0x040000
+  delete process_;
+#else
+  process_->deleteLater();
+#endif  
 }
