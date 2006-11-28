@@ -63,7 +63,9 @@ Viewer::Viewer()
 }
 
 void Viewer::init()
-{  
+{
+  Quaternion q(Vec(1,0,0), M_PI/2.0);
+  cout << q << endl;
 return;
   // glDisable(GL_LIGHTING);
   qWarning("init");

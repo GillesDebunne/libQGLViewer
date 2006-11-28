@@ -604,7 +604,8 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
 #else
       QString selectedFormat = FDFormatString[snapshotFormat()];
 # if QT_VERSION >= 0x040000
-      fileName = QFileDialog::getSaveFileName(this, "Choose a file name to save under", snapshotFileName(), formats, &selectedFormat);
+      fileName = QFileDialog::getSaveFileName(this, "Choose a file name to save under", snapshotFileName(), formats, &selectedFormat,
+					      overwrite?QFileDialog::DontConfirmOverwrite:QFlag(0));
 # else
       fileName = QFileDialog::getSaveFileName(snapshotFileName(), formats, this,
 					      "Save Snapshot dialog", "Choose a file name to save under", &selectedFormat);
@@ -651,13 +652,15 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
 	  }
     }
 
+#if QT_VERSION < 0x040000
   if ((fileInfo.exists()) && (!overwrite) &&
       (QMessageBox::warning(this,"Overwrite file ?",
 			    "File "+fileInfo.fileName()+" already exists.\nOverwrite ?",
 			    QMessageBox::Yes,
 			    QMessageBox::Cancel) == QMessageBox::Cancel))
       return;
-
+#endif
+  
   bool saveOK;
 #ifndef NO_VECTORIAL_RENDER
   if ( (snapshotFormat() == "EPS") || (snapshotFormat() == "PS") || (snapshotFormat() == "XFIG") )

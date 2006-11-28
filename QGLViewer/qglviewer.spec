@@ -151,6 +151,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Wed Jul 26 2006 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.4-0
+- New DRIVE mouse mode, standardCamera example, minor bug fixes.
+
 * Wed Jul 26 2006 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.3-1
 - Missing brace in .pro added.
 

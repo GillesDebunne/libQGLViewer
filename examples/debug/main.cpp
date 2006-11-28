@@ -18,7 +18,7 @@ int main(int argc, char** argv)
   // application.setMainWidget(&v);
   //application.setMainWidget(v2);
 #else
-  setWindowTitle("debug");
+  v2->setWindowTitle("debug");
 #endif
 
   // Run main loop.
