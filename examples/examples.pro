@@ -18,4 +18,6 @@ SUBDIRS       = animation \
 		screenCoordSystem \
 		select \
 		simpleViewer \
+		standardCamera \
 		stereoViewer
+

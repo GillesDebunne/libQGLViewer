@@ -9,17 +9,17 @@ int main(int argc, char** argv)
 
   // Instantiate the two viewers.
   StandardCamera* sc = new StandardCamera();
-  Viewer v(sc);
-  CameraViewer cv(sc);
+  Viewer viewer(sc);
+  CameraViewer cviewer(sc);
 
   // Make sure every v camera movement updates the camera viewer
-  QObject::connect(viewer.camera()->frame(), SIGNAL(manipulated()), &cv, SLOT(updateGL()));
-  QObject::connect(viewer.camera()->frame(), SIGNAL(spun()), &cv, SLOT(updateGL()));
+  QObject::connect(viewer.camera()->frame(), SIGNAL(manipulated()), &cviewer, SLOT(updateGL()));
+  QObject::connect(viewer.camera()->frame(), SIGNAL(spun()), &cviewer, SLOT(updateGL()));
   // Also update on camera change (type or mode)
-  QObject::connect(&v, SIGNAL(cameraChanged()), &cv, SLOT(updateGL()));
+  QObject::connect(&viewer, SIGNAL(cameraChanged()), &cviewer, SLOT(updateGL()));
 
 #if QT_VERSION < 0x040000
-  application.setMainWidget(&v);
+  application.setMainWidget(&viewer);
 #else
   viewer.setWindowTitle("standardCamera");
   cviewer.setWindowTitle("Camera viewer");

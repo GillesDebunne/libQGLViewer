@@ -1,10 +1,10 @@
 %define version_major 2
 %define version_minor 2
-%define version_patch 3
+%define version_patch 4
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_patch}
-Release:	1
+Release:	0
 
 Summary:	Qt based OpenGL generic 3D viewer library.
 License:	GPL

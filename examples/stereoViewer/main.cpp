@@ -14,7 +14,7 @@ int main(int argc, char** argv)
   Viewer viewer;
 
 #if QT_VERSION < 0x040000
-  application.setMainWidget(&v);
+  application.setMainWidget(&viewer);
 #else
   viewer.setWindowTitle("stereoViewer");
 #endif

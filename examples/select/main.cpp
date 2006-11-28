@@ -9,7 +9,7 @@ int main(int argc, char** argv)
 
 #if QT_VERSION < 0x040000
   // Set the viewer as the application main widget.
-  application.setMainWidget(&v);
+  application.setMainWidget(&viewer);
 #else
   viewer.setWindowTitle("select");
 #endif
