@@ -11,7 +11,7 @@ using namespace std;
 
   \attention Created object is removeFromMouseGrabberPool(). */
 ManipulatedCameraFrame::ManipulatedCameraFrame()
-  : flyUpVector_(0.0, 1.0, 0.0)
+  : driveSpeed_(0.0), flyUpVector_(0.0, 1.0, 0.0)
 {
   setFlySpeed(0.0);
   removeFromMouseGrabberPool();
@@ -65,10 +65,11 @@ void ManipulatedCameraFrame::flyUpdate()
       flyDisp.z = flySpeed();
       translate(localInverseTransformOf(flyDisp));
       break;
-    default:
     case QGLViewer::DRIVE:
       flyDisp.z = flySpeed() * driveSpeed_;
       translate(localInverseTransformOf(flyDisp));
+      break;
+    default:
       break;
     }
 
