@@ -31,6 +31,8 @@ Unix systems
 </div>
 
 
+
+
 <a name="linux"></a>
 <h2><img src="images/linux.png" width="49" height="54" align="middle" alt="linux"/>Linux and Unix</h2>
 
@@ -93,7 +95,9 @@ INCLUDE_DIR    PREFIX/include
 DOC_DIR        PREFIX/share/doc
 </pre>
 
-When set, the <code>QGLVIEWER_STATIC</code> qmake option will compile a static version of the library.
+When set, the <code>QGLVIEWER_STATIC</code> qmake option will compile a static version of the
+library. Run <code>qmake all</code> (Qt4) to compile the debug <i>and</i> the release (default)
+version of the library.
 
 <p>
 If your Qt version is lower than 3.1, you need to link with the <code>glut</code> library: uncomment
@@ -107,8 +111,9 @@ Once the library is compiled, you can <a href="examples/index.html#linux">compil
 
 <p>
 You may also want to install the <a href="#plugin">libQGLViewer designer plugin</a> (especially Qt4 users) to
-easily create user interfaces using designer.
+easily create user interfaces that integrate a QGLViewer using designer.
 </p>
+
 
 
 
@@ -119,7 +124,7 @@ easily create user interfaces using designer.
 
 You need to have the <a href="http://www.trolltech.com">Qt</a> library installed in order to run
 libQGLViewer. Qt is probably already installed on your machine, or available on your distribution
-CDs. You may however have to install the "<code>dev</code>" development package. The complete Qt/X11
+CDs. You may however have to install the <code>dev</code> development package. The complete Qt/X11
 non commercial version can also freely be <a
 href="http://www.trolltech.com/products/qt/downloads">downloaded from Trolltech</a>.
 

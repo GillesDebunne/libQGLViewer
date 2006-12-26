@@ -1,14 +1,19 @@
-#Windows Qt 2.3 users should uncomment the next 2 lines and remove all the remaining lines:
-#DEFINES *= QT_DLL QT_THREAD_SUPPORT
-#LIBS *= QGLViewer.Qt2.3.lib
-
 # The rest of this configuration file is pretty complex since it tries to automatically
 # detect system paths and configuration. In your applications, you can probably simply use:
 #unix:LIBS *= -lQGLViewer
 #win32:LIBS *= QGLViewer%CAT_VERSION%.lib (with Visual 6, use QGLViewer%MAJOR_NUMBER%.lib or QGLViewer.lib instead)
 
-# Used by Qt4 only. Adds appropriate include paths.
-QT += xml opengl
+#Windows Qt 2.3 users should uncomment the next 2 lines and remove all the remaining lines:
+#DEFINES *= QT_DLL QT_THREAD_SUPPORT
+#LIBS *= QGLViewer.Qt2.3.lib
+
+QT_VERSION=$$[QT_VERSION]
+
+contains( QT_VERSION, "^4.*" ) {
+  QT *= xml opengl
+} else {
+  CONFIG *= thread
+}
 
 #                       Unix configuration
 # See doc/installUnix.html and doc/examples/index.html for details.
@@ -36,16 +41,16 @@ unix {
   }
 
   # LIB_NAME
-  LIB_NAME = libQGLViewer.so*
+  LIB_NAME = libQGLViewer*.so*
   macx|darwin-g++ {
-    LIB_NAME = libQGLViewer.*.$${QMAKE_EXTENSION_SHLIB}
+    LIB_NAME = libQGLViewer*.$${QMAKE_EXTENSION_SHLIB}
   }
   hpux {
-    LIB_NAME = libQGLViewer.sl*
+    LIB_NAME = libQGLViewer*.sl*
   }
 
   !isEmpty( QGLVIEWER_STATIC ) {
-    LIB_NAME = libQGLViewer.a
+    LIB_NAME = libQGLViewer*.a
   }
 
   # LIB_DIR
@@ -56,9 +61,9 @@ unix {
       exists( ../../QGLViewer/$${LIB_NAME} ) {
         message( Using ../../QGLViewer as LIB_DIR )
         macx|darwin-g++ {
-          message(  You should add the path to "../../QGLViewer" to your DYLD_LIBRARY_PATH variable )
+          message( You should add the path to "../../QGLViewer" to your DYLD_LIBRARY_PATH variable )
         } else {
-          message(  You should add the path to "../../QGLViewer" to your LD_LIBRARY_PATH variable )
+          message( You should add the path to "../../QGLViewer" to your LD_LIBRARY_PATH variable )
         }
         message( See the "Compilation" section in doc/examples/index.html for details )
         LIB_DIR = ../../QGLViewer
@@ -86,8 +91,8 @@ unix {
   }
 
   # Remove debugging options
-  QMAKE_CFLAGS_RELEASE -= -g
-  QMAKE_CXXFLAGS_RELEASE -= -g
+  release:QMAKE_CFLAGS_RELEASE -= -g
+  release:QMAKE_CXXFLAGS_RELEASE -= -g
 
   # Intermediate files are created in an hidden folder
   MOC_DIR = .moc

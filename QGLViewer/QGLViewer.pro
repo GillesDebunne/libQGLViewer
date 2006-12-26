@@ -1,10 +1,11 @@
 #		l i b Q G L V i e w e r
 #	C o m p i l a t i o n    c o n f i g u r a t i o n
 
+# Run "qmake; make; make install" to compile and install the library.
+# Optional arguments can tune install paths (as in "qmake PREFIX=$HOME"). See doc/download.html for details.
+
 # This configuration file is divided into architecture specific sections.
 # You may need to tune some paths, especially for OpenGL.
-# Other than that, simply run "qmake; make" to compile the library.
-# Optional arguments can tune install paths (as in "qmake PREFIX=$HOME"). See doc/download.html for details.
 
 # Attention : Windows Qt 2.3 users should use QGLViewer.Qt2.3.pro instead of this file.
 
@@ -13,7 +14,7 @@
 # USE_GLUT = yes
 
 TEMPLATE = lib
-CONFIG  *= qt opengl warn_on release thread create_prl
+CONFIG  *= qt opengl warn_on thread create_prl debug_and_release #build_all 
 TARGET   = QGLViewer
 VERSION  = 2.2.4
 
@@ -42,14 +43,22 @@ SOURCES  = qglviewer.cpp \
 	   quaternion.cpp \
 	   vec.cpp
 
-# Used by Qt4 only
-QT += xml opengl
-
 DISTFILES *= qglviewer-icon.xpm
+
+QT_VERSION=$$[QT_VERSION]
+
+contains( QT_VERSION, "^4.*" ) {
+  QT *= xml opengl
+  CONFIG(debug, debug|release) {
+    unix: TARGET = $$join(TARGET,,,_debug)
+    win32: TARGET = $$join(TARGET,,d)
+  }
+}
 
 !isEmpty( QGLVIEWER_STATIC ) {
   CONFIG *= staticlib
 }
+
 
 #		--  U n i x  --
 unix {
@@ -84,9 +93,10 @@ unix {
   contains( QT_VERSION, "^4.*" ) {
     MOC_DIR = .moc4
     OBJECTS_DIR = .obj4
-  } else {
-    MOC_DIR = .moc
-    OBJECTS_DIR = .obj
+    CONFIG(debug, debug|release) {
+      MOC_DIR = .moc4d
+      OBJECTS_DIR = .obj4d
+    }
   }
   # NOT IN DISTRIBUTION END
   # Adds a -P option so that "make install" as root creates files owned by root and links are preserved.
@@ -95,7 +105,7 @@ unix {
     QMAKE_COPY_FILE = $${QMAKE_COPY_FILE} -P
   }
 
-  # Make much smaller libraries by removing debugging informations
+  # Make much smaller libraries (and packages) by removing debugging informations
   QMAKE_CFLAGS_RELEASE -= -g
   QMAKE_CXXFLAGS_RELEASE -= -g
 
@@ -128,7 +138,7 @@ unix {
   target.path = $${LIB_DIR}
 
   # "make install" configuration options
-  INSTALLS += target staticlib include documentation docImages docRefManual
+  INSTALLS *= target staticlib include documentation docImages docRefManual
 }
 
 
@@ -154,25 +164,26 @@ irix-cc|irix-n32 {
   QMAKE_CFLAGS           *= -LANG:std
   QMAKE_LFLAGS           *= -LANG:std
   QMAKE_CXXFLAGS         *= -LANG:std
-  QMAKE_CFLAGS           += -woff 1424,3201,1110,1188
-  QMAKE_CXXFLAGS         += -woff 1424,3201,1110,1188
+  QMAKE_CFLAGS           *= -woff 1424,3201,1110,1188
+  QMAKE_CXXFLAGS         *= -woff 1424,3201,1110,1188
   QMAKE_LIBS_OPENGL      -= -lXi
   # GLUT for SGI architecture
   !isEmpty( USE_GLUT ) {
     QMAKE_LIBDIR_OPENGL    *= /usr/local/lib32
-    QMAKE_INCDIR_OPENGL    += /usr/local/include
+    QMAKE_INCDIR_OPENGL    *= /usr/local/include
   }
 }
 
 
 #		--  M a c O S X  --
-macx {
+macx|darwin-g++ {
   # GLUT for Macintosh architecture
   !isEmpty( USE_GLUT ) {
     QMAKE_LIBS_OPENGL -= -lglut
-    QMAKE_LIBS_OPENGL += -framework GLUT -lobjc
+    QMAKE_LIBS_OPENGL *= -framework GLUT -lobjc
   }
-  CONFIG -= thread
+  # Qt3 only
+  macx: CONFIG -= thread
 }
 
 
@@ -200,28 +211,17 @@ win32 {
   # Optimise for debug, and generate browse database :
   # !win32-g++: QMAKE_CXXFLAGS_DEBUG = -Od -FR"Debug/"
   # Make sure that link prints its arguments:
-  # QMAKE_LDFLAGS += -logo
-}
-
-#		--  M a c O S X  --
-macx|darwin-g++ {
-  # GLUT for Macintosh architecture
-  !isEmpty( USE_GLUT ) {
-    QMAKE_LIBS_OPENGL -= -lglut
-    QMAKE_LIBS_OPENGL += -framework GLUT -lobjc
-  }
-  # Qt3 only
-  macx: CONFIG -= thread
+  # QMAKE_LDFLAGS *= -logo
 }
 
 
 #		--  I m a g e I n t e r f a c e  --
-QT_VERSION=$$[QT_VERSION]
 contains( QT_VERSION, "^4.*" ) {
   FORMS *= ImageInterface.Qt4.ui
 } else {
   FORMS *= ImageInterface.Qt3.ui
 }
+
 
 #		--  V e c t o r i a l   R e n d e r i n g  --
 # In case of compilation troubles with vectorial rendering, uncomment this line

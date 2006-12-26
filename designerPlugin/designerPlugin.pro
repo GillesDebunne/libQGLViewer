@@ -8,14 +8,14 @@ contains( QT_VERSION, "^4.*" ) {
   isEmpty( PREFIX ) {
     PREFIX=$$[QT_INSTALL_PLUGINS]
   } else {
-    message(Custom libQGLViewer designer plugin installation path.)
+    message(You are using a custom libQGLViewer designer plugin installation path.)
     message(Do not forget to add $${PREFIX} to your QT_PLUGIN_PATH variable.)
   }
 } else {
   isEmpty( PREFIX ) {
     PREFIX=$(QTDIR)/plugins
   } else {
-    error(Custom libQGLViewer designer plugin installation path not supported with Qt3.)
+    error(Custom libQGLViewer designer plugin installation path is not supported with Qt3.)
   }
 }
 

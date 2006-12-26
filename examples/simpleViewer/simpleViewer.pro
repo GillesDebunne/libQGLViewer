@@ -8,7 +8,6 @@
 
 # This example can be cut and pasted to start the development of a new application.
 
-
 TEMPLATE = app
 TARGET   = simpleViewer
 CONFIG  += qt opengl warn_on release thread
