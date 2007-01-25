@@ -3,21 +3,31 @@
 #include "camera.h"
 #include "keyFrameInterpolator.h"
 
-#include <qapplication.h>
-#include <qfileinfo.h>
-#include <qdatetime.h>
-#include <qmessagebox.h>
-#include <qpushbutton.h>
-#include <qtabwidget.h>
-#include <qtextstream.h>
-#include <qtimer.h>
-#include <qimage.h>
-#include <qdir.h>
-
 #if QT_VERSION >= 0x040000
 # include <QtAlgorithms>
-# include <qtextedit.h>
+# include <QTextEdit>
+# include <QApplication>
+# include <QFileInfo>
+# include <QDateTime>
+# include <QMessageBox>
+# include <QPushButton>
+# include <QTabWidget>
+# include <QTextStream>
+# include <QMouseEvent>
+# include <QTimer>
+# include <QImage>
+# include <QDir>
 #else
+# include <qapplication.h>
+# include <qfileinfo.h>
+# include <qdatetime.h>
+# include <qmessagebox.h>
+# include <qpushbutton.h>
+# include <qtabwidget.h>
+# include <qtextstream.h>
+# include <qtimer.h>
+# include <qimage.h>
+# include <qdir.h>
 // Patch for enums names change
 # define KeyboardModifierMask KeyButtonMask
 // Patch for QMap API change
@@ -816,29 +826,26 @@ void QGLViewer::drawLight(GLenum light, float scale) const
 
   \attention This method uses display lists to render the characters, with an index that starts at
   2000 by default (see the QGLWidget::renderText() documentation). If you use more than 2000 Display
-  Lists, they may overlap. Directly use QGLWidget::renderText() in that case, with a higher \c
-  listBase parameter (or overload <code>fontDisplayListBase</code> with Qt4).
+  Lists, they may overlap with these. Directly use QGLWidget::renderText() in that case, with a
+  higher \c listBase parameter (or overload <code>fontDisplayListBase</code> with Qt4).
 
   \attention There is a problem with anti-aliased font with nVidia cards and Qt versions lower than
   3.3. Until this version, the \p fnt parameter is not taken into account to prevent a crash. It is
   replaced by a fixed font that should be compatible with the \c qtconfig anti-aliased font
   configuration (disable this option otherwise).
 
-  \note This method calls QGLWidget::renderText() if your Qt version is at least 3.1, otherwise it
-  uses GLUT. The Qt minimum version that disables GLUT is set by QT_VERSION_WITHOUT_GLUT in \c
-  config \c .h. Default value is 3.1. Only the \p fnt size (set with QFont::setPixelSize() or
-  QFont::setPointSize()) is taken into account with the GLUT version.
-
-  \note With Qt versions < QT_VERSION_WITHOUT_GLUT, each call to drawText() changes the camera
-  projection matrix and restores it back (using startScreenCoordinatesSystem() and
-  stopScreenCoordinatesSystem()). If you call this method several times and it slows down your
-  frame rate, consider factorizing the context changes. */
+  \note This method uses QGLWidget::renderText() if your Qt version is greater or equal to 3.1,
+  otherwise it uses (and requires) GLUT. When GLUT is used, only the \p fnt size attribute (set with
+  QFont::setPixelSize() or QFont::setPointSize()) is taken into account. Also note that in that case
+  each call to drawText() changes the camera projection matrix and restores it back (using
+  startScreenCoordinatesSystem() and stopScreenCoordinatesSystem()). If you call this method several
+  times and it slows down your frame rate, consider factorizing the context changes. */
 void QGLViewer::drawText(int x, int y, const QString& text, const QFont& fnt)
 {
   if (!textIsEnabled())
     return;
 
-#if QT_VERSION < QT_VERSION_WITHOUT_GLUT
+#if QT_VERSION < QGLVIEWER_QT_VERSION_WITHOUT_GLUT
   const GLfloat font_scale = 119.05f - 33.33f; // see glutStrokeCharacter man page
 
   startScreenCoordinatesSystem();
@@ -888,8 +895,7 @@ void QGLViewer::drawText(int x, int y, const QString& text, const QFont& fnt)
 
 Although useful, this method is deprecated with recent Qt versions. Indeed, Qt renders text as
 pixmaps that cannot be orientated. However, when GLUT is used instead of Qt (when your Qt version is
-lower than 3.1, see QT_VERSION_WITHOUT_GLUT in config .h) orientated characters are possible and this
-method will work.
+lower than 3.1, see drawText() documentation) orientated characters are possible and this method will work.
 
 \p pos and \p normal respectively represent the 3D coordinate of the text and the normal to the text
 plane. They are expressed with respect to the \e current \c GL_MODELVIEW matrix.
@@ -901,7 +907,7 @@ See the <a href="../examples/draw3DText.html">draw3DText example</a> for an illu
 /*
  void QGLViewer::draw3DText(const Vec& pos, const Vec& normal, const QString& text, GLfloat height)
  {
- #if QT_VERSION < QT_VERSION_WITHOUT_GLUT
+ #if QT_VERSION < QGLVIEWER_QT_VERSION_WITHOUT_GLUT
  if (!textIsEnabled())
  return;
 

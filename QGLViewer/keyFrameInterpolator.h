@@ -1,8 +1,13 @@
 #ifndef QGLVIEWER_KEY_FRAME_INTERPOLATOR_H
 #define QGLVIEWER_KEY_FRAME_INTERPOLATOR_H
 
-#include <qobject.h>
-#include <qtimer.h>
+#if QT_VERSION > 0x040000
+# include <QObject>
+# include <QTimer>
+#else
+# include <qobject.h>
+# include <qtimer.h>
+#endif
 
 #include "quaternion.h"
 // Not actually needed, but some bad compilers (Microsoft VS6) complain.

@@ -1,7 +1,15 @@
-#include <qdom.h>
-#include <qstring.h>
-#include <qstringlist.h>
-#include <qcolor.h>
+#if QT_VERSION > 0x040000
+# include <QDom>
+# include <QString>
+# include <QStringList>
+# include <QColor>
+#else
+# include <qdom.h>
+# include <qstring.h>
+# include <qstringlist.h>
+# include <qcolor.h>
+#endif
+
 #include <math.h>
 
 #ifndef DOXYGEN

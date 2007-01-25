@@ -151,6 +151,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Wed Jan 23 2007 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.4-2
+- Qt4 include naming convention.
+
 * Tue Dec 12 2006 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.4-1
 - Black screen bug introduced by DRIVE mode fixed.
 

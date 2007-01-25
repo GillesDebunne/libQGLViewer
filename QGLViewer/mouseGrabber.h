@@ -2,7 +2,12 @@
 #define QGLVIEWER_MOUSE_GRABBER_H
 
 #include "config.h"
-#include <qevent.h>
+
+#if QT_VERSION >= 0x040000
+# include <QEvent>
+#else
+# include <qevent.h>
+#endif
 
 class QGLViewer;
 

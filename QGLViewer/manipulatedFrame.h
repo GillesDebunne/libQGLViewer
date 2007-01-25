@@ -4,9 +4,15 @@
 #include "frame.h"
 #include "mouseGrabber.h"
 
-#include <qstring.h>
-#include <qtimer.h>
-#include <qdatetime.h>
+#if QT_VERSION >= 0x040000
+# include <QString>
+# include <QTimer>
+# include <QDateTime>
+#else
+# include <qstring.h>
+# include <qtimer.h>
+# include <qdatetime.h>
+#endif
 
 namespace qglviewer {
   /*! \brief A ManipulatedFrame is a Frame that can be rotated and translated using the mouse.

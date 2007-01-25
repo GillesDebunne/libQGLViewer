@@ -2,7 +2,12 @@
 #define QGLVIEWER_QGLVIEWER_H
 
 #include "camera.h"
-#include <qmap.h>
+
+#if QT_VERSION >= 0x040000
+# include <QMap>
+#else
+# include <qmap.h>
+#endif
 
 class QTabWidget;
 

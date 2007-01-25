@@ -1,7 +1,11 @@
 #ifndef QGLVIEWER_QKEYSEQUENCE_H
 #define QGLVIEWER_QKEYSEQUENCE_H
 
-#include <qstring.h>
+#if QT_VERSION >= 0x040000
+# include <QString>
+#else
+# include <qstring.h>
+#endif
 
 class QKeySequence
 {

@@ -3,7 +3,13 @@
 
 #include <math.h>
 #include <iostream>
-#include <qdom.h>
+
+#if QT_VERSION >= 0x040000
+# include <QDomElement>
+#else
+# include <qdom.h>
+#endif
+
 // #include <qapplication.h>
 
 // Included by all files as vec.h is at the end of the include hierarchy
@@ -46,12 +52,12 @@ class QGLVIEWER_EXPORT Vec
   // If your compiler complains the "The class "qglviewer::Vec" has no member "x"."
   // Add your architecture Q_OS_XXXX flag (see qglobal.h) in this list.
 #if defined (Q_OS_IRIX) || defined (Q_OS_AIX) || defined (Q_OS_HPUX)
-# define UNION_NOT_SUPPORTED
+# define QGLVIEWER_UNION_NOT_SUPPORTED
 #endif
 
 public:
   /*! The internal data representation is public. One can use v.x, v.y, v.z. See also operator[](). */
-#if defined (DOXYGEN) || defined (UNION_NOT_SUPPORTED)
+#if defined (DOXYGEN) || defined (QGLVIEWER_UNION_NOT_SUPPORTED)
   float x, y, z;
 #else
   union
@@ -117,7 +123,7 @@ public:
   //@{
   /*! Bracket operator, with a constant return value. \p i must range in [0..2]. */
   float operator[](int i) const {
-#ifdef UNION_NOT_SUPPORTED
+#ifdef QGLVIEWER_UNION_NOT_SUPPORTED
     return (&x)[i];
 #else
     return v_[i];
@@ -126,7 +132,7 @@ public:
 
   /*! Bracket operator returning an l-value. \p i must range in [0..2]. */
   float& operator[](int i) {
-#ifdef UNION_NOT_SUPPORTED
+#ifdef QGLVIEWER_UNION_NOT_SUPPORTED
     return (&x)[i];
 #else
     return v_[i];
@@ -147,7 +153,7 @@ public:
   glVertex3fv(pos);
   \endcode */
   operator const float*() const {
-#ifdef UNION_NOT_SUPPORTED
+#ifdef QGLVIEWER_UNION_NOT_SUPPORTED
     return &x;
 #else
     return v_;
@@ -158,7 +164,7 @@ public:
 
   Useful to pass a Vec to a method that requires and fills a \c float*, as provided by certain libraries. */
   operator float*() {
-#ifdef UNION_NOT_SUPPORTED
+#ifdef QGLVIEWER_UNION_NOT_SUPPORTED
     return &x;
 #else
     return v_;

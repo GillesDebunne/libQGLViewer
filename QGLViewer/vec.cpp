@@ -62,7 +62,7 @@ Vec::Vec(const QDomElement& element)
 #else
   for (unsigned int i=0; i<attribute.count(); ++i)
 #endif
-#ifdef UNION_NOT_SUPPORTED
+#ifdef QGLVIEWER_UNION_NOT_SUPPORTED
     this->operator[](i) = DomUtils::floatFromDom(element, attribute[i], 0.0);
 #else
     v_[i] = DomUtils::floatFromDom(element, attribute[i], 0.0);

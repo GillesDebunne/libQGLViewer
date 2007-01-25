@@ -47,12 +47,15 @@
 #endif
 
 // OpenGL includes - Included here and hence shared by all the files that need OpenGL headers.
-#include <qgl.h>
-
+#if QT_VERSION >= 0x040000
+# include <QGLWidget>
+#else
+# include <qgl.h>
+#endif
 
 // Old Qt versions require GLUT for text rendering
-#define QT_VERSION_WITHOUT_GLUT 0x030100
-#if QT_VERSION < QT_VERSION_WITHOUT_GLUT
+#define QGLVIEWER_QT_VERSION_WITHOUT_GLUT 0x030100
+#if QT_VERSION < QGLVIEWER_QT_VERSION_WITHOUT_GLUT
 # ifdef Q_OS_MAC
 #  include <GLUT/glut.h>
 # else
@@ -67,8 +70,8 @@
 // Container classes interfaces changed a lot in Qt.
 // Compatibility patches are all grouped here.
 #if QT_VERSION >= 0x040000
-# include <qlist.h>
-# include <qvector.h>
+# include <QList>
+# include <QVector>
 #else
 # define qMax(a,b) QMAX(a,b)
 # if QT_VERSION >= 0x030000
