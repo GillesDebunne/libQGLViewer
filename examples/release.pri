@@ -103,9 +103,14 @@ unix {
 #                    Windows configuration.
 win32 {
   # Various compilation flags
-  !win32-g++: QMAKE_CXXFLAGS = -TP -G6 -GR -GX -Zi
-  # Optimise for speed, and expand any suitable inlines
-  # QMAKE_CXXFLAGS_RELEASE = -O2 -Ob2
+  !win32-g++ {
+    QMAKE_CXXFLAGS = -TP -G6 -GR -Zi
+    win32-msvc {
+      QMAKE_CXXFLAGS *= -GX
+    } else {
+      QMAKE_CXXFLAGS *= -EHs
+    }
+  }
 
   # Use the Qt DLL version
   DEFINES *= QT_DLL QT_THREAD_SUPPORT
@@ -114,16 +119,16 @@ win32 {
     DEFINES *= QGLVIEWER_STATIC
   }
 
+  win32-g++ {
+    LIB_FILE = libQGLViewer*%MAJOR_NUMBER%.a
+  } else {
+    LIB_FILE = QGLViewer*.lib
+  }
+
   # Compilation from zip file : libQGLViewer is in ../..
   exists( ../../QGLViewer ) {
     exists( ../../QGLViewer/qglviewer.h ) {
       INCLUDEPATH *= ../..
-    }
-
-    win32-g++ {
-      LIB_FILE = libQGLViewer*%MAJOR_NUMBER%.a
-    } else {
-      LIB_FILE = QGLViewer*.lib
     }
 
     exists( ../../QGLViewer/Debug ) {
