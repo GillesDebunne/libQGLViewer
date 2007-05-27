@@ -382,6 +382,7 @@ public slots:
 
     void getProjectionMatrix(GLdouble m[16]) const;
     void getModelViewMatrix(GLdouble m[16]) const;
+	void getModelViewProjectionMatrix(GLdouble m[16]) const;
 
 #ifndef DOXYGEN
     // Required for windows which otherwise silently fills

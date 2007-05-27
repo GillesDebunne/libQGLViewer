@@ -19,7 +19,21 @@
 
 <h1>Change Log</h1>
 
-<h2>November 28 2006 - 2.2.4</h2>
+<h2>May 29th 2007 - 2.2.5</h2>
+<b>New features</b>
+<ul>
+ <li>The <code>Camera</code> now saves and restores its scene center and radius in its XML representation.</li>
+ <li>A new <code>Camera::getModelViewProjectionMatrix</code> convenient method (suggester Elmar).</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li>Compilation warnings with MSVC 2003 and 2005 fixed.</li>
+ <li>Null viewer dimensions no longer cause divisions by 0 (bug finder Elmar).</li>
+</ul>
+
+
+<h2>November 28th 2006 - 2.2.4</h2>
 <b>New features</b>
 <ul>
  <li>A new <code>DRIVE</code> MouseAction. Similar to fly, but speed depends on mouse vertical position (suggester Le Thanh).</li>

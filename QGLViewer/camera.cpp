@@ -141,8 +141,9 @@ If your Camera is used without a QGLViewer (offscreen rendering, shadow maps), u
 instead to define the projection matrix. */
 void Camera::setScreenWidthAndHeight(int width, int height)
 {
-  screenWidth_  = width;
-  screenHeight_ = height;
+  // Prevent negative and zero dimensions that would cause divisions by zero.
+	screenWidth_  = width > 0 ? width : 1;
+	screenHeight_ = height > 0 ? height : 1;
 }
 
 /*! Returns the near clipping plane distance used by the Camera projection matrix.
@@ -590,6 +591,28 @@ void Camera::getModelViewMatrix(GLdouble m[16]) const
     m[i] = modelViewMatrix_[i];
 }
 
+/*! Fills \p m with the product of the ModelView and Projection matrices.
+
+  Calls getModelViewMatrix() and getProjectionMatrix() and then fills \p m with the product of these two matrices. */
+void Camera::getModelViewProjectionMatrix(GLdouble m[16]) const
+{
+  GLdouble mv[16];
+  GLdouble proj[16];
+  getModelViewMatrix(mv);
+  getProjectionMatrix(proj);
+	
+  for (unsigned short i=0; i<4; ++i)
+  {
+    for (unsigned short j=0; j<4; ++j)
+    {
+      double sum = 0.0;
+      for (unsigned short k=0; k<4; ++k)
+        sum += proj[i+4*k]*mv[k+4*j];
+      m[i+4*j] = sum;
+    }
+  }
+}
+
 #ifndef DOXYGEN
 void Camera::getProjectionMatrix(GLfloat m[16]) const
 {
@@ -636,6 +659,7 @@ void Camera::setSceneBoundingBox(const Vec& min, const Vec& max)
   setSceneCenter((min+max)/2.0);
   setSceneRadius(0.5*(max-min).norm());
 }
+
 
 /*! Sets the sceneCenter().
 
@@ -1568,7 +1592,9 @@ QDomElement Camera::domElement(const QString& name, QDomDocument& document) cons
   paramNode.setAttribute("zNearCoefficient", QString::number(zNearCoefficient()));
   paramNode.setAttribute("zClippingCoefficient", QString::number(zClippingCoefficient()));
   paramNode.setAttribute("orthoCoef", QString::number(orthoCoef_));
-  // paramNode.setAttribute("sceneRadius", QString::number(sceneRadius()));
+  paramNode.setAttribute("sceneRadius", QString::number(sceneRadius()));
+  paramNode.appendChild(sceneCenter().domElement("SceneCenter", document));
+
   switch (type())
     {
     case Camera::PERSPECTIVE  :	paramNode.setAttribute("Type", "PERSPECTIVE"); break;
@@ -1620,10 +1646,7 @@ QDomElement Camera::domElement(const QString& name, QDomDocument& document) cons
 
  The frame() pointer is not modified by this method. The frame() state is however modified.
 
- The sceneRadius() and sceneCenter() are not part of the domElement() and are hence not modified by
- this method.
-
- \attention The keyFrameInterpolator() are deleted and should be copied if they are shared. */
+ \attention The original keyFrameInterpolator() are deleted and should be copied first if they are shared. */
 void Camera::initFromDOMElement(const QDomElement& element)
 {
   QDomElement child=element.firstChild().toElement();
@@ -1640,22 +1663,24 @@ void Camera::initFromDOMElement(const QDomElement& element)
 	  setZNearCoefficient(DomUtils::floatFromDom(child, "zNearCoefficient", 0.005f));
 	  setZClippingCoefficient(DomUtils::floatFromDom(child, "zClippingCoefficient", sqrt(3.0)));
 	  orthoCoef_ = DomUtils::floatFromDom(child, "orthoCoef", tan(fieldOfView()/2.0));
-	  // setSceneRadius(DomUtils::floatValueFromDom(child, "sceneRadius", sceneRadius()));
+	  setSceneRadius(DomUtils::floatFromDom(child, "sceneRadius", sceneRadius()));
 
 	  setType(PERSPECTIVE);
 	  QString type = child.attribute("Type", "PERSPECTIVE");
 	  if (type == "PERSPECTIVE")  setType(Camera::PERSPECTIVE);
 	  if (type == "ORTHOGRAPHIC") setType(Camera::ORTHOGRAPHIC);
+
+      QDomElement child2=child.firstChild().toElement();
+      while (!child2.isNull())
+	  {
+	    /* Although the scene does not change when a camera is loaded, restore the saved center and radius values. 
+	       Mainly useful when a the viewer is restored on startup, with possible additional cameras. */
+	    if (child2.tagName() == "SceneCenter")
+	      setSceneCenter(Vec(child2));
+
+	    child2 = child2.nextSibling().toElement();
+	  }
 	}
-
-      /*
-	The scene does not change when a camera is loaded. Keep previous value.
-	if (child.tagName() == "SceneCenter")
-	setSceneCenter(Vec(sc));
-      */
-
-      if (child.tagName() == "RevolveAroundPoint")
-	setRevolveAroundPoint(Vec(child));
 
       if (child.tagName() == "ManipulatedCameraFrame")
 	frame()->initFromDOMElement(child);

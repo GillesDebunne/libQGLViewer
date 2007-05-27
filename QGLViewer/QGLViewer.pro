@@ -205,13 +205,14 @@ win32 {
   # Make sure to have C++ files, PentiumPro code, few warnings, add
   # support to RTTI and Exceptions, and generate debug info "program database"
   # Any feedback welcome on these flags.
-  !win32-g++: QMAKE_CXXFLAGS = -TP -G6 -GR -GX -Zi
-  # Optimise for speed, and expand any suitable inlines :
-  # QMAKE_CXXFLAGS_RELEASE = -O2
-  # Optimise for debug, and generate browse database :
-  # !win32-g++: QMAKE_CXXFLAGS_DEBUG = -Od -FR"Debug/"
-  # Make sure that link prints its arguments:
-  # QMAKE_LDFLAGS *= -logo
+  !win32-g++ {
+    QMAKE_CXXFLAGS = -TP -G6 -GR -Zi
+    win32-msvc {
+      QMAKE_CXXFLAGS *= -GX
+    } else {
+      QMAKE_CXXFLAGS *= -EHs
+    }
+  }
 }
 
 
