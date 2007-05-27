@@ -1,10 +1,10 @@
 %define version_major 2
 %define version_minor 2
-%define version_patch 4
+%define version_patch 5
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_patch}
-Release:	0
+Release:	1
 
 Summary:	Qt based OpenGL generic 3D viewer library.
 License:	GPL
@@ -151,8 +151,14 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
-* Wed Jan 23 2007 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.5-0
+* Tue May 29 2007 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.6-0
 - Camera saves and restores scene center and radius. Camera::getModelViewProjectionMatrix
+
+* Sun Apr 1 2007 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.5-1
+- A new clippingPlane example.
+
+* Wed Jan 31 2007 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.5-0
+- 1px shift in pointUnderPixel fixed. Minor bugs fixed.
 
 * Wed Jan 23 2007 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.4-2
 - Qt4 include naming convention.

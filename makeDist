@@ -2,11 +2,12 @@
 
 libName="libQGLViewer"
 version="2.2.5"
-release="0"
+release="1"
 
 version_major=`echo $version | cut -d"." -f1`
 version_minor=`echo $version | cut -d"." -f2`
 version_patch=`echo $version | cut -d"." -f3`
+catVersion=$(echo $version | sed s%"\."%""%g)
 
 WebSuffix="Members/Gilles.Debunne/QGLViewer"
 WebDir="/home/wwwartis/pub/$WebSuffix"
@@ -148,15 +149,19 @@ then
  exit
 fi
 
+grep 'version="3.0"' QGLViewer/ImageInterface.Qt3.ui > /dev/null
+if [[ "$?" -ne "0" ]]
+then
+ echo "No 3.0 version in QGLViewer/ImageInterface.ui - Aborting"
+ exit
+fi
+
 grep 'version="3.1"' examples/interface/viewerInterface.Qt3.ui > /dev/null
 if [[ "$?" -ne "0" ]]
 then
  echo "No 3.1 version in examples/interface/viewerInterface.Qt3.ui - Aborting"
  exit
 fi
-
-
-
 
 
 
@@ -404,7 +409,6 @@ do
   mv /tmp/notInDistrib $pro
 done
 
-catVersion=$(echo $version | sed s%"\."%""%g)
 sed s:"%CAT_VERSION%":"$catVersion":g examples/release.pri | sed s:"%MAJOR_NUMBER%":"$version_major":g > /tmp/release.filtered
 mv /tmp/release.filtered examples/release.pri
 
@@ -656,6 +660,11 @@ then
   archExt="fc4.tar.gz"
 fi
 
+if [[ `grep "Fedora Core release 6" /etc/redhat-release` ]]
+then
+  archExt="fc6.tar.gz"
+fi
+
 if [[ `grep "Mandrake Linux release 9.1" /etc/redhat-release` ]]
 then
   archExt="mdk9.1.tar.gz"
@@ -697,5 +706,13 @@ md5sum `find . -type f | sort` > md5sum.txt
 cd - > /dev/null
 exit
 fi # $1=rpm
+
+
+if [ $1 == "win" ]
+then
+  echo "Creating release-win.pri"
+  sed s:"%CAT_VERSION%":"$catVersion":g examples/release.pri | sed s:"%MAJOR_NUMBER%":"$version_major":g | sed s:"../../":"../":g | sed s:"LIBS \*= ":"LIBS *= ../":g > examples/release-win.pri
+  exit
+fi
 
 echo "Unrecognized option: $@"

@@ -223,7 +223,7 @@ public:
     return !(a==b);
   }
 
-  /*! Returns \c true when the squaredNorm() of the difference vector is lower then 1E-10. */
+  /*! Returns \c true when the squaredNorm() of the difference vector is lower than 1E-10. */
   friend bool operator==(const Vec &a, const Vec &b)
   {
     const float epsilon = 1.0E-10f;

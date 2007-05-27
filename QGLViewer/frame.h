@@ -136,7 +136,7 @@ namespace qglviewer {
     will prevent you from modifying the Frame \e inside your QGLViewer::draw() method as it would
     result in an infinite loop. However, QGLViewer::draw() should not modify the scene.
 
-    \note Efficiency reasons, this signal is emitted even if the Frame is not actually modified, for
+    \note For efficiency reasons, this signal is emitted even if the Frame is not actually modified, for
     instance with translate(Vec(0,0,0)) or setPosition(position()). */
     void modified();
 

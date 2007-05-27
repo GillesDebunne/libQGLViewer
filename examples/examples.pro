@@ -1,6 +1,7 @@
 TEMPLATE      = subdirs
 SUBDIRS       = animation \
 		callback \
+		clippingPlane \
 		constrainedCamera \
 		constrainedFrame \
 		drawLight \

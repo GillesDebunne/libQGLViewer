@@ -334,6 +334,9 @@ public:
 
   Set by setStereoDisplay() or toggleStereoDisplay(). Default value is \c false.
 
+  Stereo is performed using the Parallel axis asymmetric frustum perspective projection method.
+  See Camera::loadProjectionMatrixStereo() and Camera::loadModelViewMatrixStereo().
+
   The stereo parameters are defined by the camera(). See qglviewer::Camera::setIODistance(),
   qglviewer::Camera::setPhysicalDistanceToScreen(),
   qglviewer::Camera::setPhysicalScreenWidth() and

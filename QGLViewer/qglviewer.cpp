@@ -283,7 +283,7 @@ void QGLViewer::aboutQGLViewer()
   QMessageBox mb("About libQGLViewer",
 		 QString("libQGLViewer, version ")+QGLViewerVersionString()+QString(".<br>"
 		 "A versatile 3D viewer based on OpenGL and Qt.<br>"
-		 "Copyright 2002-2006 Gilles Debunne.<br>"
+		 "Copyright 2002-2007 Gilles Debunne.<br>"
 		 "<code>http://artis.imag.fr/Software/QGLViewer</code>"),
 		 QMessageBox::Information,
 		 QMessageBox::Ok,
@@ -2898,7 +2898,7 @@ void QGLViewer::setMouseBinding(int state, MouseHandler handler, MouseAction act
  perform \p action.
 
  If \p buttonsBefore is specified (valid only when \p doubleClick is \c true), then this mouse
- button(s) have to pressed \e before the double click occurs in order to perform \p action.
+ button(s) has to be pressed \e before the double click occurs in order to perform \p action.
 
  The list of all possible ClickAction, some binding examples and default bindings are listed in the
  <a href="../mouse.html">mouse page</a>. See also the setMouseBinding() documentation.

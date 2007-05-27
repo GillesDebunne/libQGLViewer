@@ -37,7 +37,7 @@ Unix systems
 <h2><img src="images/linux.png" width="49" height="54" align="middle" alt="linux"/>Linux and Unix</h2>
 
 <h3>Compilation and installation</h3>
-Directly install the <a href="http://blabluga.hell.pl/QGLViewer/">Debian package</a>, the <a href="http://www.freshports.org/graphics/libqglviewer/">FreeBSD port</a> or the pre-compiled RPM (built on Fedora Core 2 with gcc 3.3.3):
+Directly install the <a href="http://blabluga.hell.pl/QGLViewer/">Debian package</a>, the <a href="http://www.freshports.org/graphics/libqglviewer/">FreeBSD port</a> or the pre-compiled RPM (built on Fedora Core 6 with gcc 4.1.1):
 <pre>
 rpm -Uvh <a href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.i586.rpm">libQGLViewer-#VERSION#-#RELEASE#.i586.rpm</a> <a href="#WEBURL#/src/libQGLViewer-devel-#VERSION#-#RELEASE#.i586.rpm">libQGLViewer-devel-#VERSION#-#RELEASE#.i586.rpm</a>
 </pre>
@@ -315,8 +315,10 @@ interface that includes a QGLViewer.
 
 <a name="troubleshooting"></a>
 <h2>Troubleshooting</h2>
-Here are some error messages that you may encounter and the solution to the problem:
+Here are some error messages that you may encounter with their solutions:
 <ul>
+
+	<li><b>QWidget: Must construct a QApplication before a QPaintDevice.</b>: the library and your program were probably compiled in debug and release modes (or vice-versa). Using the same mode for both should fix this problem (may also appear with static vs dynamic libraries).</li>
 
 <li><b>declaration of <code>qtObsolete</code> conflicts with previous declaration</b>: error
 message. See the <a href="examples/index.html#mac">mac example section</a>.</li>
@@ -355,7 +357,7 @@ machine. Remove the <code>QMAKE_COPY_FILE</code> modification in <code>QGLViewer
 <li><b>gcc 2.95: ostream operator &lt;&lt; with <code>QString</code></b>: uncomment the patch in
 <code>config.h</code></li>
 
-<li><b>Undefined reference to QString::QString</b>: add/remove <code>thread</code> in the
+<li><b>Undefined reference to QString::QString (Qt3)</b>: add/remove <code>thread</code> in the
 <code>CONFIG</code> line of <code>QGLViewer.pro</code> and re-compile.</li>
 
 <li><b>exception handling disabled</b>: add <code>QMAKE_CXXFLAGS *= -fexceptions</code> in <code>QGLViewer.pro</code>.</li>

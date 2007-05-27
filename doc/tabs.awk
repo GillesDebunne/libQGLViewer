@@ -1,5 +1,6 @@
 BEGIN { p=0; inli=0; search=""; }
 
+/<div/ { if (p>1) p=p+1; }
 /<div class=\"tabs">/ { p=p+1; }
 
 /href=\"index.html\"/ { if (p==1) { gsub("index.html", "../index.html"); main=$0; } }
@@ -10,7 +11,7 @@ BEGIN { p=0; inli=0; search=""; }
 if (inli==1) {
   if (searchFound==1) {
     search=search"\n"$0;
-    searchFound=false;
+    searchFound=0;
     # print "RES=",search
   } else {
     # print "RESET SEARCH";
@@ -27,6 +28,9 @@ if (inli==1) {
 /<li.*>Related.*Functions.*<\/li>/ { next }
 
 /<\/div>/ { if (p==2) { print search } }
+
+/<div class=\"nav\">/ { next; }
+/namespaceqglviewer.html/ { next; }
 
 {
  if (inli==1) {search=search"\n"$0;}

@@ -46,6 +46,8 @@ void Viewer::init()
   setKeyDescription(Qt::Key_T, "Toggles camera type (perspective or orthographic)");
   setKeyDescription(Qt::Key_M, "Toggles camera mode (standard or QGLViewer)");
 
+  setMouseBindingDescription(Qt::SHIFT + Qt::MidButton, "Change frustum size (for standard camera in orthographic mode)");
+
   // Display help window.
   help();
 }
@@ -53,7 +55,7 @@ void Viewer::init()
 void Viewer::showMessage()
 {
   QString std = ((StandardCamera*)camera())->isStandard()?"Standard camera":"QGLViewer camera";
-  QString type = camera()->type() == Camera::PERSPECTIVE?"Perspective":"Orthogonal";
+  QString type = camera()->type() == Camera::PERSPECTIVE?"Perspective":"Orthographic";
   displayMessage(std + " - " + type);
   emit cameraChanged();
 }
@@ -110,7 +112,9 @@ QString Viewer::helpString() const
   text += "The second viewer displays the first one's camera to show its configuration.<br><br>";
 
   text += "Use <b>M</b> to switch between 'standard' and QGLViewer camera behavior.<br>";
-  text += "Use <b>T</b> to switch between perspective and orthographic camera type.";
+  text += "Use <b>T</b> to switch between perspective and orthographic camera type.<br><br>";
+
+  text += "Use <b>Shift+wheel</b> to change standard camera orthographic size.";
 
   return text;
 }

@@ -368,7 +368,7 @@ function makeExampleCell()
   fi
     
   echo "    <td style='border:2px solid #aaaacc' align=\"center\">" >> $output
-  echo "      <a href=\"$ref\"><img src=\"../images/$name.jpg\" width=\"198\" height=\"137\" alt=\"$name\"/><br/>" >> $output
+  echo "      <a href=\"$ref\"><img src=\"../images/$name.jpg\" width=\"330\" height=\"228\" alt=\"$name\"/><br/>" >> $output
   echo "      <b>$name</b></a><br/>$text" >> $output
   echo "    </td>" >> $output
 
