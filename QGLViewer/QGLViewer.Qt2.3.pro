@@ -12,7 +12,7 @@
 TEMPLATE = lib
 CONFIG  *= qt opengl warn_on release thread dll
 TARGET   = QGLViewer
-VERSION  = 2.2.5
+VERSION  = 2.2.6
 
 HEADERS  = qglviewer.h \
 	   camera.h \
