@@ -137,6 +137,8 @@ Camera& Camera::operator=(const Camera& camera)
 You should not call this method when the Camera is associated with a QGLViewer, since the
 latter automatically updates these values when it is resized (hence overwritting your values).
 
+Non-positive dimension are silently replaced by a 1 pixel value to ensure frustrum coherence.
+
 If your Camera is used without a QGLViewer (offscreen rendering, shadow maps), use setAspectRatio()
 instead to define the projection matrix. */
 void Camera::setScreenWidthAndHeight(int width, int height)
