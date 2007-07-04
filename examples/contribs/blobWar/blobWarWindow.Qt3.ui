@@ -408,6 +408,6 @@
 </connections>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
-    <includehint>blobwarviewer.h</includehint>
+    <includehint>blobWarViewer.h</includehint>
 </includehints>
 </UI>

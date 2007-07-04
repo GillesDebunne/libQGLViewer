@@ -2,7 +2,10 @@
 #if QT_VERSION < 0x040000
 # include <qpopupmenu.h>
 #else
-# include <qmenu.h>
+# include <QMenu>
+# include <QKeyEvent>
+# include <QMouseEvent>
+
 #endif
 #include <qcursor.h>
 #include <qmap.h>

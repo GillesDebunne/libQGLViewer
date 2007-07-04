@@ -4,7 +4,7 @@
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_patch}
-Release:	0
+Release:	1
 
 Summary:	Qt based OpenGL generic 3D viewer library.
 License:	GPL
@@ -151,6 +151,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Tue Jul 4 2007 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.6-1
+- Misspelling in ui files (qt3) and missing include in keyboardAndMouse example (qt4).
+
 * Tue May 29 2007 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.6-0
 - Camera saves and restores scene center and radius. Camera::getModelViewProjectionMatrix
 

@@ -206,6 +206,6 @@
 </connections>
 <layoutdefaults spacing="2" margin="6"/>
 <includehints>
-    <includehint>viewer.h</includehint>
+    <includehint>interface.h</includehint>
 </includehints>
 </UI>
