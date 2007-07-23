@@ -1,6 +1,10 @@
 #include "viewer.h"
 #include "standardCamera.h"
 
+#if QT_VERSION >= 0x040000
+# include <QKeyEvent>
+#endif
+
 using namespace std;
 using namespace qglviewer;
 

@@ -1,6 +1,10 @@
 #include "thumbnail.h"
 #include <math.h>
 
+#if QT_VERSION >= 0x040000
+# include <QKeyEvent>
+#endif
+
 using namespace std;
 
 void Viewer::draw()

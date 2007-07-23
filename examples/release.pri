@@ -9,7 +9,7 @@
 
 QT_VERSION=$$[QT_VERSION]
 
-contains( QT_VERSION, "^4.*" ) {
+contains( QT_VERSION, "^4\..*" ) {
   QT *= xml opengl
 } else {
   CONFIG *= thread

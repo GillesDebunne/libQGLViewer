@@ -3,6 +3,10 @@
 #include <qimage.h>
 #include <qfiledialog.h>
 
+#if QT_VERSION >= 0x040000
+# include <QKeyEvent>
+#endif
+
 using namespace qglviewer;
 using namespace std;
 

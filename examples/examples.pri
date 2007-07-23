@@ -7,7 +7,6 @@ unix {
     LIB_DIR=$$(HOME)/QGLViewer/QGLViewer
   }
 
-
   include( release.pri )
 
   QT_VERSION=$$[QT_VERSION]
@@ -23,5 +22,11 @@ unix {
 #CONFIG += simpleOutput.prf moc resource
 }
 
-win32: include( release-win.pri )
+win32-g++ {
+  INCLUDEPATH *= ../../..
+  LIBS *= -L../../../QGLViewer/Release -lQGLViewer2 
+  QT *= xml opengl
+}
+
+win32-msvc : include( release-win.pri )
 

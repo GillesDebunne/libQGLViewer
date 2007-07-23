@@ -1,6 +1,10 @@
 #include "multiSelect.h"
 #include "manipulatedFrameSetConstraint.h"
 
+#if QT_VERSION >= 0x040000
+# include <QMouseEvent>
+#endif
+
 using namespace qglviewer;
 
 Viewer::Viewer()

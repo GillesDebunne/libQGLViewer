@@ -1,4 +1,9 @@
 #include "standardCamera.h"
+
+#if QT_VERSION >= 0x040000
+# include <QWheelEvent>
+#endif
+
 using namespace qglviewer;
 
 StandardCamera::StandardCamera()
