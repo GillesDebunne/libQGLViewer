@@ -130,15 +130,15 @@ unix {
   docRefManual.files = ../doc/refManual/*
 
   # install static library
-  staticlib.extra = make staticlib
-  staticlib.path = $${LIB_DIR}
-  staticlib.files = lib$${TARGET}.a
+  #staticlib.extra = make staticlib
+  #staticlib.path = $${LIB_DIR}
+  #staticlib.files = lib$${TARGET}.a
 
   # install library
   target.path = $${LIB_DIR}
 
   # "make install" configuration options
-  INSTALLS *= target staticlib include documentation docImages docRefManual
+  INSTALLS *= target include documentation docImages docRefManual
 }
 
 
