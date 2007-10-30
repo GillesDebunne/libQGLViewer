@@ -2,7 +2,7 @@
 
 TEMPLATE = app
 TARGET   = debug
-CONFIG  += qt opengl warn_on debug_and_release thread
+CONFIG  += qt opengl warn_on release thread console
 
 HEADERS  = debug.h
 SOURCES  = debug.cpp main.cpp

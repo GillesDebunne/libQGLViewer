@@ -1,11 +1,8 @@
-#		l i b Q G L V i e w e r
+#		    l i b Q G L V i e w e r
 #	C o m p i l a t i o n    c o n f i g u r a t i o n
 
 # Run "qmake; make; make install" to compile and install the library.
 # Optional arguments can tune install paths (as in "qmake PREFIX=$HOME"). See doc/download.html for details.
-
-# This configuration file is divided into architecture specific sections.
-# You may need to tune some paths, especially for OpenGL.
 
 # Attention : Windows Qt 2.3 users should use QGLViewer.Qt2.3.pro instead of this file.
 
@@ -14,37 +11,40 @@
 # USE_GLUT = yes
 
 TEMPLATE = lib
-CONFIG  *= qt opengl warn_on thread create_prl debug_and_release #build_all 
-TARGET   = QGLViewer
-VERSION  = 2.2.6
+TARGET = QGLViewer
+VERSION = 2.2.6
+CONFIG -= debug
+CONFIG *= release qt opengl warn_on thread create_prl 
 
-HEADERS  = qglviewer.h \
-	   camera.h \
-	   manipulatedFrame.h \
-	   manipulatedCameraFrame.h \
-	   frame.h \
-	   constraint.h \
-	   keyFrameInterpolator.h \
-	   mouseGrabber.h \
-	   quaternion.h \
-	   vec.h \
-	   domUtils.h \
-	   config.h
+HEADERS = qglviewer.h \
+	  camera.h \
+	  manipulatedFrame.h \
+	  manipulatedCameraFrame.h \
+	  frame.h \
+	  constraint.h \
+	  keyFrameInterpolator.h \
+	  mouseGrabber.h \
+	  quaternion.h \
+	  vec.h \
+	  domUtils.h \
+	  config.h
 
-SOURCES  = qglviewer.cpp \
-	   camera.cpp \
-	   manipulatedFrame.cpp \
-	   manipulatedCameraFrame.cpp \
-	   frame.cpp \
-	   saveSnapshot.cpp \
-	   constraint.cpp \
-	   keyFrameInterpolator.cpp \
-	   mouseGrabber.cpp \
-	   quaternion.cpp \
-	   vec.cpp
+SOURCES = qglviewer.cpp \
+	  camera.cpp \
+	  manipulatedFrame.cpp \
+	  manipulatedCameraFrame.cpp \
+	  frame.cpp \
+	  saveSnapshot.cpp \
+	  constraint.cpp \
+	  keyFrameInterpolator.cpp \
+	  mouseGrabber.cpp \
+	  quaternion.cpp \
+	  vec.cpp
 
 DISTFILES *= qglviewer-icon.xpm
 
+TRANSLATIONS = qglviewer_fr.ts
+                       
 QT_VERSION=$$[QT_VERSION]
 
 contains( QT_VERSION, "^4.*" ) {
@@ -89,7 +89,6 @@ unix {
   # NOT IN DISTRIBUTION BEGIN
   DISTFILES *= VRenderInterface.Qt4.ui ImageInterface.Qt4.ui
 
-  QT_VERSION=$$[QT_VERSION]
   contains( QT_VERSION, "^4.*" ) {
     MOC_DIR = .moc4
     OBJECTS_DIR = .obj4

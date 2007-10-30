@@ -1,31 +1,37 @@
 <ui version="4.0" >
- <author></author>
- <comment></comment>
- <exportmacro></exportmacro>
  <class>VRenderInterface</class>
  <widget class="QDialog" name="VRenderInterface" >
   <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>298</width>
-    <height>224</height>
+    <width>230</width>
+    <height>211</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Vectorial rendering options</string>
   </property>
   <layout class="QVBoxLayout" >
-   <property name="margin" >
-    <number>5</number>
-   </property>
    <property name="spacing" >
     <number>6</number>
+   </property>
+   <property name="leftMargin" >
+    <number>5</number>
+   </property>
+   <property name="topMargin" >
+    <number>5</number>
+   </property>
+   <property name="rightMargin" >
+    <number>5</number>
+   </property>
+   <property name="bottomMargin" >
+    <number>5</number>
    </property>
    <item>
     <widget class="QCheckBox" name="includeHidden" >
      <property name="toolTip" >
-      <string>Hidden poligons are also included in the output (usually twice bigger)</string>
+      <string>Hidden polygons are also included in the output (usually twice bigger)</string>
      </property>
      <property name="text" >
       <string>Include hidden parts</string>
@@ -74,11 +80,20 @@
    </item>
    <item>
     <layout class="QHBoxLayout" >
-     <property name="margin" >
-      <number>11</number>
-     </property>
      <property name="spacing" >
       <number>6</number>
+     </property>
+     <property name="leftMargin" >
+      <number>11</number>
+     </property>
+     <property name="topMargin" >
+      <number>11</number>
+     </property>
+     <property name="rightMargin" >
+      <number>11</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>11</number>
      </property>
      <item>
       <widget class="QLabel" name="sortLabel" >
@@ -86,7 +101,7 @@
         <string>Polygon depth sorting method</string>
        </property>
        <property name="text" >
-        <string>Sort method :</string>
+        <string>Sort method:</string>
        </property>
       </widget>
      </item>
@@ -96,7 +111,7 @@
         <string>Polygon depth sorting method</string>
        </property>
        <property name="currentIndex" >
-        <number>0</number>
+        <number>3</number>
        </property>
        <item>
         <property name="text" >
@@ -105,7 +120,7 @@
        </item>
        <item>
         <property name="text" >
-         <string>BSP </string>
+         <string>BSP</string>
         </property>
        </item>
        <item>
@@ -140,11 +155,20 @@
    </item>
    <item>
     <layout class="QHBoxLayout" >
-     <property name="margin" >
-      <number>0</number>
-     </property>
      <property name="spacing" >
       <number>6</number>
+     </property>
+     <property name="leftMargin" >
+      <number>0</number>
+     </property>
+     <property name="topMargin" >
+      <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>0</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>0</number>
      </property>
      <item>
       <widget class="QPushButton" name="SaveButton" >

@@ -1010,7 +1010,7 @@ private:
   //@{
 public:
   /*! Returns a \c QList (see Qt documentation) that contains pointers to all the created
-  QGLViewers.
+  QGLViewers. Note that this list may contain \c NULL pointers if the associated viewer has been deleted.
 
   Can be useful to apply a method or to connect a signal to all the viewers.
 

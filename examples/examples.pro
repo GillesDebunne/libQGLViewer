@@ -15,7 +15,8 @@ SUBDIRS       = animation \
 		manipulatedFrame \
 		mouseGrabber \
 		multiSelect \
-		multiView \
+		multiView \	
+		overpainting \
 		screenCoordSystem \
 		select \
 		simpleViewer \

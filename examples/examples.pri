@@ -1,10 +1,19 @@
-unix {
+unix|win32-g++ {
+  # Artis
+  MAIN_PATH = $$(HOME)/QGLViewer
+  
+  # Local on windows
+  !exists( $${MAIN_PATH}/QGLViewer ) {
+    MAIN_PATH = C:/Users/debunne/Documents/Code/libQGLViewer/QGLViewer/trunk
+  }
+    
   isEmpty( INCLUDE_DIR ) {
-    INCLUDE_DIR=$$(HOME)/QGLViewer
+    INCLUDE_DIR=$${MAIN_PATH}
   }
 
   isEmpty( LIB_DIR ) {
-    LIB_DIR=$$(HOME)/QGLViewer/QGLViewer
+    LIB_DIR=$${MAIN_PATH}/QGLViewer
+    win32-g++:LIB_DIR=$${MAIN_PATH}/QGLViewer/Release
   }
 
   include( release.pri )
@@ -22,11 +31,4 @@ unix {
 #CONFIG += simpleOutput.prf moc resource
 }
 
-win32-g++ {
-  INCLUDEPATH *= ../../..
-  LIBS *= -L../../../QGLViewer/Release -lQGLViewer2 
-  QT *= xml opengl
-}
-
 win32-msvc : include( release-win.pri )
-

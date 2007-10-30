@@ -597,7 +597,7 @@ style="color:red">*</span> icon. With Visual Studio 6.0, use <i>File-Open worksp
 </p>
 
 Qt 2.3 users have to first edit the examples' <code>.pro</code> files (uncomment two lines and remove end of
-file as explained. Remove <code>QT_DLL</code> from <code>DEFINES</code> for .NET). If no
+file as explained. Remove <code>QT_DLL</code> from <code>DEFINES</code> for Visual Studio 7). If no
 <code>Project created</code> dialog is displayed when you open the <code>.pro</code>, try to run
 Visual with Administrator priviledges. With Qt 2.3, you also have to add <code>/GX /GR</code> in
 <i>Project-Settings-C-C++, Project options</i> before compilation and tune the include and lib
@@ -629,11 +629,11 @@ See also the installation advices for
 
 <br/><br/>
 
-<span style="color:red">*</span> Names are given in .NET standards, and differ from those of Visual 6.
+<span style="color:red">*</span> Names are given in Visual Studio 7 standards, and differ from those of Visual 6.
 Here is a correspondance table:
 
 <table>
-<tr style="background-color:#66a; color:#eef; text-align:center"><th>.NET</th><th>Visual Studio 6</th></tr>
+<tr style="background-color:#66a; color:#eef; text-align:center"><th>Visual Studio 7</th><th>Visual Studio 6</th></tr>
 <tr style="background-color:#bbd"><td>Open Qt Project</td><td>Generate Qt Project</td></tr>
 <tr style="background-color:#ddf"><td>Project-Properties-C/C++-General-Additional Include Directories</td><td>Tools-Options-Directories-Include files</td></tr>
 <tr style="background-color:#bbd"><td>Project-Properties-Linker-General-Additional Library Directories</td><td>Tools-Options-Directories-Library files</td></tr>

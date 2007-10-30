@@ -54,6 +54,7 @@ using namespace qglviewer;
   QPtrList<QGLViewer> QGLViewer::QGLViewerPool_;
 #endif
 
+
 /*! \mainpage
 
 libQGLViewer is a free C++ library based on Qt that enables the quick creation of OpenGL 3D viewers.
@@ -104,7 +105,7 @@ void QGLViewer::defaultConstructor()
   setDefaultShortcuts();
   setDefaultMouseBindings();
 
-  setSnapshotFileName("snapshot");
+  setSnapshotFileName(tr("snapshot", "Default snapshot file name"));
   initializeSnapshotFormats();
   setSnapshotCounter(0);
   setSnapshotQuality(95);
@@ -112,7 +113,7 @@ void QGLViewer::defaultConstructor()
   fpsTime_.start();
   fpsCounter_		= 0;
   f_p_s_		= 0.0;
-  fpsString_		= "?Hz";
+  fpsString_		= tr("%1Hz", "Frames per seconds, in Hertz").arg("?");
   visualHint_		= 0;
   previousPathId_	= 0;
   // prevPos_ is not initialized since pos() is not meaningful here. It will be set by setFullScreen().
@@ -198,18 +199,19 @@ QGLViewer::QGLViewer(const QGLFormat& format, QWidget* parent, const QGLWidget* 
 
 /*! Virtual destructor.
 
-Removes viewer from QGLViewerPool() and releases allocated memory. The camera() is deleted and
-should be copied before if it is shared. */
+The viewer is replaced by \c NULL in the QGLViewerPool() (in order to preserve other viewer's indexes) and allocated 
+memory is released. The camera() is deleted and should be copied before if it is shared by an other viewer. */
 QGLViewer::~QGLViewer()
 {
   // See closeEvent comment. Destructor is called (and not closeEvent) only when the widget is embedded.
   // Hence we saveToFile here. It is however a bad idea if virtual domElement() has been overloaded !
   // if (parent())
     // saveStateToFileForAllViewers();
+
 #if QT_VERSION >= 0x040000
-  QGLViewer::QGLViewerPool_.removeAll(this);
+  QGLViewer::QGLViewerPool_.replace(QGLViewer::QGLViewerPool_.indexOf(this), NULL);
 #else
-  QGLViewer::QGLViewerPool_.removeRef(this);
+  QGLViewer::QGLViewerPool_.replace(QGLViewer::QGLViewerPool_.findRef(this), NULL);
 #endif
 
   delete camera();
@@ -280,11 +282,11 @@ static int convertToShortModifier(int state)
 Default implementation displays libQGLViewer version, copyright notice and web site. */
 void QGLViewer::aboutQGLViewer()
 {
-  QMessageBox mb("About libQGLViewer",
-		 QString("libQGLViewer, version ")+QGLViewerVersionString()+QString(".<br>"
+  QMessageBox mb(tr("About libQGLViewer", "About message box title"),
+		 tr("libQGLViewer, version %1.<br>"
 		 "A versatile 3D viewer based on OpenGL and Qt.<br>"
 		 "Copyright 2002-2007 Gilles Debunne.<br>"
-		 "<code>http://artis.imag.fr/Software/QGLViewer</code>"),
+		 "<code>http://artis.imag.fr/Software/QGLViewer</code>").arg(QGLViewerVersionString()),
 		 QMessageBox::Information,
 		 QMessageBox::Ok,
 		 QMessageBox::NoButton,
@@ -467,7 +469,7 @@ void QGLViewer::postDraw()
   if (++fpsCounter_ == maxCounter)
     {
       f_p_s_ = 1000.0 * maxCounter / fpsTime_.restart();
-      fpsString_ = QString("%1Hz").arg(f_p_s_, 0, 'f', ((f_p_s_ < 10.0)?1:0));
+      fpsString_ = tr("%1Hz", "Frames per seconds, in Hertz").arg(f_p_s_, 0, 'f', ((f_p_s_ < 10.0)?1:0));
       fpsCounter_ = 0;
     }
 
@@ -573,24 +575,24 @@ void QGLViewer::setDefaultShortcuts()
   setShortcut(INCREASE_FLYSPEED,Qt::Key_Plus);
   setShortcut(DECREASE_FLYSPEED,Qt::Key_Minus);
 
-  keyboardActionDescription_[DISPLAY_FPS] = 		"Toggles the display of the FPS";
-  keyboardActionDescription_[SAVE_SCREENSHOT] = 	"Saves a screenshot";
-  keyboardActionDescription_[FULL_SCREEN] = 		"Toggles full screen display";
-  keyboardActionDescription_[DRAW_AXIS] = 		"Toggles the display of the world axis";
-  keyboardActionDescription_[DRAW_GRID] = 		"Toggles the display of the XY grid";
-  keyboardActionDescription_[CAMERA_MODE] = 		"Changes camera mode (revolve or fly)";
-  keyboardActionDescription_[STEREO] = 			"Toggles stereo display";
-  keyboardActionDescription_[HELP] = 			"Opens this help window";
-  keyboardActionDescription_[ANIMATION] = 		"Starts/stops the animation";
-  keyboardActionDescription_[EDIT_CAMERA] = 		"Toggles camera paths display"; // TODO change
-  keyboardActionDescription_[ENABLE_TEXT] = 		"Toggles the display of the text";
-  keyboardActionDescription_[EXIT_VIEWER] =		"Exits program";
-  keyboardActionDescription_[MOVE_CAMERA_LEFT] = 	"Moves camera left";
-  keyboardActionDescription_[MOVE_CAMERA_RIGHT] = 	"Moves camera right";
-  keyboardActionDescription_[MOVE_CAMERA_UP] = 		"Moves camera up";
-  keyboardActionDescription_[MOVE_CAMERA_DOWN] = 	"Moves camera down";
-  keyboardActionDescription_[INCREASE_FLYSPEED] = 	"Increases fly speed";
-  keyboardActionDescription_[DECREASE_FLYSPEED] = 	"Decreases fly speed";
+  keyboardActionDescription_[DISPLAY_FPS] = tr("Toggles the display of the FPS", "DISPLAY_FPS action description");
+  keyboardActionDescription_[SAVE_SCREENSHOT] = tr("Saves a screenshot", "SAVE_SCREENSHOT action description");
+  keyboardActionDescription_[FULL_SCREEN] = tr("Toggles full screen display", "FULL_SCREEN action description");
+  keyboardActionDescription_[DRAW_AXIS] = tr("Toggles the display of the world axis", "DRAW_AXIS action description");
+  keyboardActionDescription_[DRAW_GRID] = tr("Toggles the display of the XY grid", "DRAW_GRID action description");
+  keyboardActionDescription_[CAMERA_MODE] = tr("Changes camera mode (revolve or fly)", "CAMERA_MODE action description");
+  keyboardActionDescription_[STEREO] = tr("Toggles stereo display", "STEREO action description");
+  keyboardActionDescription_[HELP] = tr("Opens this help window", "HELP action description");
+  keyboardActionDescription_[ANIMATION] = tr("Starts/stops the animation", "ANIMATION action description");
+  keyboardActionDescription_[EDIT_CAMERA] = tr("Toggles camera paths display", "EDIT_CAMERA action description"); // TODO change
+  keyboardActionDescription_[ENABLE_TEXT] = tr("Toggles the display of the text", "ENABLE_TEXT action description");
+  keyboardActionDescription_[EXIT_VIEWER] = tr("Exits program", "EXIT_VIEWER action description");
+  keyboardActionDescription_[MOVE_CAMERA_LEFT] = tr("Moves camera left", "MOVE_CAMERA_LEFT action description");
+  keyboardActionDescription_[MOVE_CAMERA_RIGHT] = tr("Moves camera right", "MOVE_CAMERA_RIGHT action description");
+  keyboardActionDescription_[MOVE_CAMERA_UP] = tr("Moves camera up", "MOVE_CAMERA_UP action description");
+  keyboardActionDescription_[MOVE_CAMERA_DOWN] = tr("Moves camera down", "MOVE_CAMERA_DOWN action description");
+  keyboardActionDescription_[INCREASE_FLYSPEED] = tr("Increases fly speed", "INCREASE_FLYSPEED action description");
+  keyboardActionDescription_[DECREASE_FLYSPEED] = tr("Decreases fly speed", "DECREASE_FLYSPEED action description");
 
   // K e y f r a m e s   s h o r t c u t   k e y s
   setPathKey(Qt::Key_F1,   1);
@@ -1748,7 +1750,7 @@ void QGLViewer::setStereoDisplay(bool stereo)
     }
   else
     if (stereo)
-      QMessageBox::warning(this, "Stereo not supported", "Stereo is not supported on this display");
+      QMessageBox::warning(this, tr("Stereo not supported", "Message box window title"), tr("Stereo is not supported on this display."));
     else
       stereo_ = false;
 }
@@ -1812,19 +1814,19 @@ static QString keyboardModifiersString(QtKeyboardModifiers m, bool noButton=fals
 {
   QString result("");
 #if QT_VERSION >= 0x040000
-  if (m & Qt::ControlModifier) 	result += "Ctrl+";
-  if (m & Qt::AltModifier) 	result += "Alt+";
-  if (m & Qt::ShiftModifier) 	result += "Shift+";
-  if (m & Qt::MetaModifier) 	result += "Meta+";
-  if (noButton && (m==Qt::NoModifier)) result += "(no button)";
+  if (m & Qt::ControlModifier) result += QObject::tr(QT_TRANSLATE_NOOP("QGLViewer", "Ctrl+"));
+  if (m & Qt::AltModifier) result += QObject::tr(QT_TRANSLATE_NOOP("QGLViewer", "Alt+"));
+  if (m & Qt::ShiftModifier) result += QObject::tr(QT_TRANSLATE_NOOP("QGLViewer", "Shift+"));
+  if (m & Qt::MetaModifier) result += QObject::tr(QT_TRANSLATE_NOOP("QGLViewer", "Meta+"));
+  if (noButton && (m==Qt::NoModifier)) result += QObject::tr(QT_TRANSLATE_NOOP("QGLViewer", "(no button)"));
 #else
-  if (m & Qt::ControlButton) 	result += "Ctrl+";
-  if (m & Qt::AltButton) 	result += "Alt+";
-  if (m & Qt::ShiftButton) 	result += "Shift+";
+  if (m & Qt::ConQObject::tr(QT_TRANSLATE_NOOP("QGLViewer", lButton)) result += tr("Ctrl+");
+  if (m & Qt::AltButton) result += QObject::tr(QT_TRANSLATE_NOOP("QGLViewer", "Alt+"));
+  if (m & Qt::ShiftButton) result += QObject::tr(QT_TRANSLATE_NOOP("QGLViewer", "Shift+"));
 # if QT_VERSION >= 0x030000
-  if (m & Qt::MetaButton) 	result += "Meta+";
+  if (m & Qt::MetaButton) result += QObject::tr(QT_TRANSLATE_NOOP("QGLViewer", "Meta+"));
 # endif
-  if (noButton && (m==Qt::NoButton)) result += "(no button)";
+  if (noButton && (m==Qt::NoButton)) result += QObject::tr(QT_TRANSLATE_NOOP("QGLViewer", "(no button)"));
 #endif
   return result;
 }
@@ -1833,9 +1835,9 @@ static QString mouseButtonsString(QtMouseButtons b)
 {
   QString result("");
   bool addAmpersand = false;
-  if (b & Qt::LeftButton)    { result += "Left"; addAmpersand=true; }
-  if (b & Qt::MidButton)     { if (addAmpersand) result += " & "; result += "Middle"; addAmpersand=true; }
-  if (b & Qt::RightButton)   { if (addAmpersand) result += " & "; result += "Right"; }
+  if (b & Qt::LeftButton)    { result += QObject::tr(QT_TRANSLATE_NOOP("QGLViewer", "Left")); addAmpersand=true; }
+  if (b & Qt::MidButton)     { if (addAmpersand) result += " & "; result += QObject::tr(QT_TRANSLATE_NOOP("QGLViewer", "Middle")); addAmpersand=true; }
+  if (b & Qt::RightButton)   { if (addAmpersand) result += " & "; result += QObject::tr(QT_TRANSLATE_NOOP("QGLViewer", "Right")); }
   return result;
 }
 
@@ -1843,18 +1845,18 @@ QString QGLViewer::mouseActionString(QGLViewer::MouseAction ma)
 {
   switch (ma)
     {
-    case QGLViewer::NO_MOUSE_ACTION : 	return QString::null;
-    case QGLViewer::ROTATE : 		return QString("Rotates");
-    case QGLViewer::ZOOM : 		return QString("Zooms");
-    case QGLViewer::TRANSLATE : 	return QString("Translates");
-    case QGLViewer::MOVE_FORWARD : 	return QString("Moves forward");
-    case QGLViewer::LOOK_AROUND : 	return QString("Looks around");
-    case QGLViewer::MOVE_BACKWARD : 	return QString("Moves backward");
-    case QGLViewer::SCREEN_ROTATE : 	return QString("Rotates on screen");
-    case QGLViewer::ROLL :		return QString("Rolls");
-    case QGLViewer::DRIVE :		return QString("Drives");
-    case QGLViewer::SCREEN_TRANSLATE : 	return QString("Horizontally/Vertically translates");
-    case QGLViewer::ZOOM_ON_REGION : 	return QString("Zooms on region for");
+    case QGLViewer::NO_MOUSE_ACTION : return QString::null;
+    case QGLViewer::ROTATE : return tr("Rotates", "ROTATE mouse action");
+    case QGLViewer::ZOOM : return tr("Zooms", "ZOOM mouse action");
+    case QGLViewer::TRANSLATE : return tr("Translates", "TRANSLATE mouse action");
+    case QGLViewer::MOVE_FORWARD : return tr("Moves forward", "MOVE_FORWARD mouse action");
+    case QGLViewer::LOOK_AROUND : return tr("Looks around", "LOOK_AROUND mouse action");
+    case QGLViewer::MOVE_BACKWARD : return tr("Moves backward", "MOVE_BACKWARD mouse action");
+    case QGLViewer::SCREEN_ROTATE : return tr("Rotates in screen plane", "SCREEN_ROTATE mouse action");
+    case QGLViewer::ROLL : return tr("Rolls", "ROLL mouse action");
+    case QGLViewer::DRIVE : return tr("Drives", "DRIVE mouse action");
+    case QGLViewer::SCREEN_TRANSLATE : return tr("Horizontally/Vertically translates", "SCREEN_TRANSLATE mouse action");
+    case QGLViewer::ZOOM_ON_REGION : return tr("Zooms on region for", "ZOOM_ON_REGION mouse action");
     }
   return QString::null;
 }
@@ -1863,17 +1865,17 @@ QString QGLViewer::clickActionString(QGLViewer::ClickAction ca)
 {
   switch (ca)
     {
-    case QGLViewer::NO_CLICK_ACTION : 	return QString::null;
-    case QGLViewer::ZOOM_ON_PIXEL : 	return QString("Zooms on pixel");
-    case QGLViewer::ZOOM_TO_FIT : 	return QString("Zooms to fit scene");
-    case QGLViewer::SELECT : 		return QString("Selects");
-    case QGLViewer::RAP_FROM_PIXEL : 	return QString("Sets revolve around point");
-    case QGLViewer::RAP_IS_CENTER : 	return QString("Resets revolve around point");
-    case QGLViewer::CENTER_FRAME : 	return QString("Centers frame");
-    case QGLViewer::CENTER_SCENE : 	return QString("Centers scene");
-    case QGLViewer::SHOW_ENTIRE_SCENE : return QString("Shows entire scene");
-    case QGLViewer::ALIGN_FRAME : 	return QString("Aligns frame");
-    case QGLViewer::ALIGN_CAMERA : 	return QString("Aligns camera");
+    case QGLViewer::NO_CLICK_ACTION : return QString::null;
+    case QGLViewer::ZOOM_ON_PIXEL : return tr("Zooms on pixel", "ZOOM_ON_PIXEL click action");
+    case QGLViewer::ZOOM_TO_FIT : return tr("Zooms to fit scene", "ZOOM_TO_FIT click action");
+    case QGLViewer::SELECT : return tr("Selects", "SELECT click action");
+    case QGLViewer::RAP_FROM_PIXEL : return tr("Sets revolve around point", "RAP_FROM_PIXEL click action");
+    case QGLViewer::RAP_IS_CENTER : return tr("Resets revolve around point", "RAP_IS_CENTER click action");
+    case QGLViewer::CENTER_FRAME : return tr("Centers frame", "CENTER_FRAME click action");
+    case QGLViewer::CENTER_SCENE : return tr("Centers scene", "CENTER_SCENE click action");
+    case QGLViewer::SHOW_ENTIRE_SCENE : return tr("Shows entire scene", "SHOW_ENTIRE_SCENE click action");
+    case QGLViewer::ALIGN_FRAME : return tr("Aligns frame", "ALIGN_FRAME click action");
+    case QGLViewer::ALIGN_CAMERA : return tr("Aligns camera", "ALIGN_CAMERA click action");
     }
   return QString::null;
 }
@@ -1960,7 +1962,8 @@ QString QGLViewer::mouseString() const
   const QString tdtr("</td></tr>\n");
   const QString tdtd("</td><td>");
 
-  text += "<tr bgcolor=\"#aaaacc\"><th align=\"center\">Button(s)</th><th align=\"center\">Description</th></tr>\n";
+  text += QString("<tr bgcolor=\"#aaaacc\"><th align=\"center\">%1</th><th align=\"center\">%2</th></tr>\n").
+	  arg(tr("Button(s)", "Buttons column header in help window mouse tab")).arg(tr("Description", "Description column header in help window mouse tab"));
 
   QMap<ClickActionPrivate, QString> mouseBinding;
 
@@ -1989,7 +1992,7 @@ QString QGLViewer::mouseString() const
   if (!mouseBinding.isEmpty())
     {
       mouseBinding.clear();
-      text += "<tr bgcolor=\"#aaaacc\"><td colspan=2>Standard mouse bindings</td></tr>\n";
+      text += QString("<tr bgcolor=\"#aaaacc\"><td colspan=2>%1</td></tr>\n").arg(tr("Standard mouse bindings", "In help window mouse tab"));
     }
 
   // Concatenates the descriptions of wheelBinding_, mouseBinding_, clickBinding_ and mouseDescription_.
@@ -2009,8 +2012,8 @@ QString QGLViewer::mouseString() const
 	{
 	  switch (itw.value().handler)
 	    {
-	    case CAMERA: text += " camera"; break;
-	    case FRAME:  text += " manipulated frame"; break;
+	    case CAMERA: text += " " + tr("camera", "Prefix after action"); break;
+	    case FRAME:  text += " " + tr("manipulated frame", "Prefix after action"); break;
 	    }
 	  if (!(itw.value().withConstraint))
 	    text += "*";
@@ -2034,8 +2037,8 @@ QString QGLViewer::mouseString() const
 	{
 	  switch (itmb.value().handler)
 	    {
-	    case CAMERA: text += " camera"; break;
-	    case FRAME:  text += " manipulated frame"; break;
+	    case CAMERA: text += " " + tr("camera", "Prefix after action"); break;
+	    case FRAME:  text += " " + tr("manipulated frame", "Prefix after action"); break;
 	    }
 	  if (!(itmb.value().withConstraint))
 	    text += "*";
@@ -2053,11 +2056,11 @@ QString QGLViewer::mouseString() const
 
       QString button = keyboardModifiersString(it2.key().modifiers) + mouseButtonsString(it2.key().button);
       if (it2.key().doubleClick)
-	button += " double click";
+	button += " " + tr("double click", "Prefix after mouse button");
       if (it2.key().button == Qt::NoButton)
-	button += "Wheel";
+	button += tr("Wheel", "Mouse wheel");
       if (it2.key().buttonsBefore != Qt::NoButton)
-	button += " with " + mouseButtonsString(it2.key().buttonsBefore) + " pressed";
+		  button += " " + tr("with", "As in : Left button with Ctrl pressed") + " " + mouseButtonsString(it2.key().buttonsBefore) + " " + tr("pressed", "As in : Left button with Ctrl pressed");
 
       text += tableLine(button, it2.value());
     }
@@ -2197,7 +2200,8 @@ QString QGLViewer::cameraPathKeysString() const
 QString QGLViewer::keyboardString() const
 {
   QString text("<table border=\"1\" cellspacing=\"0\">\n");
-  text += "<tr bgcolor=\"#aaaacc\"><th align=\"center\">Key(s)</th><th align=\"center\">Description</th></tr>\n";
+  text += QString("<tr bgcolor=\"#aaaacc\"><th align=\"center\">%1</th><th align=\"center\">%2</th></tr>\n").
+	  arg(tr("Key(s)", "Keys column header in help window mouse tab")).arg(tr("Description", "Description column header in help window mouse tab"));
 
   QMap<int, QString> keyDescription;
 
@@ -2214,7 +2218,7 @@ QString QGLViewer::keyboardString() const
   if (!keyDescription.isEmpty())
     {
       keyDescription.clear();
-      text += "<tr bgcolor=\"#aaaacc\"><td colspan=2>Standard viewer keys</td></tr>\n";
+      text += QString("<tr bgcolor=\"#aaaacc\"><td colspan=2>%1</td></tr>\n").arg(tr("Standard viewer keys", "In help window keys tab"));
     }
 
 
@@ -2232,13 +2236,14 @@ QString QGLViewer::keyboardString() const
   const QString cpks = cameraPathKeysString();
   if (!cpks.isNull())
     {
-      text += "<tr bgcolor=\"#ccccff\">><td colspan=2>\nCamera paths are controlled using " + cpks + " (noted <i>Fx</i> below):</td></tr>\n";
-      text += tableLine(keyboardModifiersString(playPathKeyboardModifiers()) + "<i>Fx</i>",
-			"Plays path (or resets saved position)");
-      text += tableLine(keyboardModifiersString(addKeyFrameKeyboardModifiers()) + "<i>Fx</i>",
-			"Adds a key frame (or defines a position)");
-      text += tableLine(keyboardModifiersString(addKeyFrameKeyboardModifiers()) + "<i>Fx</i>+<i>Fx</i>",
-			"Deletes path (or saved position)");
+      text += "<tr bgcolor=\"#ccccff\"><td colspan=2>\n";
+      text += tr("Camera paths are controlled using %1 (noted <i>Fx</i> below):", "Help window key tab camera keys").arg(cpks) + "</td></tr>\n";
+      text += tableLine(keyboardModifiersString(playPathKeyboardModifiers()) + "<i>" + tr("Fx", "Generic function key (F1..F12)") + "</i>",
+			tr("Plays path (or resets saved position)"));
+      text += tableLine(keyboardModifiersString(addKeyFrameKeyboardModifiers()) + "<i>" + tr("Fx", "Generic function key (F1..F12)") + "</i>",
+			tr("Adds a key frame to path (or defines a position)"));
+      text += tableLine(keyboardModifiersString(addKeyFrameKeyboardModifiers()) + "<i>" + tr("Fx", "Generic function key (F1..F12)") + "</i>+<i>" + tr("Fx", "Generic function key (F1..F12)") + "</i>",
+			tr("Deletes path (or saved position)"));
     }
   text += "</table>";
 
@@ -2263,20 +2268,20 @@ void QGLViewer::help()
   int width=600;
   int height=400;
 
-  static QString label[] = {" &Help ", " &Keyboard ", " &Mouse "};
+  static QString label[] = {tr("&Help", "Help window tab title"), tr("&Keyboard", "Help window tab title"), tr("&Mouse", "Help window tab title")};
 
   if (!helpWidget())
     {
       // Qt4 requires a NULL parent...
       helpWidget_ = new QTabWidget(NULL);
 #if QT_VERSION >= 0x040000
-      helpWidget()->setWindowTitle("Help");
+      helpWidget()->setWindowTitle(tr("Help", "Help window title"));
 #else
-      helpWidget()->setCaption("Help");
+      helpWidget()->setCaption(tr("Help", "Help window title"));
 #endif
 
 #if QT_VERSION >= 0x030200
-      QPushButton* aboutButton = new QPushButton("About", helpWidget());
+      QPushButton* aboutButton = new QPushButton(tr("About", "About button in help window"), helpWidget());
       connect(aboutButton, SIGNAL(released()), SLOT(aboutQGLViewer()));
       helpWidget()->setCornerWidget(aboutButton);
 #endif
@@ -2427,9 +2432,9 @@ void QGLViewer::keyPressEvent(QKeyEvent *e)
 		  {
 		    disconnect(camera()->keyFrameInterpolator(index), SIGNAL(interpolated()), this, SLOT(updateGL()));
 		    if (camera()->keyFrameInterpolator(index)->numberOfKeyFrames() > 1)
-		      displayMessage("Path "+QString::number(index)+" deleted");
+		      displayMessage(tr("Path %1 deleted", "Feedback message").arg(index));
 		    else
-		      displayMessage("Position "+QString::number(index)+" deleted");
+		      displayMessage(tr("Position %1 deleted", "Feedback message").arg(index));
 		    camera()->deletePath(index);
 		  }
 	      }
@@ -2440,10 +2445,10 @@ void QGLViewer::keyPressEvent(QKeyEvent *e)
 		if (nullBefore)
 		  connect(camera()->keyFrameInterpolator(index), SIGNAL(interpolated()), SLOT(updateGL()));
 		int nbKF = camera()->keyFrameInterpolator(index)->numberOfKeyFrames();
-		if (nbKF == 1)
-		  displayMessage("Position "+QString::number(index)+" saved");
+		if (nbKF > 1)
+		  displayMessage(tr("Path %1, position %2 added", "Feedback message").arg(index).arg(nbKF));
 		else
-		  displayMessage("Path "+QString::number(index)+", position "+QString::number(nbKF)+" saved");
+		  displayMessage(tr("Position %1 saved", "Feedback message").arg(index));
 	      }
 	    previousPathId_ = index;
 	  }
@@ -2470,7 +2475,7 @@ void QGLViewer::handleKeyboardAction(KeyboardAction id)
     case EDIT_CAMERA :		toggleCameraIsEdited(); break;
     case CAMERA_MODE :
       toggleCameraMode();
-      displayMessage(cameraIsInRevolveMode()?"Camera in revolve around mode":"Camera in fly mode");
+      displayMessage(cameraIsInRevolveMode()?tr("Camera in revolve around mode", "Feedback message"):tr("Camera in fly mode", "Feedback message"));
       break;
 
     case MOVE_CAMERA_LEFT :
@@ -2490,8 +2495,8 @@ void QGLViewer::handleKeyboardAction(KeyboardAction id)
       updateGL();
       break;
 
-    case INCREASE_FLYSPEED : 	camera()->setFlySpeed(camera()->flySpeed() * 1.5); break;
-    case DECREASE_FLYSPEED : 	camera()->setFlySpeed(camera()->flySpeed() / 1.5); break;
+    case INCREASE_FLYSPEED : camera()->setFlySpeed(camera()->flySpeed() * 1.5); break;
+    case DECREASE_FLYSPEED : camera()->setFlySpeed(camera()->flySpeed() / 1.5); break;
     }
 }
 
@@ -3496,7 +3501,8 @@ void QGLViewer::saveStateToFileForAllViewers()
   for (QGLViewer* viewer; (viewer = it.current()) != 0; ++it)
     {
 #endif
-    viewer->saveStateToFile();
+	if (viewer)
+      viewer->saveStateToFile();
     }
 }
 
@@ -3563,7 +3569,7 @@ void QGLViewer::saveStateToFile()
 
   if (fileInfo.isDir())
     {
-      QMessageBox::warning(this, "Save to file error", "State file name is a directory ("+name+") and not a file.");
+      QMessageBox::warning(this, tr("Save to file error", "Message box window title"), tr("State file name (%1) references a directory instead of a file.").arg(name));
       return;
     }
 
@@ -3581,7 +3587,7 @@ void QGLViewer::saveStateToFile()
       if (!(dir.mkdir(dirName, true)))
 #endif
 	{
-	  QMessageBox::warning(this, "Save to file error", "Unable to create directory "+dirName);
+	  QMessageBox::warning(this, tr("Save to file error", "Message box window title"), tr("Unable to create directory %1").arg(dirName));
 	  return;
 	}
     }
@@ -3603,9 +3609,9 @@ void QGLViewer::saveStateToFile()
     }
   else
 #if QT_VERSION < 0x030200
-    QMessageBox::warning(this, "Save to file error", "Unable to save to file "+name);
+    QMessageBox::warning(this, tr("Save to file error", "Message box window title"), tr("Unable to save to file %1").arg(name));
 #else
-    QMessageBox::warning(this, "Save to file error", "Unable to save to file "+name+":\n"+f.errorString());
+    QMessageBox::warning(this, tr("Save to file error", "Message box window title"), tr("Unable to save to file %1").arg(name) + ":\n" + f.errorString());
 #endif
 }
 
@@ -3644,7 +3650,7 @@ bool QGLViewer::restoreStateFromFile()
 
   if (!fileInfo.isReadable())
     {
-      QMessageBox::warning(this, "restoreStateFromFile problem", "File "+name+" is not readable.");
+      QMessageBox::warning(this, tr("Problem in state restoration", "Message box window title"), tr("File %1 is not readable.").arg(name));
       return false;
     }
 
@@ -3665,9 +3671,9 @@ bool QGLViewer::restoreStateFromFile()
   else
     {
 #if QT_VERSION < 0x030200
-      QMessageBox::warning(this, "Open file error", "Unable to open file "+name);
+      QMessageBox::warning(this, tr("Open file error", "Message box window title"), tr("Unable to open file %1").arg(name));
 #else
-      QMessageBox::warning(this, "Open file error", "Unable to open file "+name+":\n"+f.errorString());
+      QMessageBox::warning(this, tr("Open file error", "Message box window title"), tr("Unable to open file %1").arg(name) + ":\n" + f.errorString());
 #endif
       return false;
     }

@@ -6,6 +6,7 @@
 #include <qmessagebox.h>
 #include <qdom.h>
 #include <qapplication.h>
+#include <QKeyEvent>
 // #include <GL/glut.h>
 
 using namespace std;
@@ -21,6 +22,16 @@ public:
 ostream& operator<<(ostream& o, const MyVec& v)
 {
   return o << "Je suis un MyVec" << v[0];
+}
+
+ostream& operator<<(ostream& o, const Vec& v)
+{
+  return o << "Vec " << v[0] << " " << v[1] << " " << v[2];
+}
+
+ostream& operator<<(ostream& o, const Quaternion& q)
+{
+  return o << "Quat " << q[0] << " " << q[1] << " " << q[2] << " " << q[3];
 }
 
 static Vec orthogonal(Vec v)
@@ -66,6 +77,10 @@ void Viewer::init()
 {
   Quaternion q(Vec(1,0,0), M_PI/2.0);
   cout << q << endl;
+
+  q = Quaternion(Vec(1.0,0.0,0.0), Vec(0.0,1.0,0.0));
+  cout << q << endl;
+
 return;
   // glDisable(GL_LIGHTING);
   qWarning("init");
@@ -248,7 +263,7 @@ void Viewer::keyPressEvent(QKeyEvent *e)
     case Qt::Key_X : camera()->setPosition(Vec(0,0,3)); camera()->setOrientation(Quaternion(Vec(1,0,0), 1.0)); updateGL(); break;
     case Qt::Key_L :
       // camera()->setOrientation(Quaternion(Vec(1,0,0), 0.3));
-      camera()->lookAt(Vec(4.0*drand48()-2.0, 4.0*drand48()-2.0, 4.0*drand48()-2.0));
+      //camera()->lookAt(Vec(4.0*drand48()-2.0, 4.0*drand48()-2.0, 4.0*drand48()-2.0));
       //camera()->setUpVector(Vec(0,0,1));
       updateGL();
       break;
@@ -576,70 +591,6 @@ void Viewer::adrien()
       cout << camera()->orientation().angle() << endl;
       camera()->showEntireScene();
       updateGL();
-    }
-}
-
-void Viewer::testSetFromRotationMatrix()
-{
-  const int nb = 10;
-  for (int i=0; i<nb; ++i)
-    {
-      Vec v(drand48()-0.5, drand48()-0.5, drand48()-0.5);
-      Quaternion q( v , drand48()*M_PI );
-      // Quaternion q( v, drand48()*M_PI );
-      float m[3][3];
-      q.getRotationMatrix(m);
-      Quaternion res;
-      res.setFromRotationMatrix(m);
-      Vec v1(q[0], q[1], q[2]);
-      Vec v2(res[0], res[1], res[2]);
-      if (v1*v2 < 0.0)
-	for (unsigned int j=0; j<4; ++j)
-	  res[j] = -res[j];
-
-      float delta = 0.0;
-      for (unsigned int j=0; j<4; ++j)
-	delta += (q[0]-res[0])*(q[0]-res[0]);
-
-      if (delta > 1E-5)
-	cout << "Error " << delta << " \t q" << q << "\t res=" << res << endl;
-      else if ((delta < 1E-8) && (delta != 0.0))
-	cout << "Numerical error " << delta << endl;
-    }
-}
-
-void Viewer::testSetFromRotatedBase()
-{
-  const int nb = 10;
-  for (int i=0; i<nb; ++i)
-    {
-      Vec v(drand48()-0.5, drand48()-0.5, drand48()-0.5);
-      Quaternion q( v , drand48()*M_PI );
-      Vec X, Y, Z;
-      X = q.rotate(Vec(1,0,0));
-      Y = q.rotate(Vec(0,1,0));
-      Z = q.rotate(Vec(0,0,1));
-      Quaternion res;
-      res.setFromRotatedBase(X,Y,Z);
-      cout << q.axis() << "  " << q.angle() << endl;
-      cout << res.axis() << "  " << res.angle() << endl;
-      cout << q[0]-res[0] << "  "  << q[1]-res[1] << "  "  << q[2]-res[2] << "  "  << q[3]-res[3] << endl << endl;
-    }
-}
-
-void Viewer::testRecursiv()
-{
-  for (int i=0; i<10; ++i)
-    {
-      cout << camera()->frame()->coordinatesOf(Vec(drand48()-0.5, drand48()-0.5, drand48()-0.5)) << endl;
-      cout << camera()->frame()->transformOf(Vec(drand48()-0.5, drand48()-0.5, drand48()-0.5)) << endl;
-      for (int j=0; j<10; ++j)
-	{
-	  qglviewer::Frame fr;
-	  fr.setPosition(Vec(drand48()-0.5, drand48()-0.5, drand48()-0.5));
-	  fr.setOrientation(Quaternion(Vec(drand48()-0.5, drand48()-0.5, drand48()-0.5), drand48()));
-	  cout << camera()->frame()->coordinatesOfFrom(Vec(drand48()-0.5, drand48()-0.5, drand48()-0.5), &fr) << endl;
-	}
     }
 }
 

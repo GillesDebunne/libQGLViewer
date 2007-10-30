@@ -1,15 +1,12 @@
 <ui version="4.0" >
- <author></author>
- <comment></comment>
- <exportmacro></exportmacro>
  <class>ImageInterface</class>
  <widget class="QDialog" name="ImageInterface" >
   <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>238</width>
-    <height>195</height>
+    <width>235</width>
+    <height>191</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -19,24 +16,42 @@
    <iconset>../../../../../../Documents and Settings/debunne/Bureau/libQGLViewer-2.2.0-1/doc/images/qglviewer.icon.png</iconset>
   </property>
   <layout class="QVBoxLayout" >
-   <property name="margin" >
-    <number>9</number>
-   </property>
    <property name="spacing" >
     <number>6</number>
    </property>
+   <property name="leftMargin" >
+    <number>9</number>
+   </property>
+   <property name="topMargin" >
+    <number>9</number>
+   </property>
+   <property name="rightMargin" >
+    <number>9</number>
+   </property>
+   <property name="bottomMargin" >
+    <number>9</number>
+   </property>
    <item>
     <layout class="QHBoxLayout" >
-     <property name="margin" >
-      <number>0</number>
-     </property>
      <property name="spacing" >
       <number>6</number>
+     </property>
+     <property name="leftMargin" >
+      <number>0</number>
+     </property>
+     <property name="topMargin" >
+      <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>0</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>0</number>
      </property>
      <item>
       <widget class="QLabel" name="label_2" >
        <property name="text" >
-        <string>&lt;html>&lt;head>&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; />&lt;/head>&lt;body style=&quot; white-space: pre-wrap; font-family:MS Shell Dlg; font-size:8.25pt; font-weight:400; font-style:normal; text-decoration:none;&quot;>&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;>&lt;span style=&quot; font-size:8pt;&quot;>Width&lt;/span>&lt;/p>&lt;/body>&lt;/html></string>
+        <string>Width</string>
        </property>
       </widget>
      </item>
@@ -48,11 +63,11 @@
        <property name="suffix" >
         <string> px</string>
        </property>
-       <property name="maximum" >
-        <number>32000</number>
-       </property>
        <property name="minimum" >
         <number>1</number>
+       </property>
+       <property name="maximum" >
+        <number>32000</number>
        </property>
       </widget>
      </item>
@@ -72,7 +87,7 @@
      <item>
       <widget class="QLabel" name="label_3" >
        <property name="text" >
-        <string>&lt;html>&lt;head>&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; />&lt;/head>&lt;body style=&quot; white-space: pre-wrap; font-family:MS Shell Dlg; font-size:8.25pt; font-weight:400; font-style:normal; text-decoration:none;&quot;>&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;>Height&lt;/p>&lt;/body>&lt;/html></string>
+        <string>Height</string>
        </property>
       </widget>
      </item>
@@ -84,11 +99,11 @@
        <property name="suffix" >
         <string> px</string>
        </property>
-       <property name="maximum" >
-        <number>32000</number>
-       </property>
        <property name="minimum" >
         <number>1</number>
+       </property>
+       <property name="maximum" >
+        <number>32000</number>
        </property>
       </widget>
      </item>
@@ -96,16 +111,25 @@
    </item>
    <item>
     <layout class="QHBoxLayout" >
-     <property name="margin" >
-      <number>0</number>
-     </property>
      <property name="spacing" >
       <number>6</number>
+     </property>
+     <property name="leftMargin" >
+      <number>0</number>
+     </property>
+     <property name="topMargin" >
+      <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>0</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>0</number>
      </property>
      <item>
       <widget class="QLabel" name="label_4" >
        <property name="text" >
-        <string>&lt;html>&lt;head>&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; />&lt;/head>&lt;body style=&quot; white-space: pre-wrap; font-family:MS Shell Dlg; font-size:8.25pt; font-weight:400; font-style:normal; text-decoration:none;&quot;>&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;>Image quality&lt;/p>&lt;/body>&lt;/html></string>
+        <string>Image quality</string>
        </property>
       </widget>
      </item>
@@ -114,11 +138,11 @@
        <property name="toolTip" >
         <string>Between 0 (smallest files) and 100 (highest quality)</string>
        </property>
-       <property name="maximum" >
-        <number>100</number>
-       </property>
        <property name="minimum" >
         <number>0</number>
+       </property>
+       <property name="maximum" >
+        <number>100</number>
        </property>
       </widget>
      </item>
@@ -139,16 +163,25 @@
    </item>
    <item>
     <layout class="QHBoxLayout" >
-     <property name="margin" >
-      <number>0</number>
-     </property>
      <property name="spacing" >
       <number>6</number>
+     </property>
+     <property name="leftMargin" >
+      <number>0</number>
+     </property>
+     <property name="topMargin" >
+      <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>0</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>0</number>
      </property>
      <item>
       <widget class="QLabel" name="label" >
        <property name="text" >
-        <string>&lt;html>&lt;head>&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; />&lt;/head>&lt;body style=&quot; white-space: pre-wrap; font-family:MS Shell Dlg; font-size:8.25pt; font-weight:400; font-style:normal; text-decoration:none;&quot;>&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;>Oversampling&lt;/p>&lt;/body>&lt;/html></string>
+        <string>Oversampling</string>
        </property>
       </widget>
      </item>
@@ -163,17 +196,17 @@
        <property name="decimals" >
         <number>1</number>
        </property>
-       <property name="maximum" >
-        <double>64</double>
-       </property>
        <property name="minimum" >
-        <double>0.1</double>
+        <double>0.100000000000000</double>
+       </property>
+       <property name="maximum" >
+        <double>64.000000000000000</double>
        </property>
        <property name="singleStep" >
-        <double>1</double>
+        <double>1.000000000000000</double>
        </property>
        <property name="value" >
-        <double>1</double>
+        <double>1.000000000000000</double>
        </property>
       </widget>
      </item>
@@ -227,11 +260,20 @@
    </item>
    <item>
     <layout class="QHBoxLayout" >
-     <property name="margin" >
-      <number>0</number>
-     </property>
      <property name="spacing" >
       <number>6</number>
+     </property>
+     <property name="leftMargin" >
+      <number>0</number>
+     </property>
+     <property name="topMargin" >
+      <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>0</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>0</number>
      </property>
      <item>
       <spacer>
@@ -264,7 +306,6 @@
    </item>
   </layout>
  </widget>
- <pixmapfunction></pixmapfunction>
  <resources/>
  <connections>
   <connection>

@@ -19,12 +19,33 @@
 
 <h1>Change Log</h1>
 
+<h2>October 29th 2007 - 2.2.7</h2>
+<b>New features</b>
+<ul>
+ <li>A new <a href="examples/overpainting.html">overpainting</a> example demonstrates mixing OpenGL and <code>QPainter</code> drawing.</li>
+ <li>A new <a href="examples/contribs.html#cornerAxis">cornerAxis</a> example displays scene orientation in the lower left corner.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li>A deleted <code>QGLViewer</code> is no longer removed from the <code>QGLViewerPool</code> (a <code>null</code> replaces it) 
+in order to preserve viewer's indexes (used by <code>stateFileName</code>) (bug finder Gianluca).</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li>All the texts are now translatable. A french translation is available.</li>
+</ul>
+
+
+
 <h2>May 29th 2007 - 2.2.6</h2>
 <b>New features</b>
 <ul>
  <li>The <code>Camera</code> now saves and restores its scene center and radius in its XML representation.</li>
  <li>A new <code>Camera::getModelViewProjectionMatrix</code> convenient method (suggester Elmar).</li>
 </ul>
+
 
 <b>Bug fixes or improvements</b>
 <ul>

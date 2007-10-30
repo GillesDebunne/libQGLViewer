@@ -7,6 +7,9 @@
 #DEFINES *= QT_DLL QT_THREAD_SUPPORT
 #LIBS *= QGLViewer.Qt2.3.lib
 
+CONFIG -= debug
+CONFIG += release console
+
 QT_VERSION=$$[QT_VERSION]
 
 contains( QT_VERSION, "^4\..*" ) {
@@ -18,7 +21,7 @@ contains( QT_VERSION, "^4\..*" ) {
 #                       Unix configuration
 # See doc/installUnix.html and doc/examples/index.html for details.
 # Same INCLUDE_DIR and LIB_DIR parameters than for the make install.
-unix {
+unix|win32-g++ {
   isEmpty( PREFIX ) {
     PREFIX=/usr
   }
@@ -31,6 +34,10 @@ unix {
       exists( ../../QGLViewer/qglviewer.h ) {
         message( Using ../.. as INCLUDE_DIR )
         INCLUDE_DIR = ../..
+      }
+      exists( ../../../QGLViewer/qglviewer.h ) {
+        message( Using ../../.. as INCLUDE_DIR )
+        INCLUDE_DIR = ../../..
       }
     }
   }
@@ -48,10 +55,16 @@ unix {
   hpux {
     LIB_NAME = libQGLViewer*.sl*
   }
+  win32-g++ {
+    LIB_NAME = libQGLViewer*.a
+  }
 
   !isEmpty( QGLVIEWER_STATIC ) {
     LIB_NAME = libQGLViewer*.a
   }
+
+  #    exists( $${LIB_PATH}/libQGLViewer%MAJOR_NUMBER%.a ) {
+  #     LIBS *= -L$${LIB_PATH} -lQGLViewer%MAJOR_NUMBER%
 
   # LIB_DIR
   isEmpty( LIB_DIR ) {
@@ -60,14 +73,23 @@ unix {
     !exists( $${LIB_DIR}/$${LIB_NAME} ) {
       exists( ../../QGLViewer/$${LIB_NAME} ) {
         message( Using ../../QGLViewer as LIB_DIR )
-        macx|darwin-g++ {
-          message( You should add the path to "../../QGLViewer" to your DYLD_LIBRARY_PATH variable )
-        } else {
-          message( You should add the path to "../../QGLViewer" to your LD_LIBRARY_PATH variable )
-        }
-        message( See the "Compilation" section in doc/examples/index.html for details )
         LIB_DIR = ../../QGLViewer
       }
+    }  
+    !exists( $${LIB_DIR}/$${LIB_NAME} ) {
+      exists( ../../QGLViewer/Release/$${LIB_NAME} ) {
+        message( Using ../../Release/QGLViewer as LIB_DIR )
+        LIB_DIR = ../../Release/QGLViewer
+      }
+    }
+    
+    contains( LIB_DIR, "../.." ) {
+      macx|darwin-g++ {
+        message( You should add the path to "$${LIB_DIR}" to your DYLD_LIBRARY_PATH variable )
+      } else {
+        message( You should add the path to "$${LIB_DIR}" to your LD_LIBRARY_PATH variable )
+      }
+      message( See the "Compilation" section in doc/examples/index.html for details )
     }
   }
 
@@ -101,15 +123,14 @@ unix {
 
 
 #                    Windows configuration.
+!win32-g++ {
 win32 {
   # Various compilation flags
-  !win32-g++ {
-    QMAKE_CXXFLAGS = -TP -G6 -GR -Zi
-    win32-msvc {
-      QMAKE_CXXFLAGS *= -GX
-    } else {
-      QMAKE_CXXFLAGS *= -EHs
-    }
+  QMAKE_CXXFLAGS = -TP -G6 -GR -Zi
+  win32-msvc {
+    QMAKE_CXXFLAGS *= -GX
+  } else {
+    QMAKE_CXXFLAGS *= -EHs
   }
 
   # Use the Qt DLL version
@@ -119,13 +140,9 @@ win32 {
     DEFINES *= QGLVIEWER_STATIC
   }
 
-  win32-g++ {
-    LIB_FILE = libQGLViewer*%MAJOR_NUMBER%.a
-  } else {
-    LIB_FILE = QGLViewer*.lib
-  }
+  LIB_FILE = QGLViewer*.lib
 
-  # Compilation from zip file : libQGLViewer is in ../..
+  # Compilation from zip file : libQGLViewer is in ../.. or ../../..
   exists( ../../QGLViewer ) {
     exists( ../../QGLViewer/qglviewer.h ) {
       INCLUDEPATH *= ../..
@@ -148,6 +165,28 @@ win32 {
     }
   }
 
+  exists( ../../../QGLViewer ) {
+    exists( ../../../QGLViewer/qglviewer.h ) {
+      INCLUDEPATH *= ../../..
+    }
+
+    exists( ../../../QGLViewer/Debug ) {
+      exists( ../../../QGLViewer/Debug/$${LIB_FILE} ) {
+        LIB_PATH = ../../../QGLViewer/Debug
+      }
+    }
+
+    exists( ../../../QGLViewer/Release ) {
+      exists( ../../../QGLViewer/Release/$${LIB_FILE} ) {
+        LIB_PATH = ../../../QGLViewer/Release
+      }
+    }
+
+    exists( ../../../QGLViewer/$${LIB_FILE} ) {
+      LIB_PATH = ../../../QGLViewer
+    }
+  }
+
   exists( $${LIB_PATH}/QGLViewer%CAT_VERSION%.lib ) {
     LIBS *= $${LIB_PATH}/QGLViewer%CAT_VERSION%.lib
   } else {
@@ -157,16 +196,9 @@ win32 {
       exists( $${LIB_PATH}/QGLViewer.lib ) {
         LIBS *= $${LIB_PATH}/QGLViewer.lib
       } else {
-        exists( $${LIB_PATH}/libQGLViewer%MAJOR_NUMBER%.a ) {
-          LIBS *= -L$${LIB_PATH} -lQGLViewer%MAJOR_NUMBER%
-        } else {
-          exists( $${LIB_PATH}/libQGLViewerd%MAJOR_NUMBER%.a ) {
-            LIBS *= -L$${LIB_PATH} -lQGLViewerd%MAJOR_NUMBER%
-          } else {
-            error( Unable to find $${LIB_FILE}. )
+        error( Unable to find $${LIB_FILE}. )
 	  }
 	}
-      }
-    }
   }
+}
 }

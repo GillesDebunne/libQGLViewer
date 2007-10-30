@@ -33,7 +33,7 @@
                 <string>Include hidden parts</string>
             </property>
             <property name="toolTip" stdset="0">
-                <string>Hidden poligons are also included in the output (usually twice bigger)</string>
+                <string>Hidden polygons are also included in the output (usually twice bigger)</string>
             </property>
         </widget>
         <widget class="QCheckBox">
@@ -93,7 +93,7 @@
                         <cstring>sortLabel</cstring>
                     </property>
                     <property name="text">
-                        <string>Sort method :</string>
+                        <string>Sort method:</string>
                     </property>
                     <property name="toolTip" stdset="0">
                         <string>Polygon depth sorting method</string>
@@ -107,7 +107,7 @@
                     </item>
                     <item>
                         <property name="text">
-                            <string>BSP </string>
+                            <string>BSP</string>
                         </property>
                     </item>
                     <item>
