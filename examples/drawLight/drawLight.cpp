@@ -34,7 +34,7 @@ void Viewer::draw()
       float alt = ratio - 0.5;
       const float nor = .5;
       const float up = sqrt(1.0-nor*nor);
-      glColor3f(1-ratio, .2 , ratio);
+      glColor3f(1-ratio, 0.2f , ratio);
       glNormal3f(nor*c, up, nor*s);
       glVertex3f(r1*c, alt, r1*s);
       glVertex3f(r2*c, alt+0.05, r2*s);
@@ -44,12 +44,12 @@ void Viewer::draw()
   drawLight(GL_LIGHT0);
 
   if (light1->grabsMouse())
-    drawLight(GL_LIGHT1, 1.2);
+    drawLight(GL_LIGHT1, 1.2f);
   else
     drawLight(GL_LIGHT1);
 
   if (light2->grabsMouse())
-    drawLight(GL_LIGHT2, 1.2);
+    drawLight(GL_LIGHT2, 1.2f);
   else
     drawLight(GL_LIGHT2);
 }
@@ -65,8 +65,8 @@ void Viewer::init()
 
   // Light1 is a spot light
   glEnable(GL_LIGHT1);
-  const GLfloat light_ambient[4]  = {0.8, 0.2, 0.2, 1.0};
-  const GLfloat light_diffuse[4]  = {1.0, 0.4, 0.4, 1.0};
+  const GLfloat light_ambient[4]  = {0.8f, 0.2f, 0.2f, 1.0};
+  const GLfloat light_diffuse[4]  = {1.0, 0.4f, 0.4f, 1.0};
   const GLfloat light_specular[4] = {1.0, 0.0, 0.0, 1.0};
 
   glLightf( GL_LIGHT1, GL_SPOT_EXPONENT,  3.0);
@@ -80,8 +80,8 @@ void Viewer::init()
 
   // Light2 is a classical directionnal light
   glEnable(GL_LIGHT2);
-  const GLfloat light_ambient2[4]  = {0.2, 0.2, 2.0, 1.0};
-  const GLfloat light_diffuse2[4]  = {0.8, 0.8, 1.0, 1.0};
+  const GLfloat light_ambient2[4]  = {0.2f, 0.2f, 2.0, 1.0};
+  const GLfloat light_diffuse2[4]  = {0.8f, 0.8f, 1.0, 1.0};
   const GLfloat light_specular2[4] = {0.0, 0.0, 1.0, 1.0};
 
   glLightfv(GL_LIGHT2, GL_AMBIENT,  light_ambient2);

@@ -96,8 +96,8 @@ void Viewer::init()
 void Viewer::draw()
 {
   glMultMatrixd(frame->matrix());
-  drawAxis(0.4);
-  const float scale = 0.3;
+  drawAxis(0.4f);
+  const float scale = 0.3f;
   glScalef(scale, scale, scale);
 
   const float nbSteps = 200.0;
@@ -113,7 +113,7 @@ void Viewer::draw()
       float alt = ratio - 0.5;
       const float nor = .5;
       const float up = sqrt(1.0-nor*nor);
-      glColor3f(1-ratio, .2 , ratio);
+      glColor3f(1-ratio, 0.2f , ratio);
       glNormal3f(nor*c*scale, up*scale, nor*s*scale);
       glVertex3f(r1*c, alt, r1*s);
       glVertex3f(r2*c, alt+0.05, r2*s);

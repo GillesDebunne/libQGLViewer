@@ -18,7 +18,7 @@ Viewer::Viewer()
     for (int j=-nb; j<=nb; ++j)
       {
 	Object* o = new Object();
-	o->frame.setPosition(Vec(i/float(nb), j/float(nb), 0.0f));
+	o->frame.setPosition(Vec(i/float(nb), j/float(nb), 0.0));
 #if QT_VERSION < 0x040000
 	// How could they sell this ?
 	objects_.resize(objects_.size()+1);
@@ -64,7 +64,7 @@ QString Viewer::helpString() const
 void Viewer::draw()
 {
   // Draws selected objects only.
-  glColor3f(0.9, 0.3, 0.3);
+  glColor3f(0.9f, 0.3f, 0.3f);
 #if QT_VERSION < 0x040000
   for (QValueList<int>::const_iterator it=selection_.begin(), end=selection_.end(); it != end; ++it)
 #else
@@ -73,7 +73,7 @@ void Viewer::draw()
       objects_.at(*it)->draw();
 
   // Draws all the objects. Selected ones are not repainted because of GL depth test.
-  glColor3f(0.8, 0.8, 0.8);
+  glColor3f(0.8f, 0.8f, 0.8f);
   for (int i=0; i<int(objects_.size()); i++)
     objects_.at(i)->draw();
 
@@ -245,7 +245,7 @@ void Viewer::drawSelectionRectangle() const
   glDisable(GL_LIGHTING);
   glEnable(GL_BLEND);
 
-  glColor4f(0.0, 0.0, 0.3, 0.3);
+  glColor4f(0.0, 0.0, 0.3f, 0.3f);
   glBegin(GL_QUADS);
   glVertex2i(rectangle_.left(),  rectangle_.top());
   glVertex2i(rectangle_.right(), rectangle_.top());
@@ -254,7 +254,7 @@ void Viewer::drawSelectionRectangle() const
   glEnd();
 
   glLineWidth(2.0);
-  glColor4f(0.4, 0.4, 0.5, 0.5);
+  glColor4f(0.4f, 0.4f, 0.5f, 0.5f);
   glBegin(GL_LINE_LOOP);
   glVertex2i(rectangle_.left(),  rectangle_.top());
   glVertex2i(rectangle_.right(), rectangle_.top());

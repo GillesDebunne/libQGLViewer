@@ -10,6 +10,10 @@
 #include "sky.h"
 #include "tree.h"
 
+#if QT_VERSION >= 0x040000
+# include <QKeyEvent>
+#endif
+
 using namespace std;
 
 // variables globales
@@ -77,7 +81,7 @@ void Viewer::init()
   //  camera()->lookAt(0.5,myQuadtree.GetScaledHeightAtPoint( (int)myQuadtree.sizeHeightMap/2, 								(int)myQuadtree.sizeHeightMap/2)/myQuadtree.sizeHeightMap,0.5);
 
   // Large scene dimension so that the sky is not clipped
-  setSceneCenter(Vec(0.5,0.3,0.5));
+  setSceneCenter(Vec(0.5f, 0.3f, 0.5f));
   setSceneRadius(2.0);
   showEntireScene();
 

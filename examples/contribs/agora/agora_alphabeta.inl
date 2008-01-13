@@ -8,7 +8,6 @@
 #include <vector>
 #include <algorithm>
 #include <deque>
-#include "givtimer.h"
 #include "agora.h"
 
 #define START_PROFONDEUR 5
@@ -239,8 +238,9 @@ inline double Agora<Ints>::BestPlay(Coup& bp, bool ordi_color, int depth) {
 
     
 template<class Ints>
-inline double Agora<Ints>::OnebyOneBP(Coup& bp, bool ordi_color, int depth, double temps_max, Timer& global) {
-        Timer tim; tim.clear(); tim.start();
+inline double Agora<Ints>::OnebyOneBP(Coup& bp, bool ordi_color, int depth, int temps_max, QTime& global) {
+        QTime tim; 
+		tim.start();
 
         int d = depth-1;
         Size_t ls = TopPM.size();
@@ -272,11 +272,9 @@ inline double Agora<Ints>::OnebyOneBP(Coup& bp, bool ordi_color, int depth, doub
                 e = em;
                 bp = *pi;
             }
-            tim.stop();
-            global += tim;
-            double devia = tim.realtime();
+            int devia = tim.elapsed();
 
-            for(++pi ; ((global.realtime()+devia) < temps_max) && (pi != end_pi) ; ++pi, global += tim, devia = (devia+tim.realtime())/2 ) {
+            for(++pi ; ((global.elapsed()+devia) < temps_max) && (pi != end_pi) ; ++pi, devia = (devia+tim.elapsed())/2 ) {
                 tim.start();
                 jouer( (*pi).depart(), dep, (*pi).arrivee(), arr, (*pi).dessus());
 		// Prevent unused variable `bool arr_coul' warning message
@@ -294,7 +292,6 @@ inline double Agora<Ints>::OnebyOneBP(Coup& bp, bool ordi_color, int depth, doub
                     e = em;
                     bp = *pi;
                 }
-                tim.stop();
             }
 #ifdef __DEPTHS__
             std::cerr << std::endl;
@@ -305,50 +302,47 @@ inline double Agora<Ints>::OnebyOneBP(Coup& bp, bool ordi_color, int depth, doub
 
 
 template<class Ints>
-inline typename Agora<Ints>::Coup& Agora<Ints>::Suggest(Coup& bp, bool ordi_color, double temps_max, int depth) {
+inline typename Agora<Ints>::Coup& Agora<Ints>::Suggest(Coup& bp, bool ordi_color, int temps_max, int depth) {
     if (depth > 0) {
-        Timer tim; tim.clear();tim.start();
+        QTime tim;
+		tim.start();
         CoupsPossibles( TopPM, ordi_color );
         std::random_shuffle(TopPM.begin(), TopPM.end() );
         BestPlay(bp, ordi_color, 1);
         _PM.resize(depth);
         BestPlay(bp, ordi_color, depth);
-        tim.stop();
-        if (tim.realtime() < temps_max)
-            Iteratif(bp, ordi_color, temps_max-tim.realtime(), depth+1);
+        if (tim.elapsed() < temps_max)
+            Iteratif(bp, ordi_color, temps_max-tim.elapsed(), depth+1);
         return bp;
     } else {
-        return Iteratif(bp, ordi_color, temps_max);
+        return Iteratif(bp, ordi_color, temps_max, START_PROFONDEUR);
     }
 }
 
 
 
 template<class Ints>
-inline typename Agora<Ints>::Coup& Agora<Ints>::Iteratif(Coup& bp, bool ordi_color, double temps_max, int StartProf = START_PROFONDEUR) {
-        Timer tim, global; tim.clear(); global.clear(); global.start();
+inline typename Agora<Ints>::Coup& Agora<Ints>::Iteratif(Coup& bp, bool ordi_color, int temps_max, int StartProf = START_PROFONDEUR) {
+        QTime global; 
+		global.start();
         double SEUIL =  22.0 / 4.0;
         SEUIL = (SEUIL < 3)? 3 : SEUIL ;
         CoupsPossibles( TopPM, ordi_color );
         double ev = BestPlay(bp, ordi_color, 1);
-        global.stop();
-        
         
         int profondeur = StartProf ;
-        for(;   ( global.realtime()*SEUIL < temps_max ) 
+        for(;   ( global.elapsed()*SEUIL < temps_max ) 
                 && (ev > MINFTYOT) 
                 && (ev < INFTYOT)
-                ;  ++profondeur, global += tim ) {
+                ;  ++profondeur ) {
                 
-            tim.start();
             _PM.resize(profondeur);
             ev = BestPlay(bp, ordi_color, profondeur);
-            tim.stop();
         }
 
-        if ( ((global.realtime()*5) < (temps_max*4)) && (ev > MINFTYOT) && (ev < INFTYOT) ) {
+        if ( ((global.elapsed()*5) < (temps_max*4)) && (ev > MINFTYOT) && (ev < INFTYOT) ) {
             _PM.resize(profondeur);
-            ev = OnebyOneBP(bp, ordi_color, profondeur, temps_max, global);
+			ev = OnebyOneBP(bp, ordi_color, profondeur, temps_max, global);
         }
 #ifdef __DEPTHS__
         std::cerr << "time: " << global << std::endl;

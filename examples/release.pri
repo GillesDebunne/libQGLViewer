@@ -125,16 +125,10 @@ unix|win32-g++ {
 #                    Windows configuration.
 !win32-g++ {
 win32 {
-  # Various compilation flags
-  QMAKE_CXXFLAGS = -TP -G6 -GR -Zi
-  win32-msvc {
-    QMAKE_CXXFLAGS *= -GX
-  } else {
-    QMAKE_CXXFLAGS *= -EHs
+  contains( QT_VERSION, "^3\..*" ) {
+    # Use the Qt DLL version
+    DEFINES *= QT_DLL QT_THREAD_SUPPORT
   }
-
-  # Use the Qt DLL version
-  DEFINES *= QT_DLL QT_THREAD_SUPPORT
 
   !isEmpty( QGLVIEWER_STATIC ) {
     DEFINES *= QGLVIEWER_STATIC
@@ -199,6 +193,6 @@ win32 {
         error( Unable to find $${LIB_FILE}. )
 	  }
 	}
+    }
   }
-}
 }

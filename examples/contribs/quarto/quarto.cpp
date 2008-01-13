@@ -1,25 +1,36 @@
 #include "quarto.h"
-#include <signal.h>
 
+#include <signal.h>
 #include <qvariant.h>
 #include <qapplication.h>
 #include <qframe.h>
 #include <qgroupbox.h>
-#include <qheader.h>
 #include <qlabel.h>
 #include <qmessagebox.h>
 #include <qpushbutton.h>
 #include <qwidget.h>
 #include <qmime.h>
-#include <qdragobject.h>
 #include <qlayout.h>
 #include <qtooltip.h>
 #include <qdialog.h>
 
+#if QT_VERSION < 0x040000
+# include <qdragobject.h>
+# include <qheader.h>
+#endif
+
+#if QT_VERSION < 0x040000
 Quarto::Quarto( QWidget* parent,  const char* name, WFlags fl )
   : QMainWindow( parent, name, fl )
 {
-
+  setName( "Quarto" );
+  setCaption( trUtf8( "Quarto" ) );
+#else
+Quarto::Quarto(QWidget* parent)
+  : QMainWindow( parent )
+{
+  setWindowTitle( "Quarto" );
+#endif
   //************************************************************************************************************************//
   //************************************************************************************************************************//
   //                      Definition de l'apparence de l'interface graphique ( Tous les Widgets )                           //
@@ -27,19 +38,16 @@ Quarto::Quarto( QWidget* parent,  const char* name, WFlags fl )
   //************************************************************************************************************************//
 
   // Parametres principaux
-  if ( !name )
-    setName( "Quarto" );
   resize( 800, 400 );
-  setCaption( trUtf8( "Quarto" ) );
-  setCentralWidget( new QWidget( this, "qt_central_widget" ) );
-  QuartoLayout = new QVBoxLayout( centralWidget(), 2, -1, "QuartoLayout");
+  setCentralWidget(this);
 
   //***************************//
   // Fenetre de vue du plateau //
   //***************************//
-  MainHLayout = new QHBoxLayout( 0, 0, 2, "MainHLayout"  );
+  QuartoLayout = new QVBoxLayout( centralWidget());
+  MainHLayout = new QHBoxLayout( NULL );
 
-  GLFrameJeu = new QFrame( centralWidget(), "GLFrameJeu" );
+  GLFrameJeu = new QFrame( centralWidget() );
   GLFrameJeu->setMouseTracking( TRUE );
   GLFrameJeu->setFrameShape( QFrame::StyledPanel );
   GLFrameJeu->setFrameShadow( QFrame::Raised );
@@ -47,37 +55,38 @@ Quarto::Quarto( QWidget* parent,  const char* name, WFlags fl )
   GLFrameJeu->setLineWidth( 2 );
   // Create our OpenGL widget
   vuePlateau = new GLViewJeu( GLFrameJeu );
-  HLayout1 = new QHBoxLayout( GLFrameJeu, 2, 2, "HLayout1"  );
+  HLayout1 = new QHBoxLayout( GLFrameJeu );
+  //**********************************//
+  //        Partie Selection         //
+  //********************************//
+  VLayout1 = new QVBoxLayout( NULL );
+
   HLayout1->addWidget( vuePlateau );
   // Ajout au tableau de fenetres
   MainHLayout->addWidget( GLFrameJeu );
 
-  //**********************************//
-  //        Partie Selection         //
-  //********************************//
-  VLayout1 = new QVBoxLayout( 0, 0, 2, "VLayout1");
-
   //######################//
   // Groupe de fonctions //
   //####################//
-  GameGroupBox = new QGroupBox( centralWidget(), "GameGroupBox" );
-  GameGroupBox->setMaximumSize( 600, 100 );
+  GameGroupBox = new QGroupBox( centralWidget() );
+  QWidget* privateLayoutWidget = new QWidget( GameGroupBox );
 
-  QWidget* privateLayoutWidget = new QWidget( GameGroupBox, "VLayout2" );
-  privateLayoutWidget->setGeometry( QRect( 10, 15, 280, 80 ) );
-  VLayout2 = new QVBoxLayout( privateLayoutWidget, 0, 2, "VLayout2");
-
+  VLayout2 = new QVBoxLayout(privateLayoutWidget);
   // Indication du tour des joueurs
-  HLayout2 = new QHBoxLayout( 0, 0, 2, "HLayout2");
+  HLayout2 = new QHBoxLayout(NULL);
+
+  GameGroupBox->setMaximumSize( 600, 100 );
+  privateLayoutWidget->setGeometry( QRect( 10, 15, 280, 80 ) );
+
   // titre
-  TourDeJeuLabel = new QLabel( privateLayoutWidget, "TourDeJeuLabel" );
+  TourDeJeuLabel = new QLabel( privateLayoutWidget );
   QFont TourDeJeuLabel_font(  TourDeJeuLabel->font() );
   TourDeJeuLabel_font.setPointSize( 14 );
   TourDeJeuLabel->setFont( TourDeJeuLabel_font );
   TourDeJeuLabel->setText( trUtf8( "Now playing :" ) );
   HLayout2->addWidget( TourDeJeuLabel );
   // indicateur
-  NomLabel = new QLabel( privateLayoutWidget, "NomLabel" );
+  NomLabel = new QLabel( privateLayoutWidget );
   QFont NomLabel_font(  NomLabel->font() );
   NomLabel_font.setPointSize( 14 );
   NomLabel->setFont( NomLabel_font );
@@ -89,7 +98,7 @@ Quarto::Quarto( QWidget* parent,  const char* name, WFlags fl )
   //############################//
   // Fenetre de vue des pieces //
   //##########################//
-  GLFramePieces = new QFrame( centralWidget(), "GLFramePieces" );
+  GLFramePieces = new QFrame( centralWidget() );
   GLFramePieces->setMouseTracking( TRUE );
   GLFramePieces->setFrameShape( QFrame::StyledPanel );
   GLFramePieces->setFrameShadow( QFrame::Raised );
@@ -97,22 +106,22 @@ Quarto::Quarto( QWidget* parent,  const char* name, WFlags fl )
   GLFramePieces->setLineWidth( 2 );
   // Create our OpenGL widget
   vuePieces = new GLViewPieces( GLFramePieces );
-  HLayout4 = new QHBoxLayout( GLFramePieces, 2, 2, "HLayout4"  );
+  HLayout4 = new QHBoxLayout( GLFramePieces );
   HLayout4->addWidget( vuePieces );
   // Ajout au tableau de fenetres
   VLayout1->addWidget( GLFramePieces );
 
     // Bouttons utiles
-  HLayout3 = new QHBoxLayout( 0, 0, 2, "HLayout3");
+  HLayout3 = new QHBoxLayout( NULL );
   // Boutton de reset
-  ResetButton = new QPushButton( privateLayoutWidget, "ResetButton" );
+  ResetButton = new QPushButton( privateLayoutWidget );
   QFont ResetButton_font(  ResetButton->font() );
   ResetButton_font.setPointSize( 14 );
   ResetButton->setFont( ResetButton_font );
   ResetButton->setText( trUtf8( "New Game" ) );
   HLayout3->addWidget( ResetButton );
   // Boutton de quit
-  QuitButton = new QPushButton( privateLayoutWidget, "QuitButton" );
+  QuitButton = new QPushButton( privateLayoutWidget );
   QFont QuitButton_font(  QuitButton->font() );
   QuitButton_font.setPointSize( 14 );
   QuitButton->setFont( QuitButton_font );

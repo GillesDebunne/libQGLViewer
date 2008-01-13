@@ -27,7 +27,7 @@ void Viewer::displayPlayers()
 	    }
 	  else
 	    {
-	      glColor3f(0.6, 0.6, 0.6);
+	      glColor3f(0.6f, 0.6f, 0.6f);
 	      if (camera()->keyFrameInterpolator(i)->numberOfKeyFrames() > 1)
 		s = "Path F" + QString::number(i);
 	      else
@@ -75,7 +75,7 @@ void Viewer::init()
   for (int i = -nbSpirals/2; i<=nbSpirals/2; ++i)
     {
       Spiral s;
-      s.setPosition(Vec(1.8f*i/nbSpirals, 0.0f, 0.0f));
+      s.setPosition(Vec(1.8f*i/nbSpirals, 0.0, 0.0));
       spiral_.push_back(s);
     }
 

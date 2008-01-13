@@ -23,7 +23,7 @@ int main(int argc, char** argv)
 		 qWarning("unable to load");
      application.installTranslator(&translator); 
 
-	   // Instantiate the viewer.
+  // Instantiate the viewer.
   Viewer viewer;
 
 #if QT_VERSION < 0x040000

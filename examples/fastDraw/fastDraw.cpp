@@ -8,7 +8,7 @@ void Viewer::init()
   // Increase the material shininess, so that the difference between
   // the two versions of the spiral is more visible.
   glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0);
-  GLfloat specular_color[4] = { 0.8, 0.8, 0.8, 1.0 };
+  GLfloat specular_color[4] = { 0.8f, 0.8f, 0.8f, 1.0 };
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,  specular_color);
 
   restoreStateFromFile();
@@ -43,7 +43,7 @@ static void drawSpiral(bool simplified = false)
 
 	      glColor3f(1-ratio, (n+j)/nbSub , ratio);
 	      glNormal3fv(shift);
-	      glVertex3fv(center+0.2*shift);
+	      glVertex3fv(center+0.2f*shift);
 	    }
 	}
       glEnd();

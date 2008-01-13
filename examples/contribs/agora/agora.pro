@@ -14,8 +14,8 @@ CONFIG  += qt opengl warn_on release thread
 # Input
 HEADERS += agora_alphabeta.inl  agora_coupspossibles.inl  agora_init.inl  agora_jouer.inl   agoraViewer.h
 HEADERS += agora_class.h        agora_evaluation.inl      agora_io.h      container_stream.h agora_container.h
-HEADERS += agora_coup.h         agora.h                   agora_io.inl    agora_types.h     givtimer.h
-SOURCES += main.cpp givtimer.C agoraViewer.cpp
+HEADERS += agora_coup.h         agora.h                   agora_io.inl    agora_types.h
+SOURCES += main.cpp agoraViewer.cpp
 
 QT_VERSION=$$[QT_VERSION]
 contains( QT_VERSION, "^4.*" ) {

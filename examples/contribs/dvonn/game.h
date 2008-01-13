@@ -17,7 +17,7 @@ namespace dvonn
 		 GameOverPhase      = 3 } Phase;
 
   extern Color colorOf(Player p);
-  extern Player player(Color c) throw (std::range_error);
+  extern Player player(Color c)/* throw (std::range_error)*/;
   extern QString nameOf(const dvonn::Player);
   //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   // Interface of Game

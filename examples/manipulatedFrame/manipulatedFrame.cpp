@@ -19,7 +19,7 @@ static void drawSpiral()
       float alt = ratio - 0.5;
       const float nor = .5;
       const float up = sqrt(1.0-nor*nor);
-      glColor3f(1-ratio, .2 , ratio);
+      glColor3f(1.0-ratio, 0.2f , ratio);
       glNormal3f(nor*c, up, nor*s);
       glVertex3f(r1*c, alt, r1*s);
       glVertex3f(r2*c, alt+0.05, r2*s);
@@ -41,7 +41,6 @@ void Viewer::init()
   setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::ControlModifier);
 #endif
 
-  setMouseBinding(Qt::LeftButton, FRAME, DRIVE);
 #ifdef GL_RESCALE_NORMAL  // OpenGL 1.2 Only...
   glEnable(GL_RESCALE_NORMAL);
 #endif
@@ -70,7 +69,7 @@ void Viewer::draw()
   glMultMatrixd(manipulatedFrame()->matrix());
 
   // Scale down the drawings
-  glScalef(0.3, 0.3, 0.3);
+  glScalef(0.3f, 0.3f, 0.3f);
 
   // Draw an axis using the QGLViewer static function
   drawAxis();

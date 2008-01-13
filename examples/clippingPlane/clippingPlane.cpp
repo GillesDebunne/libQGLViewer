@@ -13,15 +13,15 @@ void Viewer::draw()
   for (int i=0; i<nbSteps; ++i)
     {
       const float ratio = i/nbSteps;
-      const float angle = 21.0f*ratio;
+      const float angle = 21.0*ratio;
       const float c = cos(angle);
       const float s = sin(angle);
-      const float r1 = 1.0f - 0.8f*ratio;
+      const float r1 = 1.0 - 0.8f*ratio;
       const float r2 = 0.8f - 0.8f*ratio;
       const float alt = ratio - 0.5f;
       const float nor = 0.5f;
-      const float up = sqrt(1.0f-nor*nor);
-      glColor3f(1.0f-ratio, 0.2f , ratio);
+      const float up = sqrt(1.0-nor*nor);
+      glColor3f(1.0-ratio, 0.2f , ratio);
       glNormal3f(nor*c, up, nor*s);
       glVertex3f(r1*c, alt, r1*s);
       glVertex3f(r2*c, alt+0.05f, r2*s);
@@ -38,14 +38,14 @@ void Viewer::draw()
   glClipPlane(GL_CLIP_PLANE0, equation);
   
   // Draw a plane representation: Its normal...
-  glColor3f(0.8, 0.8, 0.8);
-  drawArrow(0.4, 0.015);
+  glColor3f(0.8f, 0.8f, 0.8f);
+  drawArrow(0.4f, 0.015f);
   // ...and a quad (with a slightly shifted z so that it is not clipped).
   glBegin(GL_QUADS);
-  glVertex3f(-1.0, -1.0, 0.001);
-  glVertex3f(-1.0,  1.0, 0.001);
-  glVertex3f( 1.0,  1.0, 0.001);
-  glVertex3f( 1.0, -1.0, 0.001);
+  glVertex3f(-1.0, -1.0, 0.001f);
+  glVertex3f(-1.0,  1.0, 0.001f);
+  glVertex3f( 1.0,  1.0, 0.001f);
+  glVertex3f( 1.0, -1.0, 0.001f);
   glEnd();
   glPopMatrix();
 }

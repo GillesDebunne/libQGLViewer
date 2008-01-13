@@ -2,6 +2,11 @@
 #include <iostream>
 #include <qimage.h>
 
+
+#if QT_VERSION >= 0x040000
+# include <QMouseEvent>
+#endif
+
 using namespace qglviewer;
 
 //********************************************************************//
@@ -17,15 +22,17 @@ void GLView::init()
   /* lissage des couleurs sur les facettes */
   glShadeModel(GL_SMOOTH);
   /* activation de la normalisation des normales */
+#ifdef GL_RESCALE_NORMAL  // OpenGL 1.2 Only...
   glEnable(GL_RESCALE_NORMAL);
+#endif
   glDisable(GL_COLOR_MATERIAL);
 
   /* activation des sources */
   glEnable(GL_LIGHT0);
   glEnable(GL_LIGHT1);
   /* parametres des sources */
-  static GLfloat pos_source[2][4] = { { 0., 0., 40., 0.8 }, { -40., 0., 0., 0.8 } };
-  static GLfloat colorLight[2][4] = { { 1., 1., 1., 1. }, { 1., 1., 1., 1. } };
+  static GLfloat pos_source[2][4] = { { 0.0, 0.0, 40.0, 0.8f }, { -40.0, 0.0, 0.0, 0.8f } };
+  static GLfloat colorLight[2][4] = { { 1.0, 1.0, 1.0, 1.0 }, { 1.0, 1.0, 1.0, 1.0 } };
   /* Definition des sources: position */
   glLightfv(GL_LIGHT0, GL_POSITION, pos_source[0] );
   glLightfv(GL_LIGHT1, GL_POSITION, pos_source[1] );
@@ -203,18 +210,18 @@ void GLViewJeu::makePlateau()
 {
   int i,j;
   float taille=18;
-  static GLfloat amb_diff[] = { 0.15, 0.15, 0.15 };
-  static GLfloat ambiant[] = { 0.85, 0.4, 0.35 };
-  static GLfloat specular1[] = { 0.3, 0.3, 0.3 };
-  static GLfloat specular2[] = { 0., 0., 0. };
-  static GLfloat shininess = 120.;
+  static GLfloat amb_diff[] = { 0.15f, 0.15f, 0.15f };
+  static GLfloat ambiant[] = { 0.85f, 0.4f, 0.35f };
+  static GLfloat specular1[] = { 0.3f, 0.3f, 0.3f };
+  static GLfloat specular2[] = { 0.0, 0.0, 0.0 };
+  static GLfloat shininess = 120.0;
 
   plateau = glGenLists( 1 );
   glNewList( plateau, GL_COMPILE );
   glPushMatrix();
   glTranslatef(9, 9, 0 );
   glRotatef( 45, 0, 0, 1 );
-  glScalef( 1.1, 1.1, 1 );
+  glScalef( 1.1f, 1.1f, 1 );
   glTranslatef(-9, -9, 0 );
   // Couleur noire du plateau
   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, amb_diff);

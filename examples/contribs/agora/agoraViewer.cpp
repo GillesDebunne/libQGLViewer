@@ -9,6 +9,7 @@
 #include <qaction.h>
 
 #if QT_VERSION >= 0x040000
+# include <QMouseEvent>
 # include "ui_agoraWindow.Qt4.h"
   class AgoraWindow : public QMainWindow, public Ui::AgoraWindow {};
 #else
@@ -21,6 +22,10 @@
 
 using namespace std;
 using namespace qglviewer;
+
+// Size of one Agora position is 1.0, entire board is hence 6.0 x 6.0.
+float AgoraViewer::pieceSize = 29.0f / 38.0f;
+float AgoraViewer::pieceHeight = 5.0f / 38.0f;
 
 #if QT_VERSION < 0x040000
   AgoraViewer::AgoraViewer(QWidget* parent,  const char* name)
@@ -99,9 +104,9 @@ void AgoraViewer::initSpotLight()
 
   glLightf( GL_LIGHT1, GL_SPOT_EXPONENT,  2.0);
   glLightf( GL_LIGHT1, GL_SPOT_CUTOFF,    60.0);
-  glLightf( GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0.1);
-  glLightf( GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.3);
-  glLightf( GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.3);
+  glLightf( GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0.1f);
+  glLightf( GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.3f);
+  glLightf( GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.3f);
   glLightfv(GL_LIGHT1, GL_AMBIENT,  light_ambient);
   glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular);
   glLightfv(GL_LIGHT1, GL_DIFFUSE,  light_diffuse);
@@ -209,7 +214,7 @@ void AgoraViewer::initViewer()
 
 void AgoraViewer::draw()
 {
-  glColor3f(0.7, 0.7, 0.7);
+  glColor3f(0.7f, 0.7f, 0.7f);
   glDisable(GL_LIGHTING);
   if (blackPlay_)
     drawText(20, 20, "Blacks play");
@@ -253,7 +258,7 @@ void AgoraViewer::drawAgora() const
   glDisable(GL_LIGHTING);
 
   glLineWidth(3.0);
-  glColor3f(0.4, 0.4, 0.4);
+  glColor3f(0.4f, 0.4f, 0.4f);
   drawBorderLines(6.0, 6.0 * pieceHeight);
   drawBorderLines(4.0, 6.0 * pieceHeight, false, 3.0 * pieceHeight);
   drawBorderLines(2.0, 3.0 * pieceHeight, false, pieceHeight);
@@ -263,7 +268,7 @@ void AgoraViewer::drawAgora() const
   drawLeveLines(2.0, 2.0 * pieceHeight);
 
   glLineWidth(4.0);
-  glColor3f(0.1, 0.1, 0.1);
+  glColor3f(0.1f, 0.1f, 0.1f);
   drawSeparatingBars(6.0, 6.0 * pieceHeight);
   drawSeparatingBars(4.0, 3.0 * pieceHeight);
   drawSeparatingBars(2.0, pieceHeight);
@@ -279,7 +284,7 @@ void AgoraViewer::drawPiece() const
 
   glLineWidth(2.0);
   glDisable(GL_LIGHTING);
-  glColor3f(0.4, 0.4, 0.4);
+  glColor3f(0.4f, 0.4f, 0.4f);
   drawBorderLines(pieceSize, pieceHeight);
   glEnable(GL_LIGHTING);
 }
@@ -288,7 +293,7 @@ void AgoraViewer::highlightSelectedPiece() const
 {
   glEnable(GL_BLEND);
   const float s = 1.1 * piece_[selectedPiece_].scale;
-  glColor4f(0.3, 0.9, 0.3, 0.3);
+  glColor4f(0.3f, 0.9f, 0.3f, 0.3f);
   glPushMatrix();
   glMultMatrixd(piece_[selectedPiece_].frame.matrix());
   glScalef(s, s, s);
@@ -306,9 +311,9 @@ void AgoraViewer::drawAllPieces(bool select) const
       glScalef(piece_[i].scale, piece_[i].scale, 1.0);
 
       if (piece_[i].isBlack)
-	glColor3f(0.2, 0.2, 0.2);
+	glColor3f(0.2f, 0.2f, 0.2f);
       else
-	glColor3f(0.9, 0.9, 0.9);
+	glColor3f(0.9f, 0.9f, 0.9f);
 
       if (select)
 	glPushName(i);
@@ -325,7 +330,7 @@ void AgoraViewer::drawAllPieces(bool select) const
 void AgoraViewer::drawPossibleDestinations(bool select) const
 {
   glEnable(GL_BLEND);
-  glColor4f(0.3, 0.3, 0.9, 0.5);
+  glColor4f(0.3f, 0.3f, 0.9f, 0.5f);
   for (Possibles::const_iterator it=possibleDest_.begin(), end=possibleDest_.end(); it != end; ++it)
     {
       const int dest = (*it).arrivee();
@@ -336,7 +341,7 @@ void AgoraViewer::drawPossibleDestinations(bool select) const
       if (select)
 	glPushName(dest);
 
-      drawFace(0.9, 0.0, true);
+      drawFace(0.9f, 0.0, true);
 
       if (select)
 	for (int i=0; i<16; ++i)
@@ -388,8 +393,8 @@ void AgoraViewer::drawBorderLines(float width, float height, bool out, float hei
   // Avoid aliassing on inside agora
   if (!out)
     {
-      heightMin += 0.01;
-      width     -= 0.01;
+      heightMin += 0.01f;
+      width     -= 0.01f;
     }
 
   for (int i=0; i<4; ++i)
@@ -433,7 +438,7 @@ void AgoraViewer::drawSeparatingBars(float width, float height, float thickness)
 {
   const Vec up(0.0, 0.0, 1.0);
 
-  height += 0.01;
+  height += 0.01f;
 
   for (int i=0; i<4; ++i)
     {
@@ -450,7 +455,7 @@ void AgoraViewer::drawSeparatingBars(float width, float height, float thickness)
 void AgoraViewer::drawLeveLines(float width, float height) const
 {
   const Vec up(0.0, 0.0, 1.0);
-  width -= 0.01;
+  width -= 0.01f;
 
   glBegin(GL_LINE_LOOP);
 
@@ -478,7 +483,7 @@ void AgoraViewer::drawFace(float width, float height, bool up) const
 void AgoraViewer::animatePlay()
 {
   float start = 0.0;
-  float end = 0.8;
+  float end = 0.8f;
   int hpops = higherPieceOnPosition(play_.depart());
   int hpope = higherPieceOnPosition(play_.arrivee());
   revoStart_.clear();
@@ -501,11 +506,11 @@ void AgoraViewer::animatePlay()
 	    kfi_[nbKfi].addKeyFrame(piece_[i].frame, 0.0);
 	    Frame midFrame(piece_[i].frame.position()+Vec(0.0, 0.0, 4*pieceHeight*(piece_[i].level+2)),
 			   Quaternion(Vec(1.0, 0.0, 0.0), 2.0));
-	    kfi_[nbKfi].addKeyFrame(midFrame, 0.3);
+	    kfi_[nbKfi].addKeyFrame(midFrame, 0.3f);
 	    Frame endFrame(piece_[i].frame.position()+Vec(0.0, 0.0, pieceHeight),
 			   Quaternion(Vec(1.0, 0.0, 0.0), M_PI));
-	    kfi_[nbKfi].addKeyFrame(endFrame, 0.6);
-	    start = 0.6;
+	    kfi_[nbKfi].addKeyFrame(endFrame, 0.6f);
+	    start = 0.6f;
 	    swapArrival_.push_back(i);
 	  }
     }
@@ -533,7 +538,7 @@ void AgoraViewer::animatePlay()
 		midFrame.setPosition(piece_[i].frame.position()+Vec(0.0, 0.0, 3.0*pieceHeight*(piece_[i].level+2)));
 		endFrame.setPosition(piece_[i].frame.position()+Vec(0.0, 0.0, pieceHeight));
 	      }
-	    kfi_[nbKfi].addKeyFrame(midFrame, 0.4);
+	    kfi_[nbKfi].addKeyFrame(midFrame, 0.4f);
 	    kfi_[nbKfi].addKeyFrame(endFrame, 1.0);
 	    end = 1.0;
 	  }
@@ -548,15 +553,15 @@ void AgoraViewer::animatePlay()
 	  kfi_[nbKfi].deletePath();
 	  kfi_[nbKfi].setFrame(&piece_[i].frame);
 	  kfi_[nbKfi].addKeyFrame(piece_[i].frame, 0.0);
-	  kfi_[nbKfi].addKeyFrame(piece_[i].frame, 0.6);
+	  kfi_[nbKfi].addKeyFrame(piece_[i].frame, 0.6f);
 	  Frame midFrame(piece_[i].frame.position()+Vec(0.0, 0.0, 3.0*pieceHeight*(piece_[i].level+2)),
 			 Quaternion(Vec(1.0, 0.0, 0.0), 2.0));
 	  Frame endFrame(piece_[i].frame.position()+Vec(0.0, 0.0, pieceHeight),
 			 Quaternion(Vec(1.0, 0.0, 0.0), M_PI));
 
 	  // piece_[i].isBlack = !piece_[hpops].isBlack;
-	  kfi_[nbKfi].addKeyFrame(midFrame, 0.9);
-	  kfi_[nbKfi].addKeyFrame(endFrame, 1.5);
+	  kfi_[nbKfi].addKeyFrame(midFrame, 0.9f);
+	  kfi_[nbKfi].addKeyFrame(endFrame, 1.5f);
 	  end = 1.5;
 	  revoStart_.push_back(i);
 	}

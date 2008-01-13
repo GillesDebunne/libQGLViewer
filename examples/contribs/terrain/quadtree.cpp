@@ -1,6 +1,5 @@
 // TP OpenGL: Joerg Liebelt, Serigne Sow
 #include <stdio.h>
-
 #include "quadtree.h"
 
 #define SQR( number )		( number*number )
@@ -181,37 +180,30 @@ void QUADTREE::PropagateRoughness( void )
 	  for( x=edgeOffset; x<sizeHeightMap-edgeOffset; x+=( edgeLength ) )
 	    {
 	      //haut, milieu
-	      localD2= ( int )ceil( abs( ( ( GetTrueHeightAtPoint( x-edgeOffset, z+edgeOffset )+
-					     GetTrueHeightAtPoint( x+edgeOffset, z+edgeOffset ) )>>1 )-
-					 GetTrueHeightAtPoint( x, z+edgeOffset ) ) );
+	      localD2= (int) ceil( (int)( abs( ( ( GetTrueHeightAtPoint( x-edgeOffset, z+edgeOffset )+GetTrueHeightAtPoint( x+edgeOffset, z+edgeOffset ) )>>1 ) - GetTrueHeightAtPoint( x, z+edgeOffset ) ) ) );
 	      //a droite, milieu
 	      dH= ( int )ceil( abs( ( ( GetTrueHeightAtPoint( x+edgeOffset, z+edgeOffset )+
-					GetTrueHeightAtPoint( x+edgeOffset, z-edgeOffset ) )>>1 )-
-				    GetTrueHeightAtPoint( x+edgeOffset, z ) ) );
+					GetTrueHeightAtPoint( x+edgeOffset, z-edgeOffset ) )>>1 ) - GetTrueHeightAtPoint( x+edgeOffset, z ) ) );
 	      localD2= MAX( localD2, dH );
 
 	      //en bas, milieu
 	      dH= ( int )ceil( abs( ( ( GetTrueHeightAtPoint( x-edgeOffset, z-edgeOffset )+
-					GetTrueHeightAtPoint( x+edgeOffset, z-edgeOffset ) )>>1 )-
-				    GetTrueHeightAtPoint( x, z-edgeOffset ) ) );
+					GetTrueHeightAtPoint( x+edgeOffset, z-edgeOffset ) )>>1 ) - GetTrueHeightAtPoint( x, z-edgeOffset ) ) );
 	      localD2= MAX( localD2, dH );
 
 	      //a gauche, milieu
 	      dH= ( int )ceil( abs( ( ( GetTrueHeightAtPoint( x-edgeOffset, z+edgeOffset )+
-					GetTrueHeightAtPoint( x-edgeOffset, z-edgeOffset ) )>>1 )-
-				    GetTrueHeightAtPoint( x-edgeOffset, z ) ) );
+					GetTrueHeightAtPoint( x-edgeOffset, z-edgeOffset ) )>>1 ) - GetTrueHeightAtPoint( x-edgeOffset, z ) ) );
 	      localD2= MAX( localD2, dH );
 
 	      //deux points sur la diagonale de bas gauche a haut droite
 	      dH= ( int )ceil( abs( ( ( GetTrueHeightAtPoint( x-edgeOffset, z-edgeOffset )+
-					GetTrueHeightAtPoint( x+edgeOffset, z+edgeOffset ) )>>1 )-
-				    GetTrueHeightAtPoint( x, z ) ) );
+					GetTrueHeightAtPoint( x+edgeOffset, z+edgeOffset ) )>>1 ) - GetTrueHeightAtPoint( x, z ) ) );
 	      localD2= MAX( localD2, dH );
 
 	      //deux points sur la diagonale de bas droite a haut gauche
 	      dH= ( int )ceil( abs( ( ( GetTrueHeightAtPoint( x+edgeOffset, z-edgeOffset )+
-					GetTrueHeightAtPoint( x-edgeOffset, z+edgeOffset ) )>>1 )-
-				    GetTrueHeightAtPoint( x, z ) ) );
+					GetTrueHeightAtPoint( x-edgeOffset, z+edgeOffset ) )>>1 ) - GetTrueHeightAtPoint( x, z ) ) );
 	      localD2= MAX( localD2, dH );
 	      // localD2 de 0 a 255, normaliser par la taille du bloc actuelle (de 3 a sizeHeightMap)
 	      // ... donc multiplier par 3 pour obtenir une precision maximale de 0 a 255 pour d2

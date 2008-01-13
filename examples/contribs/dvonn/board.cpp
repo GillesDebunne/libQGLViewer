@@ -452,7 +452,7 @@ Board::ConstStackHandle::~ConstStackHandle()
 }
 Board::ConstStackHandle::operator bool() const
 {
-  return space_;
+  return space_ != NULL;
 }
 const Stack*
 Board::ConstStackHandle::operator->() const

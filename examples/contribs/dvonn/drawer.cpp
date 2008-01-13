@@ -682,5 +682,5 @@ Drawer::boardRadius() const
 Vec
 Drawer::defaultEyePosition() const
 {
-  return boardCenter()+boardRadius()*Vec(0.0, -1.7, 1.0);
+  return boardCenter()+boardRadius()*Vec(0.0, -1.7f, 1.0);
 }

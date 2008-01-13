@@ -5,6 +5,10 @@
 #include <math.h>
 #include <qmessagebox.h>
 
+#if QT_VERSION >= 0x040000
+# include <QMouseEvent>
+#endif
+
 using namespace std;
 using namespace qglviewer;
 using namespace dvonn;
@@ -275,9 +279,9 @@ DvonnViewer::initSpotLight()
 
   glLightf( GL_LIGHT1, GL_SPOT_EXPONENT,  2.0);
   glLightf( GL_LIGHT1, GL_SPOT_CUTOFF,    60.0);
-  glLightf( GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0.1);
-  glLightf( GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.3);
-  glLightf( GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.3);
+  glLightf( GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0.1f);
+  glLightf( GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.3f);
+  glLightf( GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.3f);
   glLightfv(GL_LIGHT1, GL_AMBIENT,  light_ambient);
   glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular);
   glLightfv(GL_LIGHT1, GL_DIFFUSE,  light_diffuse);

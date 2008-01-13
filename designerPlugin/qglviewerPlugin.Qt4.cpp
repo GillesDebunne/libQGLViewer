@@ -22,7 +22,7 @@ public:
   explicit Viewer(QWidget* parent=NULL)
     : QGLViewer(parent)
   {
-    camera()->setPosition(qglviewer::Vec(1.29831, 0.60826, 1.78031));
+    camera()->setPosition(qglviewer::Vec(1.29831f, 0.60826f, 1.78031f));
     camera()->setOrientation(qglviewer::Quaternion(0.35032, -0.135992, 0.471794, -0.797617));
   }
 
@@ -42,7 +42,7 @@ public:
 	float alt = ratio - 0.5;
 	const float nor = .5;
 	const float up = sqrt(1.0-nor*nor);
-	glColor3f(1.0-ratio, 0.2 , ratio);
+	glColor3f(1.0-ratio, 0.2f, ratio);
 	glNormal3f(nor*c, up, nor*s);
 	glVertex3f(r1*c, alt, r1*s);
 	glVertex3f(r2*c, alt+0.05, r2*s);

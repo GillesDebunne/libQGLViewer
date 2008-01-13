@@ -35,8 +35,8 @@ public:
   void suggestPlay() { play_ = agora.Suggest(play_, blackPlay_, gameLevel_.computerMaxReflexionTime_, gameLevel_.computerMaxDepth_); play(); }
   void togglePlayAgainstComputer(bool on);
   void levelIsEasy()      { gameLevel_.computerMaxDepth_ = 3; }
-  void levelIsAverage()   { gameLevel_.computerMaxReflexionTime_ = 1.5; gameLevel_.computerMaxDepth_ = 0; }
-  void levelIsDifficult() { gameLevel_.computerMaxReflexionTime_ = 8.0; gameLevel_.computerMaxDepth_ = 0; }
+  void levelIsAverage()   { gameLevel_.computerMaxReflexionTime_ = 1500; gameLevel_.computerMaxDepth_ = 0; }
+  void levelIsDifficult() { gameLevel_.computerMaxReflexionTime_ = 8000; gameLevel_.computerMaxDepth_ = 0; }
   void toggleComputerIsBlack(bool black) { computerIsBlack_ = black; }
 
   // D i s p l a y   m e n u
@@ -94,8 +94,9 @@ private :
   void deselect();
 
   // Size of one Agora position is 1.0, entire board is hence 6.0 x 6.0.
-  static const float pieceSize   = 29.0 / 38.0;
-  static const float pieceHeight = 5.0 / 38.0;
+  static float pieceSize;
+  static float pieceHeight;
+
   qglviewer::Vec normal[5];
 
   Agora_t agora;
@@ -105,7 +106,7 @@ private :
   bool computerIsBlack_;
 
   struct AgoraLevel {
-    float computerMaxReflexionTime_;
+    int computerMaxReflexionTime_; // in milliseconds
     int computerMaxDepth_;
   } gameLevel_;
 

@@ -1,5 +1,6 @@
 #include "game.h"
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
 using namespace dvonn;
@@ -10,7 +11,7 @@ dvonn::colorOf(Player p)
   return static_cast<Color>(p+1);
 }
 Player
-dvonn::player(Color c) throw (range_error)
+dvonn::player(Color c)/* throw (range_error)*/
 {
   if (c==Red) throw range_error("No Red Player");
   return static_cast<Player>(c-1);

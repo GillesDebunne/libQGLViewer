@@ -51,8 +51,8 @@ Particle::Particle()
 
 void Particle::animate()
 {
-  speed_.z -= 0.05;
-  pos_     += 0.1 * speed_;
+  speed_.z -= 0.05f;
+  pos_ += 0.1f * speed_;
 
   if (pos_.z < 0.0)
     {

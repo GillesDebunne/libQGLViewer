@@ -76,7 +76,7 @@ void Viewer::draw()
   luxo.draw();
 
   // Draw the ground
-  glColor3f(.4,.4,.4);
+  glColor3f(0.4f, 0.4f, 0.4f);
   const float nbPatches = 100;
   glNormal3f(0.0,0.0,1.0);
   for (int j=0; j<nbPatches; ++j)
@@ -126,13 +126,13 @@ Luxo::Luxo()
     }
 
   // Initialize frames
-  frame(1)->setTranslation(Vec(0.0, 0.0, 0.08)); // Base height
-  frame(2)->setTranslation(Vec(0.0, 0.0, 0.5));  // Arm length
-  frame(3)->setTranslation(Vec(0.0, 0.0, 0.5));  // Arm length
+  frame(1)->setTranslation(Vec(0.0, 0.0, 0.08f)); // Base height
+  frame(2)->setTranslation(Vec(0.0, 0.0, 0.5f));  // Arm length
+  frame(3)->setTranslation(Vec(0.0, 0.0, 0.5f));  // Arm length
 
   frame(1)->setRotation(Quaternion(Vec(1.0,0.0,0.0), 0.6));
   frame(2)->setRotation(Quaternion(Vec(1.0,0.0,0.0), -2.0));
-  frame(3)->setRotation(Quaternion(Vec(1.0,-0.3,0.0), -1.7));
+  frame(3)->setRotation(Quaternion(Vec(1.0,-0.3f,0.0), -1.7));
 
   // Set frame constraints
   WorldConstraint* baseConstraint = new WorldConstraint();
@@ -195,42 +195,42 @@ void Luxo::draw(bool names)
 
 void Luxo::drawBase()
 {
-  drawCone(0.0,0.03, 0.15, 0.15, 30);
-  drawCone(0.03,0.05, 0.15, 0.13, 30);
-  drawCone(0.05,0.07, 0.13, 0.01, 30);
-  drawCone(0.07,0.09, 0.01, 0.01, 10);
+  drawCone(0.0, 0.03f, 0.15f, 0.15f, 30);
+  drawCone(0.03f, 0.05f, 0.15f, 0.13f, 30);
+  drawCone(0.05f, 0.07f, 0.13f, 0.01f, 30);
+  drawCone(0.07f, 0.09f, 0.01f, 0.01f, 10);
 }
 
 void Luxo::drawArm()
 {
-  glTranslatef(0.02, 0.0, 0.0);
-  drawCone(0.0,0.5, 0.01, 0.01, 10);
-  glTranslatef(-0.04, 0.0, 0.0);
-  drawCone(0.0,0.5, 0.01, 0.01, 10);
-  glTranslatef(0.02, 0.0, 0.0);
+  glTranslatef(0.02f, 0.0, 0.0);
+  drawCone(0.0, 0.5f, 0.01f, 0.01f, 10);
+  glTranslatef(-0.04f, 0.0, 0.0);
+  drawCone(0.0, 0.5f, 0.01f, 0.01f, 10);
+  glTranslatef(0.02f, 0.0, 0.0);
 }
 
 void Luxo::drawHead()
 {
-  drawCone(-0.02,0.06, 0.04, 0.04, 30);
-  drawCone(0.06,0.15, 0.04, 0.17, 30);
-  drawCone(0.15,0.17, 0.17, 0.17, 30);
+  drawCone(-0.02f, 0.06f, 0.04f, 0.04f, 30);
+  drawCone(0.06f, 0.15f, 0.04f, 0.17f, 30);
+  drawCone(0.15f, 0.17f, 0.17f, 0.17f, 30);
 }
 
 void Luxo::drawCylinder()
 {
   glPushMatrix();
-  glRotatef(90, 0.0,1.0,0.0);
-  drawCone(-0.05,0.05, 0.02, 0.02, 20);
+  glRotatef(90, 0.0, 1.0, 0.0);
+  drawCone(-0.05f, 0.05f, 0.02f, 0.02f, 20);
   glPopMatrix();
 }
 
 void Luxo::setColor(unsigned short nb)
 {
   if (nb == selected)
-    glColor3f(0.9, 0.9, 0.0);
+    glColor3f(0.9f, 0.9f, 0.0);
   else
-    glColor3f(0.9, 0.9, 0.9);
+    glColor3f(0.9f, 0.9f, 0.9f);
 }
 
 // Draws a truncated cone aligned with the Z axis.

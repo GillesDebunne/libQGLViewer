@@ -5,7 +5,6 @@
 # include <QMenu>
 # include <QKeyEvent>
 # include <QMouseEvent>
-
 #endif
 #include <qcursor.h>
 #include <qmap.h>
@@ -30,7 +29,7 @@ void Viewer::draw()
       float alt = ratio - 0.5;
       const float nor = .5;
       const float up = sqrt(1.0-nor*nor);
-      glColor3f(fabs(c), 0.2, fabs(s));
+      glColor3f(fabs(c), 0.2f, fabs(s));
       glNormal3f(nor*c, up, nor*s);
       glVertex3f(r1*c, alt, r1*s);
       glVertex3f(r2*c, alt+0.05, r2*s);

@@ -25,13 +25,7 @@ Agora<Ints>::Agora(int n) :
         _ajoute_prison( _bsize ),
         _voisins ( _size ) { 
 
-// for random_shuffle
-#ifdef _GLIBCPP_HAVE_DRAND48
-    srand48(BaseTimer::seed());
-#else
-    srand(BaseTimer::seed());
-#endif
-
+	qsrand(QTime::currentTime().elapsed());
 
     this->resize(_size); 
     

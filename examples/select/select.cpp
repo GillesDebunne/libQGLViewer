@@ -20,11 +20,11 @@ static void drawSpiral(const bool specialColor = false)
       const float nor = .5;
       const float up = sqrt(1.0-nor*nor);
       if (specialColor)
-	glColor3f(1.0-ratio, .8 , ratio/2.0);
+	glColor3f(1.0-ratio, 0.8f , ratio/2.0);
       else
-	glColor3f(1.0-ratio, 0.2, ratio);
+	glColor3f(1.0-ratio, 0.2f, ratio);
       glNormal3f(nor*c, nor*s, up);
-      glVertex3f(r2*c, r2*s, alt+0.05);
+      glVertex3f(r2*c, r2*s, alt+0.05f);
       glVertex3f(r1*c, r1*s, alt);
     }
   glEnd();
@@ -55,7 +55,7 @@ void Viewer::postSelection(const QPoint& point)
   // Find the selectedPoint coordinates, using camera()->pointUnderPixel().
   bool found;
   selectedPoint = camera()->pointUnderPixel(point, found);
-  selectedPoint -= 0.01*dir; // Small offset to make point clearly visible.
+  selectedPoint -= 0.01f*dir; // Small offset to make point clearly visible.
   // Note that "found" is different from (selectedObjectId()>=0) because of the size of the select region.
 
   if (selectedName() == -1)
@@ -98,7 +98,7 @@ void Viewer::draw()
   // Draw (approximated) intersection point on selected object
   if (selectedName() >= 0)
     {
-      glColor3f(0.9, 0.2, 0.1);
+      glColor3f(0.9f, 0.2f, 0.1f);
       glBegin(GL_POINTS);
       glVertex3fv(selectedPoint);
       glEnd();

@@ -9,7 +9,7 @@ Box* Box::Root;
 
 void Box::draw() const
 {
-  glColor3f(0.3*level, 0.2, 1.0-0.3*level);
+  glColor3f(0.3*level, 0.2f, 1.0-0.3*level);
   glLineWidth(level+1);
 
   glBegin(GL_LINE_STRIP);

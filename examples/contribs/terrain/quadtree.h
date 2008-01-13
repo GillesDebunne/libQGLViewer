@@ -4,7 +4,6 @@
 #define __QUADTREE_H__
 
 #include "terrain.h"
-
 #include <qgl.h>
 
 #define QT_LR_NODE 0

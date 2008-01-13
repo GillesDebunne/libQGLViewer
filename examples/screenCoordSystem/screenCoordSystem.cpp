@@ -46,15 +46,15 @@ void Viewer::drawSaucer() const
 {
   static GLUquadric* quadric = gluNewQuadric();
 
-  glTranslatef(0.0, 0.0, -0.014);
+  glTranslatef(0.0, 0.0, -0.014f);
   gluCylinder(quadric, 0.015, 0.03, 0.004, 32, 1);
-  glTranslatef(0.0, 0.0, 0.004);
+  glTranslatef(0.0, 0.0, 0.004f);
   gluCylinder(quadric, 0.03, 0.04, 0.01, 32, 1);
-  glTranslatef(0.0, 0.0, 0.01);
+  glTranslatef(0.0, 0.0, 0.01f);
   gluCylinder(quadric, 0.05, 0.03, 0.02, 32, 1);
-  glTranslatef(0.0, 0.0, 0.02);
+  glTranslatef(0.0, 0.0, 0.02f);
   gluCylinder(quadric, 0.03, 0.0, 0.003, 32, 1);
-  glTranslatef(0.0, 0.0, -0.02);
+  glTranslatef(0.0, 0.0, -0.02f);
 }
 
 void Viewer::draw()
@@ -80,10 +80,10 @@ void Viewer::draw()
       glBegin(GL_POLYGON);
       proj[i] = camera()->projectedCoordinatesOf(saucerPos[i].position());
       // The small z offset makes the arrow slightly above the saucer, so that it is always visible
-      glVertex3fv(proj[i] + Vec(-55, 0, -0.001));
-      glVertex3fv(proj[i] + Vec(-17,-5, -0.001));
-      glVertex3fv(proj[i] + Vec( -5, 0, -0.001));
-      glVertex3fv(proj[i] + Vec(-17, 5, -0.001));
+      glVertex3fv(proj[i] + Vec(-55, 0, -0.001f));
+      glVertex3fv(proj[i] + Vec(-17,-5, -0.001f));
+      glVertex3fv(proj[i] + Vec( -5, 0, -0.001f));
+      glVertex3fv(proj[i] + Vec(-17, 5, -0.001f));
       glEnd();
     }
   stopScreenCoordinatesSystem();

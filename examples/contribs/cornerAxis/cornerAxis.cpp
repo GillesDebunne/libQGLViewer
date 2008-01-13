@@ -20,7 +20,7 @@ void Viewer::draw()
     float alt = ratio - 0.5;
     const float nor = 0.5;
     const float up = sqrt(1.0-nor*nor);
-    glColor3f(1.0-ratio, 0.2 , ratio);
+    glColor3f(1.0-ratio, 0.2f, ratio);
     glNormal3f(nor*c, up, nor*s);
     glVertex3f(r1*c, alt, r1*s);
     glVertex3f(r2*c, alt+0.05, r2*s);

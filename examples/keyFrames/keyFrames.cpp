@@ -99,7 +99,7 @@ void Viewer::draw()
   // Draw interpolated frame
   glPushMatrix();
   glMultMatrixd(kfi_.frame()->matrix());
-  drawAxis(0.3);
+  drawAxis(0.3f);
   glPopMatrix();
 
   kfi_.drawPath(5, 10);
@@ -110,9 +110,9 @@ void Viewer::draw()
       glMultMatrixd(kfi_.keyFrame(i).matrix());
 
       if ((i == currentKF_) || (keyFrame_[i]->grabsMouse()))
-	drawAxis(0.4);
+	drawAxis(0.4f);
       else
-	drawAxis(0.2);
+	drawAxis(0.2f);
 
       glPopMatrix();
     }

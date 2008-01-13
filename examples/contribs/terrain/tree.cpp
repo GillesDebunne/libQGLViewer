@@ -35,7 +35,7 @@ void TREE::initTrees(QUADTREE ter, int num, float waterLevel)
   myTerrain = ter;
   numTrees = num;
   treeInfo = new Vec[numTrees];
-  srand( time(NULL) );
+  qsrand( QTime::currentTime().elapsed() );
   for (i=0;i<numTrees;i++)
     {
       do {

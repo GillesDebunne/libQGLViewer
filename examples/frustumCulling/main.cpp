@@ -10,7 +10,7 @@ int main(int argc, char** argv)
   QApplication application(argc,argv);
 
   // Create octree AABBox hierarchy
-  const qglviewer::Vec p(1.0, 0.7, 1.3);
+  const qglviewer::Vec p(1.0, 0.7f, 1.3f);
   Box::Root = new Box(-p, p);
   Box::Root->buildBoxHierarchy(4);
 

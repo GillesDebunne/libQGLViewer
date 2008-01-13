@@ -1,7 +1,4 @@
 <ui version="4.0" >
- <author></author>
- <comment></comment>
- <exportmacro></exportmacro>
  <class>AgoraWindow</class>
  <widget class="QMainWindow" name="AgoraWindow" >
   <property name="geometry" >
@@ -19,23 +16,27 @@
    <iconset/>
   </property>
   <widget class="QWidget" name="widget" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>29</y>
-     <width>600</width>
-     <height>453</height>
-    </rect>
-   </property>
    <layout class="QGridLayout" >
-    <property name="margin" >
+    <property name="leftMargin" >
      <number>11</number>
     </property>
-    <property name="spacing" >
+    <property name="topMargin" >
+     <number>11</number>
+    </property>
+    <property name="rightMargin" >
+     <number>11</number>
+    </property>
+    <property name="bottomMargin" >
+     <number>11</number>
+    </property>
+    <property name="horizontalSpacing" >
+     <number>6</number>
+    </property>
+    <property name="verticalSpacing" >
      <number>6</number>
     </property>
     <item row="0" column="0" >
-     <widget class="AgoraViewer" name="agoraViewer" />
+     <widget class="AgoraViewer" native="1" name="agoraViewer" />
     </item>
    </layout>
   </widget>
@@ -45,16 +46,16 @@
      <x>0</x>
      <y>0</y>
      <width>600</width>
-     <height>28</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="fileMenu" >
     <property name="geometry" >
      <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>700</width>
-      <height>420</height>
+      <x>538</x>
+      <y>332</y>
+      <width>148</width>
+      <height>184</height>
      </rect>
     </property>
     <property name="title" >
@@ -68,13 +69,13 @@
     <addaction name="separator" />
     <addaction name="fileExitAction" />
    </widget>
-   <widget class="QMenu" name="editMenu" >
+   <widget class="QMenu" name="gameMenu" >
     <property name="geometry" >
      <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>700</width>
-      <height>420</height>
+      <x>572</x>
+      <y>332</y>
+      <width>193</width>
+      <height>290</height>
      </rect>
     </property>
     <property name="title" >
@@ -94,13 +95,13 @@
     <addaction name="DifficultAction" />
     <addaction name="separator" />
    </widget>
-   <widget class="QMenu" name="PopupMenu" >
+   <widget class="QMenu" name="DisplayMenu" >
     <property name="geometry" >
      <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>700</width>
-      <height>420</height>
+      <x>627</x>
+      <y>340</y>
+      <width>178</width>
+      <height>138</height>
      </rect>
     </property>
     <property name="title" >
@@ -114,10 +115,10 @@
    <widget class="QMenu" name="helpMenu" >
     <property name="geometry" >
      <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>700</width>
-      <height>420</height>
+      <x>681</x>
+      <y>340</y>
+      <width>159</width>
+      <height>103</height>
      </rect>
     </property>
     <property name="title" >
@@ -128,8 +129,8 @@
     <addaction name="helpAboutAction" />
    </widget>
    <addaction name="fileMenu" />
-   <addaction name="editMenu" />
-   <addaction name="PopupMenu" />
+   <addaction name="gameMenu" />
+   <addaction name="DisplayMenu" />
    <addaction name="helpMenu" />
   </widget>
   <action name="fileOpenAction" >
@@ -365,6 +366,9 @@
     <property name="checkable" >
      <bool>true</bool>
     </property>
+    <property name="text" >
+     <string>&amp;Average</string>
+    </property>
     <property name="iconText" >
      <string>&amp;Average</string>
     </property>
@@ -373,6 +377,9 @@
     <property name="checkable" >
      <bool>true</bool>
     </property>
+    <property name="text" >
+     <string>&amp;Difficult</string>
+    </property>
     <property name="iconText" >
      <string>Difficult</string>
     </property>
@@ -380,21 +387,11 @@
   </actiongroup>
  </widget>
  <layoutdefault spacing="6" margin="11" />
- <pixmapfunction></pixmapfunction>
  <customwidgets>
   <customwidget>
    <class>AgoraViewer</class>
    <extends></extends>
    <header>agoraViewer.h</header>
-   <container>0</container>
-   <pixmap></pixmap>
-  </customwidget>
-  <customwidget>
-   <class>QMainWindow</class>
-   <extends></extends>
-   <header>qmainwindow.h</header>
-   <container>1</container>
-   <pixmap></pixmap>
   </customwidget>
  </customwidgets>
  <resources/>

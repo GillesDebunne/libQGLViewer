@@ -27,17 +27,17 @@ void Viewer::draw()
     {
       float angle = 2.0*M_PI*i/nbLines;
 
-      glColor3f(.8,.2,.2);
+      glColor3f(0.8f, 0.2f, 0.2f);
       // These lines will never be seen as they are always aligned with the viewing direction.
       glVertex3fv(camera()->position());
       glVertex3f (cos(angle), sin(angle), 0.0);
 
-      glColor3f(.2,.8,.2);
+      glColor3f(0.2f, 0.8f, 0.2f);
       // World Coordinates are infered from the camera, and seem to be immobile in the screen.
       glVertex3fv(camera()->worldCoordinatesOf(Vec(.3*cos(angle), .3*sin(angle), -2.0)));
       glVertex3f (cos(angle), sin(angle), 0.0);
 
-      glColor3f(.2,.2,.8);
+      glColor3f(0.2f, 0.2f, 0.8f);
       // These lines are defined in the world coordinate system and will move with the camera.
       glVertex3f(1.5*cos(angle), 1.5*sin(angle), -1.0);
       glVertex3f(cos(angle), sin(angle), 0.0);

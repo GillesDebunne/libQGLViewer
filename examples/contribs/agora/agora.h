@@ -6,7 +6,6 @@
 
 #include <iostream>
 #include <vector>
-#include "givtimer.h"
 
 #define SHORTCOULEURMASK 32768
 
@@ -93,7 +92,7 @@ public:
 
         // Meilleur coup
         // Default : temps limité, mais si depth > 0 --> profondeur fixée
-    Coup& Suggest(Coup& bp, bool ordi_color, double temps_max, int depth = 0);
+    Coup& Suggest(Coup& bp, bool ordi_color, int temps_max, int depth = 0);
 
 	// Coups possibles
     bool gameIsOver() ;
@@ -128,12 +127,12 @@ private:
     double ami_ab(int depth, double alpha, double beta, bool ordi_color, double currev, const Pile_t ad, const Pile_t nd, const Pile_t aa, const Pile_t na);
     double ennemi_ab(int depth, double alpha, double beta, bool ordi_color, double currev, const Pile_t ad, const Pile_t nd, const Pile_t aa, const Pile_t na) ;
         // Meilleur coup en temps limité
-    Coup& Iteratif(Coup& bp, bool ordi_color, double temps_max, int StartProf) ;
+    Coup& Iteratif(Coup& bp, bool ordi_color, int temps_max, int StartProf) ;
         // Meilleur coup à profondeur fixée
     double BestPlay(Coup& bp, bool ordi_color, int depth);
 
     inline double MTDFdouble(int depth, double f, bool ordi_color) ;
-    double OnebyOneBP(Coup& bp, bool ordi_color, int depth, double temps_max, Timer& global) ;
+    double OnebyOneBP(Coup& bp, bool ordi_color, int depth, int temps_max, QTime& global) ;
 
         // Possiblité de coup
         // Pour l'instant isolé interdit

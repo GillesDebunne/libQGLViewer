@@ -22,7 +22,12 @@ class Quarto : public QMainWindow
   Q_OBJECT
 
 public:
-  Quarto( QWidget* parent = 0, const char* name = 0, WFlags fl = WType_TopLevel );
+#if QT_VERSION < 0x040000
+  Quarto(QWidget* parent=NULL, const char* name=0, WFlags fl=WType_TopLevel);
+#else
+  Quarto(QWidget* parent=NULL);
+#endif
+
   ~Quarto();
 
   QFrame* GLFrameJeu, *GLFramePieces;

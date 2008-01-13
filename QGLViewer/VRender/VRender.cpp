@@ -222,7 +222,7 @@ void VRenderParams::setFilename(const char *fn)
 	if(_filename != NULL)
 		free(_filename) ;
 
-	if((_filename = strdup(fn)) == NULL)
+	if((_filename = _strdup(fn)) == NULL)
 		throw std::runtime_error("could not copy supplied filename. Out of memory ?") ;
 }
 
