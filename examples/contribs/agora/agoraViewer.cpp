@@ -57,8 +57,8 @@ float AgoraViewer::pieceHeight = 5.0f / 38.0f;
 void AgoraViewer::init()
 {
   initViewer();
-  initSpotLight();
   initCamera();
+  initSpotLight();
   initGame();
 
   setMouseBinding(Qt::RightButton, CAMERA, ROTATE);

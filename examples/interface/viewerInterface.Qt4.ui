@@ -1,7 +1,4 @@
 <ui version="4.0" >
- <author></author>
- <comment></comment>
- <exportmacro></exportmacro>
  <class>Dialog</class>
  <widget class="QDialog" name="Dialog" >
   <property name="geometry" >
@@ -16,22 +13,43 @@
    <string>Interface</string>
   </property>
   <layout class="QVBoxLayout" >
-   <property name="margin" >
-    <number>8</number>
-   </property>
    <property name="spacing" >
     <number>6</number>
    </property>
+   <property name="leftMargin" >
+    <number>8</number>
+   </property>
+   <property name="topMargin" >
+    <number>8</number>
+   </property>
+   <property name="rightMargin" >
+    <number>8</number>
+   </property>
+   <property name="bottomMargin" >
+    <number>8</number>
+   </property>
    <item>
-    <widget class="Viewer" name="viewer" />
+    <widget class="QGLViewer" name="viewer_2" />
+   </item>
+   <item>
+    <widget class="Viewer" native="1" name="viewer" />
    </item>
    <item>
     <layout class="QHBoxLayout" >
-     <property name="margin" >
-      <number>0</number>
-     </property>
      <property name="spacing" >
       <number>6</number>
+     </property>
+     <property name="leftMargin" >
+      <number>0</number>
+     </property>
+     <property name="topMargin" >
+      <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>0</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>0</number>
      </property>
      <item>
       <widget class="QCheckBox" name="FPSCheckBox" >
@@ -78,14 +96,17 @@
    </item>
   </layout>
  </widget>
- <pixmapfunction></pixmapfunction>
  <customwidgets>
+  <customwidget>
+   <class>QGLViewer</class>
+   <extends>QWidget</extends>
+   <header>QGLViewer/qglviewer.h</header>
+   <script source="customwidgetplugin" language="Qt Script" >See the QGLViewer simpleViewer example.</script>
+  </customwidget>
   <customwidget>
    <class>Viewer</class>
    <extends></extends>
    <header>interface.h</header>
-   <container>0</container>
-   <pixmap></pixmap>
   </customwidget>
  </customwidgets>
  <resources/>
