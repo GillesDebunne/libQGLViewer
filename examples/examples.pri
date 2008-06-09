@@ -1,6 +1,9 @@
 # Artis
 MAIN_PATH = $$(HOME)/QGLViewer
-  
+
+CONFIG -= debug
+CONFIG += release console embed_manifest_exe
+
 # Local on windows
 !exists( $${MAIN_PATH}/QGLViewer ) {
   MAIN_PATH = C:/Users/debunne/Documents/Code/libQGLViewer/QGLViewer/trunk

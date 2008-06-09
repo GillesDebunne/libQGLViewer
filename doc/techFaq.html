@@ -44,12 +44,12 @@
 "I copy-pasted my code in your <code>draw()</code> function, and the screen remains black. I hate OpenGL !"
 <br/>
 The classical OpenGL black screen is not supported by libQGLViewer. There are two
-possible reasons for your problem, as detailed in <a href="introduction.html">the introduction</a>:
+possible reasons for your problem, as detailed in the <a href="introduction.html">introduction</a>:
 <ul>
 <li><i>The World coordinate system</i>: when you start drawing in <code>draw</code>, you are in the
 <i>world coordinate system</i>: a fixed coordinate system, that is viewed by a moving camera. This
 is different (but much more intuitive) from the standard camera-centered OpenGL coordinate
-system. The camera displacement and its associated projection matrix are handled by libQGLViewer:
+system. To make it simple: the camera displacement and its associated projection matrix are handled by libQGLViewer, so
 simply remove any camera related matrix multiplication from the beginning of your
 <code>draw()</code> function.</li>
 
@@ -62,7 +62,7 @@ href="introduction.html#sceneRadius">introduction</a> for details.</li>
 </ul>
 
 Press 'A' to display the world axis and double click the mouse middle button to make the camera fit
-the scene. You should at least see the axis.
+the scene. You should at least see the axis and can start debugging from there with basic drawing code.
 
 <a name="stillstrange"></a>
 <h2>It still looks strange</h2>
@@ -72,7 +72,7 @@ If your are still unable to get the results you had before porting to libQGLView
 
 <p>
 Also note that libQGLViewer slightly changes the default OpenGL
-state (see the <code>QGLViewer::initializeGL()</code> documentation): <code>GL_LIGHTING</code>, 
+state (see the <a href="refManual/classqglviewer_1_1QGLViewer.html#TODO"><code>QGLViewer::initializeGL()</code> documentation</a>): <code>GL_LIGHTING</code>, 
 <code>GL_LIGHT0</code>, <code>GL_DEPTHTEST</code> and <code>GL_COLORMATERIAL</code> are enabled.
 Disable them in your <code>init()</code> method if desired.
 </p>
@@ -92,20 +92,20 @@ in the <a href="refManual/classqglviewer_1_1Frame.html#_details">Frame detailed 
 
 <a name="severalmanip"></a>
 <h2>How can I use several ManipulatedFrame ?</h2>
-You need to create a structure (typically a <code>vector</code>) that holds the pointers to the
-different <code>ManipulatedFrame</code> you have created. Use <code>setManipulatedFrame()</code> to
+Simply create several <code>ManipulatedFrame</code> (typically stored in a <code>vector</code>) and use <code>setManipulatedFrame()</code> to
 decide which of them is active at a given time. See the <a href="examples/luxo.html">Luxo
 example</a> for an illustration.
 
 <a name="mousegrabbers"></a>
 <h2>What are MouseGrabbers ?</h2>
 <a href="refManual/classqglviewer_1_1MouseGrabber.html">MouseGrabber</a> is an empty interface for
-any object that may grab the mouse focus. Many usages are possible, opening the way to innovating
+any object that may grab the mouse focus. They are usually 2D or 3D objects, located on screen and that react 
+when the mouse hover over them. Being very generic, many usages are possible, opening the way to innovating
 reactive user interfaces. See the <a
 href="refManual/classqglviewer_1_1MouseGrabber.html">MouseGrabber documentation for an example</a>.
 
 <p>
-Note that <code>ManipulatedFrame</code> are <code>MouseGrabbers</code>, see the <a
+Note that a <code>ManipulatedFrame</code> is actually a <code>MouseGrabber</code>: the frame can be directly manipulated when the mouse goes close to its origin. See the <a
 href="examples/mouseGrabber.html">MouseGrabber example</a> for an illustration.
 </p>
 
@@ -113,33 +113,33 @@ href="examples/mouseGrabber.html">MouseGrabber example</a> for an illustration.
 <h2>How are mouse events interpreted ?</h2>
 The mouse events are sent to three possible receivers: the camera, the <code>manipulatedFrame</code>
 or a <code>MouseGrabber</code>, depending on the context. By default, events are send to the camera.
-With a specific state key (default is <code>Control</code>), it is the <code>manipulatedFrame</code>
+With a specific state key (default is the <code>Control</code> key), it is the <code>manipulatedFrame</code>
 that receives the mouse events. Finally, the <code>mouseGrabber</code> grabs mouse focus when its
 <code>MouseGrabber::grabsMouse()</code> method returns <code>true</code> (typically when the mouse
-hovers). All this can of course be customized (see <a href="mouse.html">mouse page</a>).
+hovers). All this can of course be customized (see the <a href="mouse.html">mouse page</a>).
 
 <a name="mousekey"></a>
 <h2>How can I redefine the mouse/keyboard behavior ?</h2>
 See the <a href="mouse.html">mouse</a> and <a href="keyboard.html">keyboard</a> pages. The <a
-href="examples/keyboardAndMouse.html">keyboardAndMouse</a> example illustrates this in details.
+href="examples/keyboardAndMouse.html">keyboardAndMouse example</a> illustrates this in details.
 
 <a name="multiselect"></a>
 <h2>How can I select/move/edit several objects ?</h2>
-See the <a href="examples/multiSelect.html">multiSelect</a> example for multiple selection.
+See the <a href="examples/multiSelect.html">multiSelect example</a> for a multiple selection implementation. The selected objects can then be manipulated (or edited) as a group.
 
 <a name="severalviewers"></a>
 <h2>How can I use several viewers ?</h2>
-Simply create them, as in the <a href="examples/multiView.html">multiView</a> example.
+Simply create them, as in the <a href="examples/multiView.html">multiView example</a>.
 
 <p>
 You may have to connect additional signals to synchronize viewers' displays. A <a
 href="refManual/classqglviewer_1_1ManipulatedFrame.html"><code>ManipulatedFrame</code></a> displayed
-by several viewers will typically have its <code>manipulated</code> signal connected to the other
+by several viewers should typically have its <code>manipulated</code> signal connected to the other
 viewers' <code>updateGL()</code> slots.
 </p>
 
 The different viewers can share their OpenGL contexts. See the <code>QGLViewer</code> constructors'
-documentations and the <a href="examples/multiView.html">multiView</a> example.
+documentations and the <a href="examples/multiView.html">multiView example</a>.
 
 <a name="makeCurrent"></a>
 <h2>I use several viewers and textures/display list are screwed up</h2>

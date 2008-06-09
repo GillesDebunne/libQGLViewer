@@ -10,6 +10,9 @@
 
 #include <stdio.h>
 #include <vector>
+#include <stdlib.h>
+#include <string.h>
+
 #include "VRender.h"
 #include "ParserGL.h"
 #include "Exporter.h"

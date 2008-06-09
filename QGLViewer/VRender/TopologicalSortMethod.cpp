@@ -1,4 +1,6 @@
 #include <assert.h>
+#include <climits>
+
 #include "VRender.h"
 #include "Primitive.h"
 #include "PrimitivePositioning.h"

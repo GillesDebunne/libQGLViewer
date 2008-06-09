@@ -3,6 +3,8 @@
 #include "qglviewer.h"
 #include "camera.h"
 
+#include <cstdlib>
+
 #if QT_VERSION >= 0x040000
 # include <QMouseEvent>
 #endif

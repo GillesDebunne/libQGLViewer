@@ -444,15 +444,9 @@ Many pedagogical examples illustrate some of the functionalities of the viewer a
 understanding and cut and paste.
 
 <p>
-
-One should first try the <a href="#basic">basic examples</a> listed below. A <a
-href="../download.html#examples">pre-compiled</a> version of these is available for evaluation.
-
+One should first try the <a href="#basic">basic examples</a> listed below and read the <a href="../introduction.html">introduction page</a> to understand
+the philosophy of the library. See also the <a href="compilation.html">compilation with libQGLViewer</a> page to learn how to create your first program.
 </p>
-
-New developers should first read the <a href="../introduction.html">introduction page</a> to understand
-the philosophy of the library.
-
 
 <a name="basic"></a>
 <h2>Basic examples</h2>
@@ -469,6 +463,7 @@ do
 done
 fillTable
 
+# Pedagogical examples
 echo "<a name=\"pedagogical\"></a>" >> $output
 echo "<h2>Pedagogical examples</h2>" >> $output
 
@@ -482,6 +477,7 @@ do
 done
 fillTable
 
+# Complex examples
 echo "<a name=\"complex\"></a>" >> $output
 echo "<h2>More complex examples</h2>" >> $output
 
@@ -495,165 +491,10 @@ do
 done
 fillTable
 
-
-cat >> $output <<EOF
-
-<a name="compilation"></a>
-<h2>Compilation of the examples</h2>
-
-Some pre-compiled examples are available for an easy evaluation of the library's functionnalities on
-the <a href="../download.html#examples">download page</a>. It is however better to recompile from the
-sources to ensure a full compatibility with dependencies.
-
-<p>
-<a name="linux"></a>
-<img src="../images/linux.png" width="49" height="54" align="middle" alt="linux"/>
-
-If you installed the RPM, the examples' source files are in
-<code>/usr/share/doc/QGLViewer/examples</code> (may have to be copied to a place where you have
-write permission). If you have downloaded the tarball instead, simply go to the
-<code>examples</code> directory. Then,
-</p>
-
-<pre>
-> cd exampleDirectory
-> qmake [PREFIX=...] [INCLUDE_DIR=...] [LIB_DIR=...] [QGLVIEWER_STATIC=yes]
-> make
-</pre>
-
-The optional <code>PREFIX, INCLUDE_DIR</code> and <code>LIB_DIR</code> parameters are those you used
-if you customized your <code><a href="../installUnix.html#linux">make install</a></code>. Use
-<code>QGLVIEWER_STATIC=yes</code> to link with the static version of the library.
-These commands can also be typed in the <code>examples</code>' main directory to compile <i>all</i> the examples.
-
-<p>
-You may be prompted with an <code>"error while loading shared libraries"</code> message when trying
-to execute an example. You probably forgot to add the <code>libQGLViewer.so</code> directory to your
-default library path. Simply do this (use <code>LD_LIBRARYN32_PATH</code> instead on some Unix
-flavors):
-</p>
-
-<pre>
-[bash] > export LD_LIBRARY_PATH=\${LD_LIBRARY_PATH}:/Path/To/libQGLViewer
-[tcsh] > setenv LD_LIBRARY_PATH \${LD_LIBRARY_PATH}:/Path/To/libQGLViewer
-</pre>
-
-Some configurations may require you to add <code>LIBS *= -lXi</code> in the <code>.pro</code> file.
-Debian users may have to replace <code>-lQGLViewer</code> by <code>-lQGLViewer-2</code> (change the
-<code>Makefile</code> or create a link on <code>libQGLViewer.so</code> in your lib directory).
-
-<p>
-See also the <a href="../installUnix.html#qt-linux">Qt-Unix</a> and <a
-href="../installUnix.html#linux">libQGLViewer on Unix</a> installation pages.
-</p>
-
-<hr/>
-
-<p>
-<a name="mac"></a>
-<img src="../images/mac.png" width="55" height="54" align="middle" alt="mac"/>
-
-The examples' compilation is essentially identical to the one described above in the linux section.
-Simply replace the above lines by:
-
-</p>
-<pre>
-[bash] > export DYLD_LIBRARY_PATH=\${DYLD_LIBRARY_PATH}:/Path/To/libQGLViewer
-[tcsh] > setenv DYLD_LIBRARY_PATH \${DYLD_LIBRARY_PATH}:/Path/To/libQGLViewer
-</pre>
-
-You can safely ignore the prebound warning. Building a prebound library creates overlapping address
-ranges. This requires further investigations and any help is more than welcome.
-
-<p>
-If you get a <code>declaration of C function 'void qObsolete' conflicts with previous declaration</code> or a
-<code>template with C linkage</code> error message, try to install libQGLViewer somewhere else:
-</p>
-
-<pre>
-cd QGLViewer
-make uninstall
-qmake INCLUDE_DIR=/usr/local/include (for instance)
-make install
-</pre>
-
-Then compile the examples with the same <code>qmake INCLUDE_DIR=/usr/local/include</code> line. Any
-explanation and cleaner solution is more than welcome.
-
-<p>
-See also the <a href="../installUnix.html#qt-mac">Qt-Mac</a> and <a
-href="../installUnix.html#mac">libQGLViewer on Mac</a> installation pages.
-</p>
-
-<hr/>
-
-<p>
-<a name="windows"></a>
-<img src="../images/windows.png" width="55" height="54" align="middle" alt="windows"/>
-
-Use <i>Qt - Open solution from .pro file</i> <span class="redStar">*</span> on individual <code>.pro</code> files or on <code>examples.pro</code>. 
-With Visual Studio 6, use <i>File-Open workspace</i> to open the <code>.dsp</code> generated file.
-</p>
-
-Qt 2.3 users have to first edit the examples' <code>.pro</code> files (uncomment two lines and remove end of
-file as explained. Remove <code>QT_DLL</code> from <code>DEFINES</code> for Visual Studio 7). If no
-<code>Project created</code> dialog is displayed when you open the <code>.pro</code>, try to run
-Visual with Administrator priviledges. With Qt 2.3, you also have to add <code>/GX /GR</code> in
-<i>Project-Settings-C-C++, Project options</i> before compilation and tune the include and lib
-paths:
-
-<ul>
-EOF
-
-echo "<li>Add the path to <code>libQGLViewer-$VERSION</code> (note there is no trailing <code>QGLViewer</code>) to your" >> $output
-echo "<i>Project-Properties-C/C++-General-Additional Include Directories</i> <span class="redStar">*</span></li>" >> $output
-echo "<li>Add the path <code>libQGLViewer-$VERSION\QGLViewer</code> to your" >> $output
-
-cat >> $output <<EOF
-
-<i>Linker-General-Additional Library Directories</i> <span class="redStar">*</span>. Visual 6
-users may add <code>Release</code> (or <code>Debug</code>) to this path: it must be the directoy
-where <code>QGLViewer.lib</code> is located.</li>
-
-</ul>
-
-<p>
-All this should be done automatically if you use Qt version 3 or 4. Apply the same options to your
-own projects if you didn't start them from one of the examples.
-</p>
-
-<ul>
-<li>A <code>fatal error C1083 'QGLViewer/qglviewer.h' : No such file or directory</code> is fixed by adding 
-<code>libQGLViewer-$VERSION</code> (note there is no trailing <code>QGLViewer</code>) to your <i>Project - Properties - C-C++ - General - Additional Include Directories</i>.</li>
-
-<li>A <code>fatal error C1083: 'QDomElement' : No such file or directory</code> is fixed by adding 
-<code>XML library</code> and <code>OpenGL library</code> in <i>Project - Add Qt module</i>.</li>
-
-<li>An <code>error LNK2001: undefined symbol QGLViewer::...</code> is fixed by adding 
-<code>QGLViever$VERSION.lib</code> to your <i>Project - Properties - Link editor - Input - Additional dependencies</i> and
-<code>libQGLViewer-$VERSION/release</code> (the path where <code>QGLViever$VERSION.lib</code> was generated) 
-to your <i>Project - Properties - Link editor - General - Additional Library Directories</i>.</li>
-</ul>
-
-See also the installation advices for
-<a href="../installWindows.html#qt">Qt-Windows</a> and
-<a href="../installWindows.html">libQGLViewer on Windows</a>.
-
-<br/><br/>
-
-<span class="redStar">*</span> Names are given in Visual Studio 7 standards, and differ from those of Visual 6.
-Here is a correspondance table:
-
-<table class="blue">
-<tr><th>Visual Studio 7</th><th>Visual Studio 6</th></tr>
-<tr><td>Open Qt Project</td><td>Generate Qt Project</td></tr>
-<tr class="even"><td>Project-Properties-C/C++-General-Additional Include Directories</td><td>Tools-Options-Directories-Include files</td></tr>
-<tr><td>Project-Properties-Linker-General-Additional Library Directories</td><td>Tools-Options-Directories-Library files</td></tr>
-</table>
-
 <p>
   <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
   <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.png" alt="Valid CSS!" width="88" height="31"/></a>
+</p>
 EOF
 
 echo "  <i>Last modified on $date.</i>" >> $output

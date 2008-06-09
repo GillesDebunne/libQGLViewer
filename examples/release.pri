@@ -8,7 +8,7 @@
 #LIBS *= QGLViewer.Qt2.3.lib
 
 CONFIG -= debug
-CONFIG += release console
+CONFIG += release console embed_manifest_exe
 
 QT_VERSION=$$[QT_VERSION]
 

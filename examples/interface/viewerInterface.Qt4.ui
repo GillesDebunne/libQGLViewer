@@ -29,9 +29,6 @@
     <number>8</number>
    </property>
    <item>
-    <widget class="QGLViewer" name="viewer_2" />
-   </item>
-   <item>
     <widget class="Viewer" native="1" name="viewer" />
    </item>
    <item>
@@ -97,12 +94,6 @@
   </layout>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>QGLViewer</class>
-   <extends>QWidget</extends>
-   <header>QGLViewer/qglviewer.h</header>
-   <script source="customwidgetplugin" language="Qt Script" >See the QGLViewer simpleViewer example.</script>
-  </customwidget>
   <customwidget>
    <class>Viewer</class>
    <extends></extends>

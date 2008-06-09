@@ -110,7 +110,7 @@ unix {
 
   # install header
   include.path = $${INCLUDE_DIR}/QGLViewer
-  include.files = $${HEADERS} qglviewer.cw
+  include.files = $${HEADERS} qglviewer.cw qglviewer_*.qm
 
   # install documentation html
   documentation.path = $${DOC_DIR}/QGLViewer
@@ -203,7 +203,7 @@ win32 {
 
   # Make sure to have C++ files, PentiumPro code, few warnings, add
   # support to RTTI and Exceptions, and generate debug info "program database"
-  # Any feedback welcome on these flags.
+  # Any feedback on these flags is welcome.
   !win32-g++ {
     QMAKE_CXXFLAGS = -TP -G6 -GR -Zi
     win32-msvc {
@@ -241,7 +241,7 @@ contains( DEFINES, NO_VECTORIAL_RENDER ) {
 	VRender/BSPSortMethod.cpp \
 	VRender/EPSExporter.cpp \
 	VRender/Exporter.cpp \
-        VRender/FIGExporter.cpp \
+	VRender/FIGExporter.cpp \
 	VRender/gpc.cpp \
 	VRender/ParserGL.cpp \
 	VRender/Primitive.cpp \
