@@ -18,16 +18,16 @@
   <widget class="QWidget" name="widget" >
    <layout class="QGridLayout" >
     <property name="leftMargin" >
-     <number>11</number>
+     <number>3</number>
     </property>
     <property name="topMargin" >
-     <number>11</number>
+     <number>3</number>
     </property>
     <property name="rightMargin" >
-     <number>11</number>
+     <number>3</number>
     </property>
     <property name="bottomMargin" >
-     <number>11</number>
+     <number>3</number>
     </property>
     <property name="horizontalSpacing" >
      <number>6</number>
@@ -52,10 +52,10 @@
    <widget class="QMenu" name="fileMenu" >
     <property name="geometry" >
      <rect>
-      <x>538</x>
-      <y>332</y>
+      <x>0</x>
+      <y>0</y>
       <width>148</width>
-      <height>184</height>
+      <height>147</height>
      </rect>
     </property>
     <property name="title" >
@@ -65,81 +65,67 @@
     <addaction name="fileSaveAction" />
     <addaction name="fileSaveAsAction" />
     <addaction name="separator" />
-    <addaction name="filePrintAction" />
-    <addaction name="separator" />
     <addaction name="fileExitAction" />
    </widget>
-   <widget class="QMenu" name="gameMenu" >
+   <widget class="QMenu" name="PopupMenu" >
     <property name="geometry" >
      <rect>
-      <x>572</x>
-      <y>332</y>
-      <width>193</width>
-      <height>290</height>
-     </rect>
-    </property>
-    <property name="title" >
-     <string>&amp;Game</string>
-    </property>
-    <addaction name="editUndoAction" />
-    <addaction name="editRedoAction" />
-    <addaction name="separator" />
-    <addaction name="newGameAction" />
-    <addaction name="suggestPlayAction" />
-    <addaction name="separator" />
-    <addaction name="twoPlayersAction" />
-    <addaction name="computerBlackAction" />
-    <addaction name="separator" />
-    <addaction name="EasyAction" />
-    <addaction name="AverageAction" />
-    <addaction name="DifficultAction" />
-    <addaction name="separator" />
-   </widget>
-   <widget class="QMenu" name="DisplayMenu" >
-    <property name="geometry" >
-     <rect>
-      <x>627</x>
-      <y>340</y>
-      <width>178</width>
-      <height>138</height>
+      <x>0</x>
+      <y>0</y>
+      <width>186</width>
+      <height>94</height>
      </rect>
     </property>
     <property name="title" >
      <string>&amp;Display</string>
     </property>
+    <addaction name="togglePossibleMoveAction" />
     <addaction name="toggleAnimationAction" />
-    <addaction name="togglePossDestAction" />
-    <addaction name="toggleLightsAction" />
-    <addaction name="toggleTexturesAction" />
    </widget>
    <widget class="QMenu" name="helpMenu" >
     <property name="geometry" >
      <rect>
-      <x>681</x>
-      <y>340</y>
-      <width>159</width>
-      <height>103</height>
+      <x>0</x>
+      <y>0</y>
+      <width>150</width>
+      <height>94</height>
      </rect>
     </property>
     <property name="title" >
      <string>&amp;Help</string>
     </property>
     <addaction name="helpRulesAction" />
-    <addaction name="separator" />
     <addaction name="helpAboutAction" />
    </widget>
+   <widget class="QMenu" name="editMenu" >
+    <property name="geometry" >
+     <rect>
+      <x>71</x>
+      <y>123</y>
+      <width>193</width>
+      <height>231</height>
+     </rect>
+    </property>
+    <property name="title" >
+     <string>&amp;Game</string>
+    </property>
+    <addaction name="gameNewGameAction" />
+    <addaction name="separator" />
+    <addaction name="gameUndoAction" />
+    <addaction name="gameRedoAction" />
+    <addaction name="separator" />
+    <addaction name="gameWhiteIsHumanAction" />
+    <addaction name="gameConfigureWhitePlayerAction" />
+    <addaction name="separator" />
+    <addaction name="gameBlackIsHumanAction" />
+    <addaction name="gameConfigureBlackPlayerAction" />
+   </widget>
    <addaction name="fileMenu" />
-   <addaction name="gameMenu" />
-   <addaction name="DisplayMenu" />
+   <addaction name="editMenu" />
+   <addaction name="PopupMenu" />
    <addaction name="helpMenu" />
   </widget>
   <action name="fileOpenAction" >
-   <property name="icon" >
-    <iconset>image2</iconset>
-   </property>
-   <property name="text" >
-    <string>&amp;Load game</string>
-   </property>
    <property name="iconText" >
     <string>Load game</string>
    </property>
@@ -151,12 +137,6 @@
    </property>
   </action>
   <action name="fileSaveAction" >
-   <property name="icon" >
-    <iconset>image3</iconset>
-   </property>
-   <property name="text" >
-    <string>&amp;Save</string>
-   </property>
    <property name="iconText" >
     <string>Save</string>
    </property>
@@ -165,9 +145,6 @@
    </property>
   </action>
   <action name="fileSaveAsAction" >
-   <property name="text" >
-    <string>Save &amp;As...</string>
-   </property>
    <property name="iconText" >
     <string>Save As</string>
    </property>
@@ -175,24 +152,7 @@
     <string/>
    </property>
   </action>
-  <action name="filePrintAction" >
-   <property name="icon" >
-    <iconset>image4</iconset>
-   </property>
-   <property name="text" >
-    <string>&amp;Print...</string>
-   </property>
-   <property name="iconText" >
-    <string>Print</string>
-   </property>
-   <property name="shortcut" >
-    <string/>
-   </property>
-  </action>
   <action name="fileExitAction" >
-   <property name="text" >
-    <string>E&amp;xit</string>
-   </property>
    <property name="iconText" >
     <string>Exit</string>
    </property>
@@ -200,13 +160,7 @@
     <string>Esc</string>
    </property>
   </action>
-  <action name="editUndoAction" >
-   <property name="icon" >
-    <iconset>image5</iconset>
-   </property>
-   <property name="text" >
-    <string>&amp;Undo</string>
-   </property>
+  <action name="gameUndoAction" >
    <property name="iconText" >
     <string>Undo</string>
    </property>
@@ -214,13 +168,7 @@
     <string>Ctrl+Z</string>
    </property>
   </action>
-  <action name="editRedoAction" >
-   <property name="icon" >
-    <iconset>image6</iconset>
-   </property>
-   <property name="text" >
-    <string>&amp;Redo</string>
-   </property>
+  <action name="gameRedoAction" >
    <property name="iconText" >
     <string>Redo</string>
    </property>
@@ -229,9 +177,6 @@
    </property>
   </action>
   <action name="helpRulesAction" >
-   <property name="text" >
-    <string>&amp;Rules of Agora...</string>
-   </property>
    <property name="iconText" >
     <string>Rules of Agora</string>
    </property>
@@ -240,9 +185,6 @@
    </property>
   </action>
   <action name="helpAboutAction" >
-   <property name="text" >
-    <string>&amp;About...</string>
-   </property>
    <property name="iconText" >
     <string>About</string>
    </property>
@@ -250,10 +192,7 @@
     <string/>
    </property>
   </action>
-  <action name="newGameAction" >
-   <property name="text" >
-    <string>&amp;New game</string>
-   </property>
+  <action name="gameNewGameAction" >
    <property name="iconText" >
     <string>New game</string>
    </property>
@@ -269,32 +208,10 @@
     <bool>true</bool>
    </property>
    <property name="iconText" >
-    <string>Animate plays</string>
+    <string>Animate moves</string>
    </property>
   </action>
-  <action name="suggestPlayAction" >
-   <property name="icon" >
-    <iconset>image7</iconset>
-   </property>
-   <property name="iconText" >
-    <string>Suggest play</string>
-   </property>
-   <property name="shortcut" >
-    <string>Ctrl+P</string>
-   </property>
-  </action>
-  <action name="togglePossDestAction" >
-   <property name="checkable" >
-    <bool>true</bool>
-   </property>
-   <property name="checked" >
-    <bool>true</bool>
-   </property>
-   <property name="iconText" >
-    <string>Show possible plays</string>
-   </property>
-  </action>
-  <action name="toggleTexturesAction" >
+  <action name="togglePossibleMoveAction" >
    <property name="checkable" >
     <bool>true</bool>
    </property>
@@ -302,13 +219,13 @@
     <bool>true</bool>
    </property>
    <property name="text" >
-    <string>Use &amp;textures</string>
+    <string>Show possible moves</string>
    </property>
    <property name="iconText" >
-    <string>Use textures</string>
+    <string>Show possible moves</string>
    </property>
   </action>
-  <action name="toggleLightsAction" >
+  <action name="gameWhiteIsHumanAction" >
    <property name="checkable" >
     <bool>true</bool>
    </property>
@@ -316,13 +233,13 @@
     <bool>true</bool>
    </property>
    <property name="text" >
-    <string>Spot &amp;light</string>
+    <string>White player is human</string>
    </property>
    <property name="iconText" >
-    <string>Spot light</string>
+    <string>White player is human</string>
    </property>
   </action>
-  <action name="computerBlackAction" >
+  <action name="gameBlackIsHumanAction" >
    <property name="checkable" >
     <bool>true</bool>
    </property>
@@ -330,61 +247,31 @@
     <bool>true</bool>
    </property>
    <property name="iconText" >
-    <string>Computer plays blacks</string>
+    <string>Black player is human</string>
    </property>
   </action>
-  <action name="twoPlayersAction" >
-   <property name="checkable" >
-    <bool>true</bool>
+  <action name="gameConfigureWhitePlayerAction" >
+   <property name="enabled" >
+    <bool>false</bool>
    </property>
-   <property name="checked" >
-    <bool>true</bool>
+   <property name="text" >
+    <string>Configure white player</string>
    </property>
    <property name="iconText" >
-    <string>Play against computer</string>
-   </property>
-   <property name="shortcut" >
-    <string>Ctrl+T</string>
+    <string>Configure white player</string>
    </property>
   </action>
-  <actiongroup name="levelActionGroup" >
-   <action name="EasyAction" >
-    <property name="checkable" >
-     <bool>true</bool>
-    </property>
-    <property name="checked" >
-     <bool>true</bool>
-    </property>
-    <property name="text" >
-     <string>&amp;Easy</string>
-    </property>
-    <property name="iconText" >
-     <string>Easy</string>
-    </property>
-   </action>
-   <action name="AverageAction" >
-    <property name="checkable" >
-     <bool>true</bool>
-    </property>
-    <property name="text" >
-     <string>&amp;Average</string>
-    </property>
-    <property name="iconText" >
-     <string>&amp;Average</string>
-    </property>
-   </action>
-   <action name="DifficultAction" >
-    <property name="checkable" >
-     <bool>true</bool>
-    </property>
-    <property name="text" >
-     <string>&amp;Difficult</string>
-    </property>
-    <property name="iconText" >
-     <string>Difficult</string>
-    </property>
-   </action>
-  </actiongroup>
+  <action name="gameConfigureBlackPlayerAction" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string>Configure black player</string>
+   </property>
+   <property name="iconText" >
+    <string>Configure black player</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11" />
  <customwidgets>

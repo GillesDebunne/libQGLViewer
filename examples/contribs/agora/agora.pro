@@ -7,31 +7,11 @@
 # You should find the rules of the game on the web. Questions relative to the artificial
 # intelligence implementation should be asked to <code>Jean-Guillaume dot Dumas at imag dot fr</code>.
 
-TEMPLATE = app
-TARGET   = agora
-CONFIG  += qt opengl warn_on release thread
+# Computer player programs are expected to take three parameters: a board file name, an allowed
+# time (expressed in milliseconds and which sign determines which player is to play) and the
+# remaining number of moves before the game is declared over. The output should be the x,y coordinates of
+# the start and end positions of the move to play.
 
-# Input
-HEADERS += agora_alphabeta.inl  agora_coupspossibles.inl  agora_init.inl  agora_jouer.inl   agoraViewer.h
-HEADERS += agora_class.h        agora_evaluation.inl      agora_io.h      container_stream.h agora_container.h
-HEADERS += agora_coup.h         agora.h                   agora_io.inl    agora_types.h
-SOURCES += main.cpp agoraViewer.cpp
+TEMPLATE = subdirs
+SUBDIRS = AI Viewer
 
-QT_VERSION=$$[QT_VERSION]
-contains( QT_VERSION, "^4.*" ) {
-  FORMS += agoraWindow.Qt4.ui
-} else {
-  FORMS += agoraWindow.Qt3.ui
-}
-
-# "make dist" additionnal file
-DISTFILES += wood.png
-
-QMAKE_CXXFLAGS_RELEASE *= -O7 -funroll-all-loops -felide-constructors -fstrict-aliasing -frerun-loop-opt \
-			  -fexpensive-optimizations -fforce-addr -fstrength-reduce
-
-include( ../../examples.pri )
-
-# NOT IN DISTRIBUTION BEGIN
-DISTFILES *= agoraWindow.Qt4.ui
-# NOT IN DISTRIBUTION END
