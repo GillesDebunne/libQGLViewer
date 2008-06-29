@@ -265,7 +265,7 @@ void AgoraViewer::draw()
 	}
 
 	const GLfloat pos[4] = {board_->size().width() / 2.0, board_->size().height() / 2.0, 3.0, 1.0};
-    const GLfloat spot_dir[3]   = {0.0, 0.0, -1.0};
+    const GLfloat spot_dir[3] = {0.0, 0.0, -1.0};
     glLightfv(GL_LIGHT1, GL_POSITION, pos);
     glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_dir);
 

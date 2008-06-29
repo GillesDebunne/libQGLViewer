@@ -428,8 +428,8 @@ Default implementation displays axis, grid, FPS... when the respective flags are
 See the <a href="../examples/multiSelect.html">multiSelect</a> and <a
 href="../examples/contribs.html#thumbnail">thumbnail</a> examples for an overloading illustration.
 
-The GLContext (color, LIGHTING, BLEND...) should \e not be modified by this method, so that in
-draw(), the user can rely on the OpenGL context. Respect this convention (by pushing/popping the
+The GLContext (color, LIGHTING, BLEND...) is \e not modified by this method, so that in
+draw(), the user can rely on the OpenGL context he defined. Respect this convention (by pushing/popping the
 different attributes) if you overload this method. */
 void QGLViewer::postDraw()
 {
