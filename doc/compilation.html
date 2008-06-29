@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Compilation with libQGLViewer</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link href="qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="images/qglviewer.icon.png" type="image/png" />
+</head>
+
+<body>
+
+<div class="banner">
+  <a class="qindex" href="index.html">Home</a>
+  <a class="qindex" href="refManual/hierarchy.html">Documentation</a>
+  <a class="qindex" href="download.html">Download</a>
+  <a class="qindex" href="examples/index.html">Examples</a>
+  <a class="qindex" href="developer.html">Developer</a>
+</div>
+
+<h1>Compilation with libQGLViewer</h1>
+
+Now that you have <a href="download.html">installed</a> Qt and libQGLViewer, these instructions detail how to compile a program that use the libQGLViewer library.
+They apply to the provided <a href="examples/index.html">examples</a> as well as to your own programs (whose code will probably start from one of these, <code>simpleViewer</code> being the simplest one).
+
+
+<h2>Tuning the <code>.pro</code></h2>
+
+The compilation settings are set using the <code>.pro</code> file in Qt. The one that comes with the examples is pretty involved since it 
+tries to automatically detect a number of parameters, and it can be simplified. The important variables that have to be set in order to
+use libQGLViewer are:
+<ul>
+<li><code><b>INCLUDEPATH</b></code> which must indicates where to find the QGLViewer's include files. Since the includes use a <code>QGLViewer/qglviewer.h</code> syntax, if 
+libQGLViewer was installed in a directory such as <code>/xxx/yyy/QGLViewer</code>, you will set this variable to <code>INCLUDEPATH *= /xxx/yyy</code> (note there is no <code>QGLViewer</code> suffix).<br /> <br /></li>
+
+<li><code><b>LIBS</b></code> which tells that your program links with libQGLViewer.
+<ul>
+<li>Unix : use <code>LIBS *= -L<i>/path/to/lib</i> -lQGLViewer%MAJOR_NUMBER%</code>, where <code></i>/path/to/lib</i></code> is the path to the libQGLViewer lib, named <code>libQGLViewer*.{so|a|dylib}</code> depending on your Unix flavor.</li>
+<li>Windows with MinGW : use <code>LIBS *= -L<i>/path/to/lib</i> -lQGLViewer%MAJOR_NUMBER%</code>, where <code></i>/path/to/lib</i></code> is the path to <code>libQGLViewer%MAJOR_NUMBER%.a</code>.</li>
+<li>Windows with Visual Studio : use <code>LIBS *= C:/.../path/to/QGLViewer%MAJOR_NUMBER%.lib</code> (depending on your environment, <code>QGLViewer%MAJOR_NUMBER%.lib</code> may actually be named <code>QGLViewer%CAT_VERSION%.lib</code> or <code>QGLViewer.lib</code>).</li>
+</ul>
+<br />
+</li>
+
+<li><code><b>QT</b></code> which lists the Qt modules needed : <code>QT *= opengl xml</code>.</li>
+</ul>
+
+Here is a typical <code>.pro</code>:
+
+<pre>
+TARGET = simpleViewer
+CONFIG *= qt release
+QT *= opengl xml
+
+HEADERS = simpleViewer.h
+SOURCES = simpleViewer.cpp main.cpp
+
+INCLUDEPATH *= C:/Users/debunne/Documents/libQGLViewer
+LIBS *= -LC:/Users/debunne/Documents/libQGLViewer/QGLViewer/release -lQGLViewer%MAJOR_NUMBER%
+# Visual Studio : LIBS *= C:/Users/debunne/Documents/libQGLViewer/QGLViewer/release/QGLViewer%MAJOR_NUMBER%.lib
+</pre>
+
+
+<h2>Compiling and running your program</h2>
+
+<p>
+<img src="images/windows.png" width="55" height="54" align="middle" alt="windows"/>Using the Qt OpenSource edition with MinGW
+</p>
+
+Launch the Qt command prompt from the Start menu. Then simply type :
+
+<pre>
+> cd path\to\simpleViewer
+> qmake
+> make
+> cd release
+> simpleViewer
+</pre>
+
+Some <code>dll</code>s need to be found in order to run your program. Copy them to the executable's directory, or share them in a standard lib directory such as <code>C:\Windows\System32</code>.
+All these <code>dll</code>s can be found in the libQGLViewer examples' directory created by the installation package. Or, if you compiled from the sources : 
+<ul>
+<li><code>QGLViewer%MAJOR_NUMBER%.dll</code> has been created when you compiled the QGLViewer library.</li>
+<li>The Qt libraries (<code>QtCore4, QtGui4, QtOpenGL4</code> and <code>QtXml4</code>) were installed in your Qt <code>bin</code> directory.</li>
+<li>The MinGW <code>mingwm10.dll</code> is located in the MinGW <code>bin</code> directory.</li>
+</ul>
+
+<p>See also the advices for <a href="installWindows.html">libQGLViewer installation on Windows</a>.</p>
+
+<br/><hr/><br/>
+
+<p>
+<img src="images/windows.png" width="55" height="54" align="middle" alt="windows"/>Using the Qt Commercial edition with Visual Studio integration 
+</p>
+
+Launch Visual Studio from the Qt folder in the Start menu and use the Qt menu to open the <code>.pro</code> file. All parameters should be properly configured, and your program should compile.
+
+<p>
+See the comment above about QGLViewer and Qt <code>dll</code>s if you have an error when starting your program.
+</p>
+
+You can otherwise manually add the QGLViewer's headers path (without the trailing <code>QGLViewer</code>) to <i>C/C++ / General / Additional Include Directories</i> 
+and add <code>QGLViewer%MAJOR_NUMBER%.lib</code> to the <i>Linker / Input / Additional Dependencies</i> using the project properties. 
+These settings can also be shared by all your projects by setting the <i>Tools / Options / Directories</i> Include and Library values.
+
+<p>
+A <code>fatal error C1083: 'QDomElement' : No such file or directory</code> is fixed by adding 
+<code>XML library</code> and <code>OpenGL library</code> in <i>Project - Add Qt module</i>.
+</p>
+
+<div style="font-size:small; font-style:italic; margin:5px; padding:0 8px;">
+With Visual Studio 6, use <i>File-Open workspace</i> to open the <code>.dsp</code> generated by <code>qmake</code> from the <code>.pro</code>.
+
+<p>
+Qt 2.3 users have to first edit the examples' <code>.pro</code> files (uncomment two lines and remove end of
+file as explained. Remove <code>QT_DLL</code> from <code>DEFINES</code> for Visual Studio 7). If no
+<code>Project created</code> dialog is displayed when you open the <code>.pro</code>, try to run
+Visual with Administrator priviledges. With Qt 2.3, you also have to add <code>/GX /GR</code> in
+<i>Project-Settings-C-C++, Project options</i> before compilation.
+</p>
+</div>
+
+<p>See also the advices for <a href="installWindows.html">libQGLViewer installation on Windows</a>.</p>
+
+<br/> <hr/> <br/>
+
+<p>
+<img src="images/linux.png" width="49" height="54" align="middle" alt="linux"/>
+Using the Unix command line, the compilation is as simple as:
+</p>
+
+<pre>
+> cd path/to/simpleViewer
+> qmake
+> make
+> simpleViewer
+</pre>
+
+<!--
+The optional <code>PREFIX, INCLUDE_DIR</code> and <code>LIB_DIR</code> parameters are those you used
+if you customized your <code><a href="../installUnix.html#linux">make install</a></code>. Use
+<code>QGLVIEWER_STATIC=yes</code> to link with the static version of the library.
+These commands can also be typed in the <code>examples</code>' main directory to compile <i>all</i> the examples.
+
+If you installed the RPM, the examples' source files are in
+<code>/usr/share/doc/QGLViewer/examples</code> (may have to be copied to a place where you have
+write permission). If you have downloaded the tarball instead, simply go to the
+<code>examples</code> directory. Then,
+-->
+
+You may be prompted with an <code>error while loading shared libraries</code> message when trying
+to execute the program. Either copy <code>libQGLViewer.so</code> (created when you compiled the QGLViewer library) to this directory, or (better) add its path to your
+default library path (use <code>LD_LIBRARYN32_PATH</code> instead on some Unix flavors):
+
+<pre>
+[bash] > export LD_LIBRARY_PATH=\${LD_LIBRARY_PATH}:/.../.../...
+[tcsh] > setenv LD_LIBRARY_PATH \${LD_LIBRARY_PATH}:/.../.../...
+</pre>
+
+Some configurations may require you to add <code>LIBS *= -lXi</code> in the <code>.pro</code> file.
+Debian users may have to replace <code>-lQGLViewer</code> by <code>-lQGLViewer-2</code> in their <code>.pro</code>.
+
+<p>
+See also the <a href="../installUnix.html#qt-linux">Qt-Unix</a> and <a
+href="../installUnix.html#linux">libQGLViewer on Unix</a> installation pages.
+</p>
+
+<br/> <br/> <hr/> <br/>
+
+<p>
+<img src="images/mac.png" width="55" height="54" align="middle" alt="mac"/>
+
+The compilation on Mac is essentially identical to the one described above in the linux section (<code>libQGLViewer.so</code> is named <code>libQGLViewer.dylib</code> instead)
+Simply replace the above lines by:
+</p>
+
+<pre>
+[bash] > export DYLD_LIBRARY_PATH=\${DYLD_LIBRARY_PATH}:/.../.../...
+[tcsh] > setenv DYLD_LIBRARY_PATH \${DYLD_LIBRARY_PATH}:/.../.../...
+</pre>
+
+You can safely ignore the prebound warning. Building a prebound library creates overlapping address
+ranges. This requires further investigations and any help is more than welcome.
+
+<p>
+If you get a <code>declaration of C function 'void qObsolete' conflicts with previous declaration</code> or a
+<code>template with C linkage</code> error message, try to install libQGLViewer somewhere else:
+</p>
+
+<pre>
+cd QGLViewer
+make uninstall
+qmake INCLUDE_DIR=/usr/local/include (for instance)
+make install
+</pre>
+
+Tune your <code>.pro</code> accordingly and recompile your program. Any
+explanation or cleaner solution is more than welcome.
+
+<p>
+See also the <a href="../installUnix.html#qt-mac">Qt-Mac</a> and <a
+href="../installUnix.html#mac">libQGLViewer on Mac</a> installation pages.
+</p>
+
+
+
+
+<h2>Going further</h2>
+
+Now that your program compiles and runs smoothly, you can start editing it. You will probably start by changing the <code>draw()</code> method to define your own scene. 
+Overload the <code>init()</code> function to initialize your scene as well as the OpenGL parameters (such as textures and objects). 
+<a href="introduction.html">Read the principles</a> of the library for details. If not already done, try out the 
+different <a href="examples/index.html">examples</a> and feel free to cut and paste code for the functionnalities you need.
+
+<h2>Localizing your application</h2>
+
+See the Qt Linguist Manual for an explanation of the Qt translation model. Here are the lines you typically need to add in your <code>main</code> method to translate the texts of your interface.
+
+<pre>
+  QApplication application(argc,argv);
+
+  QString locale = QLocale::system().name();
+
+  QTranslator translator;
+  translator.load(QString("qglviewer_") + locale);
+  // translator.load(your application specific translation file(s));
+  app.installTranslator(&translator); 
+</pre>
+
+This assumes that <code>qglviewer_*.qm</code> is located in your application directory. If it is not the case, copy it or use the overloaded <code>load</code> method:
+<pre>
+  translator.load(QString("qglviewer_") + locale, "C:\\Users\\debunne\\Documents\\Code\\libQGLViewer\\QGLViewer"); // for instance
+</pre>
+
+QGLViewer translation files are available in the QGLViewer's header directory.
+
+
+<p>
+Please <a href="mailto:&#71;&#105;&#108;&#108;&#101;&#115;&#46;&#68;&#101;&#98;&#117;&#110;&#110;&#101;&#64;&#105;&#109;&#97;&#103;&#46;&#102;&#114;?Subject=QGLViewer RPM">let me know</a> if you
+encounter any problem following this guide.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="images/css.png" alt="Valid CSS!" width="88" height="31"/></a>
+  <i>Last modified on #DATE#.</i>
+</p>
+    
+</body>
+</html>
