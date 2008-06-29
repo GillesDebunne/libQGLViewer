@@ -1,17 +1,17 @@
 %define version_major 2
 %define version_minor 2
-%define version_patch 6
+%define version_release 6
 
 Name:		libQGLViewer
-Version:	%{version_major}.%{version_minor}.%{version_patch}
-Release:	1
+Version:	%{version_major}.%{version_minor}
+Release:	%{version_release}
 
 Summary:	Qt based OpenGL generic 3D viewer library.
 License:	GPL
 Group:		Development/C++
-Source:		%{name}-%{version}-%{release}.tar.gz
+Source:		%{name}-%{version}.%{release}.tar.gz
 URL:		http://artis.imag.fr/Members/Gilles.Debunne/QGLViewer
-Buildroot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
+Buildroot:      %{_tmppath}/%{name}-%{version}.%{release}-buildroot
 
 %description
 libQGLViewer is a C++ library based on Qt that eases the creation of OpenGL 3D viewers. It provides
@@ -34,7 +34,7 @@ that uses libQGLViewer. A reference documentation and pedagogical examples are i
 %define docDir %{_defaultdocdir}/QGLViewer
 %define includeDir %{_includedir}/QGLViewer
 %define libDir %{_libdir}
-%setup -q -n %{name}-%{version}-%{release}
+%setup -q -n %{name}-%{version}.%{release}
 
 %build
 # if [[ -z "${QTDIR}" ]]
