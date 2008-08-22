@@ -329,10 +329,6 @@ done
 for f in `cd examples/contribs ; ls`
 do
   test -d examples/contribs/$f || continue
-  if [ $f == "CVS" ]
-  then
-      continue
-  fi
 
   if [ `grep $f examples/contribs/contribs.pro | wc -l` = 0 ]
   then
@@ -348,9 +344,23 @@ do
 
   cd examples/contribs/$f
   qmake
-  make dist
+  if [ -d Viewer ]
+  then
+    echo "Essai de tar.gz sur agora et blobWar. Memo recup agora boards"
+    make qmake
+    cd Viewer ; make dist ; cd ..
+    tar -rf $f.tar Viever/Viewer.tar.gz
+    cd AI ; make dist ; cd ..
+    tar -rf $f.tar AI/AI.tar.gz
+    tar -rf $f.tar *Boards
+    tar -rf $f.tar $f.pro
+    gzip $f.tar
+  else
+    make dist
+  fi
+
   mv $f.tar.gz ..
-  cd - > /dev/null
+  cd ../..
   tar -rf Examples.tar examples/contribs/$f.tar.gz
   rm examples/contribs/$f.tar.gz
 done
@@ -418,7 +428,7 @@ sed s%"\.\./\.\."%"\.\."% examples/release.pri > /tmp/release.pri
 cat /tmp/designer.pro /tmp/release.pri > designerPlugin/designerPlugin.pro
 
 sed s%"\.\./\.\."%"\.\./\.\./\.\."% examples/release.pri > examples/contribs/release.pri
-for dir in "examples" "examples/contribs"
+for dir in "examples" "examples/contribs"  "examples/contribs/agora" "examples/contribs/blobWar"
 do
   cd $dir
   # Extract examples tars
@@ -426,14 +436,20 @@ do
     do
     tar -xzf $f
     rm $f
-    # Bug in qmake include files
-
   done
   
   # Modify examples' .pro
   for f in `ls */*.pro`
   do
     if [[ $f == "contribs/contribs.pro" ]]
+    then
+      continue
+    fi
+    if [[ $f == "contribs/agora/agora.pro" ]]
+    then
+      continue
+    fi
+    if [[ $f == "contribs/blobWar/blobWar.pro" ]]
     then
       continue
     fi

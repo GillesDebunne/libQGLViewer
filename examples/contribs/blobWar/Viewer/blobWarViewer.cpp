@@ -129,7 +129,7 @@ void BlobWarViewer::initViewer()
   board_ = new Board();
 
   QStringList boardDir;
-  boardDir << "Boards" << "../Boards" << "../../Boards";
+  boardDir << "BlobWarBoards" << "../BlobWarBoards" << "../../BlobWarBoards";
   for (int i=0; i<boardDir.size(); ++i) {
 	  if (QFileInfo(boardDir.at(i)).isDir()) {
 		boardFileName_ = boardDir.at(i)+"/4x4.bwb";

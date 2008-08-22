@@ -11,7 +11,7 @@ Exporter::Exporter()
 	_pointSize=1 ;
 }
 
-void Exporter::exportToFile(	const char *filename,
+void Exporter::exportToFile(const char *filename,
 										const vector<PtrPrimitive>& primitive_tab,
 										VRenderParams& vparams)
 {

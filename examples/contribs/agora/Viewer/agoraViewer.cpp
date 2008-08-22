@@ -168,11 +168,10 @@ void AgoraViewer::initBoard()
 
 	QStringList boardDir;
 	boardFileName_ = "";
-	boardDir << "Boards" << "../Boards" << "../../Boards";
+	boardDir << "AgoraBoards" << "../AgoraBoards" << "../../AgoraBoards";
 	for (int i=0; i<boardDir.size(); ++i) {
 		if (QFileInfo(boardDir.at(i)).isDir()) {
 			boardFileName_ = boardDir.at(i)+"/standard.ago";
-			boardFileName_ = boardDir.at(i)+"/3x3.ago";
 			break;
 		}
 	}
