@@ -1,0 +1,251 @@
+libQGLViewer license agreement V 1.0
+
+Copyright (C) 2007 Alma. All rights reserved.
+
+
+
+Software covered by this license
+================================
+
+This License Agreement ("License") is between CONPANY NAME ("Licensee") and Alma.
+It pertains to the libQGLViewer library or parts thereof, including the source 
+code, example programs and the documentation ("Documentation").
+
+The software referred to above is based on the Qt library provided by Trolltech SA
+("Qt Library") to implement various functions. Qt Library is not prepared by or 
+owned by Alma, and it is not covered by this License. Any use of the Qt Library is 
+entirely at the risk and responsibility of Licensee.
+
+Licensee acknowledges (1) that the Qt Library may require additional licensing of 
+copyright and patents from the owners of such, and (2) that distribution of any of 
+the Licensed Software referencing any portion of the Qt Library may require 
+appropriate licensing from such third parties.
+
+When the term "Software" is used below in this License, it refers only to the 
+software covered by the License, and not the software that is part of the Qt 
+Library.
+
+Licensee also acknowledges that due to license conflicts, the vectorial rendering 
+part of the libQGLViewer library (code located in the VRender directory) is NOT 
+covered by this agreement and will not be available and distributed under this 
+commercial license.
+
+
+Binding terms - new versions
+============================
+
+By installing, copying, or otherwise using the Software or Documentation, Licensee 
+agrees to be bound by the terms of this License. This paragraph does not exclude 
+Licensee from using the Software under the GPL, provided that the terms and 
+conditions of the GPL are observed.
+
+If Alma replaces this License Version 1.0 with a new Version during the term of 
+the License, Licensee shall be entitled to receive and use such new Version on the 
+terms and conditions then applicable to such new Version, without having to pay 
+further compensation. Licensee may choose to continue using this Version 1.0 
+instead, in which case the terms and conditions in this License shall apply for 
+the remainder of the License term.  Receipt of a new Version and acceptance of the 
+licensing terms for such new Version, shall not in it self extend the term of the 
+initial License.
+
+A "Version" of the Software refers to a release with a unique version number, e.g. 
+1.0.0 and 1.0.1 being different Versions.
+
+
+Copyright and restrictions
+==========================
+
+All intellectual property rights in the Software and Documentation are owned by 
+Alma, and are protected by French copyright laws, other applicable copyright laws, 
+and international treaty provisions. Alma reserves all rights not expressly 
+granted in this License. No title, property rights or copyright in the Software or 
+in any modifications to the Software or Documentation shall pass to Licensee under 
+any circumstances. Licensee may not loan, rent, lease, or license the Software or 
+any copy hereof, unless expressly provided for in this License. Licensee may not 
+alter or remove any details of ownership, copyright, trade mark or other property 
+right connected with the Software.
+
+Alma grants Licensee the right to use the Software in one, and only one, of 
+Licensee's Product ("Product") in the manner provided below. The name of this 
+Product must be reported to Alma. A Product is a piece of software created by the 
+licensee and which uses the libQGLViewer library. Different releases of the same 
+Product can benefit from the same libQGLViewer license. If different Products with 
+different names use the libQGLViewer library, a commercial libQGLViewer license 
+must be purchased for each of them. 
+
+
+Duration
+========
+
+This License is valid for one year from the date that Alma has sent out an order 
+confirmation. A renewal offer stating the terms and conditions for an extension of 
+the License will be sent to Licensee by Alma. If Licensee does not accept this 
+offer, or Alma chooses not to provide such offer, the License will expire at the 
+end of the one year period referred to above.
+
+If the License expires, the rights to updates and support (subsections (6) and (7) 
+under "Licensee's rights" below) shall cease. Licensee retains the right to create 
+and distribute applications (as stated in subsections (1), (2), (3), (4) and (5) 
+under "Licensee's rights" below), but only for use of the last Version of the 
+Software that was released while the License was valid.
+
+
+Licensee's rights
+=================
+
+(1) Using and modifying the Software: Licensee may freely use and modify the 
+Software to develop any kind of product on any platform, except products which 
+would 1) compete directly with the Software or 2) pass on functionality which makes 
+it possible for others to create software competing with the Software. Licensee may 
+make and install copies of the Software on an unlimited number of computers on any 
+number of development platforms.
+
+(2) Redistribution of the original Software: Licensee is granted a nonexclusive, 
+royalty-free right to redistribute the unchanged Software as part of Licensee's own 
+product in source or binary form, but only if the Software has in its entirety been 
+obtained under a valid libQGLViewer License.
+
+(3) Distribution of modified Software: Licensee is granted a nonexclusive, 
+royalty-free right to copy and distribute Software which has been modified as 
+allowed under section (1) above, as part of his product. This can be done in one of 
+the following two ways: (a) in the form of source code patches to the original 
+unmodified Software; (b) in binary form, provided that the binary is named in such a
+manner that it cannot be confused with the original Software. Such copying and 
+distribution may only take place if any and all modifications to the original 
+Software have in their entireties been developed by Licensee on basis of and in 
+accordance with the provisions of a valid libQGLViewer License.
+
+(4) The right to distribution as referred to under (2) and (3) above also applies to 
+the Documentation, but only to the extent the Documentation is distributed as an 
+integrated part of the Software.
+
+The right to distribute the Software as described under (2) and (3) above does not 
+authorize Licensee to give any third parties any rights to the Software, except the 
+right to use the Software or modified Software as an integrated part of the products 
+sold by Licensee.
+
+(5) The above provisions do not exclude Licensee from re-distributing the Software 
+in accordance with the GPL, but in such case, the terms and conditions of the GPL 
+must be observed. If Licensee has made any modifications to the Software under the 
+GPL license, such modified Software must, if re-distributed, either a) be 
+re-distributed on the terms and conditions set by the GPL, or b) be re-distributed 
+under a libQGLViewer License, but so that a libQGLViewer License must be purchased 
+from Alma with retrospective effect, meaning that all previous development work 
+under the GPL which is intended distributed must be paid for as if developed under 
+the libQGLViewer License.  Alma is not obliged to sell such licenses with 
+retrospective effect, but may do so, at its own discretion.
+
+(6) Upgrades: Licensee is granted the right to free upgrades to all new Versions of 
+the Software, through the libQGLViewer website for the duration of the License (one 
+year), in accordance with Alma's licensing terms and conditions then applicable to 
+the upgrades.
+
+(7) Support: Licensee has the right to prioritized email software developer support 
+with no additional cost for the duration of the License (one year).
+
+Licensee's rights are non-exclusive.
+
+
+Prices and payment
+==================
+
+As consideration for the rights given to Licensee under this License, Licensee shall 
+pay to Alma the license fees applicable at the time of ordering. The License is not 
+valid until such order has been placed with Alma, and Alma has accepted the order in 
+writing.
+
+
+"As is" purchase-disclaimer of warranties
+=========================================
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND EXCEPT AS SPECIFICALLY PROVIDED HEREIN, Alma 
+MAKES NO WARRANTIES OR REPRESENTATIONS, EITHER EXPRESSED OR IMPLIED, WITH RESPECT TO 
+THE SOFTWARE OR DOCUMENTATION, INCLUDING, BUT NOT LIMITED TO, THEIR QUALITY, 
+PERFORMANCE, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR PURPOSE. TO THE EXTENT 
+THAT ANY WARRANTIES WOULD OTHERWISE BE IMPLIED BY LAW, Alma HEREBY DISCLAIMS ALL 
+SUCH WARRANTIES, AND LICENSEE ACCEPTS THAT NO SUCH WARRANTIES SHALL APPLY.
+
+Because software is inherently complex and cannot be expected to be free of errors, 
+Licensee is advised to verify his work and make backup copies where appropriate. Any 
+and all use of the Software or modified versions of the Software is at the risk of 
+Licensee.
+
+
+Limitation of liability
+=======================
+
+IF, Alma'S WARRANTY DISCLAIMER NOTWITHSTANDING, Alma IS HELD LIABLE TO LICENSEE, ANY 
+AWARD OF DAMAGES FROM Alma TO LICENSEE SHALL NOT EXCEED THE TOTAL AMOUNT THAT 
+LICENSEE HAS PAID TO Alma IN CONNECTION WITH THIS LICENSE. IN NO EVENT SHALL Alma BE 
+LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL, INCIDENTAL, EXEMPLARY, OR CONSEQUENTIAL 
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, DAMAGES FOR LOSS OR CORRUPTION OF DATA, AND 
+LOSS OF PROFITS OR INTERRUPTION OF BUSINESS), HOWEVER CAUSED AND ON ANY THEORY OF 
+LIABILITY, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. TO THE EXTENT THAT 
+THE APPLICABLE LAW DOES NOT ALLOW THE EXCLUSION OR LIMITATION OF IMPLIED WARRANTIES 
+OR LIMITATION OF LIABILITY FOR INCIDENTAL OR CONSEQUENTIAL DAMAGES, THE ABOVE 
+LIMITATION OR EXCLUSION SHALL APPLY TO THE MAXIMUM EXTENT ALLOWED.
+
+
+Verification
+============
+
+Alma may, upon its reasonable request and at its expense, audit Licensee with respect 
+to the use of the Licensed Software. Any such audit shall be conducted during regular 
+business hours at Licensee's facilities and shall not unreasonably interfere with 
+Licensee's business activities. Alma will not remove, copy, or redistribute any 
+electronic material during the course of an audit. If an audit reveals that Licensee 
+is using the Licensed Software in a way that is in material violation of the terms of 
+the License, then Licensee shall pay Alma's reasonable costs of conducting the audit. 
+In the case of a material violation, Licensee agrees to pay Alma any amounts owing 
+that are attributable to the unauthorized use. In the alternative, Alma reserves the 
+right, at Alma's sole option, to terminate the licenses for the Licensed Software.
+
+
+Termination
+===========
+
+Alma may terminate the License at any time immediately upon written notice by Alma to 
+Licensee if Licensee breaches this License, fails to pay the fees for the Licensed 
+Software, or infringes Alma's intellectual property in or to the Licensed Software. 
+Upon termination of the Licenses, Licensee shall return to Alma all copies of Licensed 
+Software that were supplied by Alma. All other copies of Licensed Software in the 
+possession or control of Licensee must be erased or destroyed. An officer of Licensee 
+must promptly deliver to Alma a written confirmation that this has occurred.
+
+
+Entire contract and severability
+================================
+
+This License represents the complete agreement concerning subject matter hereof. If 
+any provision of this License is held to be unenforceable, such provision shall be 
+reformed only to the extent necessary to make it enforceable. The remainder will 
+remain valid and enforceable according to its terms.
+
+
+Governing law and disputes
+==========================
+
+This License shall be governed by French law. Unless otherwise agreed in writing, all 
+disputes arising out of or in connection with this License shall be brought before
+the Grenoble City Court as the exclusive legal venue.
+
+In addition, Alma shall be entitled to seek interlocutory injunctions in any court of 
+law worldwide, to the extent allowed by the procedural law of the relevant jurisdiction.
+
+
+
+
+Alma Scop
+15 rue Georges Perec
+38400 Saint-Martin-d'Hères 
+France
+
+
+Licensee :
+Bocad Software GmbH
+Am Umweltpark 7
+D-44793 Bochum
+Germany
+
+Support and upgrades granted until 1st September 2010.
+
