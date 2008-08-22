@@ -20,7 +20,7 @@ contains( QT_VERSION, "^4.*" ) {
 DISTFILES *= ../Boards/*.ago
 
 # NOT IN DISTRIBUTION BEGIN
-DISTFILES *= agoraWindow.Qt4.ui computerPlayerInterface.Qt4.ui
+DISTFILES *= agoraWindow.Qt3.ui computerPlayerInterface.Qt3.ui
 # NOT IN DISTRIBUTION END
 
 include( ../../../examples.pri )

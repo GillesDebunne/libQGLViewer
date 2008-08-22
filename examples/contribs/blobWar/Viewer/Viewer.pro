@@ -26,7 +26,7 @@ contains( QT_VERSION, "^4.*" ) {
 DISTFILES *= ../Boards/*.bwb
 
 # NOT IN DISTRIBUTION BEGIN
-DISTFILES *= blobWarWindow.Qt4.ui computerPlayerInterface.Qt4.ui
+DISTFILES *= blobWarWindow.Qt3.ui computerPlayerInterface.Qt3.ui
 # NOT IN DISTRIBUTION END
 
 include( ../../../examples.pri )

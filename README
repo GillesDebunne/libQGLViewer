@@ -1,8 +1,8 @@
 
-                      l i b Q G L V i e w e r
+                        l i b Q G L V i e w e r
 
 		 Gilles Debunne (Gilles.Debunne@imag.fr)
-	      Version #VERSION#-#RELEASE#. Packaged on #DATE#
+	      	 Version #VERSION#. Packaged on #DATE#
 	    Copyright 2002, 2003, 2004, 2005, 2006, 2007, 2008
 
 libQGLViewer is an open source C++ library based on Qt that enables the quick creation 

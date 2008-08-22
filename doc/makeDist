@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 version=`grep -a "^version=" ../makeDist | head -1 | cut -d'"' -f2`
 catVersion=`echo $version | sed s@"\."@""@g`

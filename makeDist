@@ -1,21 +1,21 @@
-#!/bin/sh
+#!/bin/bash
 
 libName="libQGLViewer"
-version="2.2.6"
-release="1"
+version="2.3.0"
 
 version_major=`echo $version | cut -d"." -f1`
 version_minor=`echo $version | cut -d"." -f2`
-version_patch=`echo $version | cut -d"." -f3`
+version_release=`echo $version | cut -d"." -f3`
 catVersion=$(echo $version | sed s%"\."%""%g)
 
 WebSuffix="Members/Gilles.Debunne/QGLViewer"
 WebDir="/home/wwwartis/pub/$WebSuffix"
+#WebDir="/tmp/commercial"
 test -d $WebDir || WebDir="/net/cedre/chroot/var/www/artis/pub/$WebSuffix"
 test -d $WebDir || WebDir="/h/cedre/chroot/var/www/artis/pub/$WebSuffix"
 WebURL="http://artis.imag.fr/$WebSuffix"
 
-libNameVersion="$libName-$version-$release"
+libNameVersion="$libName-$version"
 tarName="$libNameVersion.tar.gz"
 tmpDir="/tmp/$libNameVersion"
 
@@ -54,17 +54,17 @@ function checkVersion()
   fi
 }
 
-grep "Gilles Debunne <Gilles.Debunne@imag.fr> $version-$release" QGLViewer/qglviewer.spec > /dev/null
+grep "Gilles Debunne <Gilles.Debunne@imag.fr> $version" QGLViewer/qglviewer.spec > /dev/null
 if [[ "$?" -ne "0" ]]
 then
-  echo "No changelog comment in QGLViewer/qglviewer.spec for $version-$release - Abort"
+  echo "No changelog comment in QGLViewer/qglviewer.spec for $version - Abort"
   exit
 fi
 
-grep "$version-$release" doc/index.html > /dev/null
+grep "$version" doc/index.html > /dev/null
 if [[ "$?" -ne "0" ]]
 then
-  echo "No news section in doc/index.html for $version-$release - Abort"
+  echo "No news section in doc/index.html for $version - Abort"
   exit
 fi
 
@@ -78,18 +78,13 @@ START="%define version_minor "
 FILE="QGLViewer/qglviewer.spec"
 checkVersion
 
-VERSION=$version_patch
-START="%define version_patch "
-FILE="QGLViewer/qglviewer.spec"
-checkVersion
-
-VERSION=$release
-START="Release:	"
+VERSION=$version_revision
+START="%define version_revision "
 FILE="QGLViewer/qglviewer.spec"
 checkVersion
 
 VERSION=$version
-START="VERSION  = "
+START="VERSION = "
 FILE="QGLViewer/QGLViewer.pro"
 checkVersion
 
@@ -98,26 +93,34 @@ START="VERSION  = "
 FILE="QGLViewer/QGLViewer.Qt2.3.pro"
 checkVersion
 
-hexVersion="0x0${version_major}0${version_minor}0${version_patch}"
+hexVersion="0x0${version_major}0${version_minor}0${version_release}"
 VERSION=$hexVersion
 START="#define QGLVIEWER_VERSION "
 FILE="QGLViewer/config.h"
 checkVersion
 
-VERSION="$version-$release\""
+VERSION="$version\""
 START="PROJECT_NUMBER         = \"Version "
 FILE="doc/Doxyfile"
 checkVersion
 
 echo " - Checking file integrity"
 
-for f in `ls QGLViewer/QGLViewer.pro examples/*/*.pro examples/contribs/*/*.pro`
+for f in `ls QGLViewer/QGLViewer.pro examples/*/*.pro examples/contribs/*/*.pro examples/contribs/*/*/*.pro`
 do
   if [ $f == "examples/debug/debug.pro" ]
   then
     continue
   fi
   if [ $f == "examples/contribs/contribs.pro" ]
+  then
+    continue
+  fi
+  if [ $f == "examples/contribs/agora/agora.pro" ]
+  then
+    continue
+  fi
+  if [ $f == "examples/contribs/blobWar/blobWar.pro" ]
   then
     continue
   fi
@@ -200,13 +203,6 @@ then
     #cd latex ; make clear ; make pdf > /dev/null ; cp refman.pdf $WebDir/qglviewer.pdf
   cd - > /dev/null
 
-  # cd QGLViewer
-    # echo " - Making CVS index..."
-    # test -d $WebDir/CVS || mkdir -p $WebDir/CVS
-    # test -d $WebDir/CVS/diff || rm -rf $WebDir/CVS/diff
-    # cvs2html -f -C chrono.html -p -o $WebDir/CVS/index.html -a -b -n3 -N20 > /dev/null
-  # cd -
-  
   echo " - Checking web site links"
   cd $WebDir
   checkLinks.pl -r
@@ -224,9 +220,9 @@ fi
 
 if [ $1 == "rpm" ]
 then
-echo " - Building libQGLViewer version $version-$release"
+echo " - Building libQGLViewer version $version"
 
-# echo "This will replace files of version $version-$release, are you sure ?"
+# echo "This will replace files of version $version, are you sure ?"
 # exit
 
 QGLViewerRootDir=`pwd`
@@ -294,7 +290,7 @@ cd - > /dev/null
 
 cd examples ; makeDist ; cd - > /dev/null
 tar -cf Examples.tar examples/examples.pro examples/contribs/contribs.pro examples/release.pri examples/html
-EXAMPLES_SKIPPED_DIRS="attic contribs debug html CVS"
+EXAMPLES_SKIPPED_DIRS="attic contribs debug html"
 for f in `cd examples ; ls`
 do
   test -d examples/$f || continue
@@ -344,23 +340,9 @@ do
 
   cd examples/contribs/$f
   qmake
-  if [ -d Viewer ]
-  then
-    echo "Essai de tar.gz sur agora et blobWar. Memo recup agora boards"
-    make qmake
-    cd Viewer ; make dist ; cd ..
-    tar -rf $f.tar Viever/Viewer.tar.gz
-    cd AI ; make dist ; cd ..
-    tar -rf $f.tar AI/AI.tar.gz
-    tar -rf $f.tar *Boards
-    tar -rf $f.tar $f.pro
-    gzip $f.tar
-  else
-    make dist
-  fi
-
+  make dist
   mv $f.tar.gz ..
-  cd ../..
+  cd - > /dev/null
   tar -rf Examples.tar examples/contribs/$f.tar.gz
   rm examples/contribs/$f.tar.gz
 done
@@ -404,7 +386,7 @@ export LC_TIME="en"
 date=`date "+%B %-d, %Y"`
 for f in "gpl-warning" "CHANGELOG" "INSTALL" "LICENCE" "README"
 do
-  sed s:"#VERSION#":"$version":g $f | sed s:"#RELEASE#":"$release":g | sed s§"#WEBURL#"§"$WebURL"§g | sed s:"#DATE#":"$date":g > $f.filtered
+  sed s:"#VERSION#":"$version":g $f | sed s%"#WEBURL#"%"$WebURL"%g | sed s:"#DATE#":"$date":g > $f.filtered
   mv $f.filtered $f
 done
 
@@ -428,7 +410,7 @@ sed s%"\.\./\.\."%"\.\."% examples/release.pri > /tmp/release.pri
 cat /tmp/designer.pro /tmp/release.pri > designerPlugin/designerPlugin.pro
 
 sed s%"\.\./\.\."%"\.\./\.\./\.\."% examples/release.pri > examples/contribs/release.pri
-for dir in "examples" "examples/contribs"  "examples/contribs/agora" "examples/contribs/blobWar"
+for dir in "examples" "examples/contribs"
 do
   cd $dir
   # Extract examples tars
@@ -436,20 +418,14 @@ do
     do
     tar -xzf $f
     rm $f
+    # Bug in qmake include files
+
   done
   
   # Modify examples' .pro
   for f in `ls */*.pro`
   do
     if [[ $f == "contribs/contribs.pro" ]]
-    then
-      continue
-    fi
-    if [[ $f == "contribs/agora/agora.pro" ]]
-    then
-      continue
-    fi
-    if [[ $f == "contribs/blobWar/blobWar.pro" ]]
     then
       continue
     fi
@@ -579,7 +555,7 @@ for e in $BIN_EXAMPLES
 do
   echo "   = $e"
   cd $e
-  qmake INCLUDE_DIR=../.. LIB_DIR=../../QGLViewer >& /dev/null
+  qmake-qt4 INCLUDE_DIR=../.. LIB_DIR=../../QGLViewer >& /dev/null
   make > /dev/null
   cp $e $exDir
   cd - > /dev/null
@@ -641,10 +617,11 @@ function addNamespace()
 addNamespace ManipulatedFrame Frame manipulatedFrame
 addNamespace ManipulatedCameraFrame ManipulatedFrame manipulatedCameraFrame
 
-for f in `find . -name '*.h' -o -name '*.cpp' -o -name '*.html' -o -name '*.css' -o -name '*.txt'`
-do
-  recode ..pc $f
-done
+echo "Skipping recode of files for special characters"
+#for f in `find . -name '*.h' -o -name '*.cpp' -o -name '*.html' -o -name '*.css' -o -name '*.txt'`
+#do
+#  recode ..pc $f
+#done
 
 cd ..
 zip -qr $libNameVersion.zip $libNameVersion
@@ -664,36 +641,7 @@ then
     exit
 fi
 
-cp -f $tarName $rpmDir/SRPMS/$libNameVersion.src.rpm $libNameVersion.zip $WebDir/src
-
-if [[ `grep "Fedora Core release 2" /etc/redhat-release` ]]
-then
-  archExt="fc2.tar.gz"
-fi
-
-if [[ `grep "Fedora Core release 4" /etc/redhat-release` ]]
-then
-  archExt="fc4.tar.gz"
-fi
-
-if [[ `grep "Fedora Core release 6" /etc/redhat-release` ]]
-then
-  archExt="fc6.tar.gz"
-fi
-
-if [[ `grep "Mandrake Linux release 9.1" /etc/redhat-release` ]]
-then
-  archExt="mdk9.1.tar.gz"
-fi
-
-if [[ $archExt == "" ]]
-then
-    echo "Unable to detect machine architecture for example archExt"
-    cat /etc/redhat-release
-    archExt="tar.gz"
-#else
-  # echo " - Creating binary example package for $archExt"
-fi
+cp -f $tarName $rpmDir/SRPMS/$libNameVersion-1.src.rpm $libNameVersion.zip $WebDir/src
 
 # No more distribution prefix. Add libstdc++ if needed.
 archExt="tar.gz"
@@ -701,19 +649,19 @@ cp -f $exName.tar.gz $WebDir/src/$exName.$archExt
 
 for i in "i586" "i486" "i386"
 do
-  if [ -f $rpmDir/RPMS/$i/$libNameVersion.$i.rpm ]
+  if [ -f $rpmDir/RPMS/$i/$libNameVersion-1.$i.rpm ]
   then
       ix86=$i
       break
   fi
 done
 
-if [ ! -f $rpmDir/RPMS/$ix86/$libNameVersion.$ix86.rpm ]
+if [ ! -f $rpmDir/RPMS/$ix86/$libNameVersion-1.$ix86.rpm ]
 then
     echo "Unable to find ix86 dir in $rpmDir/RPMS/"
 else
-    cp -f $rpmDir/RPMS/$ix86/$libNameVersion.$ix86.rpm $WebDir/src/$libNameVersion.i586.rpm
-    cp -f $rpmDir/RPMS/$ix86/$libName-devel-$version-$release.$ix86.rpm $WebDir/src/$libName-devel-$version-$release.i586.rpm
+    cp -f $rpmDir/RPMS/$ix86/$libNameVersion-1.$ix86.rpm $WebDir/src/$libNameVersion.i586.rpm
+    cp -f $rpmDir/RPMS/$ix86/$libName-devel-$version-1.$ix86.rpm $WebDir/src/$libName-devel-$version.i586.rpm
 fi
 
 cd $WebDir/src

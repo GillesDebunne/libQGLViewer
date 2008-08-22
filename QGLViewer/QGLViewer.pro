@@ -12,7 +12,7 @@
 
 TEMPLATE = lib
 TARGET = QGLViewer
-VERSION = 2.2.6
+VERSION = 2.3.0
 CONFIG -= debug
 CONFIG *= release qt opengl warn_on thread create_prl 
 
@@ -129,15 +129,15 @@ unix {
   docRefManual.files = ../doc/refManual/*
 
   # install static library
-  #staticlib.extra = make staticlib
-  #staticlib.path = $${LIB_DIR}
-  #staticlib.files = lib$${TARGET}.a
+  staticlib.extra = make -f Makefile.Release staticlib
+  staticlib.path = $${LIB_DIR}
+  staticlib.files = lib$${TARGET}.a
 
   # install library
   target.path = $${LIB_DIR}
 
   # "make install" configuration options
-  INSTALLS *= target include documentation docImages docRefManual
+  INSTALLS *= target staticlib include documentation docImages docRefManual
 }
 
 

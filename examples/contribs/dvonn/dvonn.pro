@@ -27,5 +27,5 @@ contains( QT_VERSION, "^4.*" ) {
 include( ../../examples.pri )
 
 # NOT IN DISTRIBUTION BEGIN
-DISTFILES *= dvonnwindow.Qt4.ui
+DISTFILES *= dvonnwindow.Qt3.ui
 # NOT IN DISTRIBUTION END

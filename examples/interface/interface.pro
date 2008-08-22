@@ -39,7 +39,7 @@ contains( QT_VERSION, "^4.*" ) {
 }
 
 # NOT IN DISTRIBUTION BEGIN
-DISTFILES *= viewerInterface.Qt4.ui
+DISTFILES *= viewerInterface.Qt3.ui
 # NOT IN DISTRIBUTION END
 
 include( ../examples.pri )

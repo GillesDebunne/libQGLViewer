@@ -1,5 +1,9 @@
-personal_ws-1.1 en 192
 QDomElement
+libQGLViewer
+glLightfv
+ManipulatedFrame
+setManipulatedFrame
+manipulatedFrame
 transformOf
 QMouseEvent
 setCameraIsEdited

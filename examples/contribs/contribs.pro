@@ -5,14 +5,12 @@ SUBDIRS       = agora \
 		blobWar \
 		cornerAxis \
 		dvonn \
-		quarto \
 		terrain \
 		textureViewer \
-		thumbnail \
-		3dsViewer
+		thumbnail
 
 QT_VERSION = $$[QT_VERSION]
 !contains( QT_VERSION, "^4.*" ) {
-  SUBDIRS *= eventRecorder x3dViewer
+  SUBDIRS *= quarto 3dsViewer eventRecorder x3dViewer
 }
 

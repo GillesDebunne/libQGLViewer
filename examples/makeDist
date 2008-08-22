@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 # composite -geometry +14+12 @ ~/background.jpg #.bis.jpg to #.jpg
 
 IMAGES_DIR="../doc/images"
 OUTPUT_DIR="html"
-SKIP_DIRS="attic debug contribs CVS $OUTPUT_DIR"
+SKIP_DIRS="attic debug contribs $OUTPUT_DIR"
 VERSION=`grep -a "^version=" ../makeDist | sed s/"version=\"\(.*\)\""/"\1"/`
 BASIC_DIRS="simpleViewer manipulatedFrame select keyboardAndMouse"
 
@@ -224,14 +224,16 @@ do
     continue
   fi
 
-  if [ $name == "CVS" ]
-  then
-      continue
-  fi
-
   CONTRIB_DIRS="$CONTRIB_DIRS $name"
   
-  for file in `ls $contribsDir/$name/*.h $contribsDir/$name/*.cpp $contribsDir/$name/*.cpp $contribsDir/$name/*.pro`
+  if [ -d $contribsDir/$name/Viewer ]
+  then
+    list="$contribsDir/$name/Viewer/*.h $contribsDir/$name/Viewer/*.cpp $contribsDir/$name/Viewer/*.pro"
+  else
+    list="$contribsDir/$name/*.h $contribsDir/$name/*.cpp $contribsDir/$name/*.pro"
+  fi
+ 
+  for file in `ls $list`
   do
     if [ $file -nt $output -o $0 -nt $output ]
     then
@@ -283,11 +285,6 @@ EOF
 	  continue
       fi
 
-      if [ $name == "CVS" ]
-      then
-	  continue
-      fi
-      
       if [ ! -f $IMAGES_DIR/$name.jpg ]
       then
 	  echo "    No image found for $name"
@@ -433,7 +430,6 @@ then
 <b><a href="#basic">&raquo;&raquo;</a></b> &nbsp; Basic examples<br/>
 <b><a href="#pedagogical">&raquo;&raquo;</a></b> &nbsp; Pedagogical examples<br/>
 <b><a href="#complex">&raquo;&raquo;</a></b> &nbsp; More complex examples<br/>
-<b><a href="#compilation">&raquo;&raquo;</a></b> &nbsp; Compilation of the examples<br/>
 </div>
 
 
@@ -445,7 +441,7 @@ understanding and cut and paste.
 
 <p>
 One should first try the <a href="#basic">basic examples</a> listed below and read the <a href="../introduction.html">introduction page</a> to understand
-the philosophy of the library. See also the <a href="compilation.html">compilation with libQGLViewer</a> page to learn how to create your first program.
+the philosophy of the library. See also the <a href="../compilation.html">compilation with libQGLViewer</a> page to learn how to create your first program.
 </p>
 
 <a name="basic"></a>
@@ -491,6 +487,7 @@ do
 done
 fillTable
 
+cat >> $output <<EOF
 <p>
   <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
   <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.png" alt="Valid CSS!" width="88" height="31"/></a>

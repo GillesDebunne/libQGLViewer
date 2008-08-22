@@ -12,9 +12,9 @@ if (inli==1) {
   if (searchFound==1) {
     search=search"\n"$0;
     searchFound=0;
-    # print "RES=",search
+    #print "RES=",search
   } else {
-    # print "RESET SEARCH";
+    #print "RESET SEARCH";
     search="";
   }
   inli=0;
@@ -27,13 +27,13 @@ if (inli==1) {
 /<li.*>Variables.*<\/li>/ { next }
 /<li.*>Related.*Functions.*<\/li>/ { next }
 
-/<\/div>/ { if (p==2) { print search } }
+/<\/ul>/ { if (p==2) { print search; } }
 
 /<div class=\"nav\">/ { next; }
 /namespaceqglviewer.html/ { next; }
 
 {
  if (inli==1) {search=search"\n"$0;}
- if (p==1) next;
+ if (p==1) { next; }
  print;
 }

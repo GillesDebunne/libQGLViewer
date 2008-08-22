@@ -1,17 +1,17 @@
 %define version_major 2
-%define version_minor 2
-%define version_release 6
+%define version_minor 3
+%define version_revision 0
 
 Name:		libQGLViewer
-Version:	%{version_major}.%{version_minor}
-Release:	%{version_release}
+Version:	%{version_major}.%{version_minor}.%{version_revision}
+Release:	1	
 
 Summary:	Qt based OpenGL generic 3D viewer library.
 License:	GPL
 Group:		Development/C++
-Source:		%{name}-%{version}.%{release}.tar.gz
+Source:		%{name}-%{version}.tar.gz
 URL:		http://artis.imag.fr/Members/Gilles.Debunne/QGLViewer
-Buildroot:      %{_tmppath}/%{name}-%{version}.%{release}-buildroot
+Buildroot:      %{_tmppath}/%{name}-%{version}-buildroot
 
 %description
 libQGLViewer is a C++ library based on Qt that eases the creation of OpenGL 3D viewers. It provides
@@ -34,7 +34,7 @@ that uses libQGLViewer. A reference documentation and pedagogical examples are i
 %define docDir %{_defaultdocdir}/QGLViewer
 %define includeDir %{_includedir}/QGLViewer
 %define libDir %{_libdir}
-%setup -q -n %{name}-%{version}.%{release}
+%setup -q -n %{name}-%{version}
 
 %build
 # if [[ -z "${QTDIR}" ]]
@@ -55,7 +55,7 @@ that uses libQGLViewer. A reference documentation and pedagogical examples are i
 # export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${QTDIR}/lib
 
 cd QGLViewer
-qmake
+qmake-qt4
 make %{?_smp_mflags}
 make staticlib
 make clean
@@ -151,6 +151,15 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Mon Jun 30 2008 Gilles Debunne <Gilles.Debunne@imag.fr> 2.3.0
+- New examples, default package compilation using Qt4, new version numbering.
+
+* Tue Aug 28 2007 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.6-3
+- make install problem with static lib compilation fixed (and bug submitted to Trolltech).
+
+* Tue Jul 25 2007 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.6-2
+- Missing event includes in examples (qt4).
+
 * Tue Jul 4 2007 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.6-1
 - Misspelling in ui files (qt3) and missing include in keyboardAndMouse example (qt4).
 

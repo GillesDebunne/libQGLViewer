@@ -40,20 +40,20 @@ Unix systems
 <h3>Compilation and installation</h3>
 Directly install the <a href="http://blabluga.hell.pl/QGLViewer/">Debian package</a>, the <a href="http://www.freshports.org/graphics/libqglviewer/">FreeBSD port</a> or the pre-compiled RPM (built on Fedora Core 6 with gcc 4.1.1):
 <pre>
-rpm -Uvh <a href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.i586.rpm">libQGLViewer-#VERSION#-#RELEASE#.i586.rpm</a> <a href="#WEBURL#/src/libQGLViewer-devel-#VERSION#-#RELEASE#.i586.rpm">libQGLViewer-devel-#VERSION#-#RELEASE#.i586.rpm</a>
+rpm -Uvh <a href="#WEBURL#/src/libQGLViewer-#VERSION#.i586.rpm">libQGLViewer-#VERSION#.i586.rpm</a> <a href="#WEBURL#/src/libQGLViewer-devel-#VERSION#.i586.rpm">libQGLViewer-devel-#VERSION#.i586.rpm</a>
 </pre>
 
 Re-compile the RPM for optimal results or if you have a different configuration:
 <pre>
-rpmbuild --rebuild <a href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.src.rpm">libQGLViewer-#VERSION#-#RELEASE#.src.rpm</a>
+rpmbuild --rebuild <a href="#WEBURL#/src/libQGLViewer-#VERSION#.src.rpm">libQGLViewer-#VERSION#.src.rpm</a>
 cd /usr/src/RPM/RPMS/i586/ (or /usr/src/redhat/RPMS/i586, see the rpmbuild last log lines)
-rpm -Uvh libQGLViewer-*#VERSION#-#RELEASE#.i?86.rpm
+rpm -Uvh libQGLViewer-*#VERSION#.i?86.rpm
 </pre>
 
 or directly use the source tarball:
 <pre>
-tar -xzf <a href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.tar.gz">libQGLViewer-#VERSION#-#RELEASE#.tar.gz</a>
-cd libQGLViewer-#VERSION#-#RELEASE#/QGLViewer
+tar -xzf <a href="#WEBURL#/src/libQGLViewer-#VERSION#.tar.gz">libQGLViewer-#VERSION#.tar.gz</a>
+cd libQGLViewer-#VERSION#/QGLViewer
 qmake (see options below)
 make
 make install
@@ -97,7 +97,7 @@ DOC_DIR        PREFIX/share/doc
 </pre>
 
 When set, the <code>QGLVIEWER_STATIC</code> qmake option will compile a static version of the
-library. Run <code>qmake all</code> (Qt4) to compile the debug <i>and</i> the release (default)
+library. Run <code>make all</code> (Qt4) to compile the debug <i>and</i> the release (default)
 version of the library.
 
 <p>
@@ -108,7 +108,7 @@ install libglut3-dev</code>.
 </p>
 
 <h3>Next steps</h3>
-Once the library is compiled, you can <a href="examples/index.html#linux">compile the examples</a>.
+Once the library is compiled, you can <a href="compilation.html#unix">compile the examples</a>.
 
 <p>
 You may also want to install the <a href="#plugin">libQGLViewer designer plugin</a> (especially Qt4 users) to
@@ -168,8 +168,8 @@ Source this file or open a new shell to take these values into account. If you i
 The installation procedure is essentially identical to the one described in the <a
 href="#linux">Linux section</a>:
 <pre>
-tar -xzf <a href="#WEBURL#/src/libQGLViewer-#VERSION#-#RELEASE#.tar.gz">libQGLViewer-#VERSION#-#RELEASE#.tar.gz</a>
-cd libQGLViewer-#VERSION#-#RELEASE#/QGLViewer
+tar -xzf <a href="#WEBURL#/src/libQGLViewer-#VERSION#.tar.gz">libQGLViewer-#VERSION#.tar.gz</a>
+cd libQGLViewer-#VERSION#/QGLViewer
 qmake INCLUDE_DIR=/usr/local/include (for instance, see below) 
 make
 make install
@@ -183,7 +183,7 @@ I unfortunately do not have a mac at hand to investigate. Let me know if you try
 </p>
 
 See the <a href="#linux">Linux section</a> for details and install paths customization. Once the
-library is installed, <a href="examples/index.html#mac">compile the examples</a> and test them:
+library is installed, <a href="compilation.html#mac">compile the examples</a> and test them:
 
 <pre>
 cd ../examples
@@ -319,10 +319,10 @@ interface that includes a QGLViewer.
 Here are some error messages that you may encounter with their solutions:
 <ul>
 
-	<li><b>QWidget: Must construct a QApplication before a QPaintDevice.</b>: the library and your program were probably compiled in debug and release modes (or vice-versa). Using the same mode for both should fix this problem (may also appear with static vs dynamic libraries).</li>
+<li><b>QWidget: Must construct a QApplication before a QPaintDevice.</b>: the library and your program were probably compiled in debug and release modes (or vice-versa). Using the same mode for both should fix this problem (may also appear with static vs dynamic libraries).</li>
 
 <li><b>declaration of <code>qtObsolete</code> conflicts with previous declaration</b>: error
-message. See the <a href="examples/index.html#mac">mac example section</a>.</li>
+message. See the <a href="compilation.html#mac">mac example section</a>.</li>
 
 <li><b>uic: File generated with too recent version of Qt Designer</b>: try to change the
 <code>version="..."</code> in the first line of the <code>ui</code> file.</li>
