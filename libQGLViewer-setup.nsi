@@ -2,9 +2,9 @@ Name libQGLViewer
 
 # Defines
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION 2.2.7
+!define VERSION 2.3.0
 !define COMPANY "Gilles Debunne"
-!define URL http://artis.imag.fr/Software/QGLViewer/
+!define URL http://www.libQGLViewer.com/
 
 # MUI defines
 !define MUI_ICON doc\images\qglviewer128.ico
@@ -129,18 +129,20 @@ Section $(ExamplesSection) SEC0001
     File examples\stereoViewer\release\stereoViewer.exe
     
     #File examples\contribs\3dsViewer\release\3dsViewer.exe
-    File examples\contribs\agora\release\agora.exe
+    File examples\contribs\agora\Viewer\release\agora.exe
+    File examples\contribs\agora\AI\release\agoraAI.exe
+    File /r /x .svn examples\contribs\agora\AgoraBoards
     File examples\contribs\anaglyph\release\anaglyph.exe
     File examples\contribs\backgroundImage\release\backgroundImage.exe
     File examples\contribs\blobWar\Viewer\release\blobWar.exe
     File examples\contribs\blobWar\AI\release\blobWarAI.exe
-    File /r /x .svn examples\contribs\blobWar\Boards
+    File /r /x .svn examples\contribs\blobWar\BlobWarBoards
     File examples\contribs\cornerAxis\release\cornerAxis.exe
     #File examples\contribs\dvonn\release\dvonn.exe
     #File /r /x .svn examples\contribs\dvonn\images
     #File /r /x .svn examples\contribs\dvonn\rules
     #File examples\contribs\eventRecorder\release\eventRecorder.exe
-    File examples\contribs\quarto\release\quarto.exe
+    #File examples\contribs\quarto\release\quarto.exe
     #File examples\contribs\terrain\release\terrain.exe
     File examples\contribs\textureViewer\release\textureViewer.exe
     File examples\contribs\thumbnail\release\thumbnail.exe
@@ -242,7 +244,7 @@ SectionEnd
 Section $(Development) SEC0003
     SetOutPath $INSTDIR\QGLViewer
     SetOverwrite on
-    File QGLViewer\release\QGLViewer2.lib
+    #File QGLViewer\release\QGLViewer2.lib
     File /r QGLViewer\*.h
     File /r QGLViewer\*.qm
 

@@ -6,7 +6,7 @@ CONFIG += release console embed_manifest_exe
 
 # Local on windows
 !exists( $${MAIN_PATH}/QGLViewer ) {
-  MAIN_PATH = C:/Users/debunne/Documents/Code/libQGLViewer/QGLViewer/trunk
+  MAIN_PATH = C:/Users/debunne/Documents/Code/libQGLViewer/Alma_libQGLViewer/trunk
 }
     
 isEmpty( INCLUDE_DIR ) {
