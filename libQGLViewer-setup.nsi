@@ -1,5 +1,10 @@
 Name libQGLViewer
 
+# TODO
+# Reimporter le refManuel tel qu'exporté dans /www
+# Reimporter les exemples tels qu'exportés dans /www
+# lancer lrelease
+
 # Defines
 !define REGKEY "SOFTWARE\$(^Name)"
 !define VERSION 2.3.0
@@ -148,10 +153,11 @@ Section $(ExamplesSection) SEC0001
     File examples\contribs\thumbnail\release\thumbnail.exe
     #File examples\contribs\x3dViewer\release\x3dViewer.exe
     
-    File C:\Qt\4.3.3\bin\QtGui4.dll
-    File C:\Qt\4.3.3\bin\QtCore4.dll
-    File C:\Qt\4.3.3\bin\QtOpenGL4.dll
-    File C:\Qt\4.3.3\bin\QtXml4.dll
+    File C:\Qt\4.4.0\bin\QtGui4.dll
+    File C:\Qt\4.4.0\bin\QtCore4.dll
+    File C:\Qt\4.4.0\bin\QtOpenGL4.dll
+    File C:\Qt\4.4.0\bin\QtXml4.dll
+    File "C:\Program Files\MinGW\bin\mingwm10.dll"
     
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     SetOutPath $SMPROGRAMS\$StartMenuGroup
@@ -214,12 +220,18 @@ SectionEnd
 Section $(Documentation) SEC0002
     SetOutPath $INSTDIR\doc
     SetOverwrite on
-    File /r doc\*.html
+    File /r installer\*
+    
+    #File /r doc\*.html
+    #File /r doc\*.css
     #File doc\Doxyfile
-    File doc\qglviewer.css
-    SetOutPath $INSTDIR\doc\images
-    File /r doc\images\*.jpg
-    File /r doc\images\*.png
+    #SetOutPath $INSTDIR\doc\refManual
+    #File /r doc\refManual\*
+    #SetOutPath $INSTDIR\doc\images
+    #File /r doc\images\*.jpg
+    #File /r doc\images\*.png
+    #SetOutPath $INSTDIR\doc\examples
+    #File /r doc\examples\*
     
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     SetOutPath $SMPROGRAMS\$StartMenuGroup
