@@ -38,7 +38,7 @@ Unix systems
 <h2><img src="images/linux.png" width="49" height="54" alt="linux"/>Linux and Unix</h2>
 
 <h3>Compilation and installation</h3>
-Directly install the <a href="http://blabluga.hell.pl/QGLViewer/">Debian package</a>, the <a href="http://www.freshports.org/graphics/libqglviewer/">FreeBSD port</a> or the pre-compiled RPM (built on Fedora Core 6 with gcc 4.1.1):
+Directly install the <a href="http://ftp.debian.org/debian/pool/main/libq/libqglviewer/">Debian package</a>, the <a href="http://www.freshports.org/graphics/libqglviewer/">FreeBSD port</a> or the pre-compiled RPM (built on Fedora Core 6 with gcc 4.1.1):
 <pre>
 rpm -Uvh <a href="#WEBURL#/src/libQGLViewer-#VERSION#.i586.rpm">libQGLViewer-#VERSION#.i586.rpm</a> <a href="#WEBURL#/src/libQGLViewer-devel-#VERSION#.i586.rpm">libQGLViewer-devel-#VERSION#.i586.rpm</a>
 </pre>
@@ -335,15 +335,15 @@ message. See the <a href="compilation.html#mac">mac example section</a>.</li>
 <code>CONFIG</code> line, and re-compile.</li>
 
 <li><b>lib3ds</b>: this library is needed to compile the <a
-href="examples/3dsViewer.html">3dsViewer example</a>. Download the patched <a
+href="examples/contribs.html#3dsViewer">3dsViewer example</a>. Download the patched <a
 href="#WEBURL#/src/lib3ds-1.2.0-1.i686.rpm">lib3ds-1.2.0-1.i686.rpm</a> or the sources (<a
 href="#WEBURL#/src/lib3ds-1.2.0-1.src.rpm">lib3ds-1.2.0-1.src.rpm</a> or <a
 href="#WEBURL#/src/lib3ds-1.2.0.tar.gz">lib3ds-1.2.0.tar.gz</a>).</li>
-
+<!--
 <li><b>libX3DTK</b>: this library is needed to compile the <a
-href="examples/x3dViewer.html">x3dViewer example</a>. Download the library from the
+hNOref="examples/x3dViewer.html">x3dViewer example</a>. Download the library from the
 <a href="http://artis.imag.fr/Members/Yannick.Legoc/X3D">X3DTK web site</a>.</li>
-
+-->
 <li><b>The indicated type is incomplete</b> error message in <code>qvaluevector.h</code> while
 compiling <code>keyFrameInterpolator.cpp</code>: include <code>frame.h</code> (see top of
 <code>keyFrameInterpolator.cpp</code>).</li>

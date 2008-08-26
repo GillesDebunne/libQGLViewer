@@ -1,23 +1,24 @@
 #!/bin/sh
 
 CW_DIR="cwFiles"
+tmp="/home/debunne/.tmp"
 
 test -d $CW_DIR || mkdir $CW_DIR
 
 # for f in `ls -1 refManual/class*-members.html`
 for f in `ls -1 refManual/classQGLViewer-members.html`
 do
-  grep "\[.*signal.*\]" $f | sed s:"<[^>]*>"::g | sed s:").*":")": | sed s:"=[^,) ]*"::g | sed s:"const "::g > /tmp/signals
-  grep "\[.*slot.*\]" $f | grep -v "\[.*protected.*\]" | sed s:"<[^>]*>"::g | sed s:").*":")": | sed s:"=[^,) ]*"::g | sed s:"const "::g > /tmp/slots
-  grep "\[.*protected.*slot.*\]" $f   | sed s:"<[^>]*>"::g | sed s:").*":")": | sed s:"=[^,) ]*"::g | sed s:"const "::g > /tmp/protected_slots
+  grep "\[.*signal.*\]" $f | sed s:"<[^>]*>"::g | sed s:").*":")": | sed s:"=[^,) ]*"::g | sed s:"const "::g > $tmp/signals
+  grep "\[.*slot.*\]" $f | grep -v "\[.*protected.*\]" | sed s:"<[^>]*>"::g | sed s:").*":")": | sed s:"=[^,) ]*"::g | sed s:"const "::g > $tmp/slots
+  grep "\[.*protected.*slot.*\]" $f   | sed s:"<[^>]*>"::g | sed s:").*":")": | sed s:"=[^,) ]*"::g | sed s:"const "::g > $tmp/protected_slots
   for type in {bool,int,float,double,char,QString}
   do
-    sed s:"$type [^,)]*\([,)]\)":"$type\1":g < /tmp/signals > /tmp/temp
-    mv /tmp/temp /tmp/signals
-    sed s:"$type [^,)]*\([,)]\)":"$type\1":g < /tmp/slots > /tmp/temp
-    mv /tmp/temp /tmp/slots
+    sed s:"$type [^,)]*\([,)]\)":"$type\1":g < $tmp/signals > $tmp/temp
+    mv $tmp/temp $tmp/signals
+    sed s:"$type [^,)]*\([,)]\)":"$type\1":g < $tmp/slots > $tmp/temp
+    mv $tmp/temp $tmp/slots
   done   
-  if [ -s /tmp/slots -o -s /tmp/signals ] 
+  if [ -s $tmp/slots -o -s $tmp/signals ] 
   then
     name=`echo $f | sed s:"refManual/class\([^-]*\)-members.*":"\1": | sed s:"qglviewer_._."::`
     # output="$CW_DIR/$name.cw"
@@ -40,18 +41,18 @@ cat >> $output << EOF
     </pixmap>
 EOF
 
-    sort /tmp/signals | sed s:"^ ":"     <signal>": | sed s:"$":" </signal>": >> $output
-    sort /tmp/slots           | sed s:"^ ":"     <slot access=\"public\">":    | sed s:"$":" </slot>": >> $output
-    sort /tmp/protected_slots | sed s:"^ ":"     <slot access=\"protected\">": | sed s:"$":" </slot>": >> $output
+    sort $tmp/signals | sed s:"^ ":"     <signal>": | sed s:"$":" </signal>": >> $output
+    sort $tmp/slots           | sed s:"^ ":"     <slot access=\"public\">":    | sed s:"$":" </slot>": >> $output
+    sort $tmp/protected_slots | sed s:"^ ":"     <slot access=\"protected\">": | sed s:"$":" </slot>": >> $output
     if [ $# -gt 0 ]
     then
-      echo "  " `cat /tmp/signals | wc -l` "signals"
-      more /tmp/signals
-      echo "  " `cat /tmp/slots /tmp/protected_slots | wc -l` "slots (" `cat /tmp/protected_slots| wc -l` " protected)"
-      more /tmp/slots 
-      more /tmp/protected_slots 
+      echo "  " `cat $tmp/signals | wc -l` "signals"
+      more $tmp/signals
+      echo "  " `cat $tmp/slots $tmp/protected_slots | wc -l` "slots (" `cat $tmp/protected_slots| wc -l` " protected)"
+      more $tmp/slots 
+      more $tmp/protected_slots 
     else
-      echo "   = Class $name," `cat /tmp/signals | wc -l` "signals and" `cat /tmp/slots /tmp/protected_slots | wc -l` "slots, protected" `cat /tmp/protected_slots | wc -l`
+      echo "   = Class $name," `cat $tmp/signals | wc -l` "signals and" `cat $tmp/slots $tmp/protected_slots | wc -l` "slots, protected" `cat $tmp/protected_slots | wc -l`
     fi
     echo -e "  </customwidget>\n</customwidgets>\n</CW>" >> $output
   fi  

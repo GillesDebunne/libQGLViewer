@@ -3,9 +3,11 @@
 
 IMAGES_DIR="../doc/images"
 OUTPUT_DIR="html"
-SKIP_DIRS="attic debug contribs $OUTPUT_DIR"
+SKIP_DIRS="attic debug contribs rangeAxisConstraint nearFarCamera $OUTPUT_DIR"
 VERSION=`grep -a "^version=" ../makeDist | sed s/"version=\"\(.*\)\""/"\1"/`
 BASIC_DIRS="simpleViewer manipulatedFrame select keyboardAndMouse"
+
+tmp="/home/debunne/.tmp"
 
 indexUpToDate="Yes"
 
@@ -27,7 +29,7 @@ which source-highlight >& /dev/null
 if [ $? != 0 ]
 then
     echo "Unable to find source-highlight - Abort"
-    exit
+    #exit
 fi
 
 export LC_TIME="en"
@@ -172,9 +174,11 @@ EOF
     chap=`echo $file | sed s#$name/##`
     echo "<h2>$chap</h2>" >> $output
       # echo "<pre>" >> $output
-    cp $file /tmp/src-high
-    source-highlight -s cpp -f html /tmp/src-high >> $output >& /dev/null
-    cat /tmp/src-high.html >> $output
+    cp $file $tmp/src-high
+    echo "No src highlight"
+    #source-highlight -s cpp -f html $tmp/src-high >> $output >& /dev/null
+    #cat $tmp/src-high.html >> $output
+    cat $tmp/src-high >> $output
       # highlight -fX $file >> $output
       #code2html -l c++ --no-header $file >> $output
       # echo "</pre>" >> $output

@@ -1,6 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
-tmpDir="/tmp/LogsQGLViewer"
+tmp="/home/debunne/.tmp"
+tmpDir="$tmp/LogsQGLViewer"
 statFile="stats.txt"
 test -d $tmpDir && rm -f $tmpDir/*
 test -d $tmpDir || mkdir $tmpDir

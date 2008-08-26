@@ -8,16 +8,17 @@ version_minor=`echo $version | cut -d"." -f2`
 version_release=`echo $version | cut -d"." -f3`
 catVersion=$(echo $version | sed s%"\."%""%g)
 
-WebSuffix="Members/Gilles.Debunne/QGLViewer"
-WebDir="/home/wwwartis/pub/$WebSuffix"
-#WebDir="/tmp/commercial"
-test -d $WebDir || WebDir="/net/cedre/chroot/var/www/artis/pub/$WebSuffix"
-test -d $WebDir || WebDir="/h/cedre/chroot/var/www/artis/pub/$WebSuffix"
-WebURL="http://artis.imag.fr/$WebSuffix"
+WebSuffix=""
+WebDir="/www"
+#WebDir="$tmp/commercial"
+#test -d $WebDir || WebDir="/net/cedre/chroot/var/www/artis/pub/$WebSuffix"
+#test -d $WebDir || WebDir="/h/cedre/chroot/var/www/artis/pub/$WebSuffix"
+WebURL="http://www.libqglviewer.com"
 
 libNameVersion="$libName-$version"
 tarName="$libNameVersion.tar.gz"
-tmpDir="/tmp/$libNameVersion"
+tmp="/home/debunne/.tmp"
+tmpDir="$tmp/$libNameVersion"
 
 # echo "$0 disabled for security"
 # exit
@@ -49,8 +50,8 @@ function checkVersion()
   if [[ "$?" -ne "0" ]]
   then
     echo "Version found in $FILE is not $VERSION - Patching"
-    sed s~"^$START.*"~"$START$VERSION"~ $FILE > /tmp/makeDist
-    cp /tmp/makeDist $FILE
+    sed s~"^$START.*"~"$START$VERSION"~ $FILE > $tmp/makeDist
+    cp $tmp/makeDist $FILE
   fi
 }
 
@@ -172,6 +173,7 @@ fi
 if [ $1 == "web" ]
 then
   test -d $WebDir || mkdir -p $WebDir
+  test -d $WebDir/src || mkdir -p $WebDir/src
 
   cd examples
     echo " - Creating examples"
@@ -397,17 +399,17 @@ mv examples/html doc/examples
 
 for pro in "QGLViewer/QGLViewer.pro" "qglviewerplugin/designerPlugin.pro"
 do
-  sed /"NOT IN DISTRIBUTION BEGIN"/,/"NOT IN DISTRIBUTION END"/d $pro > /tmp/notInDistrib
-  mv /tmp/notInDistrib $pro
+  sed /"NOT IN DISTRIBUTION BEGIN"/,/"NOT IN DISTRIBUTION END"/d $pro > $tmp/notInDistrib
+  mv $tmp/notInDistrib $pro
 done
 
-sed s:"%CAT_VERSION%":"$catVersion":g examples/release.pri | sed s:"%MAJOR_NUMBER%":"$version_major":g > /tmp/release.filtered
-mv /tmp/release.filtered examples/release.pri
+sed s:"%CAT_VERSION%":"$catVersion":g examples/release.pri | sed s:"%MAJOR_NUMBER%":"$version_major":g > $tmp/release.filtered
+mv $tmp/release.filtered examples/release.pri
 
 mv qglviewerplugin designerPlugin
-grep -v "^include.*examples.pri" designerPlugin/designerPlugin.pro > /tmp/designer.pro
-sed s%"\.\./\.\."%"\.\."% examples/release.pri > /tmp/release.pri
-cat /tmp/designer.pro /tmp/release.pri > designerPlugin/designerPlugin.pro
+grep -v "^include.*examples.pri" designerPlugin/designerPlugin.pro > $tmp/designer.pro
+sed s%"\.\./\.\."%"\.\."% examples/release.pri > $tmp/release.pri
+cat $tmp/designer.pro $tmp/release.pri > designerPlugin/designerPlugin.pro
 
 sed s%"\.\./\.\."%"\.\./\.\./\.\."% examples/release.pri > examples/contribs/release.pri
 for dir in "examples" "examples/contribs"
@@ -429,8 +431,8 @@ do
     then
       continue
     fi
-    grep -v "^include.*examples.pri" $f | sed /"NOT IN DISTRIBUTION BEGIN"/,/"NOT IN DISTRIBUTION END"/d > /tmp/proPatched.tmp
-    cat /tmp/proPatched.tmp release.pri > $f
+    grep -v "^include.*examples.pri" $f | sed /"NOT IN DISTRIBUTION BEGIN"/,/"NOT IN DISTRIBUTION END"/d > $tmp/proPatched.tmp
+    cat $tmp/proPatched.tmp release.pri > $f
   done
   rm release.pri
 
@@ -459,7 +461,7 @@ do
   mv $f.bak $f
 done
 
-mv gpl-warning /tmp/
+mv gpl-warning $tmp/
 
 cd doc
   cp qglviewer.cw ../QGLViewer
@@ -493,8 +495,8 @@ function checkRPMUpdate() {
     cd previous$libName
     tar -xzf ../$tarName
     cd ..
-    diff -r $libNameVersion previous$libName/$libNameVersion > /tmp/qgldiff
-    if [ ! -s /tmp/qgldiff ]
+    diff -r $libNameVersion previous$libName/$libNameVersion > $tmp/qgldiff
+    if [ ! -s $tmp/qgldiff ]
     then
       echo " - Sources did not change"
       if [ -f $rpmDir/SRPMS/$libNameVersion.src.rpm -a $rpmDir/SRPMS/$libNameVersion.src.rpm -nt $tarName ]
@@ -505,7 +507,7 @@ function checkRPMUpdate() {
         echo " - RPM is not up to date"    
       fi
     else
-      echo " - Sources have changed (see /tmp/qgldiff)"
+      echo " - Sources have changed (see $tmp/qgldiff)"
     fi
     rm -rf previous$libName
   fi
@@ -524,9 +526,9 @@ then
   cp -f $tarName $rpmDir/SOURCES
   cp -f $QGLViewerRootDir/QGLViewer/qglviewer.spec $rpmDir/SPECS/$libNameVersion.spec
   cd $rpmDir/SPECS/
-  echo " - RPM build... (see /tmp/QGLViewer.rpmbuild)"
+  echo " - RPM build... (see $tmp/QGLViewer.rpmbuild)"
   #echo " - ##### Commented"
-  rpmbuild -ba $libNameVersion.spec >& /tmp/QGLViewer.rpmbuild
+  rpmbuild -ba $libNameVersion.spec >& $tmp/QGLViewer.rpmbuild
   if [ $? != 0 ]
   then
     echo "Problem in RPM creation - Abort"
@@ -594,8 +596,8 @@ mv LICENCE Licence.txt
 mv README Readme.txt
 
 # Add Qt 2.3 specific files
-cat /tmp/gpl-warning $QGLViewerRootDir/QGLViewer/keySequence.h   > QGLViewer/keySequence.h
-cat /tmp/gpl-warning $QGLViewerRootDir/QGLViewer/keySequence.cpp > QGLViewer/keySequence.cpp
+cat $tmp/gpl-warning $QGLViewerRootDir/QGLViewer/keySequence.h   > QGLViewer/keySequence.h
+cat $tmp/gpl-warning $QGLViewerRootDir/QGLViewer/keySequence.cpp > QGLViewer/keySequence.cpp
 cp $QGLViewerRootDir/QGLViewer/QGLViewer.Qt2.3.pro QGLViewer/
 cp $QGLViewerRootDir/QGLViewer/ImageInterface.Qt2.ui QGLViewer/
 cp $QGLViewerRootDir/QGLViewer/VRenderInterface.Qt2.ui QGLViewer/
@@ -610,8 +612,8 @@ function addNamespace()
       exit 1
   fi
 
-  sed s%"$str"%"class QGLVIEWER_EXPORT $1 : public qglviewer::$2"% QGLViewer/$3.h > /tmp/addNamespace
-  mv /tmp/addNamespace QGLViewer/$3.h 
+  sed s%"$str"%"class QGLVIEWER_EXPORT $1 : public qglviewer::$2"% QGLViewer/$3.h > $tmp/addNamespace
+  mv $tmp/addNamespace QGLViewer/$3.h 
 }
 #addNamespace SpinningFrame Frame spinningFrame
 addNamespace ManipulatedFrame Frame manipulatedFrame

@@ -4,24 +4,27 @@ version=`grep -a "^version=" ../makeDist | head -1 | cut -d'"' -f2`
 catVersion=`echo $version | sed s@"\."@""@g`
 release=`grep -a "^release=" ../makeDist | head -1 | cut -d'"' -f2`
 filteredDir="filteredHTML"
-WebURL="http://artis.imag.fr/Members/Gilles.Debunne/QGLViewer"
+WebURL="http://www.libqglviewer.com"
 
-if [ $# != 0 ]
-then
-  echo "No argument needed by makeDist. Try a cd .. first !"
-  exit
-fi
+tmp="/home/debunne/.tmp"
+
+#if [ $# != 0 ]
+#then
+#  echo "No argument needed by makeDist. Try a cd .. first !"
+#  exit
+#fi
 
 ### Check that doxygen is up to date ###
 ########################################
 function updateDoc()
 {
-    doxygen Doxyfile
+    echo " - doxygen skipped"
+    #doxygen Doxyfile
     echo " - Extracting cw files"
     cwExtractor
     cd refManual
-    doxytag -s search.idx >& /dev/null
-    rm installdox
+    #doxytag -s search.idx >& /dev/null
+    test -f installdox && rm installdox
 
     ### Changing header menu in doxygen pages ###
     echo " - Removing unused pages"
@@ -38,22 +41,22 @@ function updateDoc()
       mv $newName-bis $newName
     done
 
-    sed s%"This inheritance.*alphabetically:"%% hierarchy.html > /tmp/hierarchy.html
-    mv /tmp/hierarchy.html hierarchy.html
+    sed s%"This inheritance.*alphabetically:"%% hierarchy.html > $tmp/hierarchy.html
+    mv $tmp/hierarchy.html hierarchy.html
 
     echo " - Changing QGLViewer:: enums"
     for f in $(ls class*.html)
     do
-      sed s%">QGLViewer::\([A-Z_]*\)</a>"%">\1</a>"%g $f > /tmp/qgl
-      mv /tmp/qgl $f
+      sed s%">QGLViewer::\([A-Z_]*\)</a>"%">\1</a>"%g $f > $tmp/qgl
+      mv $tmp/qgl $f
     done
 
     echo " - Changing header menus"
      #for f in `ls *.html *.php`
      #do
-       #awk '/^<a class="qindex/ { gsub(" \\| ", ""); print }' $f > /tmp/header
-       #sed s%"href=\"index.html\">Main"%"href=\"../index.html\">Main"% /tmp/header | sed s%"<a class=\"qindex\" href=\"globals.html\">File&nbsp;Members</a>"%% | sed s%"<a class=\"qindex\" href=\"namespaces.html\">Namespace List</a>"%% | sed s%"<a class=\"qindex\" href=\"annotated.*File&nbsp;List</a>"%% | sed s%"<a class=\"qindex\" href=\"globals.html\">File&nbsp;Members</a>"%% | sed s%"Class&nbsp;Members"%"All\&nbsp;Functions"% | sed s%"/a>"%"/a>\n"%g > /tmp/header.filtered
-       #sed /"^<a class=\"qindex"/d $f | sed "/^<div class=\"qindex.*search.php/r /tmp/header.filtered" > $f.tmp
+       #awk '/^<a class="qindex/ { gsub(" \\| ", ""); print }' $f > $tmp/header
+       #sed s%"href=\"index.html\">Main"%"href=\"../index.html\">Main"% $tmp/header | sed s%"<a class=\"qindex\" href=\"globals.html\">File&nbsp;Members</a>"%% | sed s%"<a class=\"qindex\" href=\"namespaces.html\">Namespace List</a>"%% | sed s%"<a class=\"qindex\" href=\"annotated.*File&nbsp;List</a>"%% | sed s%"<a class=\"qindex\" href=\"globals.html\">File&nbsp;Members</a>"%% | sed s%"Class&nbsp;Members"%"All\&nbsp;Functions"% | sed s%"/a>"%"/a>\n"%g > $tmp/header.filtered
+       #sed /"^<a class=\"qindex"/d $f | sed "/^<div class=\"qindex.*search.php/r $tmp/header.filtered" > $f.tmp
        #awk '/^<div class="nav">/ {skip=1; next} {if (skip) {skip=0; next} else print }' $f.tmp > $f
        #rm $f.tmp
      #done
@@ -62,8 +65,8 @@ function updateDoc()
     do
         if [ $f != "search.php" ]
         then
-	  awk -f ../tabs.awk $f > /tmp/tabs
-	  mv /tmp/tabs $f
+	  awk -f ../tabs.awk $f > $tmp/tabs
+	  mv $tmp/tabs $f
         fi
     done
     
@@ -106,6 +109,13 @@ done
 if [ ! -d refManual ]
 then
   echo "   refManual does not exist, running doxygen"
+  echo "WINDOWS"
+  #updateDoc
+fi
+
+if [ "X$1" == "Xforce" ]
+then
+  echo "Force update : doxygen from windows"
   updateDoc
 fi
 
@@ -114,7 +124,8 @@ do
   if [ $newer -nt $f ]
   then
     echo "   doxygen not up to date ($newer is newer)"
-    updateDoc
+    echo "WINDOWS"
+    #updateDoc
     break
   fi
 done

@@ -10,7 +10,7 @@ Summary:	Qt based OpenGL generic 3D viewer library.
 License:	GPL
 Group:		Development/C++
 Source:		%{name}-%{version}.tar.gz
-URL:		http://artis.imag.fr/Members/Gilles.Debunne/QGLViewer
+URL:		http://www.libqglviewer.com
 Buildroot:      %{_tmppath}/%{name}-%{version}-buildroot
 
 %description
