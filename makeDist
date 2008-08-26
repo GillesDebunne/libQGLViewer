@@ -196,6 +196,7 @@ then
     echo " - Copy images"
     rm -rf $WebDir/images
     cp -r images $WebDir
+    rm -rf $WebDir/images/.svn
     cp ../statsDownload/downloads.png ../statsDownload/examples.png $WebDir/images
 
     echo " - Copy refManual"
