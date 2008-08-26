@@ -178,7 +178,9 @@ EOF
     echo "No src highlight"
     #source-highlight -s cpp -f html $tmp/src-high >> $output >& /dev/null
     #cat $tmp/src-high.html >> $output
-    cat $tmp/src-high >> $output
+    echo "<pre>" >> $output
+    sed 's/&/\&amp;/g;s/</\&lt;/g;s/>/\&gt;/g' $tmp/src-high >> $output
+    echo "</pre>" >> $output
       # highlight -fX $file >> $output
       #code2html -l c++ --no-header $file >> $output
       # echo "</pre>" >> $output
