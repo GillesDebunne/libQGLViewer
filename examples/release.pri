@@ -1,7 +1,7 @@
 # The rest of this configuration file is pretty complex since it tries to automatically
 # detect system paths and configuration. In your applications, you can probably simply use:
 #unix:LIBS *= -lQGLViewer
-#win32:LIBS *= QGLViewer%CAT_VERSION%.lib (with Visual 6, use QGLViewer%MAJOR_NUMBER%.lib or QGLViewer.lib instead)
+#win32:LIBS *= QGLViewer%CAT_VERSION%.lib (with Visual 6, use QGLViewer#VERSION_MAJOR#.lib or QGLViewer.lib instead)
 
 #Windows Qt 2.3 users should uncomment the next 2 lines and remove all the remaining lines:
 #DEFINES *= QT_DLL QT_THREAD_SUPPORT
@@ -63,8 +63,8 @@ unix|win32-g++ {
     LIB_NAME = libQGLViewer*.a
   }
 
-  #    exists( $${LIB_PATH}/libQGLViewer%MAJOR_NUMBER%.a ) {
-  #     LIBS *= -L$${LIB_PATH} -lQGLViewer%MAJOR_NUMBER%
+  #    exists( $${LIB_PATH}/libQGLViewer#VERSION_MAJOR#.a ) {
+  #     LIBS *= -L$${LIB_PATH} -lQGLViewer#VERSION_MAJOR#
 
   # LIB_DIR
   isEmpty( LIB_DIR ) {
@@ -184,8 +184,8 @@ win32 {
   exists( $${LIB_PATH}/QGLViewer%CAT_VERSION%.lib ) {
     LIBS *= $${LIB_PATH}/QGLViewer%CAT_VERSION%.lib
   } else {
-    exists( $${LIB_PATH}/QGLViewer%MAJOR_NUMBER%.lib ) {
-      LIBS *= $${LIB_PATH}/QGLViewer%MAJOR_NUMBER%.lib
+    exists( $${LIB_PATH}/QGLViewer#VERSION_MAJOR#.lib ) {
+      LIBS *= $${LIB_PATH}/QGLViewer#VERSION_MAJOR#.lib
     } else {
       exists( $${LIB_PATH}/QGLViewer.lib ) {
         LIBS *= $${LIB_PATH}/QGLViewer.lib

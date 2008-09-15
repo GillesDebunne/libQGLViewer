@@ -10,7 +10,8 @@ bool TERRAIN::LoadHeightMap( char* filename, int size )
   if( heightMap.arrayHeightMap )
     UnloadHeightMap( );
 
-  FILE* pFile = fopen(filename, "rb" );
+  FILE* pFile;
+  fopen(&pFile, filename, "rb" );
   if( pFile==NULL )
     {
       return false;
@@ -36,7 +37,8 @@ bool TERRAIN::LoadHeightMap( char* filename, int size )
 
 bool TERRAIN::SaveHeightMap( char* filename )
 {
-  FILE* pFile = fopen(filename, "wb" );
+  FILE* pFile;
+  fopen(&pFile, filename, "wb" );
   if( pFile==NULL )
     {
       return false;

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 version=`grep -a "^version=" ../makeDist | head -1 | cut -d'"' -f2`
-catVersion=`echo $version | sed s@"\."@""@g`
+version_major=`echo $version | cut -d"." -f1`
 release=`grep -a "^release=" ../makeDist | head -1 | cut -d'"' -f2`
 filteredDir="filteredHTML"
 WebURL="http://www.libqglviewer.com"
@@ -140,7 +140,7 @@ export LC_TIME="en"
 for f in `ls *.html`
 do
   date=`date -r $f "+%A, %B %-d, %Y"`
-  sed s:"#VERSION#":"$version":g $f | sed s:"#CATVERSION#":"$catVersion":g | sed s:"#RELEASE#":"$release":g | sed s§"#WEBURL#"§"$WebURL"§g | sed s:"#DATE#":"$date":g > $filteredDir/$f
+  sed s:"#VERSION#":"$version":g $f | sed s:"#VERSION_MAJOR#":"$version_major":g | sed s:"#RELEASE#":"$release":g | sed s§"#WEBURL#"§"$WebURL"§g | sed s:"#DATE#":"$date":g > $filteredDir/$f
 done
 unset LC_TIME
 

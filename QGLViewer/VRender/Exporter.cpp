@@ -15,9 +15,10 @@ void Exporter::exportToFile(const char *filename,
 										const vector<PtrPrimitive>& primitive_tab,
 										VRenderParams& vparams)
 {
-	FILE *f = fopen(filename, "w") ;
+	FILE *f;
+	fopen_s(&f, filename, "w") ;
 
-	if(f == NULL)
+	if (f == NULL)
 		throw runtime_error(string("could not open file ") + filename) ;
 
 	writeHeader(f) ;

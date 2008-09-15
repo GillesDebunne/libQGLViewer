@@ -3,17 +3,15 @@
 libName="libQGLViewer"
 version="2.3.0"
 
+WebSuffix=""
+WebDir="/www"
+WebURL="http://www.libqglviewer.com"
+
 version_major=`echo $version | cut -d"." -f1`
 version_minor=`echo $version | cut -d"." -f2`
 version_release=`echo $version | cut -d"." -f3`
-catVersion=$(echo $version | sed s%"\."%""%g)
 
-WebSuffix=""
-WebDir="/www"
-#WebDir="$tmp/commercial"
-#test -d $WebDir || WebDir="/net/cedre/chroot/var/www/artis/pub/$WebSuffix"
 #test -d $WebDir || WebDir="/h/cedre/chroot/var/www/artis/pub/$WebSuffix"
-WebURL="http://www.libqglviewer.com"
 
 libNameVersion="$libName-$version"
 tarName="$libNameVersion.tar.gz"
@@ -142,7 +140,7 @@ fi
 grep "^URL" QGLViewer/qglviewer.spec | grep "$WebURL" > /dev/null
 if [[ "$?" -ne "0" ]]
 then
-  echo "Bad WebURL in QGLViewer/qglviewer.spec URL - Aborting"
+  echo "Bad URL in QGLViewer/qglviewer.spec URL - Aborting"
   exit
 fi
 
@@ -166,6 +164,8 @@ then
  echo "No 3.1 version in examples/interface/viewerInterface.Qt3.ui - Aborting"
  exit
 fi
+
+
 
 
 
@@ -404,7 +404,7 @@ do
   mv $tmp/notInDistrib $pro
 done
 
-sed s:"%CAT_VERSION%":"$catVersion":g examples/release.pri | sed s:"%MAJOR_NUMBER%":"$version_major":g > $tmp/release.filtered
+sed s:"#VERSION_MAJOR#":"$version_major":g | examples/release.pri > $tmp/release.filtered
 mv $tmp/release.filtered examples/release.pri
 
 mv qglviewerplugin designerPlugin
@@ -678,7 +678,7 @@ fi # $1=rpm
 if [ $1 == "win" ]
 then
   echo "Creating release-win.pri"
-  sed s:"%CAT_VERSION%":"$catVersion":g examples/release.pri | sed s:"%MAJOR_NUMBER%":"$version_major":g | sed s:"../../":"../":g | sed s:"LIBS \*= ":"LIBS *= ../":g > examples/release-win.pri
+  sed s:"#VERSION_MAJOR#":"$version_major":g examples/release.pri | sed s:"../../":"../":g | sed s:"LIBS \*= ":"LIBS *= ../":g > examples/release-win.pri
   exit
 fi
 
