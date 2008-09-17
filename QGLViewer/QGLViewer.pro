@@ -13,8 +13,8 @@
 TEMPLATE = lib
 TARGET = QGLViewer
 VERSION = 2.3.0
-CONFIG -= debug
-CONFIG *= release qt opengl warn_on thread create_prl 
+CONFIG -= debug debug_and_release
+CONFIG *= release qt opengl warn_on shared thread create_prl rtti
 
 HEADERS = qglviewer.h \
 	  camera.h \
@@ -58,7 +58,6 @@ contains( QT_VERSION, "^4.*" ) {
 !isEmpty( QGLVIEWER_STATIC ) {
   CONFIG *= staticlib
 }
-
 
 #		--  U n i x  --
 unix {
@@ -129,15 +128,15 @@ unix {
   docRefManual.files = ../doc/refManual/*
 
   # install static library
-  staticlib.extra = make -f Makefile.Release staticlib
-  staticlib.path = $${LIB_DIR}
-  staticlib.files = lib$${TARGET}.a
+  #staticlib.extra = make -f Makefile.Release staticlib
+  #staticlib.path = $${LIB_DIR}
+  #staticlib.files = lib$${TARGET}.a
 
   # install library
   target.path = $${LIB_DIR}
 
   # "make install" configuration options
-  INSTALLS *= target staticlib include documentation docImages docRefManual
+  INSTALLS *= target include documentation docImages docRefManual
 }
 
 
@@ -176,6 +175,7 @@ irix-cc|irix-n32 {
 
 #		--  M a c O S X  --
 macx|darwin-g++ {
+  CONFIG *= lib_bundle
   # GLUT for Macintosh architecture
   !isEmpty( USE_GLUT ) {
     QMAKE_LIBS_OPENGL -= -lglut
@@ -191,15 +191,16 @@ win32 {
   staticlib {
     DEFINES *= QGLVIEWER_STATIC
   } else {
-    CONFIG *= dll
     DEFINES *= CREATE_QGLVIEWER_DLL
   }
 
   # Use the DLL version of Qt
   DEFINES *= QT_DLL QT_THREAD_SUPPORT
 
-  # Required to use dynamic_cast
-  CONFIG *= rtti
+  CONFIG *= embed_manifest_dll
+
+  MOC_DIR = moc
+  OBJECTS_DIR = obj
 
   # Make sure to have C++ files, PentiumPro code, few warnings, add
   # support to RTTI and Exceptions, and generate debug info "program database"

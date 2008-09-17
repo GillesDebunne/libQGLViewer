@@ -5,6 +5,13 @@
 
 #include "Primitive.h"
 
+#include "../config.h"
+#if QT_VERSION >= 0x040000
+# include <QTextStream>
+#else
+# include <qtextstream.h>
+#endif
+
 namespace vrender
 {
 	class VRenderParams ;
@@ -22,12 +29,12 @@ namespace vrender
 			void setBlackAndWhite(bool b) ;
 
 		protected:
-			virtual void spewPoint(const Point *,FILE *) = 0 ;
-			virtual void spewSegment(const Segment *,FILE *) = 0 ;
-			virtual void spewPolygone(const Polygone *,FILE *) = 0 ;
+			virtual void spewPoint(const Point *, QTextStream& out) = 0 ;
+			virtual void spewSegment(const Segment *, QTextStream& out) = 0 ;
+			virtual void spewPolygone(const Polygone *, QTextStream& out) = 0 ;
 
-			virtual void writeHeader(FILE *) const = 0 ;
-			virtual void writeFooter(FILE *) const = 0 ;
+			virtual void writeHeader(QTextStream& out) const = 0 ;
+			virtual void writeFooter(QTextStream& out) const = 0 ;
 
 			float _clearR,_clearG,_clearB ;
 			float _pointSize ;
@@ -47,15 +54,15 @@ namespace vrender
 			virtual ~EPSExporter() {};
 
 		protected:
-			virtual void spewPoint(const Point *,FILE *) ;
-			virtual void spewSegment(const Segment *,FILE *) ;
-			virtual void spewPolygone(const Polygone *,FILE *) ;
+			virtual void spewPoint(const Point *, QTextStream& out) ;
+			virtual void spewSegment(const Segment *, QTextStream& out) ;
+			virtual void spewPolygone(const Polygone *, QTextStream& out) ;
 
-			virtual void writeHeader(FILE *) const ;
-			virtual void writeFooter(FILE *) const ;
+			virtual void writeHeader(QTextStream& out) const ;
+			virtual void writeFooter(QTextStream& out) const ;
 
 		private:
-			void setColor(FILE *,float,float,float) ;
+			void setColor(QTextStream& out,float,float,float) ;
 
 			static const double EPS_GOURAUD_THRESHOLD ;
 			static const char *GOURAUD_TRIANGLE_EPS[] ;
@@ -74,7 +81,7 @@ namespace vrender
 		public:
 			virtual ~PSExporter() {};
 		protected:
-			virtual void writeFooter(FILE *) const ;
+			virtual void writeFooter(QTextStream& out) const ;
 	};
 
 	class FIGExporter: public Exporter
@@ -84,12 +91,12 @@ namespace vrender
 			virtual ~FIGExporter() {};
 
 		protected:
-			virtual void spewPoint(const Point *,FILE *) ;
-			virtual void spewSegment(const Segment *,FILE *) ;
-			virtual void spewPolygone(const Polygone *,FILE *) ;
+			virtual void spewPoint(const Point *, QTextStream& out) ;
+			virtual void spewSegment(const Segment *, QTextStream& out) ;
+			virtual void spewPolygone(const Polygone *, QTextStream& out) ;
 
-			virtual void writeHeader(FILE *) const ;
-			virtual void writeFooter(FILE *) const ;
+			virtual void writeHeader(QTextStream& out) const ;
+			virtual void writeFooter(QTextStream& out) const ;
 
 		private:
 			mutable int _sizeX ;
@@ -104,12 +111,12 @@ namespace vrender
 	class SVGExporter: public Exporter
 	{
 		protected:
-			virtual void spewPoint(const Point *,FILE *) ;
-			virtual void spewSegment(const Segment *,FILE *) ;
-			virtual void spewPolygone(const Polygone *,FILE *) ;
+			virtual void spewPoint(const Point *, QTextStream& out) ;
+			virtual void spewSegment(const Segment *, QTextStream& out) ;
+			virtual void spewPolygone(const Polygone *, QTextStream& out) ;
 
-			virtual void writeHeader(FILE *) const ;
-			virtual void writeFooter(FILE *) const ;
+			virtual void writeHeader(QTextStream& out) const ;
+			virtual void writeFooter(QTextStream& out) const ;
 	};
 #endif
 }

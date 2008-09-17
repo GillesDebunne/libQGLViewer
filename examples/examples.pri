@@ -1,36 +1,15 @@
 # Artis
-MAIN_PATH = $$(HOME)/QGLViewer
-
-CONFIG -= debug
-CONFIG += release console embed_manifest_exe
-
-# Local on windows
-!exists( $${MAIN_PATH}/QGLViewer ) {
-  MAIN_PATH = C:/Users/debunne/Documents/Code/libQGLViewer/Alma_libQGLViewer/trunk
-}
+#MAIN_PATH = $$(HOME)/QGLViewer
     
-isEmpty( INCLUDE_DIR ) {
-  INCLUDE_DIR=$${MAIN_PATH}
-}
+#isEmpty( INCLUDE_DIR ) {
+#  INCLUDE_DIR=$${MAIN_PATH}
+#}
 
-isEmpty( LIB_DIR ) {
-  win32 {
-    debug : LIB_DIR=$${MAIN_PATH}/QGLViewer/Debug
-    release : LIB_DIR=$${MAIN_PATH}/QGLViewer/Release
-  } else {
-    LIB_DIR=$${MAIN_PATH}/QGLViewer
-  }
-}
+#isEmpty( LIB_DIR ) {
+#    LIB_DIR=$${MAIN_PATH}/QGLViewer
+#}
 
-win32-msvc2005 {
-  QT *= xml opengl
-  INCLUDEPATH *= $${INCLUDE_DIR}
-  #debug : LIBS *= $${LIB_DIR}/QGLViewer2d.lib
-  #release : LIBS *= $${LIB_DIR}/QGLViewer2.lib
-  LIBS *= $${LIB_DIR}/QGLViewer2.lib
-} else {
-  include( release.pri )
-}
+include( release.pri )
 
 unix {
   QT_VERSION=$$[QT_VERSION]

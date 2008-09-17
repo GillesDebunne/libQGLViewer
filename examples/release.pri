@@ -7,8 +7,8 @@
 #DEFINES *= QT_DLL QT_THREAD_SUPPORT
 #LIBS *= QGLViewer.Qt2.3.lib
 
-CONFIG -= debug
-CONFIG += release console embed_manifest_exe
+CONFIG -= debug debug_and_release
+CONFIG += release qt opengl warn_on thread rtti console embed_manifest_exe
 
 QT_VERSION=$$[QT_VERSION]
 
@@ -89,7 +89,7 @@ unix|win32-g++ {
       } else {
         message( You should add the path to "$${LIB_DIR}" to your LD_LIBRARY_PATH variable )
       }
-      message( See the "Compilation" section in doc/examples/index.html for details )
+      message( See doc/compilation.html for details )
     }
   }
 
@@ -123,8 +123,13 @@ unix|win32-g++ {
 
 
 #                    Windows configuration.
-!win32-g++ {
 win32 {
+  MOC_DIR = moc
+  OBJECTS_DIR = obj
+}
+
+!win32-g++ {
+win32 {	
   contains( QT_VERSION, "^3\..*" ) {
     # Use the Qt DLL version
     DEFINES *= QT_DLL QT_THREAD_SUPPORT

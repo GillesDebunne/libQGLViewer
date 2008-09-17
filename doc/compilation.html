@@ -52,15 +52,15 @@ Here is a typical <code>.pro</code> (on Unix, only the path format would differ)
 
 <pre>
 TARGET = simpleViewer
-CONFIG *= qt release
+CONFIG *= qt opengl release
 QT *= opengl xml
 
 HEADERS = simpleViewer.h
 SOURCES = simpleViewer.cpp main.cpp
 
 INCLUDEPATH *= C:/Users/debunne/Documents/libQGLViewer
-LIBS *= -LC:/Users/debunne/Documents/libQGLViewer/QGLViewer/release -lQGLViewer#VERSION_MAJOR#
-# Visual Studio : LIBS *= C:/Users/debunne/Documents/libQGLViewer/QGLViewer/release/QGLViewer#VERSION_MAJOR#.lib
+LIBS *= -LC:/Users/debunne/Documents/libQGLViewer/QGLViewer -lQGLViewer#VERSION_MAJOR#
+# Visual Studio : LIBS *= C:/Users/debunne/Documents/libQGLViewer/QGLViewer/QGLViewer#VERSION_MAJOR#.lib
 </pre>
 
 
@@ -76,13 +76,12 @@ Launch the Qt command prompt from the <i>Start</i> menu. Then simply type :
 > cd path\to\simpleViewer
 > qmake
 > make
-> cd release
 > simpleViewer
 </pre>
 
 Some <code>dll</code>s need to be found in order to run your program :
 <ul>
-<li><code>QGLViewer#VERSION_MAJOR#.dll</code>, which has been created in the <code>release</code> directory when you compiled the QGLViewer library.</li>
+<li><code>QGLViewer#VERSION_MAJOR#.dll</code>, which has been created when you compiled the QGLViewer library.</li>
 <li>The Qt libraries (<code>QtCore4.dll, QtGui4.dll, QtOpenGL4.dll</code> and <code>QtXml4.dll</code>), which standard location is <code>C:\Qt\4.x.x\bin</code>.</li>
 <li>The MinGW <code>mingwm10.dll</code>, usually located in <code>C:\Program Files\MinGW\bin</code>.</li>
 </ul>

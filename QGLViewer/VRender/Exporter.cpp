@@ -1,6 +1,13 @@
-#include <stdexcept>
 #include "VRender.h"
 #include "Exporter.h"
+
+#if QT_VERSION >= 0x040000
+# include <QFile>
+# include <QMessageBox>
+#else
+# include <qfile.h>
+# include <qmessagebox.h>
+#endif
 
 using namespace vrender ;
 using namespace std ;
@@ -12,16 +19,19 @@ Exporter::Exporter()
 }
 
 void Exporter::exportToFile(const char *filename,
-										const vector<PtrPrimitive>& primitive_tab,
-										VRenderParams& vparams)
+							const vector<PtrPrimitive>& primitive_tab,
+							VRenderParams& vparams)
 {
-	FILE *f;
-	fopen_s(&f, filename, "w") ;
+	QFile file(filename);
 
-	if (f == NULL)
-		throw runtime_error(string("could not open file ") + filename) ;
+	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+		QMessageBox::warning(NULL, QObject::tr("Exporter error", "Message box window title"), QObject::tr("Unable to open file %1.").arg(filename));
+		return;
+	}
 
-	writeHeader(f) ;
+	QTextStream out(&file);
+
+	writeHeader(out) ;
 
 	int N = primitive_tab.size()/200 + 1 ;
 
@@ -31,17 +41,17 @@ void Exporter::exportToFile(const char *filename,
 		Segment *s = dynamic_cast<Segment *>(primitive_tab[i]) ;
 		Polygone *P = dynamic_cast<Polygone *>(primitive_tab[i]) ;
 
-		if(p != NULL) spewPoint(p,f) ;
-		if(s != NULL) spewSegment(s,f) ;
-		if(P != NULL) spewPolygone(P,f) ;
+		if(p != NULL) spewPoint(p,out) ;
+		if(s != NULL) spewSegment(s,out) ;
+		if(P != NULL) spewPolygone(P,out) ;
 
 		if(i%N == 0)
 			vparams.progress(i/(float)primitive_tab.size(),string("Exporting to file ")+filename) ;
 	}
 
-	writeFooter(f) ;
+	writeFooter(out) ;
 
-	fclose(f) ;
+	file.close();
 }
 
 void Exporter::setBoundingBox(float xmin,float ymin,float xmax,float ymax)
