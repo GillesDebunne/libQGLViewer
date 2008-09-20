@@ -38,9 +38,5 @@ contains( QT_VERSION, "^4.*" ) {
   FORMS *= viewerInterface.Qt3.ui
 }
 
-# NOT IN DISTRIBUTION BEGIN
-DISTFILES *= viewerInterface.Qt3.ui
-# NOT IN DISTRIBUTION END
-
 include( ../examples.pri )
 

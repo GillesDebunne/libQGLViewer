@@ -254,8 +254,8 @@ void Quaternion::initFromDOMElement(const QDomElement& element)
   *this = q;
 }
 
-/*! Constructs a Quaternion from a \c QDomElement representing an XML code of the form \c
-  <anyTagName q0=".." q1=".." q2=".." q3=".." />.
+/*! Constructs a Quaternion from a \c QDomElement representing an XML code of the form
+  \code< anyTagName q0=".." q1=".." q2=".." q3=".." />\endcode
 
   If one of these attributes is missing or is not a number, a warning is displayed and the associated
   value is respectively set to 0, 0, 0 and 1 (identity Quaternion).

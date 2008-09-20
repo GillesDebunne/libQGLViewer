@@ -85,18 +85,6 @@ unix {
   MOC_DIR = .moc
   OBJECTS_DIR = .obj
 
-  # NOT IN DISTRIBUTION BEGIN
-  DISTFILES *= VRenderInterface.Qt4.ui ImageInterface.Qt4.ui
-
-  contains( QT_VERSION, "^4.*" ) {
-    MOC_DIR = .moc4
-    OBJECTS_DIR = .obj4
-    CONFIG(debug, debug|release) {
-      MOC_DIR = .moc4d
-      OBJECTS_DIR = .obj4d
-    }
-  }
-  # NOT IN DISTRIBUTION END
   # Adds a -P option so that "make install" as root creates files owned by root and links are preserved.
   # This is not a standard option, and it may have to be removed on old Unix flavors.
   !hpux {

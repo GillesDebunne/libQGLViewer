@@ -1,4 +1,4 @@
-# Mixing OpenGL (3D) and QPainter (2D) drawing in the same viewer. 
+# Mixing OpenGL (3D) and QPainter (2D) drawing in the same viewer.
 
 # A semi-transparent eounded square is painted in 2D using a QPainter on top of a classical 3D OpenGL rendering.
 # Useful to add 2D objects (annotations, menus, head-up display) to your viewers.

@@ -35,10 +35,6 @@ unix|win32-g++ {
         message( Using ../.. as INCLUDE_DIR )
         INCLUDE_DIR = ../..
       }
-      exists( ../../../QGLViewer/qglviewer.h ) {
-        message( Using ../../.. as INCLUDE_DIR )
-        INCLUDE_DIR = ../../..
-      }
     }
   }
 
@@ -141,7 +137,7 @@ win32 {
 
   LIB_FILE = QGLViewer*.lib
 
-  # Compilation from zip file : libQGLViewer is in ../.. or ../../..
+  # Compilation from zip file : libQGLViewer is in ../..
   exists( ../../QGLViewer ) {
     exists( ../../QGLViewer/qglviewer.h ) {
       INCLUDEPATH *= ../..
@@ -164,40 +160,13 @@ win32 {
     }
   }
 
-  exists( ../../../QGLViewer ) {
-    exists( ../../../QGLViewer/qglviewer.h ) {
-      INCLUDEPATH *= ../../..
-    }
-
-    exists( ../../../QGLViewer/Debug ) {
-      exists( ../../../QGLViewer/Debug/$${LIB_FILE} ) {
-        LIB_PATH = ../../../QGLViewer/Debug
-      }
-    }
-
-    exists( ../../../QGLViewer/Release ) {
-      exists( ../../../QGLViewer/Release/$${LIB_FILE} ) {
-        LIB_PATH = ../../../QGLViewer/Release
-      }
-    }
-
-    exists( ../../../QGLViewer/$${LIB_FILE} ) {
-      LIB_PATH = ../../../QGLViewer
-    }
-  }
-
-  exists( $${LIB_PATH}/QGLViewer%CAT_VERSION%.lib ) {
-    LIBS *= $${LIB_PATH}/QGLViewer%CAT_VERSION%.lib
-  } else {
-    exists( $${LIB_PATH}/QGLViewer#VERSION_MAJOR#.lib ) {
-      LIBS *= $${LIB_PATH}/QGLViewer#VERSION_MAJOR#.lib
+  exists( $${LIB_PATH}/QGLViewer#VERSION_MAJOR#.lib )
+    LIBS *= $${LIB_PATH}/QGLViewer#VERSION_MAJOR#.lib
+  else {
+    exists( $${LIB_PATH}/QGLViewer.lib ) {
+      LIBS *= $${LIB_PATH}/QGLViewer.lib
     } else {
-      exists( $${LIB_PATH}/QGLViewer.lib ) {
-        LIBS *= $${LIB_PATH}/QGLViewer.lib
-      } else {
-        error( Unable to find $${LIB_FILE}. )
-	  }
-	}
+      error( Unable to find $${LIB_FILE}. )
     }
   }
-}
+}}

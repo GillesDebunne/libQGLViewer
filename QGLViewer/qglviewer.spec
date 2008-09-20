@@ -151,7 +151,7 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
-* Mon Sep 1 2008 Gilles Debunne <Gilles.Debunne@imag.fr> 2.3.0
+* Mon Sep 1 2008 Gilles Debunne <contact@libQGLViewer.com> 2.3.0
 - New examples, default package compilation using Qt4, new version numbering.
 
 * Tue Aug 28 2007 Gilles Debunne <Gilles.Debunne@imag.fr> 2.2.6-3

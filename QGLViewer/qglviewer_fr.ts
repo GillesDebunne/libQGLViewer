@@ -618,6 +618,17 @@
         <source>No help available.</source>
         <translation>Pas d&apos;aide disponible.</translation>
     </message>
+    <message>
+        <location filename="VRender/Exporter.cpp" line="29"/>
+        <source>Exporter error</source>
+        <comment>Message box window title</comment>
+        <translation>Erreur d&apos;export</translation>
+    </message>
+    <message>
+        <location filename="VRender/Exporter.cpp" line="29"/>
+        <source>Unable to open file %1.</source>
+        <translation>Impossible d&apos;ouvrir le ficher %1.</translation>
+    </message>
 </context>
 <context>
     <name>VRenderInterface</name>

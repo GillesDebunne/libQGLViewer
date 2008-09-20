@@ -1,5 +1,6 @@
 #include "VRender.h"
 #include "Exporter.h"
+#include "../qglviewer.h"
 
 #if QT_VERSION >= 0x040000
 # include <QFile>
@@ -25,7 +26,7 @@ void Exporter::exportToFile(const char *filename,
 	QFile file(filename);
 
 	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-		QMessageBox::warning(NULL, QObject::tr("Exporter error", "Message box window title"), QObject::tr("Unable to open file %1.").arg(filename));
+		QMessageBox::warning(NULL, QGLViewer::tr("Exporter error", "Message box window title"), QGLViewer::tr("Unable to open file %1.").arg(filename));
 		return;
 	}
 

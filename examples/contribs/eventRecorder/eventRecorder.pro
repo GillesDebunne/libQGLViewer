@@ -23,6 +23,3 @@ contains( QT_VERSION, "^4.*" ) {
 
 include( ../../examples.pri )
 
-# NOT IN DISTRIBUTION BEGIN
-DISTFILES *= # replayInterface v4
-# NOT IN DISTRIBUTION END

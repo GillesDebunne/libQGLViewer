@@ -11,33 +11,31 @@ version_major=`echo $version | cut -d"." -f1`
 version_minor=`echo $version | cut -d"." -f2`
 version_release=`echo $version | cut -d"." -f3`
 
-#test -d $WebDir || WebDir="/h/cedre/chroot/var/www/artis/pub/$WebSuffix"
-
 libNameVersion="$libName-$version"
 tarName="$libNameVersion.tar.gz"
-tmp="/home/debunne/.tmp"
+tmp="/tmp"
+test -d $tmp || tmp="/home/debunne/.tmp"
 tmpDir="$tmp/$libNameVersion"
+QGLViewerRootDir=`pwd`
 
 # echo "$0 disabled for security"
 # exit
 
 if [ $# == 0 ]
 then
-  echo "Usage : $0 [web|rpm]"
+  echo "Usage : $0 [web|rpm|deb]"
   exit
 fi
 
-##################################################################
-############        Checking version coherence        ############
-##################################################################
+echo "--- Packaging libQGLViewer version $version ---"
 
-echo " - Checking version coherence"
 
-function checkError()
+function checkGrep()
 {
+  grep "$TARGET" $FILE > /dev/null
   if [[ "$?" -ne "0" ]]
   then
-    echo "Error - $MSG"
+    echo "ERROR : $TARGET not found in $FILE"
     exit 1
   fi
 }
@@ -53,19 +51,24 @@ function checkVersion()
   fi
 }
 
-grep "Gilles Debunne <Gilles.Debunne@imag.fr> $version" QGLViewer/qglviewer.spec > /dev/null
-if [[ "$?" -ne "0" ]]
-then
-  echo "No changelog comment in QGLViewer/qglviewer.spec for $version - Abort"
-  exit
-fi
+function makeDist()
+{
+  for source in $SOURCES
+  do
+    dir=$tmpDir/$TARGET/$(dirname $source)
+    test -d $dir || mkdir -p $dir
+    #echo "### cp $source $dir   depuis $(pwd)"
+    cp $source $dir
+  done
+}
 
-grep "$version" doc/index.html > /dev/null
-if [[ "$?" -ne "0" ]]
-then
-  echo "No news section in doc/index.html for $version - Abort"
-  exit
-fi
+
+
+
+##################################################################
+############        Checking version coherence        ############
+##################################################################
+echo " - Checking version coherence"
 
 VERSION=$version_major
 START="%define version_major "
@@ -103,67 +106,54 @@ START="PROJECT_NUMBER         = \"Version "
 FILE="doc/Doxyfile"
 checkVersion
 
+
+
+##################################################################
+############          Checking file integrity         ############
+##################################################################
 echo " - Checking file integrity"
+
+TARGET="Gilles Debunne <contact@libQGLViewer.com> $version"
+FILE="QGLViewer/qglviewer.spec"
+checkGrep
+
+TARGET="<a href=\"changeLog.html\">.*$version"
+FILE="doc/index.html"
+checkGrep
 
 for f in `ls QGLViewer/QGLViewer.pro examples/*/*.pro examples/contribs/*/*.pro examples/contribs/*/*/*.pro`
 do
-  if [ $f == "examples/debug/debug.pro" ]
-  then
+  case "$f" in
+    "examples/debug/debug.pro"|"examples/contribs/contribs.pro"|"examples/contribs/agora/agora.pro"|"examples/contribs/blobWar/blobWar.pro")
     continue
-  fi
-  if [ $f == "examples/contribs/contribs.pro" ]
-  then
-    continue
-  fi
-  if [ $f == "examples/contribs/agora/agora.pro" ]
-  then
-    continue
-  fi
-  if [ $f == "examples/contribs/blobWar/blobWar.pro" ]
-  then
-    continue
-  fi
-  if [ `grep "^CONFIG" $f | grep "release" | wc -c` == 0 ]
-  then
-    echo "Non release version in $f - Aborting"
-    exit
-  fi
+    ;;
+esac
+  
+  TARGET="^CONFIG.*release"
+  FILE="$f"
+  checkGrep
 done
- 
-grep -a "^WebURL" doc/makeDist | grep "$WebURL" > /dev/null
-if [[ "$?" -ne "0" ]]
-then
-  echo "Bad WebURL in doc/makeDist - Aborting"
-  exit
-fi
 
-grep "^URL" QGLViewer/qglviewer.spec | grep "$WebURL" > /dev/null
-if [[ "$?" -ne "0" ]]
-then
-  echo "Bad URL in QGLViewer/qglviewer.spec URL - Aborting"
-  exit
-fi
 
-grep 'version="3.0"' QGLViewer/VRenderInterface.Qt3.ui > /dev/null
-if [[ "$?" -ne "0" ]]
-then
- echo "No 3.0 version in QGLViewer/VRenderInterface.ui - Aborting"
- exit
-fi
+TARGET="^URL.*$WebURL"
+FILE="QGLViewer/qglviewer.spec"
+checkGrep
 
-grep 'version="3.0"' QGLViewer/ImageInterface.Qt3.ui > /dev/null
-if [[ "$?" -ne "0" ]]
-then
- echo "No 3.0 version in QGLViewer/ImageInterface.ui - Aborting"
- exit
-fi
+TARGET="version=\"3.0\""
+FILE="QGLViewer/VRenderInterface.Qt3.ui"
+checkGrep
 
-grep 'version="3.1"' examples/interface/viewerInterface.Qt3.ui > /dev/null
-if [[ "$?" -ne "0" ]]
-then
- echo "No 3.1 version in examples/interface/viewerInterface.Qt3.ui - Aborting"
- exit
-fi
+TARGET="version=\"3.0\""
+FILE="QGLViewer/ImageInterface.Qt3.ui"
+checkGrep
+
+TARGET="version=\"3.1\""
+FILE="examples/interface/viewerInterface.Qt3.ui"
+checkGrep
+
+
+
+
 
 
 
@@ -221,15 +211,334 @@ fi
 
 
 
-if [ $1 == "rpm" ]
+if [[ $1 == "rpm" ]] || [[ $1 == "deb" ]]
 then
-echo " - Building libQGLViewer version $version"
+ 
+##################################################################
+############            Collecting  sources            ###########
+##################################################################
+echo " - Collecting sources"
 
-# echo "This will replace files of version $version, are you sure ?"
-# exit
+test -d $tmpDir && rm -rf $tmpDir
+test -d $tmpDir || mkdir -p $tmpDir
 
-QGLViewerRootDir=`pwd`
+# ----------------------------------------------
 
+SOURCES="CHANGELOG INSTALL README LICENCE gpl-warning"
+TARGET=""
+makeDist
+
+# ----------------------------------------------
+
+cd QGLViewer
+
+qmake
+lupdate QGLViewer.pro 2> /dev/null
+lrelease QGLViewer.pro 2> $tmp/lrelease
+
+if [ `grep "untranslated" $tmp/lrelease | wc -l` != 0 ]
+then
+  echo "Untranslated QString exist - Aborting"
+  exit
+fi
+
+rm -f ui_*.h
+SOURCES="*.h *.cpp QGLViewer*.pro *.ui qglviewer_*.ts qglviewer_*.qm qglviewer-icon.xpm VRender/*.h VRender/*.cpp"
+TARGET="QGLViewer"
+makeDist
+
+cd - > /dev/null
+ 
+
+# ----------------------------------------------
+
+function makeDistExample()
+{
+  #echo "makeDirsEx sur $DIR"
+  name=$(basename $DIR)
+  test -f $DIR/$name.pro || ( echo "No example $name.pro file - Aborting" && exit )
+
+  TARGET="$name"
+  FILE="$(dirname $DIR)/$(basename $(dirname $DIR)).pro"
+  checkGrep
+
+  dotPro="$DIR/$(basename $DIR).pro"
+  subDirs=$(grep "SUBDIRS" $dotPro | sed s%"SUBDIRS *= *"%%)
+  if [[ ! -z $subDirs ]]
+  then
+    for subDir in $subDirs
+    do
+      oldDir=$DIR
+      DIR="$DIR/$subDir"
+      makeDistExample
+      DIR=$oldDir
+    done
+  else 
+    TARGET="^include( \.\./.*examples.pri )"
+    FILE="$dotPro"
+    checkGrep
+
+    SOURCES="$name.pro *.cpp"
+    distFiles=$(grep "DISTFILES" $dotPro | sed s%"DISTFILES.*= *"%%)
+    SOURCES="$SOURCES $distFiles"
+    TARGET="$DIR"
+    cd $DIR
+    ls *.h &> /dev/null && SOURCES="$SOURCES *.h"
+    makeDist
+    cd - > /dev/null
+  fi
+}
+
+
+cd examples
+
+./makeDist
+
+SOURCES="examples.pro release.pri contribs/contribs.pro"
+TARGET="examples"
+makeDist
+
+SOURCES="html/*"
+TARGET="doc/examples"
+makeDist
+
+cd - > /dev/null
+
+EXAMPLES_SKIPPED_DIRS="examples/contribs examples/rangeAxisConstraint examples/debug examples/html"
+for dir in $(ls -d examples/* examples/contribs/*)
+do
+  test -d $dir || continue
+
+  for r in $EXAMPLES_SKIPPED_DIRS
+  do
+    if [ $dir == $r ]
+    then
+      continue 2
+    fi
+  done
+  DIR="$dir"
+  makeDistExample
+done
+
+# ----------------------------------------------
+
+cd doc
+
+./makeDist
+filteredHTML=`grep -a ^filteredDir makeDist | cut -d'"' -f2`
+if [ -z "$filteredHTML" ]
+then
+  echo "Unable to find filteredHTML directory in doc - Aborting"
+  exit
+fi
+
+SOURCES="$filteredHTML/*"
+TARGET="doc"
+makeDist
+
+SOURCES="qglviewer.css qglviewer.cw refManual/* images/*jpg images/*png images/*bmp images/*ico"
+TARGET="doc"
+makeDist
+
+cd - > /dev/null
+
+# ----------------------------------------------
+
+cd designerPlugin
+
+SOURCES="*.h *.cpp *.pro"
+TARGET="designerPlugin"
+makeDist
+
+cd - > /dev/null
+
+
+
+
+##################################################################
+############            Filtering  sources            ############
+##################################################################
+echo " - Filtering sources"
+
+cd $tmpDir
+
+# Filter files
+export LC_TIME="en"
+date=`date "+%B %-d, %Y"`
+for f in "gpl-warning" "CHANGELOG" "INSTALL" "LICENCE" "README"
+do
+  sed s:"#VERSION#":"$version":g $f | sed s%"#WEBURL#"%"$WebURL"%g | sed s:"#DATE#":"$date":g > $f.filtered
+  mv $f.filtered $f
+done
+
+sed s:"#VERSION_MAJOR#":"$version_major":g examples/release.pri > $tmp/release.filtered
+mv $tmp/release.filtered examples/release.pri
+
+function replaceIncludeRelease()
+{
+  #echo "replace sur $PRO"
+  path="\.\."
+  dir=$(dirname $(dirname $PRO))
+  while [[ $dir != "." ]]
+  do
+    dir=$(dirname $dir)
+    path="$path/\.\."
+  done
+  
+  if [[ $(grep "^include.*examples.pri" $PRO) ]]
+  then
+    grep -v "^include.*examples.pri" $PRO > $tmp/proPatched.tmp
+    sed s%"\.\./\.\."%"$path"% examples/release.pri > $tmp/release.pri
+    cat $tmp/proPatched.tmp $tmp/release.pri > $PRO
+  fi
+}
+
+for PRO in $(ls */*.pro */*/*.pro */*/*/*.pro */*/*/*/*.pro)
+do
+  replaceIncludeRelease
+done
+rm examples/release.pri
+
+
+# GPL warning
+for f in `find . -name '*.h' -o -name '*.cpp'`
+do
+  cat gpl-warning $f > $f.bak
+  mv $f.bak $f
+done
+
+vRenderCopyright="$QGLViewerRootDir/QGLViewer/VRender/copyright"
+if [ ! -f $vRenderCopyright ]
+then
+  echo "No copyright in VRender"
+  exit
+fi
+
+for f in `find QGLViewer/VRender -name '*.h' -o -name '*.cpp'`
+do
+  cat $vRenderCopyright $f > $f.bak
+  mv $f.bak $f
+done
+
+mv gpl-warning $tmp/
+
+cd doc
+  cp qglviewer.cw ../QGLViewer
+  mv qglviewer.cw ../examples/interface
+  # Remove search engine (requires php).
+  rm refManual/search.idx refManual/search.php
+  for f in `ls refManual/*.html`
+    do
+    sed s%" <span class=\"search\".*</span>"%""% $f > $f.tmp
+    mv $f.tmp $f
+  done
+cd - > /dev/null
+
+echo " - All files set in $tmpDir"
+exit
+
+
+
+##################################################################
+############       Create example binaries            ############
+##################################################################
+echo " - Creating Linux binary examples"
+exName="$libName-examples-linux"
+exDir="$tmpDir/../$exName"
+test -d $exDir || mkdir $exDir
+rm -f $exDir/*
+
+cp $rpmDir/BUILD/$libNameVersion/QGLViewer/libQGLViewer.so.2 $exDir
+cp /usr/lib/libstdc++.so.5 $exDir
+
+BIN_EXAMPLES="simpleViewer manipulatedFrame luxo select animation"
+cd $rpmDir/BUILD/$libNameVersion/examples
+for e in $BIN_EXAMPLES
+do
+  echo "   = $e"
+  cd $e
+  qmake INCLUDE_DIR=../.. LIB_DIR=../../QGLViewer >& /dev/null
+  make > /dev/null
+  cp $e $exDir
+  cd - > /dev/null
+done
+
+cd $exDir
+for f in `ls`
+do
+  strip $f
+done
+
+echo "These are Linux pre-compiled versions of some libQGLViewer examples." > readme.txt
+echo >> readme.txt
+echo "These examples were compiled on a Fedora Core 2 using Qt 3.3.3." >> readme.txt
+echo "Rebuild from the sources to fit your configuration and for optimal results." >> readme.txt
+echo >> readme.txt
+echo "You have to add the current directory to your LD_LIBRARY_PATH in order to run the examples:" >> readme.txt
+echo "> export LD_LIBRARY_PATH=.:\$LD_LIBRARY_PATH (if you use bash)" >> readme.txt
+echo " (or use \"setenv LD_LIBRARY_PATH .:\$LD_LIBRARY_PATH\" with [t]csh)" >> readme.txt
+echo >> readme.txt
+echo "Note that these examples are not designed to be impressive by themselves." >> readme.txt
+echo "What is impressive is that the library enables their creation with only few tens of lines of code !" >> readme.txt
+
+cd ..
+tar -czf $exName.tar.gz $exName
+
+
+
+##################################################################
+############            Create Win Zip                ############
+##################################################################
+echo " - Creating windows zip"
+
+cd $tmpDir
+mv CHANGELOG ChangeLog.txt
+mv INSTALL Install.txt
+mv LICENCE Licence.txt
+mv README Readme.txt
+
+# Add Qt 2.3 specific files
+cat $tmp/gpl-warning $QGLViewerRootDir/QGLViewer/keySequence.h   > QGLViewer/keySequence.h
+cat $tmp/gpl-warning $QGLViewerRootDir/QGLViewer/keySequence.cpp > QGLViewer/keySequence.cpp
+cp $QGLViewerRootDir/QGLViewer/QGLViewer.Qt2.3.pro QGLViewer/
+cp $QGLViewerRootDir/QGLViewer/ImageInterface.Qt2.ui QGLViewer/
+cp $QGLViewerRootDir/QGLViewer/VRenderInterface.Qt2.ui QGLViewer/
+cp $QGLViewerRootDir/examples/interface/viewerInterface.Qt2.ui examples/interface/
+
+function addNamespace()
+{
+  str="class QGLVIEWER_EXPORT $1 : public $2"
+  if [ `grep "$str" QGLViewer/$3.h | wc -l` -ne 1 ]
+  then
+      echo "Unrecognized syntax for class $class declaration. Cannot add qglviewer::"
+      exit 1
+  fi
+
+  sed s%"$str"%"class QGLVIEWER_EXPORT $1 : public qglviewer::$2"% QGLViewer/$3.h > $tmp/addNamespace
+  mv $tmp/addNamespace QGLViewer/$3.h 
+}
+#addNamespace SpinningFrame Frame spinningFrame
+addNamespace ManipulatedFrame Frame manipulatedFrame
+addNamespace ManipulatedCameraFrame ManipulatedFrame manipulatedCameraFrame
+
+echo "Skipping recode of files for special characters"
+#for f in `find . -name '*.h' -o -name '*.cpp' -o -name '*.html' -o -name '*.css' -o -name '*.txt'`
+#do
+#  recode ..pc $f
+#done
+
+cd ..
+zip -qr $libNameVersion.zip $libNameVersion
+
+fi
+
+
+
+
+
+
+if [[ $1 == "rpm" ]]
+then
 ##################################################################
 ############        Checking RPM configuration        ############
 ##################################################################
@@ -260,226 +569,6 @@ then
   echo " - RPM find requires ($rpmFindReq) not found - Aborting"
   exit
 fi
-
-if [ ! -f $HOME/QGLViewer/QGLViewer/libQGLViewer.so ]
-then
-  echo " - You need to compile the library first (for qmake) - Aborting"
-  exit
-fi
-
- 
-##################################################################
-############            Collecting  sources            ###########
-##################################################################
-
-echo " - Collecting sources"
-
-test -d $tmpDir && rm -rf $tmpDir/*
-test -d $tmpDir || mkdir -p $tmpDir
-
-cp CHANGELOG INSTALL README LICENCE gpl-warning $tmpDir
-
-cd QGLViewer
-
-qmake
-
-# Patch for rmdir error message on non empty directories
-sed s/"rmdir"/"rm -rf"/ Makefile > Makefile.gcc3
-make -f Makefile.gcc3 dist
-rm Makefile.gcc3
-
-mv QGLViewer.tar.gz $tmpDir
-cd - > /dev/null
-
-cd examples ; makeDist ; cd - > /dev/null
-tar -cf Examples.tar examples/examples.pro examples/contribs/contribs.pro examples/release.pri examples/html
-EXAMPLES_SKIPPED_DIRS="attic contribs debug html"
-for f in `cd examples ; ls`
-do
-  test -d examples/$f || continue
-  for r in $EXAMPLES_SKIPPED_DIRS
-  do
-    if [ $f == $r ]
-    then
-      continue 2
-    fi
-  done
-
-  if [ `grep $f examples/examples.pro | wc -l` = 0 ]
-  then
-    echo "Example $f not found in examples.pro - Aborting"
-    exit
-  fi
-
-  if [ ! -f examples/$f/$f.pro ]
-  then
-    echo "No example $f.pro file - Aborting"
-    exit
-  fi
-  cd examples/$f
-  qmake
-  make dist
-  mv $f.tar.gz ..
-  cd - > /dev/null 
-  tar -rf Examples.tar examples/$f.tar.gz
-  rm examples/$f.tar.gz
-done
-
-for f in `cd examples/contribs ; ls`
-do
-  test -d examples/contribs/$f || continue
-
-  if [ `grep $f examples/contribs/contribs.pro | wc -l` = 0 ]
-  then
-    echo "Contrib example $f not found in contribs.pro - Aborting"
-    exit
-  fi
-
-  if [ ! -f examples/contribs/$f/$f.pro ]
-  then
-    echo "No example $f.pro file - Aborting"
-    exit
-  fi
-
-  cd examples/contribs/$f
-  qmake
-  make dist
-  mv $f.tar.gz ..
-  cd - > /dev/null
-  tar -rf Examples.tar examples/contribs/$f.tar.gz
-  rm examples/contribs/$f.tar.gz
-done
-gzip Examples.tar
-mv Examples.tar.gz $tmpDir
-
-cd doc
-  makeDist
-  filteredHTML=`grep -a ^filteredDir makeDist | cut -d'"' -f2`
-  if [ -z "$filteredHTML" ]
-  then
-    echo "Unable to find filteredHTML directory in doc - Aborting"
-    exit
-  fi
-cd - > /dev/null
-tar -czf Doc.tar.gz doc/$filteredHTML doc/qglviewer.css doc/refManual doc/images/*jpg doc/images/*png doc/images/*ico doc/qglviewer.cw
-# tar -czf Doc.tar.gz doc/$filteredHTML doc/*.css doc/refManual doc/man/man3/QGLViewer.3 doc/man/man3/qglviewer_* doc/images doc/qglviewer.cw
-mv Doc.tar.gz $tmpDir
-
-cd designerPlugin
-qmake
-make dist
-mv qglviewerplugin.tar.gz $tmpDir
-cd - > /dev/null
-
-##################################################################
-############            Filtering  sources            ############
-##################################################################
-
-echo " - Filtering sources"
-
-cd $tmpDir
-for f in `ls *.tar.gz`
-do
-  tar -xzf $f
-  rm $f
-done
-
-# Filter files
-export LC_TIME="en"
-date=`date "+%B %-d, %Y"`
-for f in "gpl-warning" "CHANGELOG" "INSTALL" "LICENCE" "README"
-do
-  sed s:"#VERSION#":"$version":g $f | sed s%"#WEBURL#"%"$WebURL"%g | sed s:"#DATE#":"$date":g > $f.filtered
-  mv $f.filtered $f
-done
-
-# html examples go to doc
-mv examples/html doc/examples
-
-#MSG="release.pri .." ; test `grep "\.\./\.\." examples/release.pri | wc -l` -eq 1 ; checkError
-
-for pro in "QGLViewer/QGLViewer.pro" "qglviewerplugin/designerPlugin.pro"
-do
-  sed /"NOT IN DISTRIBUTION BEGIN"/,/"NOT IN DISTRIBUTION END"/d $pro > $tmp/notInDistrib
-  mv $tmp/notInDistrib $pro
-done
-
-sed s:"#VERSION_MAJOR#":"$version_major":g | examples/release.pri > $tmp/release.filtered
-mv $tmp/release.filtered examples/release.pri
-
-mv qglviewerplugin designerPlugin
-grep -v "^include.*examples.pri" designerPlugin/designerPlugin.pro > $tmp/designer.pro
-sed s%"\.\./\.\."%"\.\."% examples/release.pri > $tmp/release.pri
-cat $tmp/designer.pro $tmp/release.pri > designerPlugin/designerPlugin.pro
-
-sed s%"\.\./\.\."%"\.\./\.\./\.\."% examples/release.pri > examples/contribs/release.pri
-for dir in "examples" "examples/contribs"
-do
-  cd $dir
-  # Extract examples tars
-  for f in `ls *.tar.gz`
-    do
-    tar -xzf $f
-    rm $f
-    # Bug in qmake include files
-
-  done
-  
-  # Modify examples' .pro
-  for f in `ls */*.pro`
-  do
-    if [[ $f == "contribs/contribs.pro" ]]
-    then
-      continue
-    fi
-    grep -v "^include.*examples.pri" $f | sed /"NOT IN DISTRIBUTION BEGIN"/,/"NOT IN DISTRIBUTION END"/d > $tmp/proPatched.tmp
-    cat $tmp/proPatched.tmp release.pri > $f
-  done
-  rm release.pri
-
-  cd - > /dev/null
-done
-
-#qmake bug with includes from remote directories
-rm examples/contribs/*/release.pri
-
-# GPL warning
-for f in `find . -name '*.h' -o -name '*.cpp'`
-do
-  cat gpl-warning $f > $f.bak
-  mv $f.bak $f
-done
-
-if [ ! -f $QGLViewerRootDir/QGLViewer/VRender/copyright ]
-then
-  echo "No copyright in VRender"
-  exit
-fi
-
-for f in `find QGLViewer/VRender -name '*.h' -o -name '*.cpp'`
-do
-  cat $QGLViewerRootDir/QGLViewer/VRender/copyright $f > $f.bak
-  mv $f.bak $f
-done
-
-mv gpl-warning $tmp/
-
-cd doc
-  cp qglviewer.cw ../QGLViewer
-  mv qglviewer.cw ../examples/interface
-  mv $filteredHTML/* .
-  rm -r $filteredHTML
-  # Remove search engine (requires php).
-  rm refManual/search.idx refManual/search.php
-  for f in `ls refManual/*.html`
-    do
-    sed s%" <span class=\"search\".*</span>"%""% $f > $f.tmp
-    mv $f.tmp $f
-  done
-cd - > /dev/null
-
-echo " - All files set in $tmpDir"
-#exit
 
 ##################################################################
 ############                Create RPM                ############
@@ -538,96 +627,13 @@ then
 fi
 
 checkRPMUpdate
+fi
 
 
-##################################################################
-############       Create example binaries            ############
-##################################################################
-echo " - Creating Linux binary examples"
-exName="$libName-examples-linux"
-exDir="$tmpDir/../$exName"
-test -d $exDir || mkdir $exDir
-rm -f $exDir/*
 
-cp $rpmDir/BUILD/$libNameVersion/QGLViewer/libQGLViewer.so.2 $exDir
-cp /usr/lib/libstdc++.so.5 $exDir
 
-BIN_EXAMPLES="simpleViewer manipulatedFrame luxo select animation"
-cd $rpmDir/BUILD/$libNameVersion/examples
-for e in $BIN_EXAMPLES
-do
-  echo "   = $e"
-  cd $e
-  qmake-qt4 INCLUDE_DIR=../.. LIB_DIR=../../QGLViewer >& /dev/null
-  make > /dev/null
-  cp $e $exDir
-  cd - > /dev/null
-done
 
-cd $exDir
-for f in `ls`
-do
-  strip $f
-done
 
-echo "These are Linux pre-compiled versions of some libQGLViewer examples." > readme.txt
-echo >> readme.txt
-echo "These examples were compiled on a Fedora Core 2 using Qt 3.3.3." >> readme.txt
-echo "Rebuild from the sources to fit your configuration and for optimal results." >> readme.txt
-echo >> readme.txt
-echo "You have to add the current directory to your LD_LIBRARY_PATH in order to run the examples:" >> readme.txt
-echo "> export LD_LIBRARY_PATH=.:\$LD_LIBRARY_PATH (if you use bash)" >> readme.txt
-echo " (or use \"setenv LD_LIBRARY_PATH .:\$LD_LIBRARY_PATH\" with [t]csh)" >> readme.txt
-echo >> readme.txt
-echo "Note that these examples are not designed to be impressive by themselves." >> readme.txt
-echo "What is impressive is that the library enables their creation with only few tens of lines of code !" >> readme.txt
-
-cd ..
-tar -czf $exName.tar.gz $exName
-
-##################################################################
-############            Create Win Zip                ############
-##################################################################
-echo " - Creating windows zip"
-
-cd $tmpDir
-mv CHANGELOG ChangeLog.txt
-mv INSTALL Install.txt
-mv LICENCE Licence.txt
-mv README Readme.txt
-
-# Add Qt 2.3 specific files
-cat $tmp/gpl-warning $QGLViewerRootDir/QGLViewer/keySequence.h   > QGLViewer/keySequence.h
-cat $tmp/gpl-warning $QGLViewerRootDir/QGLViewer/keySequence.cpp > QGLViewer/keySequence.cpp
-cp $QGLViewerRootDir/QGLViewer/QGLViewer.Qt2.3.pro QGLViewer/
-cp $QGLViewerRootDir/QGLViewer/ImageInterface.Qt2.ui QGLViewer/
-cp $QGLViewerRootDir/QGLViewer/VRenderInterface.Qt2.ui QGLViewer/
-cp $QGLViewerRootDir/examples/interface/viewerInterface.Qt2.ui examples/interface/
-
-function addNamespace()
-{
-  str="class QGLVIEWER_EXPORT $1 : public $2"
-  if [ `grep "$str" QGLViewer/$3.h | wc -l` -ne 1 ]
-  then
-      echo "Unrecognized syntax for class $class declaration. Cannot add qglviewer::"
-      exit 1
-  fi
-
-  sed s%"$str"%"class QGLVIEWER_EXPORT $1 : public qglviewer::$2"% QGLViewer/$3.h > $tmp/addNamespace
-  mv $tmp/addNamespace QGLViewer/$3.h 
-}
-#addNamespace SpinningFrame Frame spinningFrame
-addNamespace ManipulatedFrame Frame manipulatedFrame
-addNamespace ManipulatedCameraFrame ManipulatedFrame manipulatedCameraFrame
-
-echo "Skipping recode of files for special characters"
-#for f in `find . -name '*.h' -o -name '*.cpp' -o -name '*.html' -o -name '*.css' -o -name '*.txt'`
-#do
-#  recode ..pc $f
-#done
-
-cd ..
-zip -qr $libNameVersion.zip $libNameVersion
 
 ##################################################################
 ############            Update web site               ############

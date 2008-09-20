@@ -8,7 +8,7 @@ TARGET   = agora
 CONFIG  += qt opengl warn_on release thread
 
 HEADERS += agoraViewer.h   board.h   move.h   computerPlayer.h   undo.h   case.h
-SOURCES += agoraViewer.cpp board.cpp move.cpp computerPlayer.cpp undo.cpp case.cpp main.cpp 
+SOURCES += agoraViewer.cpp board.cpp move.cpp computerPlayer.cpp undo.cpp case.cpp main.cpp
 
 QT_VERSION=$$[QT_VERSION]
 contains( QT_VERSION, "^4.*" ) {
@@ -17,11 +17,7 @@ contains( QT_VERSION, "^4.*" ) {
   FORMS += agoraWindow.Qt3.ui computerPlayerInterface.Qt3.ui
 }
 
-DISTFILES *= ../Boards/*.ago
-
-# NOT IN DISTRIBUTION BEGIN
-DISTFILES *= agoraWindow.Qt3.ui computerPlayerInterface.Qt3.ui
-# NOT IN DISTRIBUTION END
+DISTFILES *= ../AgoraBoards/*.ago
 
 include( ../../../examples.pri )
 

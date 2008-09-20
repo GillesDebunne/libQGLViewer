@@ -23,11 +23,7 @@ contains( QT_VERSION, "^4.*" ) {
   FORMS += blobWarWindow.Qt3.ui computerPlayerInterface.Qt3.ui
 }
 
-DISTFILES *= ../Boards/*.bwb
-
-# NOT IN DISTRIBUTION BEGIN
-DISTFILES *= blobWarWindow.Qt3.ui computerPlayerInterface.Qt3.ui
-# NOT IN DISTRIBUTION END
+DISTFILES *= ../BlobWarBoards/*.bwb
 
 include( ../../../examples.pri )
 

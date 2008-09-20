@@ -47,7 +47,7 @@ Vec Vec::orthogonalVec() const
 }
 
 /*! Constructs a Vec from a \c QDomElement representing an XML code of the form
- \c <anyTagName x=".." y=".." z=".." />.
+ \code< anyTagName x=".." y=".." z=".." />\endcode
 
 If one of these attributes is missing or is not a number, a warning is displayed and the associated
 value is set to 0.0.

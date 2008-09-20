@@ -31,9 +31,5 @@ contains( QT_VERSION, "^4.*" ) {
   SOURCES = qglviewerPlugin.Qt3.cpp
 }
 
-
 include( ../examples/examples.pri )
 
-# NOT IN DISTRIBUTION BEGIN
-DISTFILES *= qglviewerPlugin.Qt3.h qglviewerPlugin.Qt3.cpp
-# NOT IN DISTRIBUTION END

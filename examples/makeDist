@@ -3,33 +3,29 @@
 
 IMAGES_DIR="../doc/images"
 OUTPUT_DIR="html"
-SKIP_DIRS="attic debug contribs rangeAxisConstraint nearFarCamera $OUTPUT_DIR"
 VERSION=`grep -a "^version=" ../makeDist | sed s/"version=\"\(.*\)\""/"\1"/`
-BASIC_DIRS="simpleViewer manipulatedFrame select keyboardAndMouse"
 
-tmp="/home/debunne/.tmp"
+EXAMPLES_SKIPPED_DIRS=$(grep "^EXAMPLES_SKIPPED_DIRS=" ../makeDist | head -1 | cut -d'=' -f2 | sed s%"\""%%g | sed s%"examples/"%%g)
+BASIC_EXAMPLE_DIRS="simpleViewer manipulatedFrame select keyboardAndMouse"
+
+tmp="/tmp"
+test -d $tmp || tmp="/home/debunne/.tmp"
 
 indexUpToDate="Yes"
 
 # Check all basic directories are present
-for name in $BASIC_DIRS
+for name in $BASIC_EXAMPLE_DIRS
 do
-  if [ ! -d $name ]
-  then
-      echo "Basic example $name is not found"
-      exit
-  fi
+  test -d $name || (echo "Basic example $name is not found" exit)
 done
 
 test -d $OUTPUT_DIR || mkdir -p $OUTPUT_DIR
 
-# which highlight >& /dev/null
-export PATH=$PATH:$HOME/Bin/bin
 which source-highlight >& /dev/null
 if [ $? != 0 ]
 then
     echo "Unable to find source-highlight - Abort"
-    #exit
+    exit
 fi
 
 export LC_TIME="en"
@@ -39,12 +35,9 @@ unset LC_TIME
 # Create the examples HTML files with included code
 for name in `ls -1`
 do
-  if [ ! -d $name ]
-  then
-    continue
-  fi
+  test -d $name || continue
 
-  for skip in $SKIP_DIRS
+  for skip in $EXAMPLES_SKIPPED_DIRS
   do
     if [ $name == $skip ]
     then
@@ -53,7 +46,7 @@ do
   done
 
   isBasic=0
-  for basic in $BASIC_DIRS
+  for basic in $BASIC_EXAMPLE_DIRS
   do
     if [ $name == $basic ]
     then
@@ -70,10 +63,7 @@ do
   output="$OUTPUT_DIR/$name.html"
   updateNeeded="No"
 
-  if [ ! -f $output ]
-  then
-    updateNeeded="Yes"
-  fi
+  test -f $output || updateNeeded="Yes"
 
   for file in `ls $name/*.h $name/*.cpp $name/*.pro`
   do
@@ -97,17 +87,8 @@ do
   echo "   Creating $output"
   indexUpToDate="No"
 
-  if [ ! -f $IMAGES_DIR/$name.jpg ]
-  then
-     echo "    No image found for $name - Aborting"
-     exit
-  fi
-
-  if [ ! -f $name/$name.pro ]
-  then
-     echo "    No .pro found for $name"
-     exit
-  fi
+  test -f $IMAGES_DIR/$name.jpg || (echo "    No image found for $name - Aborting" ; exit)
+  test -f $name/$name.pro || (echo "    No .pro found for $name" ; exit)
 
   cat > $output <<EOF
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -174,16 +155,11 @@ EOF
     chap=`echo $file | sed s#$name/##`
     echo "<h2>$chap</h2>" >> $output
       # echo "<pre>" >> $output
-    cp $file $tmp/src-high
-    echo "No src highlight"
-    #source-highlight -s cpp -f html $tmp/src-high >> $output >& /dev/null
-    #cat $tmp/src-high.html >> $output
-    echo "<pre>" >> $output
-    sed 's/&/\&amp;/g;s/</\&lt;/g;s/>/\&gt;/g' $tmp/src-high >> $output
-    echo "</pre>" >> $output
-      # highlight -fX $file >> $output
-      #code2html -l c++ --no-header $file >> $output
-      # echo "</pre>" >> $output
+    source-highlight -s cpp -f html $tmp/src-high >> $output >& /dev/null
+    cat $tmp/src-high.html >> $output
+    #echo "<pre>" >> $output
+    #sed 's/&/\&amp;/g;s/</\&lt;/g;s/>/\&gt;/g' $tmp/src-high >> $output
+    #echo "</pre>" >> $output
     echo -e "\n" >> $output
   done
 
@@ -210,7 +186,7 @@ EOF
 done
 
 
-
+exit
 
 
 # Create the contrib examples HTML files with simple description
@@ -459,7 +435,7 @@ EOF
 # Basic examples
 nbCol=2
 col=0
-for name in $BASIC_DIRS
+for name in $BASIC_EXAMPLE_DIRS
 do
   makeExampleCell
 done
