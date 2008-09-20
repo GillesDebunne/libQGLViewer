@@ -1,4 +1,4 @@
-# Displays a world axis in the corner of the window.
+# Displays a world axis in the lower-left corner of the window.
 
 # A world axis representation is drawn in the lower left corner, so that one always sees how the scene is oriented.
 

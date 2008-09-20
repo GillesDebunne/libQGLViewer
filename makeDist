@@ -29,6 +29,15 @@ fi
 
 echo "--- Packaging libQGLViewer version $version ---"
 
+# Convert possible Windows encoding
+find . -type f -exec dos2unix -o -p {} \; &> /tmp/error
+grep -v "/\.svn/" /tmp/error
+if [[ "$?" -eq "0" ]]
+then
+  echo "Error while converting newlines"
+  grep -v "/\.svn/" /tmp/error
+  exit 1
+fi
 
 function checkGrep()
 {
@@ -232,23 +241,13 @@ makeDist
 
 cd QGLViewer
 
-qmake
-lupdate QGLViewer.pro 2> /dev/null
-lrelease QGLViewer.pro 2> $tmp/lrelease
-
-if [ `grep "untranslated" $tmp/lrelease | wc -l` != 0 ]
-then
-  echo "Untranslated QString exist - Aborting"
-  exit
-fi
-
 rm -f ui_*.h
-SOURCES="*.h *.cpp QGLViewer*.pro *.ui qglviewer_*.ts qglviewer_*.qm qglviewer-icon.xpm VRender/*.h VRender/*.cpp"
+SOURCES="*.h *.cpp QGLViewer*.pro *.ui qglviewer_*.ts qglviewer-icon.xpm VRender/*.h VRender/*.cpp"
 TARGET="QGLViewer"
 makeDist
 
 cd - > /dev/null
- 
+
 
 # ----------------------------------------------
 
@@ -262,17 +261,22 @@ function makeDistExample()
   FILE="$(dirname $DIR)/$(basename $(dirname $DIR)).pro"
   checkGrep
 
-  dotPro="$DIR/$(basename $DIR).pro"
+  dotPro="$DIR/$name.pro"
   subDirs=$(grep "SUBDIRS" $dotPro | sed s%"SUBDIRS *= *"%%)
   if [[ ! -z $subDirs ]]
   then
     for subDir in $subDirs
     do
       oldDir=$DIR
+      oldName=$name
       DIR="$DIR/$subDir"
       makeDistExample
       DIR=$oldDir
+      name=$oldName
     done
+    SOURCES="$DIR/$name.pro"
+    TARGET=""
+    makeDist
   else 
     TARGET="^include( \.\./.*examples.pri )"
     FILE="$dotPro"
@@ -292,19 +296,13 @@ function makeDistExample()
 
 cd examples
 
-./makeDist
-
 SOURCES="examples.pro release.pri contribs/contribs.pro"
 TARGET="examples"
 makeDist
 
-SOURCES="html/*"
-TARGET="doc/examples"
-makeDist
-
 cd - > /dev/null
 
-EXAMPLES_SKIPPED_DIRS="examples/contribs examples/rangeAxisConstraint examples/debug examples/html"
+EXAMPLES_SKIPPED_DIRS="examples/contribs examples/rangeAxisConstraint examples/debug"
 for dir in $(ls -d examples/* examples/contribs/*)
 do
   test -d $dir || continue
@@ -324,7 +322,9 @@ done
 
 cd doc
 
-./makeDist
+if [[ 1 = 0 ]]
+then
+#./makeDist
 filteredHTML=`grep -a ^filteredDir makeDist | cut -d'"' -f2`
 if [ -z "$filteredHTML" ]
 then
@@ -335,8 +335,9 @@ fi
 SOURCES="$filteredHTML/*"
 TARGET="doc"
 makeDist
+fi
 
-SOURCES="qglviewer.css qglviewer.cw refManual/* images/*jpg images/*png images/*bmp images/*ico"
+SOURCES="qglviewer.css images/*jpg images/*png images/*bmp images/*ico"
 TARGET="doc"
 makeDist
 
@@ -362,7 +363,7 @@ echo " - Filtering sources"
 
 cd $tmpDir
 
-# Filter files
+########### Filter root files
 export LC_TIME="en"
 date=`date "+%B %-d, %Y"`
 for f in "gpl-warning" "CHANGELOG" "INSTALL" "LICENCE" "README"
@@ -371,6 +372,22 @@ do
   mv $f.filtered $f
 done
 
+
+########### Filter translations
+
+cd QGLViewer
+qmake
+lupdate QGLViewer.pro 2> /dev/null
+lrelease QGLViewer.pro 2> $tmp/lrelease
+
+if [ `grep "untranslated" $tmp/lrelease | wc -l` != 0 ]
+then
+  echo "Untranslated QString exist - Aborting"
+  exit
+fi
+cd - > /dev/null
+
+########### Filter example .pro include release
 sed s:"#VERSION_MAJOR#":"$version_major":g examples/release.pri > $tmp/release.filtered
 mv $tmp/release.filtered examples/release.pri
 
@@ -399,8 +416,12 @@ do
 done
 rm examples/release.pri
 
+########### Create examples' web pages
+cd examples
+$QGLViewerRootDir/examples/makeDist
+cd - > /dev/null
 
-# GPL warning
+########### Add GPL warnings
 for f in `find . -name '*.h' -o -name '*.cpp'`
 do
   cat gpl-warning $f > $f.bak
@@ -422,16 +443,17 @@ done
 
 mv gpl-warning $tmp/
 
+########### Filter doc
 cd doc
-  cp qglviewer.cw ../QGLViewer
-  mv qglviewer.cw ../examples/interface
+  #cp qglviewer.cw ../QGLViewer
+  #mv qglviewer.cw ../examples/interface
   # Remove search engine (requires php).
-  rm refManual/search.idx refManual/search.php
-  for f in `ls refManual/*.html`
-    do
-    sed s%" <span class=\"search\".*</span>"%""% $f > $f.tmp
-    mv $f.tmp $f
-  done
+  #rm refManual/search.idx refManual/search.php
+  #for f in `ls refManual/*.html`
+   # do
+   # sed s%" <span class=\"search\".*</span>"%""% $f > $f.tmp
+   # mv $f.tmp $f
+  #done
 cd - > /dev/null
 
 echo " - All files set in $tmpDir"
@@ -689,3 +711,4 @@ then
 fi
 
 echo "Unrecognized option: $@"
+

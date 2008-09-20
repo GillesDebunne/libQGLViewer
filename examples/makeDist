@@ -2,16 +2,69 @@
 # composite -geometry +14+12 @ ~/background.jpg #.bis.jpg to #.jpg
 
 IMAGES_DIR="../doc/images"
-OUTPUT_DIR="html"
-VERSION=`grep -a "^version=" ../makeDist | sed s/"version=\"\(.*\)\""/"\1"/`
+QGLVIEWER_HOME_DIR="$HOME/QGLViewer"
+OUTPUT_DIR="../doc/examples"
+VERSION=`grep -a "^version=" $QGLVIEWER_HOME_DIR/makeDist | sed s/"version=\"\(.*\)\""/"\1"/`
 
-EXAMPLES_SKIPPED_DIRS=$(grep "^EXAMPLES_SKIPPED_DIRS=" ../makeDist | head -1 | cut -d'=' -f2 | sed s%"\""%%g | sed s%"examples/"%%g)
+EXAMPLES_SKIPPED_DIRS=$(grep "^EXAMPLES_SKIPPED_DIRS=" $QGLVIEWER_HOME_DIR/makeDist | head -1 | cut -d'=' -f2 | sed s%"\""%%g | sed s%"examples/"%%g)
 BASIC_EXAMPLE_DIRS="simpleViewer manipulatedFrame select keyboardAndMouse"
 
 tmp="/tmp"
 test -d $tmp || tmp="/home/debunne/.tmp"
 
 indexUpToDate="Yes"
+
+
+
+function writeHeader() 
+{
+  cat > $OUTPUT <<EOF
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer $name example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Examples</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+EOF
+}
+
+function writeFooter() 
+{
+  cat >> $output <<EOF
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.png" width="88" height="31" alt="Valid CSS!"/></a>
+EOF
+
+  echo "<i>Last modified on $date.</i>" >> $output
+
+  cat >> $output <<EOF
+</p>
+
+</body>
+</html>
+EOF
+}
+
+
 
 # Check all basic directories are present
 for name in $BASIC_EXAMPLE_DIRS
@@ -84,34 +137,16 @@ do
     continue
   fi
   
-  echo "   Creating $output"
+  #echo "   Creating $name example page"
   indexUpToDate="No"
 
   test -f $IMAGES_DIR/$name.jpg || (echo "    No image found for $name - Aborting" ; exit)
   test -f $name/$name.pro || (echo "    No .pro found for $name" ; exit)
 
-  cat > $output <<EOF
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-  <title>libQGLViewer $name example</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
-  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
-  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
-</head>
-<body>
+  OUTPUT=$output
+  writeHeader
 
-<div class="banner">
- <a class="qindex" href="../index.html">Home</a>
- <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
- <a class="qindex" href="../download.html">Download</a>
- <a class="qindex highlight" href="index.html">Examples</a>
- <a class="qindex" href="../developer.html">Developer</a>
-</div>
-
-<h1>The $name example</h1>
-EOF
+  echo -e "<h1>The $name example</h1>\n" >> $output
 
   echo "<center>" >> $output
   echo "  <img src=\"../images/$name.jpg\" width=\"330\" height=\"228\" alt=\"$name\"/>" >> $output
@@ -150,43 +185,23 @@ EOF
     fileList="$fileList $file"
   done
   
+
   for file in $fileList
     do
-    chap=`echo $file | sed s#$name/##`
-    echo "<h2>$chap</h2>" >> $output
-      # echo "<pre>" >> $output
-    source-highlight -s cpp -f html $tmp/src-high >> $output >& /dev/null
-    cat $tmp/src-high.html >> $output
+    echo "<h2>$(echo $file | sed s#$name/##)</h2>" >> $output
+    source-highlight -s cpp -f html -i $file >> $output
+    #cat $tmp/src-high.html >> $output
     #echo "<pre>" >> $output
     #sed 's/&/\&amp;/g;s/</\&lt;/g;s/>/\&gt;/g' $tmp/src-high >> $output
     #echo "</pre>" >> $output
     echo -e "\n" >> $output
   done
 
-  cat >> $output <<EOF
-
-<p>
-  Back to the <a href="index.html">examples main page</a>.
-</p>
-
-<p>
-  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
-  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.png" width="88" height="31" alt="Valid CSS!"/></a>
-EOF
-
-echo "<i>Last modified on $date.</i>" >> $output
-
-cat >> $output <<EOF
-</p>
-
-</body>
-</html>
-EOF
-
+  writeFooter
 done
 
 
-exit
+
 
 
 # Create the contrib examples HTML files with simple description
@@ -194,17 +209,11 @@ output="$OUTPUT_DIR/contribs.html"
 contribsDir="contribs"
 updateNeeded="No"
 
-if [ ! -f $output ]
-then
-    updateNeeded="Yes"
-fi
+test -f $output || updateNeeded="Yes"
 
 for name in `ls -1 $contribsDir`
 do
-  if [ ! -d $contribsDir/$name ]
-  then
-    continue
-  fi
+  test -d $contribsDir/$name || continue
 
   CONTRIB_DIRS="$CONTRIB_DIRS $name"
   
@@ -228,29 +237,13 @@ done
 
 if [ $updateNeeded == "Yes" ]
 then
-    echo "   Creating $output"
-    indexUpToDate="No"
+  #echo "   Creating contribs page"
+  indexUpToDate="No"
 
-    cat > $output <<EOF
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-  <title>libQGLViewer contribution examples</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
-  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
-  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
-</head>
-<body>
-
-<div class="banner">
- <a class="qindex" href="../index.html">Home</a>
- <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
- <a class="qindex" href="../download.html">Download</a>
- <a class="qindex highlight" href="index.html">Examples</a>
- <a class="qindex" href="../developer.html">Developer</a>
-</div>
-
+  OUTPUT=$output
+  writeHeader
+ 
+  cat > $output <<EOF
 <h1>The contribution examples</h1>
 
 The following examples do not directly illustrate a functionality of the library. Some are very
@@ -260,61 +253,28 @@ a short description is here given, the different source code are available in th
 
 EOF
 
-    for name in `ls -1 $contribsDir`
-    do
-      if [ ! -d $contribsDir/$name ]
-      then
-	  continue
-      fi
+  for name in `ls -1 $contribsDir`
+  do
+    test -d $contribsDir/$name || continue
 
-      if [ ! -f $IMAGES_DIR/$name.jpg ]
-      then
-	  echo "    No image found for $name"
-	  exit
-      fi
+    test -f $IMAGES_DIR/$name.jpg || (echo "    No image found for $name" ; exit)
+    test -f $contribsDir/$name/$name.pro || (echo "    No .pro found for $name" ; exit)
 
-      if [ ! -f $contribsDir/$name/$name.pro ]
-      then
-	  echo "    No .pro found for $name"
-	  exit
-      fi
+    # echo "   - $name"
+    echo "<a name=\""$name"\"></a>" >> $output
+    echo "<h2 style=\"border-top:2px solid #CCC; margin:0; margin-top:20px; padding-left:20px;\">$name</h2>" >> $output
 
-      # echo "   - $name"
-      echo "<a name=\""$name"\"></a>" >> $output
-      echo "<h2>$name</h2>" >> $output
+    echo -e "<table>\n<tr>" >> $output
+    echo "  <td><img src=\"../images/$name.jpg\" width=\"330\" height=\"228\" alt=\"$name\"/></td>" >> $output
 
-      echo -e "<table>\n<tr>" >> $output
-      echo "  <td><img src=\"../images/$name.jpg\" width=\"330\" height=\"228\" alt=\"$name\"/></td>" >> $output
-
-      awk 'BEGIN { p=0; print "<td>\n<p>"; }
+    awk 'BEGIN { p=0; print "<td>\n<p>"; }
        /^#/    { if (p==2) print "<p>"; print substr($0, 2); p=1; next; }
-       /^ *$/  { if (p==1) print "</p>"; p=2; }
-       /^ *\w/ { print "\n</td>\n</tr></table>\n"; exit; }' $contribsDir/$name/$name.pro >> $output
-    done
+       /^ *$/  { if (p==1) print "</p>"; p=2; next; }
+       { print "\n</td>\n</tr></table>\n"; exit; }' $contribsDir/$name/$name.pro >> $output
+  done
 
-    cat >> $output <<EOF
-
-<p>
-  Back to the <a href="index.html">examples main page</a>.
-</p>
-
-<p>
-  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
-  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.png" width="88" height="31" alt="Valid CSS!"/></a>
-EOF
-
-    echo "<i>Last modified on $date.</i>" >> $output
-
-    cat >> $output <<EOF
-</p>
-
-</body>
-</html>
-EOF
+  writeFooter
 fi
-
-
-
 
 
 
@@ -325,17 +285,8 @@ function makeExampleCell()
     echo "  <tr>" >> $output
   fi
   
-  if [ ! -f $dir$name/$name.pro ]
-  then
-      echo "Unable to find $name.pro - Aborting"
-      exit
-  fi
-
-  if [ ! -f $IMAGES_DIR/$name.jpg ]
-  then
-      echo "Unable to find image for $name - Aborting"
-      exit
-  fi
+  test -f $dir$name/$name.pro || (echo "Unable to find $name.pro - Aborting" ; exit)
+  test -f $IMAGES_DIR/$name.jpg || (echo "Unable to find image for $name - Aborting" ; exit)
 
   text=`awk 'BEGIN { p = 0; } /^#/ { print substr($0, 2); p=1; next; } { if (p==1) exit; }' $dir$name/$name.pro`
 
@@ -372,10 +323,7 @@ function fillTable()
     echo "  </tr>" >> $output
   fi
   
-  echo "</table>" >> $output
-  echo "</td></tr></table>" >> $output
-  echo >> $output
-  echo >> $output
+  echo -e "</table>\n\n" >> $output
 }
 
 
@@ -383,27 +331,12 @@ function fillTable()
 output="$OUTPUT_DIR/index.html"
 if [ $indexUpToDate == "No" ]
 then
-  echo "   Creating index page $output"
+  #echo "   Creating index page $output"
 
-  cat > $output <<EOF
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-  <title>libQGLViewer examples</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
-  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
-  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
-</head>
-<body>
+  OUTPUT=$output
+  writeHeader
 
-<div class="banner">
- <a class="qindex" href="../index.html">Home</a>
- <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
- <a class="qindex" href="../download.html">Download</a>
- <a class="qindex highlight" href="index.html">Examples</a>
- <a class="qindex" href="../developer.html">Developer</a>
-</div>
+  cat >> $output <<EOF
 
 <h1>libQGLViewer examples</h1>
 
@@ -428,8 +361,8 @@ the philosophy of the library. See also the <a href="../compilation.html">compil
 
 <a name="basic"></a>
 <h2>Basic examples</h2>
-<table align="center"><tr><td>
-<table cellpadding="2" cellspacing="9">
+
+<table cellpadding="2" cellspacing="12">
 EOF
 
 # Basic examples
@@ -447,8 +380,7 @@ echo "<h2>Pedagogical examples</h2>" >> $output
 
 nbCol=3
 col=0
-echo "<table align=\"center\"><tr><td>" >> $output
-echo "<table cellpadding=\"2\" cellspacing=\"9\">" >> $output
+echo "<table cellpadding=\"2\" cellspacing=\"12\">" >> $output
 for name in $EXAMPLE_DIRS
 do
   makeExampleCell
@@ -461,27 +393,12 @@ echo "<h2>More complex examples</h2>" >> $output
 
 col=0
 dir="$contribsDir/"
-echo "<table align=\"center\"><tr><td>" >> $output
-echo "<table cellpadding=\"2\" cellspacing=\"9\">" >> $output
+echo "<table cellpadding=\"2\" cellspacing=\"12\">" >> $output
 for name in $CONTRIB_DIRS
 do
   makeExampleCell
 done
 fillTable
 
-cat >> $output <<EOF
-<p>
-  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
-  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.png" alt="Valid CSS!" width="88" height="31"/></a>
-</p>
-EOF
-
-echo "  <i>Last modified on $date.</i>" >> $output
-
-cat >> $output <<EOF
-</p>
-
-</body>
-</html>
-EOF
+  writeFooter
 fi

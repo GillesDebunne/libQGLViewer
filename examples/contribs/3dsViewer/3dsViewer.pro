@@ -11,7 +11,7 @@
 # (or in <code>lib3ds/file.h</code>) :
 # <pre>extern "C" { LIB3DSAPI void lib3ds_file_bounding_box(Lib3dsFile *file, Lib3dsVector min, Lib3dsVector max); }</pre>
 
-# This example is simply a translation of a lib3ds example. Although is uses display lists, the
+# This example is simply a translation of a lib3ds example. Although it uses display lists, the
 # rendering speed does not seem to be as good as with other 3ds libraries (10 factor speed up). Note
 # however that this is due to the lib3ds library and not QGLViewer.
 
