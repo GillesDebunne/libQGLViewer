@@ -30,7 +30,7 @@ fi
 echo "--- Packaging libQGLViewer version $version ---"
 
 # Convert possible Windows encoding
-find . -type f -exec dos2unix -o -p {} \; &> /tmp/error
+find . -type f -name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html'  -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb' -exec dos2unix -o -p {} \; &> /tmp/error
 grep -v "/\.svn/" /tmp/error
 if [[ "$?" -eq "0" ]]
 then
@@ -77,7 +77,7 @@ function makeDist()
 ##################################################################
 ############        Checking version coherence        ############
 ##################################################################
-echo " - Checking version coherence"
+echo "Checking version coherence"
 
 VERSION=$version_major
 START="%define version_major "
@@ -120,7 +120,7 @@ checkVersion
 ##################################################################
 ############          Checking file integrity         ############
 ##################################################################
-echo " - Checking file integrity"
+echo "Checking file integrity"
 
 TARGET="Gilles Debunne <contact@libQGLViewer.com> $version"
 FILE="QGLViewer/qglviewer.spec"
@@ -165,80 +165,27 @@ checkGrep
 
 
 
-
-
-
-
-if [ $1 == "web" ]
-then
-  test -d $WebDir || mkdir -p $WebDir
-  test -d $WebDir/src || mkdir -p $WebDir/src
-
-  cd examples
-    echo " - Creating examples"
-    makeDist
-    echo " - Copy examples"
-    test -d $WebDir/examples || rm -rf $WebDir/examples
-    mkdir -p $WebDir/examples
-    cp html/*.html $WebDir/examples
-  cd - > /dev/null
-
-  cd doc
-    echo " - Filtering doc"
-    makeDist
-    filteredHTML=`grep -a ^filteredDir makeDist | cut -d'"' -f2`
-    echo " - Copy result from $filteredHTML"
-    rm -f $WebDir/*.html $WebDir/*.css
-    cp $filteredHTML/* $WebDir
-    cp qglviewer.css $WebDir
-    
-    echo " - Copy images"
-    rm -rf $WebDir/images
-    cp -r images $WebDir
-    rm -rf $WebDir/images/.svn
-    cp ../statsDownload/downloads.png ../statsDownload/examples.png $WebDir/images
-
-    echo " - Copy refManual"
-    rm -rf $WebDir/refManual
-    cp -r refManual $WebDir
-    #cp -r man $WebDir
-    #cd latex ; make clear ; make pdf > /dev/null ; cp refman.pdf $WebDir/qglviewer.pdf
-  cd - > /dev/null
-
-  echo " - Checking web site links"
-  cd $WebDir
-  checkLinks.pl -r
-  ls -1 src | grep -v "^lib" | grep -v "index.html" | grep -v "md5sum.txt"
-  exit
-fi
-
-
-
-
-
-
-
-
-
 if [[ $1 == "rpm" ]] || [[ $1 == "deb" ]]
 then
  
 ##################################################################
 ############            Collecting  sources            ###########
 ##################################################################
-echo " - Collecting sources"
+echo -n "Collecting : "
 
 test -d $tmpDir && rm -rf $tmpDir
 test -d $tmpDir || mkdir -p $tmpDir
 
 # ----------------------------------------------
 
+dos2unix -o -p CHANGELOG INSTALL README LICENCE gpl-warning &> /tmp/error
 SOURCES="CHANGELOG INSTALL README LICENCE gpl-warning"
 TARGET=""
 makeDist
 
 # ----------------------------------------------
 
+echo -n "sources"
 cd QGLViewer
 
 rm -f ui_*.h
@@ -248,8 +195,9 @@ makeDist
 
 cd - > /dev/null
 
-
 # ----------------------------------------------
+
+echo -n " - examples"
 
 function makeDistExample()
 {
@@ -320,24 +268,10 @@ done
 
 # ----------------------------------------------
 
+echo " - doc"
 cd doc
 
-if [[ 1 = 0 ]]
-then
-#./makeDist
-filteredHTML=`grep -a ^filteredDir makeDist | cut -d'"' -f2`
-if [ -z "$filteredHTML" ]
-then
-  echo "Unable to find filteredHTML directory in doc - Aborting"
-  exit
-fi
-
-SOURCES="$filteredHTML/*"
-TARGET="doc"
-makeDist
-fi
-
-SOURCES="qglviewer.css images/*jpg images/*png images/*bmp images/*ico"
+SOURCES="*.html *.css Doxyfile cwExtractor tabs.awk images/*jpg images/*png images/*bmp images/qglviewer.ico"
 TARGET="doc"
 makeDist
 
@@ -359,7 +293,7 @@ cd - > /dev/null
 ##################################################################
 ############            Filtering  sources            ############
 ##################################################################
-echo " - Filtering sources"
+echo -n "Filtering : "
 
 cd $tmpDir
 
@@ -375,6 +309,7 @@ done
 
 ########### Filter translations
 
+echo -n "sources"
 cd QGLViewer
 qmake
 lupdate QGLViewer.pro 2> /dev/null
@@ -388,6 +323,7 @@ fi
 cd - > /dev/null
 
 ########### Filter example .pro include release
+echo -n " - pro"
 sed s:"#VERSION_MAJOR#":"$version_major":g examples/release.pri > $tmp/release.filtered
 mv $tmp/release.filtered examples/release.pri
 
@@ -417,11 +353,13 @@ done
 rm examples/release.pri
 
 ########### Create examples' web pages
+echo -n " - examples"
 cd examples
 $QGLViewerRootDir/examples/makeDist
 cd - > /dev/null
 
 ########### Add GPL warnings
+echo -n " - copyright"
 for f in `find . -name '*.h' -o -name '*.cpp'`
 do
   cat gpl-warning $f > $f.bak
@@ -435,6 +373,8 @@ then
   exit
 fi
 
+dos2unix -o -p $vRenderCopyright
+
 for f in `find QGLViewer/VRender -name '*.h' -o -name '*.cpp'`
 do
   cat $vRenderCopyright $f > $f.bak
@@ -444,9 +384,102 @@ done
 mv gpl-warning $tmp/
 
 ########### Filter doc
+echo " - doc"
 cd doc
-  #cp qglviewer.cw ../QGLViewer
-  #mv qglviewer.cw ../examples/interface
+
+### Date and version ###
+for f in `ls *.html`
+do
+  date=`date -r $f "+%A, %B %-d, %Y"`
+  sed s:"#VERSION#":"$version":g $f | sed s:"#VERSION_MAJOR#":"$version_major":g | sed s%"#WEBURL#"%"$WebURL"%g > $tmp/filtered
+  sed s:"#DATE#":"$date":g $tmp/filtered > $f
+done
+
+### Doxygen ###
+doxygen Doxyfile
+rm doxygen.css Doxyfile
+
+cd refManual
+#doxytag -s search.idx >& /dev/null
+test -f installdox && rm installdox
+
+## Changing header menu in doxygen pages ##
+# Removing unused pages
+rm -f files.html globals.html globals_*.html *_8*.html namespace*.html dir_*.html dirs.html functions_rela.html functions_vars.html functions_0x*.html
+
+# Patching functions pages
+for f in $(ls functions_*.html)
+do
+  newName=$(echo $f | sed s%"_func"%%)
+  grep -v "^Here is a list" $f | sed s%"functions_func"%"functions"%g | sed s%"| <a[^>]*>Variables</a>"%""%g | sed s%"| <a[^>]*>Related&nbsp;Functions</a>"%""%g | sed s%"<a[^>]*>All</a> |"%""%g > $newName-bis
+  rm -r $f
+  mv $newName-bis $newName
+done
+
+
+sed s%"This inheritance.*alphabetically:"%% hierarchy.html > $tmp/hierarchy.html
+mv $tmp/hierarchy.html hierarchy.html
+
+# Changing QGLViewer:: enums
+for f in $(ls class*.html)
+do
+  sed s%">QGLViewer::\([A-Z_]*\)</a>"%">\1</a>"%g $f > $tmp/qgl
+  mv $tmp/qgl $f
+done
+
+ 
+# Changing header menus
+   #for f in `ls *.html *.php`
+   #do
+     #awk '/^<a class="qindex/ { gsub(" \\| ", ""); print }' $f > $tmp/header
+     #sed s%"href=\"index.html\">Main"%"href=\"../index.html\">Main"% $tmp/header | sed s%"<a class=\"qindex\" href=\"globals.html\">File&nbsp;Members</a>"%% | sed s%"<a class=\"qindex\" href=\"namespaces.html\">Namespace List</a>"%% | sed s%"<a class=\"qindex\" href=\"annotated.*File&nbsp;List</a>"%% | sed s%"<a class=\"qindex\" href=\"globals.html\">File&nbsp;Members</a>"%% | sed s%"Class&nbsp;Members"%"All\&nbsp;Functions"% | sed s%"/a>"%"/a>\n"%g > $tmp/header.filtered
+       #sed /"^<a class=\"qindex"/d $f | sed "/^<div class=\"qindex.*search.php/r $tmp/header.filtered" > $f.tmp
+       #awk '/^<div class="nav">/ {skip=1; next} {if (skip) {skip=0; next} else print }' $f.tmp > $f
+       #rm $f.tmp
+     #done
+
+for f in $(ls *.html *.php)
+do
+  if [ $f != "search.php" ]
+  then
+    awk -f ../tabs.awk $f > $tmp/tabs
+    mv $tmp/tabs $f
+  fi
+done
+rm ../tabs.awk
+    
+# Removing auto-links
+for f in `ls class*.html | grep -v -- "-members.html"`
+do
+  sed s%"<a class=\"el\" href=\"$f\">\([^<]*\)</a>"%"\1"%g $f > $f.tmp
+  mv $f.tmp $f
+done
+
+# Patching QtKeyboardModifiers and QtMouseButtons
+for f in `ls *.html`
+do
+  sed s%"QtKeyboardModifiers"%"Qt::KeyboardModifiers"%g $f > $f.tmp
+  sed s%"QtMouseButtons"%"Qt::MouseButtons"%g $f.tmp > $f
+  rm $f.tmp
+done
+
+# Adding icon and libQGLViewer version
+for f in $(ls *.html)
+do
+  sed /doxygen.css/a"<link rel=\"shortcut icon\" href=\"../images/qglviewer.ico\" type=\"image/x-icon\" /><link rel=\"icon\" href=\"../images/qglviewer.icon.png\" type=\"image/png\" />" $f > $f.tmp
+  sed s/"Generated on .* for libQGLViewer by"/"libQGLViewer $version documentation generated by"/g $f.tmp > $f
+  rm $f.tmp
+done
+
+cd - > /dev/null
+
+# cwExtrator
+./cwExtractor
+cp qglviewer.cw ../QGLViewer
+mv qglviewer.cw ../examples/interface
+rm cwExtractor
+
+
   # Remove search engine (requires php).
   #rm refManual/search.idx refManual/search.php
   #for f in `ls refManual/*.html`
@@ -454,9 +487,8 @@ cd doc
    # sed s%" <span class=\"search\".*</span>"%""% $f > $f.tmp
    # mv $f.tmp $f
   #done
-cd - > /dev/null
 
-echo " - All files set in $tmpDir"
+echo "All files set in $tmpDir"
 exit
 
 
@@ -709,6 +741,52 @@ then
   sed s:"#VERSION_MAJOR#":"$version_major":g examples/release.pri | sed s:"../../":"../":g | sed s:"LIBS \*= ":"LIBS *= ../":g > examples/release-win.pri
   exit
 fi
+
+
+
+if [ $1 == "web" ]
+then
+  test -d $WebDir || mkdir -p $WebDir
+  test -d $WebDir/src || mkdir -p $WebDir/src
+
+  cd examples
+    echo " - Creating examples"
+    makeDist
+    echo " - Copy examples"
+    test -d $WebDir/examples || rm -rf $WebDir/examples
+    mkdir -p $WebDir/examples
+    cp html/*.html $WebDir/examples
+  cd - > /dev/null
+
+  cd doc
+    echo " - Filtering doc"
+    makeDist
+    filteredHTML=`grep -a ^filteredDir makeDist | cut -d'"' -f2`
+    echo " - Copy result from $filteredHTML"
+    rm -f $WebDir/*.html $WebDir/*.css
+    cp $filteredHTML/* $WebDir
+    cp qglviewer.css $WebDir
+    
+    echo " - Copy images"
+    rm -rf $WebDir/images
+    cp -r images $WebDir
+    rm -rf $WebDir/images/.svn
+    cp ../statsDownload/downloads.png ../statsDownload/examples.png $WebDir/images
+
+    echo " - Copy refManual"
+    rm -rf $WebDir/refManual
+    cp -r refManual $WebDir
+    #cp -r man $WebDir
+    #cd latex ; make clear ; make pdf > /dev/null ; cp refman.pdf $WebDir/qglviewer.pdf
+  cd - > /dev/null
+
+  echo " - Checking web site links"
+  cd $WebDir
+  checkLinks.pl -r
+  ls -1 src | grep -v "^lib" | grep -v "index.html" | grep -v "md5sum.txt"
+  exit
+fi
+
 
 echo "Unrecognized option: $@"
 

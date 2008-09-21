@@ -1,7 +1,8 @@
 #!/bin/sh
 
 CW_DIR="cwFiles"
-tmp="/home/debunne/.tmp"
+tmp="/tmp"
+test -d $tmp || tmp="/home/debunne/.tmp"
 
 test -d $CW_DIR || mkdir $CW_DIR
 
@@ -23,7 +24,7 @@ do
     name=`echo $f | sed s:"refManual/class\([^-]*\)-members.*":"\1": | sed s:"qglviewer_._."::`
     # output="$CW_DIR/$name.cw"
     output="qglviewer.cw"
-    echo -e "<!DOCTYPE CW><CW>\n<customwidgets>\n  <customwidget>\n   <class>$name</class>" > $output
+    echo "<!DOCTYPE CW><CW>\n<customwidgets>\n  <customwidget>\n   <class>$name</class>" > $output
 
 cat >> $output << EOF
     <header location="local">QGLViewer/qglviewer.h</header>
@@ -41,7 +42,7 @@ cat >> $output << EOF
     </pixmap>
 EOF
 
-    sort $tmp/signals | sed s:"^ ":"     <signal>": | sed s:"$":" </signal>": >> $output
+    sort $tmp/signals         | sed s:"^ ":"     <signal>": | sed s:"$":" </signal>": >> $output
     sort $tmp/slots           | sed s:"^ ":"     <slot access=\"public\">":    | sed s:"$":" </slot>": >> $output
     sort $tmp/protected_slots | sed s:"^ ":"     <slot access=\"protected\">": | sed s:"$":" </slot>": >> $output
     if [ $# -gt 0 ]
@@ -51,9 +52,11 @@ EOF
       echo "  " `cat $tmp/slots $tmp/protected_slots | wc -l` "slots (" `cat $tmp/protected_slots| wc -l` " protected)"
       more $tmp/slots 
       more $tmp/protected_slots 
-    else
-      echo "   = Class $name," `cat $tmp/signals | wc -l` "signals and" `cat $tmp/slots $tmp/protected_slots | wc -l` "slots, protected" `cat $tmp/protected_slots | wc -l`
+    #else
+      #echo "   = Class $name," `cat $tmp/signals | wc -l` "signals and" `cat $tmp/slots $tmp/protected_slots | wc -l` "slots, protected" `cat $tmp/protected_slots | wc -l`
     fi
-    echo -e "  </customwidget>\n</customwidgets>\n</CW>" >> $output
+    echo "  </customwidget>\n</customwidgets>\n</CW>" >> $output
   fi  
 done
+
+rm -rf $CW_DIR

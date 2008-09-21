@@ -1,25 +1,44 @@
 #!/bin/bash
 
-version=`grep -a "^version=" ../makeDist | head -1 | cut -d'"' -f2`
+QGLVIEWER_HOME_DIR="$HOME/QGLViewer"
+version=`grep -a "^version=" $QGLVIEWER_HOME_DIR/makeDist | head -1 | cut -d'"' -f2`
 version_major=`echo $version | cut -d"." -f1`
-filteredDir="filteredHTML"
-WebURL=$(grep "^WebURL=" ../makeDist | head -1 | cut -d'=' -f2 | sed s%"\""%%g)
+WebURL=$(grep "^WebURL=" $QGLVIEWER_HOME_DIR/makeDist | head -1 | cut -d'=' -f2 | sed s%"\""%%g)
 
 tmp="/tmp"
 test -d $tmp || tmp="/home/debunne/.tmp"
 
-#if [ $# != 0 ]
-#then
-#  echo "No argument needed by makeDist. Try a cd .. first !"
-#  exit
-#fi
+if [ $# != 0 ]
+then
+  echo "No argument needed by makeDist. Try a cd .. first !"
+  exit
+fi
+
+
+
+########################
+### Date and version ###
+########################
+echo " - Filtering pages # tags"
+export LC_TIME="en"
+for f in `ls *.html`
+do
+  echo $f 
+  date=`date -r $f "+%A, %B %-d, %Y"`
+  sed s:"#VERSION#":"$version":g $f | sed s:"#VERSION_MAJOR#":"$version_major":g | sed s§"#WEBURL#"§"$WebURL"§g > $tmp/filtered
+  sed s:"#DATE#":"$date":g $tmp/filtered > $f
+done
+unset LC_TIME
+
+
+exit
 
 ### Check that doxygen is up to date ###
 ########################################
 function updateDoc()
 {
     echo " - doxygen skipped"
-    #doxygen Doxyfile
+    doxygen Doxyfile
     echo " - Extracting cw files"
     cwExtractor
     cd refManual
@@ -110,7 +129,7 @@ if [ ! -d refManual ]
 then
   echo "   refManual does not exist, running doxygen"
   echo "WINDOWS"
-  #updateDoc
+  updateDoc
 fi
 
 if [ "X$1" == "Xforce" ]
@@ -130,18 +149,3 @@ do
   fi
 done
 
-
-### Date and version ###
-#################################
-echo " - Filtering pages # tags"
-test -d $filteredDir || mkdir -p $filteredDir
-rm -f $filteredDir/*
-export LC_TIME="en"
-for f in `ls *.html`
-do
-  date=`date -r $f "+%A, %B %-d, %Y"`
-  sed s:"#VERSION#":"$version":g $f | sed s:"#VERSION_MAJOR#":"$version_major":g | sed s§"#WEBURL#"§"$WebURL"§g | sed s:"#DATE#":"$date":g > $filteredDir/$f
-done
-unset LC_TIME
-
-rm $filteredDir/index.fr.html
