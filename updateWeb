@@ -1,0 +1,26 @@
+#!/bin/bash
+ 
+WebSuffix=""
+WebDir="/www"
+
+  cd $WebDir
+
+cd $WebDir/src
+rm md5sum.txt
+md5sum `find . -type f | sort` > md5sum.txt
+cd - > /dev/null
+
+  checkLinks.pl -r
+  ls -1 src | grep -v "^lib" | grep -v "index.html" | grep -v "md5sum.txt"
+  exit
+fi
+
+
+test -d $WebDir/src || mkdir -p $WebDir/src
+if [[ ! -d $WebDir/src ]]
+then
+    echo " - Unable to reach $WebDir, aborting"
+    exit
+fi
+
+cp -f $tarName $rpmDir/SRPMS/$libNameVersion-1.src.rpm $libNameVersion.zip $WebDir/src

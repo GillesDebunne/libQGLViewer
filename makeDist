@@ -3,8 +3,6 @@
 libName="libQGLViewer"
 version="2.3.0"
 
-WebSuffix=""
-WebDir="/www"
 WebURL="http://www.libqglviewer.com"
 
 version_major=`echo $version | cut -d"." -f1`
@@ -12,20 +10,12 @@ version_minor=`echo $version | cut -d"." -f2`
 version_release=`echo $version | cut -d"." -f3`
 
 libNameVersion="$libName-$version"
-tarName="$libNameVersion.tar.gz"
-tmp="/tmp"
-test -d $tmp || tmp="/home/debunne/.tmp"
-tmpDir="$tmp/$libNameVersion"
+tmpDir="/tmp/$libNameVersion"
 QGLViewerRootDir=`pwd`
 
 # echo "$0 disabled for security"
 # exit
 
-if [ $# == 0 ]
-then
-  echo "Usage : $0 [web|rpm|deb]"
-  exit
-fi
 
 echo "--- Packaging libQGLViewer version $version ---"
 
@@ -55,8 +45,8 @@ function checkVersion()
   if [[ "$?" -ne "0" ]]
   then
     echo "Version found in $FILE is not $VERSION - Patching"
-    sed s~"^$START.*"~"$START$VERSION"~ $FILE > $tmp/makeDist
-    cp $tmp/makeDist $FILE
+    sed s~"^$START.*"~"$START$VERSION"~ $FILE > /tmp/makeDist
+    cp /tmp/makeDist $FILE
   fi
 }
 
@@ -163,10 +153,6 @@ checkGrep
 
 
 
-
-
-if [[ $1 == "rpm" ]] || [[ $1 == "deb" ]]
-then
  
 ##################################################################
 ############            Collecting  sources            ###########
@@ -197,7 +183,7 @@ cd - > /dev/null
 
 # ----------------------------------------------
 
-echo -n " - examples"
+echo -n " examples"
 
 function makeDistExample()
 {
@@ -236,6 +222,7 @@ function makeDistExample()
     TARGET="$DIR"
     cd $DIR
     ls *.h &> /dev/null && SOURCES="$SOURCES *.h"
+    ls *.ui &> /dev/null && SOURCES="$SOURCES *.ui"
     makeDist
     cd - > /dev/null
   fi
@@ -268,10 +255,10 @@ done
 
 # ----------------------------------------------
 
-echo " - doc"
+echo -n " doc"
 cd doc
 
-SOURCES="*.html *.css Doxyfile cwExtractor tabs.awk images/*jpg images/*png images/*bmp images/qglviewer.ico"
+SOURCES="*.html *.css Doxyfile cwExtractor tabs.awk images/*jpg images/*png images/qglviewer.ico"
 TARGET="doc"
 makeDist
 
@@ -287,13 +274,14 @@ makeDist
 
 cd - > /dev/null
 
+echo
 
 
 
 ##################################################################
 ############            Filtering  sources            ############
 ##################################################################
-echo -n "Filtering : "
+echo -n "Filtering :  "
 
 cd $tmpDir
 
@@ -308,24 +296,30 @@ done
 
 
 ########### Filter translations
-
 echo -n "sources"
 cd QGLViewer
-qmake
-lupdate QGLViewer.pro 2> /dev/null
-lrelease QGLViewer.pro 2> $tmp/lrelease
 
-if [ `grep "untranslated" $tmp/lrelease | wc -l` != 0 ]
+lupdate QGLViewer.pro 2> /dev/null
+lrelease QGLViewer.pro 2> /tmp/lrelease
+
+if [ `grep "untranslated" /tmp/lrelease | wc -l` != 0 ]
 then
   echo "Untranslated QString exist - Aborting"
   exit
 fi
 cd - > /dev/null
 
+########### Create examples' web pages
+echo -n " examples"
+cd examples
+$QGLViewerRootDir/examples/makeDist
+cd - > /dev/null
+
+
 ########### Filter example .pro include release
-echo -n " - pro"
-sed s:"#VERSION_MAJOR#":"$version_major":g examples/release.pri > $tmp/release.filtered
-mv $tmp/release.filtered examples/release.pri
+echo -n " pro"
+sed s:"#VERSION_MAJOR#":"$version_major":g examples/release.pri > /tmp/release.filtered
+mv /tmp/release.filtered examples/release.pri
 
 function replaceIncludeRelease()
 {
@@ -340,9 +334,9 @@ function replaceIncludeRelease()
   
   if [[ $(grep "^include.*examples.pri" $PRO) ]]
   then
-    grep -v "^include.*examples.pri" $PRO > $tmp/proPatched.tmp
-    sed s%"\.\./\.\."%"$path"% examples/release.pri > $tmp/release.pri
-    cat $tmp/proPatched.tmp $tmp/release.pri > $PRO
+    grep -v "^include.*examples.pri" $PRO > /tmp/proPatched.tmp
+    sed s%"\.\./\.\."%"$path"% examples/release.pri > /tmp/release.pri
+    cat /tmp/proPatched.tmp /tmp/release.pri > $PRO
   fi
 }
 
@@ -352,14 +346,9 @@ do
 done
 rm examples/release.pri
 
-########### Create examples' web pages
-echo -n " - examples"
-cd examples
-$QGLViewerRootDir/examples/makeDist
-cd - > /dev/null
 
 ########### Add GPL warnings
-echo -n " - copyright"
+echo -n " copyright"
 for f in `find . -name '*.h' -o -name '*.cpp'`
 do
   cat gpl-warning $f > $f.bak
@@ -381,22 +370,23 @@ do
   mv $f.bak $f
 done
 
-mv gpl-warning $tmp/
+mv gpl-warning /tmp/
 
 ########### Filter doc
-echo " - doc"
+echo -n " doc"
 cd doc
 
 ### Date and version ###
 for f in `ls *.html`
 do
   date=`date -r $f "+%A, %B %-d, %Y"`
-  sed s:"#VERSION#":"$version":g $f | sed s:"#VERSION_MAJOR#":"$version_major":g | sed s%"#WEBURL#"%"$WebURL"%g > $tmp/filtered
-  sed s:"#DATE#":"$date":g $tmp/filtered > $f
+  sed s:"#VERSION#":"$version":g $f | sed s:"#VERSION_MAJOR#":"$version_major":g | sed s%"#WEBURL#"%"$WebURL"%g > /tmp/filtered
+  sed s:"#DATE#":"$date":g /tmp/filtered > $f
 done
 
 ### Doxygen ###
 doxygen Doxyfile
+#cd latex ; make clear ; make pdf > /dev/null ; cp refman.pdf $WebDir/qglviewer.pdf
 rm doxygen.css Doxyfile
 
 cd refManual
@@ -417,33 +407,23 @@ do
 done
 
 
-sed s%"This inheritance.*alphabetically:"%% hierarchy.html > $tmp/hierarchy.html
-mv $tmp/hierarchy.html hierarchy.html
+sed s%"This inheritance.*alphabetically:"%% hierarchy.html > /tmp/hierarchy.html
+mv /tmp/hierarchy.html hierarchy.html
 
 # Changing QGLViewer:: enums
 for f in $(ls class*.html)
 do
-  sed s%">QGLViewer::\([A-Z_]*\)</a>"%">\1</a>"%g $f > $tmp/qgl
-  mv $tmp/qgl $f
+  sed s%">QGLViewer::\([A-Z_]*\)</a>"%">\1</a>"%g $f > /tmp/qgl
+  mv /tmp/qgl $f
 done
 
- 
 # Changing header menus
-   #for f in `ls *.html *.php`
-   #do
-     #awk '/^<a class="qindex/ { gsub(" \\| ", ""); print }' $f > $tmp/header
-     #sed s%"href=\"index.html\">Main"%"href=\"../index.html\">Main"% $tmp/header | sed s%"<a class=\"qindex\" href=\"globals.html\">File&nbsp;Members</a>"%% | sed s%"<a class=\"qindex\" href=\"namespaces.html\">Namespace List</a>"%% | sed s%"<a class=\"qindex\" href=\"annotated.*File&nbsp;List</a>"%% | sed s%"<a class=\"qindex\" href=\"globals.html\">File&nbsp;Members</a>"%% | sed s%"Class&nbsp;Members"%"All\&nbsp;Functions"% | sed s%"/a>"%"/a>\n"%g > $tmp/header.filtered
-       #sed /"^<a class=\"qindex"/d $f | sed "/^<div class=\"qindex.*search.php/r $tmp/header.filtered" > $f.tmp
-       #awk '/^<div class="nav">/ {skip=1; next} {if (skip) {skip=0; next} else print }' $f.tmp > $f
-       #rm $f.tmp
-     #done
-
 for f in $(ls *.html *.php)
 do
   if [ $f != "search.php" ]
   then
-    awk -f ../tabs.awk $f > $tmp/tabs
-    mv $tmp/tabs $f
+    awk -f ../tabs.awk $f > /tmp/tabs
+    mv /tmp/tabs $f
   fi
 done
 rm ../tabs.awk
@@ -488,8 +468,88 @@ rm cwExtractor
    # mv $f.tmp $f
   #done
 
-echo "All files set in $tmpDir"
+echo
+echo ">> All files set in $tmpDir"
+cd $tmpDir
+
+
+
+
+
+
+############################################################
+############            Packages                ############
+############################################################
+echo "todo : statsDownload"
+#cp ../statsDownload/downloads.png ../statsDownload/examples.png $WebDir/images
+
+echo -n "Creating packages : "
+
+echo -n "web"
+wwwTarGZ="www.tar.gz"
+tar czf ../$wwwTarGZ doc
+
+
+rm doc/index.fr.html
+rm doc/refManual/search.php doc/refManual/search.idx
+
+# Tar 
+echo -n " tar"
+# Remove Qt 2.3 specific files
+mv QGLViewer/keySequence.h QGLViewer/keySequence.cpp QGLViewer/QGLViewer.Qt2.3.pro /tmp
+cd ..
+tar -czf $libNameVersion.tar.gz $libNameVersion
+cd - > /dev/null
+
+
+
+echo -n " zip"
+# Restore Qt 2.3 specific files
+mv /tmp/keySequence.h /tmp/keySequence.cpp /tmp/QGLViewer.Qt2.3.pro QGLViewer/
+
+mv CHANGELOG changeLog.txt
+mv INSTALL install.txt
+mv LICENCE licence.txt
+mv README readMe.txt
+
+function addNamespace()
+{
+  str="class QGLVIEWER_EXPORT $1 : public $2"
+  if [ `grep "$str" QGLViewer/$3.h | wc -l` -ne 1 ]
+  then
+      echo "Unrecognized syntax for class $class declaration. Cannot add qglviewer::"
+      exit 1
+  fi
+
+  sed s%"$str"%"class QGLVIEWER_EXPORT $1 : public qglviewer::$2"% QGLViewer/$3.h > /tmp/addNamespace
+  mv /tmp/addNamespace QGLViewer/$3.h 
+}
+#addNamespace SpinningFrame Frame spinningFrame
+addNamespace ManipulatedFrame Frame manipulatedFrame
+addNamespace ManipulatedCameraFrame ManipulatedFrame manipulatedCameraFrame
+
+find . -type f -name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html'  -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb' -exec dos2unix -u -o -p {} \; &> /tmp/error
+
+test -s /tmp/error && (echo "Error while converting newlines to DOS" ; more /tmp/error ; exit 1)
+
+cd ..
+zip -qr $libNameVersion.zip $libNameVersion
+
+
+windowsDir="/host/Users/debunne/Documents/Code/libQGLViewer/QGLViewer/trunk/"
+tar czf $windowsDir/$libNameVersion.tar.gz $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
+cd - > /dev/null
+
+echo
 exit
+
+
+
+
+
+
+
+
 
 
 
@@ -540,51 +600,6 @@ tar -czf $exName.tar.gz $exName
 
 
 
-##################################################################
-############            Create Win Zip                ############
-##################################################################
-echo " - Creating windows zip"
-
-cd $tmpDir
-mv CHANGELOG ChangeLog.txt
-mv INSTALL Install.txt
-mv LICENCE Licence.txt
-mv README Readme.txt
-
-# Add Qt 2.3 specific files
-cat $tmp/gpl-warning $QGLViewerRootDir/QGLViewer/keySequence.h   > QGLViewer/keySequence.h
-cat $tmp/gpl-warning $QGLViewerRootDir/QGLViewer/keySequence.cpp > QGLViewer/keySequence.cpp
-cp $QGLViewerRootDir/QGLViewer/QGLViewer.Qt2.3.pro QGLViewer/
-cp $QGLViewerRootDir/QGLViewer/ImageInterface.Qt2.ui QGLViewer/
-cp $QGLViewerRootDir/QGLViewer/VRenderInterface.Qt2.ui QGLViewer/
-cp $QGLViewerRootDir/examples/interface/viewerInterface.Qt2.ui examples/interface/
-
-function addNamespace()
-{
-  str="class QGLVIEWER_EXPORT $1 : public $2"
-  if [ `grep "$str" QGLViewer/$3.h | wc -l` -ne 1 ]
-  then
-      echo "Unrecognized syntax for class $class declaration. Cannot add qglviewer::"
-      exit 1
-  fi
-
-  sed s%"$str"%"class QGLVIEWER_EXPORT $1 : public qglviewer::$2"% QGLViewer/$3.h > $tmp/addNamespace
-  mv $tmp/addNamespace QGLViewer/$3.h 
-}
-#addNamespace SpinningFrame Frame spinningFrame
-addNamespace ManipulatedFrame Frame manipulatedFrame
-addNamespace ManipulatedCameraFrame ManipulatedFrame manipulatedCameraFrame
-
-echo "Skipping recode of files for special characters"
-#for f in `find . -name '*.h' -o -name '*.cpp' -o -name '*.html' -o -name '*.css' -o -name '*.txt'`
-#do
-#  recode ..pc $f
-#done
-
-cd ..
-zip -qr $libNameVersion.zip $libNameVersion
-
-fi
 
 
 
@@ -639,8 +654,8 @@ function checkRPMUpdate() {
     cd previous$libName
     tar -xzf ../$tarName
     cd ..
-    diff -r $libNameVersion previous$libName/$libNameVersion > $tmp/qgldiff
-    if [ ! -s $tmp/qgldiff ]
+    diff -r $libNameVersion previous$libName/$libNameVersion > /tmp/qgldiff
+    if [ ! -s /tmp/qgldiff ]
     then
       echo " - Sources did not change"
       if [ -f $rpmDir/SRPMS/$libNameVersion.src.rpm -a $rpmDir/SRPMS/$libNameVersion.src.rpm -nt $tarName ]
@@ -651,7 +666,7 @@ function checkRPMUpdate() {
         echo " - RPM is not up to date"    
       fi
     else
-      echo " - Sources have changed (see $tmp/qgldiff)"
+      echo " - Sources have changed (see /tmp/qgldiff)"
     fi
     rm -rf previous$libName
   fi
@@ -670,9 +685,9 @@ then
   cp -f $tarName $rpmDir/SOURCES
   cp -f $QGLViewerRootDir/QGLViewer/qglviewer.spec $rpmDir/SPECS/$libNameVersion.spec
   cd $rpmDir/SPECS/
-  echo " - RPM build... (see $tmp/QGLViewer.rpmbuild)"
+  echo " - RPM build... (see /tmp/QGLViewer.rpmbuild)"
   #echo " - ##### Commented"
-  rpmbuild -ba $libNameVersion.spec >& $tmp/QGLViewer.rpmbuild
+  rpmbuild -ba $libNameVersion.spec >& /tmp/QGLViewer.rpmbuild
   if [ $? != 0 ]
   then
     echo "Problem in RPM creation - Abort"
@@ -694,15 +709,6 @@ fi
 ##################################################################
 echo " - Updating web site"
 
-# echo "Canceled"
-# exit
-
-test -d $WebDir/src || mkdir -p $WebDir/src
-if [[ ! -d $WebDir/src ]]
-then
-    echo " - Unable to reach $WebDir, aborting"
-    exit
-fi
 
 cp -f $tarName $rpmDir/SRPMS/$libNameVersion-1.src.rpm $libNameVersion.zip $WebDir/src
 
@@ -727,12 +733,7 @@ else
     cp -f $rpmDir/RPMS/$ix86/$libName-devel-$version-1.$ix86.rpm $WebDir/src/$libName-devel-$version.i586.rpm
 fi
 
-cd $WebDir/src
-rm md5sum.txt
-md5sum `find . -type f | sort` > md5sum.txt
-cd - > /dev/null
 exit
-fi # $1=rpm
 
 
 if [ $1 == "win" ]
@@ -742,50 +743,6 @@ then
   exit
 fi
 
-
-
-if [ $1 == "web" ]
-then
-  test -d $WebDir || mkdir -p $WebDir
-  test -d $WebDir/src || mkdir -p $WebDir/src
-
-  cd examples
-    echo " - Creating examples"
-    makeDist
-    echo " - Copy examples"
-    test -d $WebDir/examples || rm -rf $WebDir/examples
-    mkdir -p $WebDir/examples
-    cp html/*.html $WebDir/examples
-  cd - > /dev/null
-
-  cd doc
-    echo " - Filtering doc"
-    makeDist
-    filteredHTML=`grep -a ^filteredDir makeDist | cut -d'"' -f2`
-    echo " - Copy result from $filteredHTML"
-    rm -f $WebDir/*.html $WebDir/*.css
-    cp $filteredHTML/* $WebDir
-    cp qglviewer.css $WebDir
-    
-    echo " - Copy images"
-    rm -rf $WebDir/images
-    cp -r images $WebDir
-    rm -rf $WebDir/images/.svn
-    cp ../statsDownload/downloads.png ../statsDownload/examples.png $WebDir/images
-
-    echo " - Copy refManual"
-    rm -rf $WebDir/refManual
-    cp -r refManual $WebDir
-    #cp -r man $WebDir
-    #cd latex ; make clear ; make pdf > /dev/null ; cp refman.pdf $WebDir/qglviewer.pdf
-  cd - > /dev/null
-
-  echo " - Checking web site links"
-  cd $WebDir
-  checkLinks.pl -r
-  ls -1 src | grep -v "^lib" | grep -v "index.html" | grep -v "md5sum.txt"
-  exit
-fi
 
 
 echo "Unrecognized option: $@"

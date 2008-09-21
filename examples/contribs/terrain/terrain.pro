@@ -13,6 +13,6 @@ CONFIG  += qt opengl warn_on release thread
 HEADERS  = quadtree.h   terrain.h   viewer.h   water.h   sky.h   tree.h
 SOURCES  = quadtree.cpp terrain.cpp viewer.cpp water.cpp sky.cpp tree.cpp main.cpp
 
-DISTFILES *= height128.raw Data/*.jpg 
+DISTFILES *= height128.raw Data/*.jpg Data/*.png
 
 include( ../../examples.pri )
