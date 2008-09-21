@@ -28,38 +28,43 @@ if [[ $@ != 0 ]] && [[ $1 = "web" ]]
 then
 echo "--- Publishing libQGLViewer version $version ---"
 
-WebDir="$HOME/www"
-#WebDir="/www"
+#WebDir="$HOME/www"
+WebDir="/www"
 SrcDir="src"
-echo "TEST mode $WebDir" && mkdir -p $WebDir/$SrcDir && touch $WebDir/$SrcDir/oldContent
+#echo "TEST mode $WebDir" && mkdir -p $WebDir/$SrcDir && touch $WebDir/$SrcDir/oldContent
 
 test -f $libNameVersion.tar.gz  || error "No archive file. WinSCP first"
 
-test -d $WebDir/$SrcDir || error "No src dir to backup : $WebDir/$SrcDir"
-mv $WebDir/$SrcDir $HOME/.tmp
-
+cp $libNameVersion.tar.gz fullPackage.tar.gz
 tar xzf $libNameVersion.tar.gz
 
-rm -rf $WebDir && mkdir -p $WebDir
+rm $WebDir/*.html $WebDir/*.css
+rm -rf $WebDir/examples $WebDir/images $WebDir/refManual 
+
 tar xzf $wwwTarGZ
 cp -r doc/* $WebDir
 rm -rf doc www.tar.gz
 
-mv $HOME/.tmp/$SrcDir $WebDir
 mv $libNameVersion.tar.gz $libNameVersion.zip $WebDir/$SrcDir
 
+mv fullPackage.tar.gz $libNameVersion.tar.gz
+
 cd $WebDir
+
 cd $SrcDir
-rm md5sum.txt
+test -f md5sum.txt && rm md5sum.txt
 md5sum `find . -type f | sort` > md5sum.txt
 ls -1 | grep -v "^lib" | grep -v "index.php" | grep -v "md5sum.txt"
 cd - > /dev/null
 
+echo "Checking links..."
 checkLinks.pl -r
 exit
 fi
 
 
+
+test -d /tmp || error "Run with web option on dzsrv-linux."
 
 
 echo "--- Packaging libQGLViewer version $version ---"

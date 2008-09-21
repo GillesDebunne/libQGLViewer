@@ -362,7 +362,7 @@ the philosophy of the library. See also the <a href="../compilation.html">compil
 <a name="basic"></a>
 <h2>Basic examples</h2>
 
-<table cellpadding="2" cellspacing="12">
+<table style="margin:auto;" cellpadding="2" cellspacing="12">
 EOF
 
 # Basic examples
@@ -380,7 +380,7 @@ echo "<h2>Pedagogical examples</h2>" >> $output
 
 nbCol=3
 col=0
-echo "<table cellpadding=\"2\" cellspacing=\"12\">" >> $output
+echo "<table style=\"margin:auto;\" cellpadding=\"2\" cellspacing=\"12\">" >> $output
 for name in $EXAMPLE_DIRS
 do
   makeExampleCell
@@ -393,7 +393,7 @@ echo "<h2>More complex examples</h2>" >> $output
 
 col=0
 dir="$contribsDir/"
-echo "<table cellpadding=\"2\" cellspacing=\"12\">" >> $output
+echo "<table style=\"margin:auto;\" cellpadding=\"2\" cellspacing=\"12\">" >> $output
 for name in $CONTRIB_DIRS
 do
   makeExampleCell
