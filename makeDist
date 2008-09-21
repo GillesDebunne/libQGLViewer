@@ -13,8 +13,53 @@ libNameVersion="$libName-$version"
 tmpDir="/tmp/$libNameVersion"
 QGLViewerRootDir=`pwd`
 
+wwwTarGZ="www.tar.gz"
+
 # echo "$0 disabled for security"
 # exit
+
+function error
+{
+  echo $1
+  exit 1
+}
+
+if [[ $@ != 0 ]] && [[ $1 = "web" ]]
+then
+echo "--- Publishing libQGLViewer version $version ---"
+
+WebDir="$HOME/www"
+#WebDir="/www"
+SrcDir="src"
+echo "TEST mode $WebDir" && mkdir -p $WebDir/$SrcDir && touch $WebDir/$SrcDir/oldContent
+
+test -f $libNameVersion.tar.gz  || error "No archive file. WinSCP first"
+
+test -d $WebDir/$SrcDir || error "No src dir to backup : $WebDir/$SrcDir"
+mv $WebDir/$SrcDir $HOME/.tmp
+
+tar xzf $libNameVersion.tar.gz
+
+rm -rf $WebDir && mkdir -p $WebDir
+tar xzf $wwwTarGZ
+cp -r doc/* $WebDir
+rm -rf doc www.tar.gz
+
+mv $HOME/.tmp/$SrcDir $WebDir
+mv $libNameVersion.tar.gz $libNameVersion.zip $WebDir/$SrcDir
+
+cd $WebDir
+cd $SrcDir
+rm md5sum.txt
+md5sum `find . -type f | sort` > md5sum.txt
+ls -1 | grep -v "^lib" | grep -v "index.php" | grep -v "md5sum.txt"
+cd - > /dev/null
+
+checkLinks.pl -r
+exit
+fi
+
+
 
 
 echo "--- Packaging libQGLViewer version $version ---"
@@ -189,7 +234,7 @@ function makeDistExample()
 {
   #echo "makeDirsEx sur $DIR"
   name=$(basename $DIR)
-  test -f $DIR/$name.pro || ( echo "No example $name.pro file - Aborting" && exit )
+  test -f $DIR/$name.pro || error "No example $name.pro file - Aborting"
 
   TARGET="$name"
   FILE="$(dirname $DIR)/$(basename $(dirname $DIR)).pro"
@@ -356,11 +401,7 @@ do
 done
 
 vRenderCopyright="$QGLViewerRootDir/QGLViewer/VRender/copyright"
-if [ ! -f $vRenderCopyright ]
-then
-  echo "No copyright in VRender"
-  exit
-fi
+test -f $vRenderCopyright || error "No copyright in VRender"
 
 dos2unix -o -p $vRenderCopyright
 
@@ -486,7 +527,6 @@ echo "todo : statsDownload"
 echo -n "Creating packages : "
 
 echo -n "web"
-wwwTarGZ="www.tar.gz"
 tar czf ../$wwwTarGZ doc
 
 
@@ -514,15 +554,12 @@ mv README readMe.txt
 
 function addNamespace()
 {
-  str="class QGLVIEWER_EXPORT $1 : public $2"
-  if [ `grep "$str" QGLViewer/$3.h | wc -l` -ne 1 ]
-  then
-      echo "Unrecognized syntax for class $class declaration. Cannot add qglviewer::"
-      exit 1
-  fi
+  TARGET="class QGLVIEWER_EXPORT $1 : public $2"
+  FILE="QGLViewer/$3.h"
+  checkGrep
 
-  sed s%"$str"%"class QGLVIEWER_EXPORT $1 : public qglviewer::$2"% QGLViewer/$3.h > /tmp/addNamespace
-  mv /tmp/addNamespace QGLViewer/$3.h 
+  sed s%"$TARGET"%"class QGLVIEWER_EXPORT $1 : public qglviewer::$2"% $FILE > /tmp/addNamespace
+  mv /tmp/addNamespace QGLViewer/$3.h
 }
 #addNamespace SpinningFrame Frame spinningFrame
 addNamespace ManipulatedFrame Frame manipulatedFrame
@@ -530,7 +567,7 @@ addNamespace ManipulatedCameraFrame ManipulatedFrame manipulatedCameraFrame
 
 find . -type f -name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html'  -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb' -exec dos2unix -u -o -p {} \; &> /tmp/error
 
-test -s /tmp/error && (echo "Error while converting newlines to DOS" ; more /tmp/error ; exit 1)
+test -s /tmp/error && more /tmp/error && error "Error while converting newlines to DOS"
 
 cd ..
 zip -qr $libNameVersion.zip $libNameVersion
