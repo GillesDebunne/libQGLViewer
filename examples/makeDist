@@ -352,7 +352,8 @@ then
 <h2>Introduction</h2>
 
 Many pedagogical examples illustrate some of the functionalities of the viewer and are provided for
-understanding and cut and paste.
+understanding and cut and paste. They were not designed to be impressive, but to demonstrate what can
+be achieved with few lines of code.
 
 <p>
 One should first try the <a href="#basic">basic examples</a> listed below and read the <a href="../introduction.html">introduction page</a> to understand

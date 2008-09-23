@@ -70,7 +70,7 @@ test -d /tmp || error "Run with web option on dzsrv-linux."
 echo "--- Packaging libQGLViewer version $version ---"
 
 # Convert possible Windows encoding
-find . -type f -name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html'  -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb' -exec dos2unix -o -p {} \; &> /tmp/error
+find . -type f -a (-name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html' -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb') -exec dos2unix -o -p {} \; &> /tmp/error
 grep -v "/\.svn/" /tmp/error
 if [[ "$?" -eq "0" ]]
 then
@@ -214,8 +214,8 @@ test -d $tmpDir || mkdir -p $tmpDir
 
 # ----------------------------------------------
 
-dos2unix -o -p CHANGELOG INSTALL README LICENCE gpl-warning &> /tmp/error
-SOURCES="CHANGELOG INSTALL README LICENCE gpl-warning"
+dos2unix -o -p CHANGELOG INSTALL README LICENCE GPL_EXCEPTION gpl-warning &> /tmp/error
+SOURCES="CHANGELOG INSTALL README LICENCE GPL_EXCEPTION gpl-warning"
 TARGET=""
 makeDist
 
@@ -338,7 +338,7 @@ cd $tmpDir
 ########### Filter root files
 export LC_TIME="en"
 date=`date "+%B %-d, %Y"`
-for f in "gpl-warning" "CHANGELOG" "INSTALL" "LICENCE" "README"
+for f in "gpl-warning" "CHANGELOG" "INSTALL" "LICENCE" "README" "GPL_EXCEPTION"
 do
   sed s:"#VERSION#":"$version":g $f | sed s%"#WEBURL#"%"$WebURL"%g | sed s:"#DATE#":"$date":g > $f.filtered
   mv $f.filtered $f
@@ -416,7 +416,6 @@ do
   mv $f.bak $f
 done
 
-mv gpl-warning /tmp/
 
 ########### Filter doc
 echo -n " doc"
@@ -540,8 +539,6 @@ rm doc/refManual/search.php doc/refManual/search.idx
 
 # Tar 
 echo -n " tar"
-# Remove Qt 2.3 specific files
-mv QGLViewer/keySequence.h QGLViewer/keySequence.cpp QGLViewer/QGLViewer.Qt2.3.pro /tmp
 cd ..
 tar -czf $libNameVersion.tar.gz $libNameVersion
 cd - > /dev/null
@@ -549,13 +546,12 @@ cd - > /dev/null
 
 
 echo -n " zip"
-# Restore Qt 2.3 specific files
-mv /tmp/keySequence.h /tmp/keySequence.cpp /tmp/QGLViewer.Qt2.3.pro QGLViewer/
 
 mv CHANGELOG changeLog.txt
 mv INSTALL install.txt
 mv LICENCE licence.txt
 mv README readMe.txt
+mv GPL_EXCEPTION GPL_exception.txt
 
 function addNamespace()
 {
@@ -570,7 +566,7 @@ function addNamespace()
 addNamespace ManipulatedFrame Frame manipulatedFrame
 addNamespace ManipulatedCameraFrame ManipulatedFrame manipulatedCameraFrame
 
-find . -type f -name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html'  -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb' -exec dos2unix -u -o -p {} \; &> /tmp/error
+find . -type f -a (-name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html' -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb') -exec unix2dos -o -p {} \; &> /tmp/error
 
 test -s /tmp/error && more /tmp/error && error "Error while converting newlines to DOS"
 
