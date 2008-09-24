@@ -82,7 +82,7 @@ void ParserGL::parseFeedbackBuffer(	GLfloat *buffer,int size,
 		loc++;
 
 		if((end-loc)/N >= next_step)
-			vparams.progress((end-loc)/(float)size,string("Parsing feedback buffer.")), ++next_step ;
+			vparams.progress((end-loc)/(float)size, QGLViewer::tr("Parsing feedback buffer.")), ++next_step ;
 
 		switch (token)
 		{

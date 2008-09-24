@@ -5,11 +5,6 @@
 #include "gpc.h"
 #include "math.h"
 
-#undef DEBUG_EPSRENDER__SHOW1
-#ifdef DEBUG_EPSRENDER__SHOW1
-# include "../qglviewer.h"
-#endif
-
 using namespace vrender ;
 using namespace std ;
 
@@ -223,7 +218,7 @@ void VisibilityOptimizer::optimize(vector<PtrPrimitive>& primitives,VRenderParam
 			}
 
 			if(nboptimised%N==0)
-				vparams.progress(nboptimised/(float)primitives.size(),string("Visibility optimization")) ;
+				vparams.progress(nboptimised/(float)primitives.size(), QGLViewer::tr("Visibility optimization")) ;
 		}
 
 #ifdef DEBUG_VO

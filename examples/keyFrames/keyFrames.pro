@@ -15,7 +15,6 @@
 
 TEMPLATE = app
 TARGET   = keyFrames
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = keyFrames.h
 SOURCES  = keyFrames.cpp main.cpp

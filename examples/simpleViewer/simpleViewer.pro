@@ -10,7 +10,6 @@
 
 TEMPLATE = app
 TARGET   = simpleViewer
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = simpleViewer.h
 SOURCES  = simpleViewer.cpp main.cpp

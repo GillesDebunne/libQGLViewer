@@ -13,7 +13,6 @@
 
 TEMPLATE = app
 TARGET   = multiSelect
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = multiSelect.h manipulatedFrameSetConstraint.h object.h
 SOURCES  = multiSelect.cpp manipulatedFrameSetConstraint.cpp object.cpp main.cpp

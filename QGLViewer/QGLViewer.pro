@@ -1,10 +1,8 @@
 #		    l i b Q G L V i e w e r
 #	C o m p i l a t i o n    c o n f i g u r a t i o n
 
-# Run "qmake; make; make install" to compile and install the library.
+# Run "qmake; make; make install" to compile and install the library on Unix systems.
 # Optional arguments can tune install paths (as in "qmake PREFIX=$HOME"). See doc/download.html for details.
-
-# Attention : Windows Qt 2.3 users should use QGLViewer.Qt2.3.pro instead of this file.
 
 # If your Qt version is lower than 3.1 (look at $QTDIR/lib), you need to link with GLUT.
 # Uncomment the following line:
@@ -58,6 +56,61 @@ contains( QT_VERSION, "^4.*" ) {
 !isEmpty( QGLVIEWER_STATIC ) {
   CONFIG *= staticlib
 }
+
+#		--  I m a g e I n t e r f a c e  --
+contains( QT_VERSION, "^4.*" ) {
+  FORMS *= ImageInterface.Qt4.ui
+} else {
+  FORMS *= ImageInterface.Qt3.ui
+}
+
+#		--  V e c t o r i a l   R e n d e r i n g  --
+# In case of compilation troubles with vectorial rendering, uncomment this line
+# DEFINES *= NO_VECTORIAL_RENDER
+
+contains( DEFINES, NO_VECTORIAL_RENDER ) {
+  message( Vectorial rendering disabled )
+} else {
+  contains( QT_VERSION, "^4.*" ) {
+    FORMS *= VRenderInterface.Qt4.ui
+  } else {
+    FORMS *= VRenderInterface.Qt3.ui
+  }
+
+  SOURCES *= \
+	VRender/BackFaceCullingOptimizer.cpp \
+	VRender/BSPSortMethod.cpp \
+	VRender/EPSExporter.cpp \
+	VRender/Exporter.cpp \
+	VRender/FIGExporter.cpp \
+	VRender/gpc.cpp \
+	VRender/ParserGL.cpp \
+	VRender/Primitive.cpp \
+	VRender/PrimitivePositioning.cpp \
+	VRender/TopologicalSortMethod.cpp \
+	VRender/VisibilityOptimizer.cpp \
+	VRender/Vector2.cpp \
+	VRender/Vector3.cpp \
+	VRender/NVector3.cpp \
+	VRender/VRender.cpp
+
+  HEADERS *= \
+	VRender/AxisAlignedBox.h \
+	VRender/Exporter.h \
+	VRender/gpc.h \
+	VRender/NVector3.h \
+	VRender/Optimizer.h \
+	VRender/ParserGL.h \
+	VRender/Primitive.h \
+	VRender/PrimitivePositioning.h \
+	VRender/SortMethod.h \
+	VRender/Types.h \
+	VRender/Vector2.h \
+	VRender/Vector3.h \
+	VRender/VRender.h
+}
+
+
 
 #		--  U n i x  --
 unix {
@@ -182,16 +235,16 @@ win32 {
     DEFINES *= CREATE_QGLVIEWER_DLL
   }
 
-  # Use the DLL version of Qt
+  MOC_DIR = moc
+  OBJECTS_DIR = obj
+
+  # Use the DLL version of Qt (needed for Qt3 only)
   DEFINES *= QT_DLL QT_THREAD_SUPPORT
 
   CONFIG *= embed_manifest_dll
 
-  MOC_DIR = moc
-  OBJECTS_DIR = obj
-
   # Make sure to have C++ files, PentiumPro code, few warnings, add
-  # support to RTTI and Exceptions, and generate debug info "program database"
+  # support to RTTI and Exceptions, and generate debug info "program database".
   # Any feedback on these flags is welcome.
   !win32-g++ {
     QMAKE_CXXFLAGS = -TP -G6 -GR -Zi
@@ -201,59 +254,4 @@ win32 {
       QMAKE_CXXFLAGS *= -EHs
     }
   }
-}
-
-
-#		--  I m a g e I n t e r f a c e  --
-contains( QT_VERSION, "^4.*" ) {
-  FORMS *= ImageInterface.Qt4.ui
-} else {
-  FORMS *= ImageInterface.Qt3.ui
-}
-
-
-#		--  V e c t o r i a l   R e n d e r i n g  --
-# In case of compilation troubles with vectorial rendering, uncomment this line
-# DEFINES *= NO_VECTORIAL_RENDER
-
-contains( DEFINES, NO_VECTORIAL_RENDER ) {
-  message( Vectorial rendering disabled )
-} else {
-  contains( QT_VERSION, "^4.*" ) {
-    FORMS *= VRenderInterface.Qt4.ui
-  } else {
-    FORMS *= VRenderInterface.Qt3.ui
-  }
-
-  SOURCES *= \
-	VRender/BackFaceCullingOptimizer.cpp \
-	VRender/BSPSortMethod.cpp \
-	VRender/EPSExporter.cpp \
-	VRender/Exporter.cpp \
-	VRender/FIGExporter.cpp \
-	VRender/gpc.cpp \
-	VRender/ParserGL.cpp \
-	VRender/Primitive.cpp \
-	VRender/PrimitivePositioning.cpp \
-	VRender/TopologicalSortMethod.cpp \
-	VRender/VisibilityOptimizer.cpp \
-	VRender/Vector2.cpp \
-	VRender/Vector3.cpp \
-	VRender/NVector3.cpp \
-	VRender/VRender.cpp
-
-  HEADERS *= \
-	VRender/AxisAlignedBox.h \
-	VRender/Exporter.h \
-	VRender/gpc.h \
-	VRender/NVector3.h \
-	VRender/Optimizer.h \
-	VRender/ParserGL.h \
-	VRender/Primitive.h \
-	VRender/PrimitivePositioning.h \
-	VRender/SortMethod.h \
-	VRender/Types.h \
-	VRender/Vector2.h \
-	VRender/Vector3.h \
-	VRender/VRender.h
 }

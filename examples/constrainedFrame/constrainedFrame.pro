@@ -8,7 +8,6 @@
 
 TEMPLATE = app
 TARGET   = constrainedFrame
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = constrainedFrame.h
 SOURCES  = constrainedFrame.cpp main.cpp

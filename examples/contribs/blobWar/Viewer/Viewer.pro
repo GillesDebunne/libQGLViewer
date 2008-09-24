@@ -11,7 +11,6 @@
 
 TEMPLATE = app
 TARGET   = blobWar
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS += blobWarViewer.h board.h move.h computerPlayer.h undo.h
 SOURCES += main.cpp blobWarViewer.cpp board.cpp boardDraw.cpp move.cpp computerPlayer.cpp undo.cpp

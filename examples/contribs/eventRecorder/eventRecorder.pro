@@ -9,7 +9,6 @@
 
 TEMPLATE = app
 TARGET   = eventRecorder
-CONFIG  += general qt opengl release thread
 
 HEADERS  = viewer.h eventRecorder.h
 SOURCES  = viewer.cpp eventRecorder.cpp main.cpp

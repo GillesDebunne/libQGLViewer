@@ -19,7 +19,6 @@
 
 TEMPLATE = app
 TARGET   = mouseGrabber
-CONFIG  += general qt opengl release thread
 
 HEADERS  = mouseGrabber.h
 SOURCES  = mouseGrabber.cpp main.cpp

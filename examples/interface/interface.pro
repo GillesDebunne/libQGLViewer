@@ -11,7 +11,7 @@
 # plugins for the classes you will derive from QGLViewer. Select your architecture in the <a
 # href="../download.html">download page</a> for details on the plugin compilation and installation.
 
-# With Qt version 2 or 3, an alternative to the plugin technique is to use the
+# With Qt version 3, an alternative to the plugin technique is to use the
 # <code>qglviewer.cw</code> (custom widget) file located in this directory (also available in the
 # QGLViewer header file directory). It describes all the QGLViewer signals and slots. Add a "Custom
 # Widget" using the <i>Tools/Custom</i> designer menu, and use <i>Load Descriptions...</i> to load
@@ -23,13 +23,9 @@
 
 TEMPLATE = app
 TARGET   = interface
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = interface.h
 SOURCES  = interface.cpp main.cpp
-
-# Windows Qt 2.3 users : uncomment next line and remove the next paragraph
-#INTERFACES = viewerInterface.Qt2.ui
 
 QT_VERSION=$$[QT_VERSION]
 contains( QT_VERSION, "^4.*" ) {

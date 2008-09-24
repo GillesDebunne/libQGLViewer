@@ -8,7 +8,6 @@
 
 TEMPLATE = app
 TARGET   = constrainedCamera
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = constrainedCamera.h
 SOURCES  = constrainedCamera.cpp main.cpp

@@ -50,7 +50,7 @@ void BSPSortMethod::sortPrimitives(std::vector<PtrPrimitive>& primitive_tab,VRen
 			segments_and_points.push_back(primitive_tab[i]) ;
 
 		if(nbinserted%N==0)
-			vparams.progress(nbinserted/(float)primitive_tab.size(),string("BSP Construction")) ;
+			vparams.progress(nbinserted/(float)primitive_tab.size(), QGLViewer::tr("BSP Construction")) ;
 	}
 
 	// 2 - insert points and segments into the BSP
@@ -66,7 +66,7 @@ void BSPSortMethod::sortPrimitives(std::vector<PtrPrimitive>& primitive_tab,VRen
 			tree.insert(p) ;
 
 		if(nbinserted%N==0)
-			vparams.progress(nbinserted/(float)primitive_tab.size(),string("BSP Construction")) ;
+			vparams.progress(nbinserted/(float)primitive_tab.size(), QGLViewer::tr("BSP Construction")) ;
 	}
 
 	// 3 - refill the array with the content of the BSP

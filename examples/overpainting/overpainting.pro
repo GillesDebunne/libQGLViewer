@@ -7,7 +7,6 @@
 
 TEMPLATE = app
 TARGET   = overpainting
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = viewer.h
 SOURCES  = viewer.cpp main.cpp

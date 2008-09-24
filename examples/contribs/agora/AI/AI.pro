@@ -1,8 +1,5 @@
 TEMPLATE = app
 TARGET   = agoraAI 
-CONFIG  += qt warn_on release thread console
-
-QT += xml opengl
 
 INCLUDEPATH *= ../Viewer
 

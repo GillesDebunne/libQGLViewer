@@ -1,28 +1,25 @@
-# The rest of this configuration file is pretty complex since it tries to automatically
-# detect system paths and configuration. In your applications, you can probably simply use:
-#unix:LIBS *= -lQGLViewer
-#win32:LIBS *= QGLViewer%CAT_VERSION%.lib (with Visual 6, use QGLViewer#VERSION_MAJOR#.lib or QGLViewer.lib instead)
-
-#Windows Qt 2.3 users should uncomment the next 2 lines and remove all the remaining lines:
-#DEFINES *= QT_DLL QT_THREAD_SUPPORT
-#LIBS *= QGLViewer.Qt2.3.lib
+QT *= xml opengl
 
 CONFIG -= debug debug_and_release
 CONFIG += release qt opengl warn_on thread rtti console embed_manifest_exe
 
-QT_VERSION=$$[QT_VERSION]
+# --------------------------------------------------------------------------------------
 
-contains( QT_VERSION, "^4\..*" ) {
-  QT *= xml opengl
-} else {
-  CONFIG *= thread
-}
+# The remaining of this configuration tries to automatically detect the library paths.
+# In your applications, you can probably simply use (see doc/compilation.html for details) :
 
-#                       Unix configuration
-# See doc/installUnix.html and doc/examples/index.html for details.
-# Same INCLUDE_DIR and LIB_DIR parameters than for the make install.
+#INCLUDEPATH *= C:/Users/debunne/Documents/libQGLViewer-#VERSION#
+#LIBS *= -LC:/Users/debunne/Documents/libQGLViewer-#VERSION#/QGLViewer -lQGLViewer#VERSION_MAJOR#
+
+# Change these paths according to your configuration.
+
+# --------------------------------------------------------------------------------------
+
+
+### Unix configuration ###
 unix|win32-g++ {
   isEmpty( PREFIX ) {
+    # Try same INCLUDE_DIR and LIB_DIR parameters than for the make install.
     PREFIX=/usr
   }
 
@@ -40,7 +37,7 @@ unix|win32-g++ {
 
   !exists( $${INCLUDE_DIR}/QGLViewer/qglviewer.h ) {
     message( Unable to find QGLViewer/qglviewer.h in $${INCLUDE_DIR} )
-    error( Use qmake INCLUDE_DIR=Path/To/QGLViewerHeaderFiles )
+    error( Use qmake INCLUDE_DIR=Path/To/QGLViewer )
   }
 
   # LIB_NAME
@@ -59,9 +56,6 @@ unix|win32-g++ {
     LIB_NAME = libQGLViewer*.a
   }
 
-  #    exists( $${LIB_PATH}/libQGLViewer#VERSION_MAJOR#.a ) {
-  #     LIBS *= -L$${LIB_PATH} -lQGLViewer#VERSION_MAJOR#
-
   # LIB_DIR
   isEmpty( LIB_DIR ) {
     LIB_DIR = $${PREFIX}/lib
@@ -72,26 +66,21 @@ unix|win32-g++ {
         LIB_DIR = ../../QGLViewer
       }
     }  
-    !exists( $${LIB_DIR}/$${LIB_NAME} ) {
-      exists( ../../QGLViewer/Release/$${LIB_NAME} ) {
-        message( Using ../../Release/QGLViewer as LIB_DIR )
-        LIB_DIR = ../../Release/QGLViewer
-      }
-    }
-    
-    contains( LIB_DIR, "../.." ) {
-      macx|darwin-g++ {
-        message( You should add the path to "$${LIB_DIR}" to your DYLD_LIBRARY_PATH variable )
-      } else {
-        message( You should add the path to "$${LIB_DIR}" to your LD_LIBRARY_PATH variable )
-      }
-      message( See doc/compilation.html for details )
-    }
   }
 
   !exists( $${LIB_DIR}/$${LIB_NAME} ) {
     message( Unable to find $${LIB_NAME} in $${LIB_DIR} )
     error( You should run qmake LIB_DIR=Path/To/$${LIB_NAME} )
+  }
+
+      
+  contains( LIB_DIR, ".." ) {
+    macx|darwin-g++ {
+      message( You should add the path to "$${LIB_DIR}" to your DYLD_LIBRARY_PATH variable )
+    } else {
+      message( You should add the path to "$${LIB_DIR}" to your LD_LIBRARY_PATH variable )
+    }
+    message( See doc/compilation.html for details )
   }
 
   # Paths were correctly detected
@@ -118,18 +107,17 @@ unix|win32-g++ {
 }
 
 
-#                    Windows configuration.
+
+### Windows configuration ###
 win32 {
   MOC_DIR = moc
   OBJECTS_DIR = obj
 }
 
 !win32-g++ {
-win32 {	
-  contains( QT_VERSION, "^3\..*" ) {
-    # Use the Qt DLL version
-    DEFINES *= QT_DLL QT_THREAD_SUPPORT
-  }
+win32 {
+  # Use the Qt DLL version. Only needed with Qt3
+  DEFINES *= QT_DLL QT_THREAD_SUPPORT
 
   !isEmpty( QGLVIEWER_STATIC ) {
     DEFINES *= QGLVIEWER_STATIC
@@ -137,22 +125,10 @@ win32 {
 
   LIB_FILE = QGLViewer*.lib
 
-  # Compilation from zip file : libQGLViewer is in ../..
+  # Compilation from zip file : libQGLViewer is located in ../..
   exists( ../../QGLViewer ) {
     exists( ../../QGLViewer/qglviewer.h ) {
       INCLUDEPATH *= ../..
-    }
-
-    exists( ../../QGLViewer/Debug ) {
-      exists( ../../QGLViewer/Debug/$${LIB_FILE} ) {
-        LIB_PATH = ../../QGLViewer/Debug
-      }
-    }
-
-    exists( ../../QGLViewer/Release ) {
-      exists( ../../QGLViewer/Release/$${LIB_FILE} ) {
-        LIB_PATH = ../../QGLViewer/Release
-      }
     }
 
     exists( ../../QGLViewer/$${LIB_FILE} ) {
@@ -160,13 +136,5 @@ win32 {
     }
   }
 
-  exists( $${LIB_PATH}/QGLViewer#VERSION_MAJOR#.lib )
-    LIBS *= $${LIB_PATH}/QGLViewer#VERSION_MAJOR#.lib
-  else {
-    exists( $${LIB_PATH}/QGLViewer.lib ) {
-      LIBS *= $${LIB_PATH}/QGLViewer.lib
-    } else {
-      error( Unable to find $${LIB_FILE}. )
-    }
-  }
+ LIBS *= -L$${LIB_PATH} -lQGLViewer#VERSION_MAJOR#
 }}

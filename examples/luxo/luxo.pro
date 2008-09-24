@@ -13,7 +13,6 @@
 
 TEMPLATE = app
 TARGET   = luxo
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = luxo.h
 SOURCES  = luxo.cpp main.cpp

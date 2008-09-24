@@ -9,7 +9,6 @@
 
 TEMPLATE = app
 TARGET   = manipulatedFrame
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = manipulatedFrame.h
 SOURCES  = manipulatedFrame.cpp main.cpp

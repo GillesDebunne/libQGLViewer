@@ -9,11 +9,7 @@
   };
 #else
 # include "interface.h"
-# if QT_VERSION >= 0x030000
-#  include "viewerInterface.Qt3.h"
-# else
-#  include "viewerInterface.Qt2.h"
-# endif
+# include "viewerInterface.Qt3.h"
 #endif
 
 int main(int argc, char** argv)

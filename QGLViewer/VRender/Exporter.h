@@ -8,8 +8,10 @@
 #include "../config.h"
 #if QT_VERSION >= 0x040000
 # include <QTextStream>
+# include <QString>
 #else
 # include <qtextstream.h>
+# include <qstring.h>
 #endif
 
 namespace vrender
@@ -21,7 +23,7 @@ namespace vrender
 			Exporter() ;
 			virtual ~Exporter() {};
 
-			virtual void exportToFile(const char *filename,const std::vector<PtrPrimitive>&,VRenderParams&) ;
+			virtual void exportToFile(const QString& filename,const std::vector<PtrPrimitive>&,VRenderParams&) ;
 
 			void setBoundingBox(float xmin,float ymin,float xmax,float ymax) ;
 			void setClearColor(float r,float g,float b) ;

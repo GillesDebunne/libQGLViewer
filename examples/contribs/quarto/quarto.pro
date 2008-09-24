@@ -6,7 +6,6 @@
 
 TEMPLATE = app
 TARGET   = quarto
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS	+= glview.h jeu.h piece.h quarto.h
 SOURCES	+= glview.cpp jeu.cpp piece.cpp quarto.cpp main.cpp

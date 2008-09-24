@@ -22,7 +22,6 @@
 
 TEMPLATE = app
 TARGET   = frameTransform
-CONFIG  *= qt opengl warn_on release thread
 
 HEADERS  = frameTransform.h
 SOURCES  = frameTransform.cpp main.cpp

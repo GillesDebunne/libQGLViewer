@@ -8,7 +8,6 @@
 
 TEMPLATE = app
 TARGET   = multiView
-CONFIG  += general qt opengl release thread
 
 HEADERS  = multiView.h
 SOURCES  = multiView.cpp main.cpp

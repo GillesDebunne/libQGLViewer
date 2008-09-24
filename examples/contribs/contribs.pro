@@ -11,6 +11,6 @@ SUBDIRS       = agora \
 
 QT_VERSION = $$[QT_VERSION]
 !contains( QT_VERSION, "^4.*" ) {
-  SUBDIRS *= quarto 3dsViewer eventRecorder x3dViewer
+  SUBDIRS *= quarto 3dsViewer eventRecorder
 }
 

@@ -341,7 +341,7 @@ void TopologicalSortUtils::recursTopologicalSort(	vector< vector<int> >& precede
 		new_pr_tab.push_back(primitive_tab[indx]) ;
 
 		if((++nbrendered)%info_cnt==0)
-			vparams.progress(nbrendered/(float)primitive_tab.size(),string("Topological sort")) ;
+			vparams.progress(nbrendered/(float)primitive_tab.size(), QGLViewer::tr("Topological sort")) ;
 	}
 
 	already_rendered[indx] = true ;
@@ -633,7 +633,7 @@ void TopologicalSortUtils::recursTopologicalSort(	vector< vector<int> >& precede
 		new_pr_tab.push_back(primitive_tab[indx]) ;
 
 		if((++nbrendered)%info_cnt==0)
-			vparams.progress(nbrendered/(float)primitive_tab.size(),string("Advanced topological sort")) ;
+			vparams.progress(nbrendered/(float)primitive_tab.size(), QGLViewer::tr("Advanced topological sort")) ;
 	}
 
 	already_rendered[indx] = true ;

@@ -19,7 +19,6 @@
 
 TEMPLATE = app
 TARGET   = 3dsViewer
-CONFIG  += qt opengl warn_on release thread
 
 # Set these paths according to your configuration
 # Use qmake 3DS_INCLUDE_DIR=... 3DS_LIB_DIR=...

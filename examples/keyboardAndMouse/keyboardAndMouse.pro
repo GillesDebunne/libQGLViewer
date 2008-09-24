@@ -15,7 +15,6 @@
 
 TEMPLATE = app
 TARGET   = keyboardAndMouse
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = keyboardAndMouse.h
 SOURCES  = keyboardAndMouse.cpp main.cpp

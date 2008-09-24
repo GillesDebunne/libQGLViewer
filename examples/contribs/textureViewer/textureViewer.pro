@@ -10,7 +10,6 @@
 
 TEMPLATE = app
 TARGET   = textureViewer
-CONFIG  += general qt opengl release thread
 
 HEADERS  = textureViewer.h
 SOURCES  = textureViewer.cpp main.cpp

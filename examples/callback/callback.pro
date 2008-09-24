@@ -6,7 +6,6 @@
 
 TEMPLATE = app
 TARGET   = callback
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = callback.h
 SOURCES  = callback.cpp main.cpp

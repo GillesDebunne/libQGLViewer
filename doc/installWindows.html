@@ -37,7 +37,6 @@ This source code is released under the GPL license. If you are using libQGLViewe
 commercial application, you need to purchase a <a href="mailto:contact@libqglviewer.com?Subject=Commercial license">libQGLViewer commercial license</a>. 
 
 
-
 <h2>Compilation from the sources</h2>
 
 If you want to compile the library from its sources, first download and install the latest Qt version from the 
@@ -119,7 +118,7 @@ when you test your interface. All the viewers' signals and slots are available a
 To compile the plugin, open the <code>designerPlugin.pro</code> file to create your workspace.
 Install the resulting plugin library (<code>qglviewerplugin.dll</code>) in <code>$QTDIR\plugins\designer</code> and/or
 <code>C:\Program Files\Trolltech\Qt VS Integration\plugins</code> to use it with the Visual Studio
-integrated designer. Note that you also have to install the QGLViewer dll in <code>C:\Windows\System32</code> (as described above).
+integrated designer. Note that you also have to install the <code>QGLViewer#VERSION_MAJOR#.dll</code> in <code>C:\Windows\System32</code> (as described above).
 Although successfully tested, this procedure does not seem to be sufficient with certain configurations, any explanation is more than welcome.
 </p>
 
@@ -135,108 +134,6 @@ file path.
 
 See the <a href="examples/interface.html">interface example</a> for an illustration of a user
 interface that includes a QGLViewer.
-
-
-
-<!--
-
-<a name="qt2.3"></a>
-<h2>Using Qt version 2.3</h2>
-
-<p>
-The <a href="ftp://ftp.trolltech.com/qt/non-commercial/QtWin230-NonCommercial.exe">Qt 2.3</a> version 
-is no longer supported by Trolltech, and it does not give a correct picture of
-the actual Qt functionalities. However, and since it used to be the only free version available on Windows, 
-libQGLViewer is fully functional with this Qt version.
-Note that Qt should <i>not</i> be installed in a directory whose name contains
-spaces (such as <code>Program Files</code>). You also need to download and install the 
-<a href="http://www.xmission.com/~nate/glut.html">GLUT library</a> as explained above.
-</p>
-
-To compile with Qt 2.3, follow the installation procedure described above but open
-<code>QGLViewer.Qt2.3.pro</code> instead.
-
-<p>
-With Visual Studio 6:
-</p>
-<ul>
-<li>If no <code>Project created</code> dialog is displayed when you open <code>QGLViewer.pro</code>,
-try to restart Visual Studio with Administrator privileges.</li>
-
-<li>Edit <code>qglviewer.h</code> and remove the word <i>slots</i> before
-<code>saveSnapshot()</code> as explained around line 515.</li>
-
-<li>Before compilation, add <code>/GX /GR</code> in <i>Project-Settings-C-C++, Project Options</i> for
-exceptions and dynamic casts.</li>
-
-<li>Also add <code>glut32.lib</code> to <i>Projects-Settings-Link-Object/library modules</i>.</li>
-
-<li>You may be prompted with <code>illegal call</code> error messages during the compilation of
-<code>className()</code> in moc files. Simply remove the first <code>qglviewer::</code> just after
-<code>strcmp(</code> and recompile.</li>
-
-<a name="mocbug"></a>
-<li>A <a href="http://www.trolltech.com/developer/tasktracker.html?id=104327+&method=entry">moc bug</a> in Qt 4.1.1
-generates a <code>error C2061: syntax error : identifier 'KeyFrameInterpolator'</code> error message. Simply replace
-<code>const(*)</code> by <code>const*</code> in the moc file to fix this (thanks Juergen).</li>
-</ul>
--->
-
-<!--
-If you use .NET (Thanks to Lionel for these tricks):
-<ul>
-<li>Generate the <code>.dsp</code> file using:
-<pre>
-tmake -win32 -t vclib -o QGLViewer.dsp QGLViewer.pro
-</pre>
-Open the file using .NET and accept all convertions into the <code>.vcproj</code>.
-</li>
-
-<li>In the project file list, right click on <code>VRenderInterface.ui</code> and select
-<i>Properties</i>. Replace <code>uic</code> by <code>%QTDIR%\bin\uic</code> in <i>Custom Build,
-Build command option</i>.</li>
-
-<li>Remove <code>QT_DLL</code> from the <i>C++ preprocessor properties</i>.</li>
-
-<li>Comment out the <code>initializeSnapshotFormats()</code> line in <code>qglviewer.cpp defaultConstructor()</code>.</li>
-
-<li>Add a <code>NO_VECTORIAL_RENDER</code> define (snapshots are not supported with .NET and Qt 2.3).</li>
-
-<li>Set <i>Enable Run-Time type info</i> to yes (/GR) in <i>C++ Language settings</i>.</li>
-
-<li>Add the following static variable definitions at the beginning of <code>qglviewer.cpp</code>:
-<pre>
-QString QString::null;
-QStringData * QString::shared_null;
-QChar QChar::null;
-QApplication * qApp;
-</pre>
-</li>
-</ul>
-
-This <a href="http://hohle.net/scrap_post.php?post=14">page</a> details how to patch Qt 2.3 to make it work with .NET.
-This has not yet been tested (<a href="mailto:contact@libqglviewer.com">feedback welcome</a>), but may
-avoid the previous patches/hacks. An alternative is to use the Qt4 version.
-
-
-
-<a name="cygwin"></a>
-<h2>Compilation and installation using cygwin</h2>
-
-An other option is to install the <a href="http://www.cygwin.com/">cygwin</a> linux emulator, with
-the <a hXXref="http://kde-cygwin.sourceforge.net/qt3">Qt-KDE</a> port. This was successfully tested, although
-Qt had to be recompiled. You may also have to remove <code>thread</code> from the
-<code>CONFIG</code> line in <code>QGLViewer.pro</code>.
-
-<p>
-Then compile QGLViewer as explained in the <a href="installUnix.html">Unix installation page</a>.
-You should rename the generated <code>cygQGLViewer-1.dll</code> file to
-<code>libQGLViewer.dll</code> and copy it in the <code>C:\Windows\System32</code> directory. Note
-that <code>cygqt-3.dll</code> and <code>cygqui-1.dll</code> (located in <code>$(QTDIR)/bin</code> or
-<code>$(QTDIR)/lib</code>) should also be copied in that directory. Thanks Jean-Gui for these
-details.
-</p>
--->
 
 
 <p>

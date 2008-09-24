@@ -36,7 +36,7 @@ void vrender::VectorialRender(RenderCB render_callback, void *callback_params, V
 
 		int nb_renders = 0 ;
 
-		vparams.progress(0.0,string("Rendering")) ;
+		vparams.progress(0.0, QGLViewer::tr("Rendering...")) ;
 
 		while(returned < 0)
 		{
@@ -70,7 +70,7 @@ void vrender::VectorialRender(RenderCB render_callback, void *callback_params, V
 		}
 #endif
 		if (returned > vparams.size())
-		    vparams.size() = returned;
+			vparams.size() = returned;
 #ifdef _VRENDER_DEBUG
 		cout << "Size = " << vparams.size() << ", returned=" << returned << endl ;
 #endif
@@ -99,21 +99,21 @@ void vrender::VectorialRender(RenderCB render_callback, void *callback_params, V
 
 		switch(vparams.sortMethod())
 		{
-			case VRenderParams::AdvancedTopologicalSort:
-			case VRenderParams::TopologicalSort: {
-																 TopologicalSortMethod *tsm = new TopologicalSortMethod() ;
-																 tsm->setBreakCycles(vparams.sortMethod() == VRenderParams::AdvancedTopologicalSort) ;
-																 sort_method = tsm ;
-															 }
-															 break ;
+		case VRenderParams::AdvancedTopologicalSort:
+		case VRenderParams::TopologicalSort: {
+			TopologicalSortMethod *tsm = new TopologicalSortMethod() ;
+			tsm->setBreakCycles(vparams.sortMethod() == VRenderParams::AdvancedTopologicalSort) ;
+			sort_method = tsm ;
+											 }
+											 break ;
 
-			case VRenderParams::BSPSort: 				sort_method = new BSPSortMethod() ;
-																break ;
+		case VRenderParams::BSPSort: 				sort_method = new BSPSortMethod() ;
+			break ;
 
-			case VRenderParams::NoSorting: 			sort_method = new DontSortMethod() ;
-																break ;
-			default:
-																throw std::runtime_error("Unknown sorting method.") ;
+		case VRenderParams::NoSorting: 			sort_method = new DontSortMethod() ;
+			break ;
+		default:
+			throw std::runtime_error("Unknown sorting method.") ;
 		}
 
 		sort_method->sortPrimitives(primitive_tab,vparams) ;
@@ -137,18 +137,18 @@ void vrender::VectorialRender(RenderCB render_callback, void *callback_params, V
 
 		switch(vparams.format())
 		{
-			case VRenderParams::EPS: exporter = new EPSExporter() ;
-											 break ;
-			case VRenderParams::PS:  exporter = new PSExporter() ;
-											 break ;
-			case VRenderParams::XFIG:exporter = new FIGExporter() ;
-											 break ;
+		case VRenderParams::EPS: exporter = new EPSExporter() ;
+			break ;
+		case VRenderParams::PS:  exporter = new PSExporter() ;
+			break ;
+		case VRenderParams::XFIG:exporter = new FIGExporter() ;
+			break ;
 #ifdef A_FAIRE
-			case VRenderParams::SVG: exporter = new SVGExporter() ;
-											 break ;
+		case VRenderParams::SVG: exporter = new SVGExporter() ;
+			break ;
 #endif
-			default:
-											 throw std::runtime_error("Sorry, this output format is not handled now. Only EPS and PS are currently supported.") ;
+		default:
+			throw std::runtime_error("Sorry, this output format is not handled now. Only EPS and PS are currently supported.") ;
 		}
 
 		// sets background and black & white options
@@ -199,34 +199,23 @@ VRenderParams::VRenderParams()
 {
 	_options = 0 ;
 	_format = EPS ;
-	_filename = NULL ;
+	_filename = "" ;
 	_progress_function = NULL ;
 	_sortMethod = BSPSort ;
 }
 
 VRenderParams::~VRenderParams()
+{}
+
+
+void VRenderParams::progress(float f, const QString& progress_string)
 {
-	if(_filename != NULL)
-		free(_filename) ;
+	_progress_function(f,progress_string) ;
 }
 
-
-void VRenderParams::progress(float f, const std::string& progress_string)
+void VRenderParams::setFilename(const QString& filename)
 {
-	if(_progress_function != NULL)
-		_progress_function(f,progress_string) ;
-}
-
-void VRenderParams::setFilename(const char *fn)
-{
-	if(strlen(fn) > 10000)
-		throw std::runtime_error("VectorialRender: filename too long.") ;
-
-	if(_filename != NULL)
-		free(_filename) ;
-
-	if((_filename = strdup(fn)) == NULL)
-		throw std::runtime_error("could not copy supplied filename. Out of memory ?") ;
+	_filename = filename;
 }
 
 void VRenderParams::setOption(VRenderOption opt,bool b)

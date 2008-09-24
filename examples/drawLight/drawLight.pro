@@ -5,7 +5,6 @@
 
 TEMPLATE = app
 TARGET   = drawLight
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = drawLight.h
 SOURCES  = drawLight.cpp main.cpp

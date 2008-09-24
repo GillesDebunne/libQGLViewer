@@ -10,7 +10,6 @@
 
 TEMPLATE = app
 TARGET   = backgroundImage
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = backgroundImage.h
 SOURCES  = backgroundImage.cpp main.cpp

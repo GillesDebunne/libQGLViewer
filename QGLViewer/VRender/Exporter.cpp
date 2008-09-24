@@ -19,7 +19,7 @@ Exporter::Exporter()
 	_pointSize=1 ;
 }
 
-void Exporter::exportToFile(const char *filename,
+void Exporter::exportToFile(const QString& filename,
 							const vector<PtrPrimitive>& primitive_tab,
 							VRenderParams& vparams)
 {
@@ -47,7 +47,7 @@ void Exporter::exportToFile(const char *filename,
 		if(P != NULL) spewPolygone(P,out) ;
 
 		if(i%N == 0)
-			vparams.progress(i/(float)primitive_tab.size(),string("Exporting to file ")+filename) ;
+			vparams.progress(i/(float)primitive_tab.size(),QGLViewer::tr("Exporting to file %1").arg(filename)) ;
 	}
 
 	writeFooter(out) ;

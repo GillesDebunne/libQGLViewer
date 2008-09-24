@@ -11,7 +11,6 @@
 
 TEMPLATE = app
 TARGET   = screenCoordSystem
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = screenCoordSystem.h
 SOURCES  = screenCoordSystem.cpp main.cpp

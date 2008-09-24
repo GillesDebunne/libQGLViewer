@@ -10,7 +10,6 @@
 
 TEMPLATE = app
 TARGET   = select
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = select.h
 SOURCES  = select.cpp main.cpp

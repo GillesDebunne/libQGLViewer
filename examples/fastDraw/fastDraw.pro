@@ -7,7 +7,6 @@
 
 TEMPLATE = app
 TARGET   = fastDraw
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = fastDraw.h
 SOURCES  = fastDraw.cpp main.cpp

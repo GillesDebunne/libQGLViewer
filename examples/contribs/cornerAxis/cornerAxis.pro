@@ -9,7 +9,6 @@
 
 TEMPLATE = app
 TARGET   = cornerAxis
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = cornerAxis.h
 SOURCES  = cornerAxis.cpp main.cpp

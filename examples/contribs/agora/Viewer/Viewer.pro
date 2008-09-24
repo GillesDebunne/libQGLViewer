@@ -5,7 +5,6 @@
 
 TEMPLATE = app
 TARGET   = agora
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS += agoraViewer.h   board.h   move.h   computerPlayer.h   undo.h   case.h
 SOURCES += agoraViewer.cpp board.cpp move.cpp computerPlayer.cpp undo.cpp case.cpp main.cpp

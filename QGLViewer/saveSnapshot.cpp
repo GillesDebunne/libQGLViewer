@@ -6,11 +6,7 @@
 # else
 #  include <qcheckbox.h>
 #  include <qcombobox.h>
-#  if QT_VERSION >= 0x030000
-#   include "VRenderInterface.Qt3.h"
-#  else
-#   include "VRenderInterface.Qt2.h"
-#  endif
+#  include "VRenderInterface.Qt3.h"
 # endif
 # include "VRender/VRender.h"
 #endif
@@ -20,11 +16,7 @@
 #else
 # include <qspinbox.h>
 # include <qcheckbox.h>
-# if QT_VERSION >= 0x030000
-#  include "ImageInterface.Qt3.h"
-# else
-#  include "ImageInterface.Qt2.h"
-# endif
+# include "ImageInterface.Qt3.h"
 #endif
 
 // Output format list
@@ -232,7 +224,7 @@ class ProgressDialog
 {
 public:
   static void showProgressDialog(QGLWidget* parent);
-  static void updateProgress(float progress, const std::string& stepString);
+  static void updateProgress(float progress, const QString& stepString);
   static void hideProgressDialog();
 
 private:
@@ -254,14 +246,14 @@ void ProgressDialog::showProgressDialog(QGLWidget* parent)
   progressDialog->show();
 }
 
-void ProgressDialog::updateProgress(float progress, const std::string& stepString)
+void ProgressDialog::updateProgress(float progress, const QString& stepString)
 {
 #if QT_VERSION >= 0x040000
   progressDialog->setValue(int(progress*100));
 #else
   progressDialog->setProgress(int(progress*100));
 #endif
-  QString message(stepString.c_str());
+  QString message(stepString);
   if (message.length() > 33)
     message = message.left(17) + "..." + message.right(12);
   progressDialog->setLabelText(message);
@@ -315,11 +307,7 @@ static int saveVectorialSnapshot(const QString& fileName, QGLWidget* widget, con
     return -1;
 
   vrender::VRenderParams vparams;
-#if QT_VERSION >= 0x040000
-  vparams.setFilename(fileName.toLatin1().constData());
-#else
   vparams.setFilename(fileName);
-#endif
 
   if (snapshotFormat == "EPS")	vparams.setFormat(vrender::VRenderParams::EPS);
   if (snapshotFormat == "PS")	vparams.setFormat(vrender::VRenderParams::PS);

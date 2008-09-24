@@ -11,7 +11,6 @@
 
 TEMPLATE = app
 TARGET   = clippingPlane
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = clippingPlane.h
 SOURCES  = clippingPlane.cpp main.cpp

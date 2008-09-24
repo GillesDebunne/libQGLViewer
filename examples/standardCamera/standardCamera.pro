@@ -10,7 +10,6 @@
 
 TEMPLATE = app
 TARGET   = standardCamera
-CONFIG  += qt console opengl warn_on release thread
 
 HEADERS  = viewer.h standardCamera.h cameraViewer.h
 SOURCES  = viewer.cpp standardCamera.cpp cameraViewer.cpp main.cpp

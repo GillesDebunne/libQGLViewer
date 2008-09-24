@@ -6,7 +6,6 @@
 
 TEMPLATE = app
 TARGET   = stereoViewer
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = stereoViewer.h
 SOURCES  = stereoViewer.cpp main.cpp

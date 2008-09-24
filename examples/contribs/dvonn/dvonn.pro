@@ -9,7 +9,6 @@
 
 TEMPLATE = app
 TARGET   = dvonn
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS += board.h   game.h   drawer.h   dvonnviewer.h   dvonnwindowimpl.h
 SOURCES += board.cpp game.cpp drawer.cpp dvonnviewer.cpp dvonnwindowimpl.cpp main.cpp

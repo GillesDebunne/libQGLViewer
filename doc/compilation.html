@@ -34,21 +34,17 @@ tries to automatically detect a number of parameters, and it can be simplified. 
 use libQGLViewer are:
 <ul>
 <li><code><b>INCLUDEPATH</b></code> which must indicates where to find the QGLViewer's include files. Since the includes use a <code>QGLViewer/qglviewer.h</code> syntax, 
-no <code>QGLViewer</code> suffix is required. If libQGLViewer was installed in a directory such as <code>/xxx/yyy/QGLViewer</code>, you will set this variable to <code>INCLUDEPATH *= /xxx/yyy</code>.<br /> <br /></li>
+the <code>QGLViewer</code> suffix should be omitted in this path: If libQGLViewer was installed in a directory such as <code>/xxx/yyy/QGLViewer</code>, you will set this variable to <code>INCLUDEPATH *= /xxx/yyy</code>.<br /> <br /></li>
 
-<li><code><b>LIBS</b></code> which tells that your program links with libQGLViewer.
-<ul>
-<li>Unix : use <code>LIBS *= -L<i>/path/to/lib</i> -lQGLViewer#VERSION_MAJOR#</code>, where <code></i>/path/to/lib</i></code> is the path to the libQGLViewer lib, named <code>libQGLViewer*.{so|a|dylib}</code> depending on your Unix flavor.</li>
-<li>Windows with MinGW : use <code>LIBS *= -L<i>/path/to/lib</i> -lQGLViewer#VERSION_MAJOR#</code>, where <code></i>/path/to/lib</i></code> is the path to <code>libQGLViewer#VERSION_MAJOR#.a</code>.</li>
-<li>Windows with Visual Studio : use <code>LIBS *= C:/.../path/to/QGLViewer#VERSION_MAJOR#.lib</code> (depending on your environment, <code>QGLViewer#VERSION_MAJOR#.lib</code> may actually be named  <code>QGLViewer.lib</code>).</li>
-</ul>
+<li><code><b>LIBS</b></code> which tells that your program links with libQGLViewer. Use <code>LIBS *= -L<i>/path/to/lib</i> -lQGLViewer#VERSION_MAJOR#</code>, where <code></i>/path/to/lib</i></code> is the path to the libQGLViewer lib, named <code>libQGLViewer#VERSION_MAJOR#.{so|a|dylib}</code> or <code>QGLViewer#VERSION_MAJOR#.lib</code> depending on your architecture.
+<br />
 <br />
 </li>
 
 <li><code><b>QT</b></code> which lists the Qt modules needed : <code>QT *= opengl xml</code>.</li>
 </ul>
 
-Here is a typical <code>.pro</code> (on Unix, only the path format would differ):
+Here is a typical <code>.pro</code> (change the paths according to your configuration):
 
 <pre>
 TARGET = simpleViewer
@@ -58,9 +54,8 @@ QT *= opengl xml
 HEADERS = simpleViewer.h
 SOURCES = simpleViewer.cpp main.cpp
 
-INCLUDEPATH *= C:/Users/debunne/Documents/libQGLViewer
-LIBS *= -LC:/Users/debunne/Documents/libQGLViewer/QGLViewer -lQGLViewer#VERSION_MAJOR#
-# Visual Studio : LIBS *= C:/Users/debunne/Documents/libQGLViewer/QGLViewer/QGLViewer#VERSION_MAJOR#.lib
+INCLUDEPATH *= C:/Users/debunne/Documents/libQGLViewer-#VERSION#
+LIBS *= -LC:/Users/debunne/Documents/libQGLViewer-#VERSION#/QGLViewer -lQGLViewer#VERSION_MAJOR#
 </pre>
 
 
@@ -227,7 +222,7 @@ href="installUnix.html#mac">libQGLViewer on Mac</a> installation pages.
 
 <h2>Going further</h2>
 
-Now that your program compiles and runs smoothly, you can start editing it. You will probably start by changing the <code>draw()</code> method to define your own scene. 
+Now that your program compiles and runs, you can start improving it. You will probably start by changing the <code>draw()</code> method to define your own scene. 
 Overload the <code>init()</code> function to initialize your scene as well as the OpenGL parameters (such as textures and objects). 
 <a href="introduction.html">Read the principles</a> of the library for details. If not already done, try out the 
 different <a href="examples/index.html">examples</a> and feel free to cut and paste code for the functionnalities you need.

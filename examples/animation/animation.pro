@@ -9,7 +9,6 @@
 
 TEMPLATE = app
 TARGET   = animation
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = animation.h
 SOURCES  = animation.cpp main.cpp

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 libName="libQGLViewer"
-version="2.3.0"
+version="2.3.1"
 
 WebURL="http://www.libqglviewer.com"
 
@@ -137,11 +137,6 @@ checkVersion
 VERSION=$version
 START="VERSION = "
 FILE="QGLViewer/QGLViewer.pro"
-checkVersion
-
-VERSION=$version
-START="VERSION  = "
-FILE="QGLViewer/QGLViewer.Qt2.3.pro"
 checkVersion
 
 hexVersion="0x0${version_major}0${version_minor}0${version_release}"
@@ -369,11 +364,11 @@ cd - > /dev/null
 ########### Filter example .pro include release
 echo -n " pro"
 sed s:"#VERSION_MAJOR#":"$version_major":g examples/release.pri > /tmp/release.filtered
-mv /tmp/release.filtered examples/release.pri
+sed s:"#VERSION#":"$version":g /tmp/release.filtered > examples/release.pri
 
 function replaceIncludeRelease()
 {
-  #echo "replace sur $PRO"
+  #echo "replaceInclude sur $PRO"
   path="\.\."
   dir=$(dirname $(dirname $PRO))
   while [[ $dir != "." ]]
@@ -386,16 +381,17 @@ function replaceIncludeRelease()
   then
     grep -v "^include.*examples.pri" $PRO > /tmp/proPatched.tmp
     sed s%"\.\./\.\."%"$path"% examples/release.pri > /tmp/release.pri
+    echo "Apres filtrage de $PRO $(grep ^include /tmp/release.pri)"
     cat /tmp/proPatched.tmp /tmp/release.pri > $PRO
   fi
 }
 
-for PRO in $(ls */*.pro */*/*.pro */*/*/*.pro */*/*/*/*.pro)
+for PRO in $(find . -type f -name '*.pro')
 do
   replaceIncludeRelease
 done
-rm examples/release.pri
 
+rm examples/release.pri
 
 ########### Add GPL warnings
 echo -n " copyright"
@@ -404,6 +400,10 @@ do
   cat gpl-warning $f > $f.bak
   mv $f.bak $f
 done
+
+rm gpl-warning
+
+echo "dans examples reste $(find examples - type f)"
 
 vRenderCopyright="$QGLViewerRootDir/QGLViewer/VRender/copyright"
 test -f $vRenderCopyright || error "No copyright in VRender"

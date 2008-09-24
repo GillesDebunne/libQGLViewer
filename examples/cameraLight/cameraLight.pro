@@ -8,7 +8,6 @@
 
 TEMPLATE = app
 TARGET   = cameraLight
-CONFIG  += qt opengl warn_on release thread
 
 HEADERS  = cameraLight.h
 SOURCES  = cameraLight.cpp main.cpp
