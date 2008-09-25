@@ -1,7 +1,7 @@
 TEMPLATE = lib
-CONFIG  -= debug 
-CONFIG  *= qt opengl warn_on release thread dll rtti plugin
-TARGET   = qglviewerplugin
+
+CONFIG *= dll plugin
+TARGET  = qglviewerplugin
 
 QT_VERSION=$$[QT_VERSION]
 contains( QT_VERSION, "^4.*" ) {
@@ -32,4 +32,3 @@ contains( QT_VERSION, "^4.*" ) {
 }
 
 include( ../examples/examples.pri )
-

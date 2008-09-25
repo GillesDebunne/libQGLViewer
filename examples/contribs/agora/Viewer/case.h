@@ -1,5 +1,6 @@
 #include <iostream>
-#include <qpoint>
+
+#include <qpoint.h>
 
 class Case
 {

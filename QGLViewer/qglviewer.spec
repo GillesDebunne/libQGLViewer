@@ -151,6 +151,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Wed Sep 1 2008 Gilles Debunne <contact@libQGLViewer.com> 2.3.1
+- Exceptions added to the GPL Open Source license, Qt2 no longer supported.
+
 * Mon Sep 1 2008 Gilles Debunne <contact@libQGLViewer.com> 2.3.0
 - New examples, default package compilation using Qt4, new version numbering.
 

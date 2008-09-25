@@ -123,18 +123,18 @@ win32 {
     DEFINES *= QGLVIEWER_STATIC
   }
 
-  LIB_FILE = QGLViewer*.lib
-
   # Compilation from zip file : libQGLViewer is located in ../..
   exists( ../../QGLViewer ) {
     exists( ../../QGLViewer/qglviewer.h ) {
       INCLUDEPATH *= ../..
     }
+    
+    LIB_FILE = QGLViewer*.lib
 
     exists( ../../QGLViewer/$${LIB_FILE} ) {
       LIB_PATH = ../../QGLViewer
     }
   }
 
- LIBS *= -L$${LIB_PATH} -lQGLViewer#VERSION_MAJOR#
+  LIBS *= -L$${LIB_PATH} -lQGLViewer#VERSION_MAJOR#
 }}

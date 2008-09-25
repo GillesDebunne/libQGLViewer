@@ -33,10 +33,9 @@ WebDir="/www"
 SrcDir="src"
 #echo "TEST mode $WebDir" && mkdir -p $WebDir/$SrcDir && touch $WebDir/$SrcDir/oldContent
 
-test -f $libNameVersion.tar.gz  || error "No archive file. WinSCP first"
+test -f $libNameVersion-all.tar.gz  || error "No archive file. WinSCP first"
 
-cp $libNameVersion.tar.gz fullPackage.tar.gz
-tar xzf $libNameVersion.tar.gz
+tar xzf $libNameVersion-all.tar.gz
 
 rm $WebDir/*.html $WebDir/*.css
 rm -rf $WebDir/examples $WebDir/images $WebDir/refManual 
@@ -47,7 +46,7 @@ rm -rf doc www.tar.gz
 
 mv $libNameVersion.tar.gz $libNameVersion.zip $WebDir/$SrcDir
 
-mv fullPackage.tar.gz $libNameVersion.tar.gz
+gzip -best $libNameVersion.tar
 
 cd $WebDir
 
@@ -70,7 +69,7 @@ test -d /tmp || error "Run with web option on dzsrv-linux."
 echo "--- Packaging libQGLViewer version $version ---"
 
 # Convert possible Windows encoding
-find . -type f -a (-name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html' -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb') -exec dos2unix -o -p {} \; &> /tmp/error
+find . -type f -a \( -name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html' -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb' \) -exec dos2unix -o -p {} \; &> /tmp/error
 grep -v "/\.svn/" /tmp/error
 if [[ "$?" -eq "0" ]]
 then
@@ -168,12 +167,12 @@ checkGrep
 for f in `ls QGLViewer/QGLViewer.pro examples/*/*.pro examples/contribs/*/*.pro examples/contribs/*/*/*.pro`
 do
   case "$f" in
-    "examples/debug/debug.pro"|"examples/contribs/contribs.pro"|"examples/contribs/agora/agora.pro"|"examples/contribs/blobWar/blobWar.pro")
+    "QGLViewer/QGLViewer.pro"|"examples/debug/debug.pro"|"examples/contribs/contribs.pro"|"examples/contribs/agora/agora.pro"|"examples/contribs/blobWar/blobWar.pro")
     continue
     ;;
 esac
   
-  TARGET="^CONFIG.*release"
+  TARGET="^include.*examples\.pri"
   FILE="$f"
   checkGrep
 done
@@ -381,7 +380,6 @@ function replaceIncludeRelease()
   then
     grep -v "^include.*examples.pri" $PRO > /tmp/proPatched.tmp
     sed s%"\.\./\.\."%"$path"% examples/release.pri > /tmp/release.pri
-    echo "Apres filtrage de $PRO $(grep ^include /tmp/release.pri)"
     cat /tmp/proPatched.tmp /tmp/release.pri > $PRO
   fi
 }
@@ -402,8 +400,6 @@ do
 done
 
 rm gpl-warning
-
-echo "dans examples reste $(find examples - type f)"
 
 vRenderCopyright="$QGLViewerRootDir/QGLViewer/VRender/copyright"
 test -f $vRenderCopyright || error "No copyright in VRender"
@@ -566,7 +562,7 @@ function addNamespace()
 addNamespace ManipulatedFrame Frame manipulatedFrame
 addNamespace ManipulatedCameraFrame ManipulatedFrame manipulatedCameraFrame
 
-find . -type f -a (-name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html' -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb') -exec unix2dos -o -p {} \; &> /tmp/error
+find . -type f -a \( -name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html' -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb' \) -exec unix2dos -o -p {} \; &> /tmp/error
 
 test -s /tmp/error && more /tmp/error && error "Error while converting newlines to DOS"
 
@@ -575,7 +571,7 @@ zip -qr $libNameVersion.zip $libNameVersion
 
 
 windowsDir="/host/Users/debunne/Documents/Code/libQGLViewer/QGLViewer/trunk/"
-tar czf $windowsDir/$libNameVersion.tar.gz $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
+tar czf $windowsDir/$libNameVersion-all.tar.gz $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
 cd - > /dev/null
 
 echo

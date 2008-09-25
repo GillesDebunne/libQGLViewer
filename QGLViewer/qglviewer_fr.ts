@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="fr">
+<defaultcodec></defaultcodec>
 <context>
     <name>ImageInterface</name>
     <message>
@@ -628,6 +629,41 @@
         <location filename="VRender/Exporter.cpp" line="29"/>
         <source>Unable to open file %1.</source>
         <translation>Impossible d&apos;ouvrir le ficher %1.</translation>
+    </message>
+    <message>
+        <location filename="VRender/BSPSortMethod.cpp" line="69"/>
+        <source>BSP Construction</source>
+        <translation>Construction du BSP</translation>
+    </message>
+    <message>
+        <location filename="VRender/Exporter.cpp" line="50"/>
+        <source>Exporting to file %1</source>
+        <translation>Export vers le fichier %1</translation>
+    </message>
+    <message>
+        <location filename="VRender/ParserGL.cpp" line="85"/>
+        <source>Parsing feedback buffer.</source>
+        <translation>Parcours du feedback buffer.</translation>
+    </message>
+    <message>
+        <location filename="VRender/TopologicalSortMethod.cpp" line="344"/>
+        <source>Topological sort</source>
+        <translation>Tri topologique</translation>
+    </message>
+    <message>
+        <location filename="VRender/TopologicalSortMethod.cpp" line="636"/>
+        <source>Advanced topological sort</source>
+        <translation>Tri topologique avancé</translation>
+    </message>
+    <message>
+        <location filename="VRender/VRender.cpp" line="39"/>
+        <source>Rendering...</source>
+        <translation>Rendu...</translation>
+    </message>
+    <message>
+        <location filename="VRender/VisibilityOptimizer.cpp" line="221"/>
+        <source>Visibility optimization</source>
+        <translation>Optimisation de la visibilité</translation>
     </message>
 </context>
 <context>

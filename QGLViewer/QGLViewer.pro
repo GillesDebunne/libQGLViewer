@@ -10,7 +10,7 @@
 
 TEMPLATE = lib
 TARGET = QGLViewer
-VERSION = 2.3.0
+VERSION = 2.3.1
 CONFIG -= debug debug_and_release
 CONFIG *= release qt opengl warn_on shared thread create_prl rtti
 
