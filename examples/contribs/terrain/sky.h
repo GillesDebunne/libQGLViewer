@@ -27,7 +27,7 @@ private:
 public:
   SKY() { iwantsky = false; }
 
-  bool LoadTexture( int side, char* filename );
+  bool LoadTexture( int side, const QString& filename );
 
   void Render();
 

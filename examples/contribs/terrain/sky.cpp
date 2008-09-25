@@ -2,7 +2,7 @@
 #include "sky.h"
 
 
-bool SKY::LoadTexture( int side, char* filename )
+bool SKY::LoadTexture( int side, const QString& filename )
 {
   QImage image;
   if (image.load(filename))

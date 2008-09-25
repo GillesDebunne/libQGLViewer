@@ -49,7 +49,7 @@ public:
 
   bool wantWater() { return iwantwater; }
 
-  void LoadReflectionMap(char* filename);
+  void LoadReflectionMap(const QString& filename);
 
   void SetColor(const QColor& col) { color = col; }
 };

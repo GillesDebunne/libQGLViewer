@@ -1,33 +1,31 @@
 // TP OpenGL: Joerg Liebelt, Serigne Sow
 #include <stdio.h>
 #include <math.h>
+#include <qfile.h>
 #include <time.h>
 #include "terrain.h"
 
 
-bool TERRAIN::LoadHeightMap( char* filename, int size )
+bool TERRAIN::LoadHeightMap(const QString& filename, int size)
 {
   if( heightMap.arrayHeightMap )
     UnloadHeightMap( );
 
-  FILE* pFile;
-  fopen(&pFile, filename, "rb" );
-  if( pFile==NULL )
-    {
-      return false;
-    }
+  QFile pFile(filename);
+  if (!pFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    return false;
 
   heightMap.arrayHeightMap = new unsigned char [size*size];
 
   if( heightMap.arrayHeightMap==NULL )
-    {
-      return false;
-    }
+    return false;
 
   //lire la carte d'hauteurs, format RAW
-  fread( heightMap.arrayHeightMap, 1, size*size, pFile );
-
-  fclose( pFile );
+  QDataStream in(&pFile);
+  for (int i=0; i<sizeHeightMap*sizeHeightMap; i++)
+    in >> heightMap.arrayHeightMap[i];
+  
+  pFile.close();
 
   sizeHeightMap = size;
 
@@ -35,23 +33,20 @@ bool TERRAIN::LoadHeightMap( char* filename, int size )
 }
 
 
-bool TERRAIN::SaveHeightMap( char* filename )
+bool TERRAIN::SaveHeightMap(const QString& filename )
 {
-  FILE* pFile;
-  fopen(&pFile, filename, "wb" );
-  if( pFile==NULL )
-    {
-      return false;
-    }
+  QFile pFile(filename);
+  if (!pFile.open(QIODevice::WriteOnly | QIODevice::Text))
+    return false;
 
   if( heightMap.arrayHeightMap==NULL )
-    {
-      return false;
-    }
+    return false;
 
-  fwrite( heightMap.arrayHeightMap, 1, sizeHeightMap*sizeHeightMap, pFile );
+  QDataStream out(&pFile);
+  for (int i=0; i<sizeHeightMap*sizeHeightMap; i++)
+    out << heightMap.arrayHeightMap[i];
 
-  fclose( pFile );
+  pFile.close();
 
   return true;
 }
@@ -554,7 +549,7 @@ void TERRAIN::StepLightingDirection(void)
   else if ((directionX==-1)&&(directionZ==0)) {directionZ--;}
 }
 
-bool TERRAIN::LoadTexture( char* filename )
+bool TERRAIN::LoadTexture( const QString& filename )
 {
   int type;
   if (!myTexture.load(filename))
@@ -578,7 +573,7 @@ bool TERRAIN::LoadTexture( char* filename )
 }
 
 //besoin d'un fonctionnement different car mipmap utilise
-bool TERRAIN::LoadDetailMap( char* filename )
+bool TERRAIN::LoadDetailMap( const QString& filename )
 {
   int type;
   if (!myDetailMap.load(filename))

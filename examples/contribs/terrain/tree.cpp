@@ -3,7 +3,7 @@
 
 using namespace qglviewer;
 
-bool TREE::LoadTexture(char* filename )
+bool TREE::LoadTexture(const QString& filename )
 {
   QImage image;
   if (image.load(filename))

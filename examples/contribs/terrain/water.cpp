@@ -318,7 +318,7 @@ void WATER::Render()
 
 //le reflection map donne l'impression qu'on voit des reflections sur la surface avec distortion par les vagues;
 //.. cependant, les reflections sont statiques et ne sont pas actualisees en fct. de la vraie pos. de la lumiere...
-void WATER::LoadReflectionMap(char* filename)
+void WATER::LoadReflectionMap(const QString& filename)
 {
   QImage image;
   if (image.load(filename))

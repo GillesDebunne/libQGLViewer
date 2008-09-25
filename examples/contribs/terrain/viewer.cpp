@@ -4,6 +4,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <qmessagebox.h>
 
 #include "quadtree.h"
 #include "water.h"
@@ -282,7 +283,7 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 // CODE EXTERNE DE Evan Pipho (evan@codershq.com) ,
 // .. permet de tester les capacites GL hardware de la carte graphique
 //--------------------------------------------------------------
-bool Viewer::CheckExtension( char* szExtensionName )
+bool Viewer::CheckExtension( const QString& szExtensionName )
 {
   unsigned int uiNextExtension;
   char*		 szSupExt= ( char* )glGetString( GL_EXTENSIONS );;
@@ -298,8 +299,7 @@ bool Viewer::CheckExtension( char* szExtensionName )
       uiNextExtension= strcspn( szSupExt, " " );
 
       //check the extension to the one given in the argument list
-      if( ( strlen( szExtensionName )==uiNextExtension ) &&
-	  ( strncmp( szExtensionName, szSupExt, uiNextExtension )==0 ) )
+      if( szExtensionName==szSupExt, uiNextExtension )
 	{
 	  //the extension is supported
 	  // printf( "Your video card supports extension: %s", szExtensionName );
@@ -311,7 +311,7 @@ bool Viewer::CheckExtension( char* szExtensionName )
     }
 
   //the extension is not supported
-  printf( "Your video card does not support extension: %s", szExtensionName );
+  QMessageBox::warning(NULL, "Viewer", QString("Your video card does not support extension: %1").arg(szExtensionName));
   return false;
 }
 // fin code externe ---------------------------------------------------------------

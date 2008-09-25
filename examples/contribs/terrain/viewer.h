@@ -15,7 +15,7 @@ protected :
   virtual void animate();		//pour l'eau
   virtual QString helpString() const;
 
-  bool CheckExtension(char* szExtensionName );	//CODE EXTERNE
+  bool CheckExtension(const QString& szExtensionName );	//CODE EXTERNE
 
 public:
   bool DrawInit( void );

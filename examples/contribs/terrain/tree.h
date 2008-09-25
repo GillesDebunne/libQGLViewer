@@ -26,7 +26,7 @@ public:
     numTrees = 20;
   }
 
-  bool LoadTexture(char* filename );
+  bool LoadTexture(const QString& filename );
 
   void initTrees(QUADTREE ter, int num, float waterLevel);
 

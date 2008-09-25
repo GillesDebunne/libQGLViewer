@@ -89,8 +89,8 @@ public:
 
   virtual void Render( void )= 0;			//fct. abstraite, a remplir par implementations
 
-  bool LoadHeightMap( char* szFilename, int iSize );	//gestion des cartes d'hauteurs de terrain
-  bool SaveHeightMap( char* szFilename );
+  bool LoadHeightMap( const QString& szFilename, int iSize );	//gestion des cartes d'hauteurs de terrain
+  bool SaveHeightMap( const QString& szFilename );
   bool UnloadHeightMap( void );
 
   //generation de terrain fractale
@@ -100,8 +100,8 @@ public:
   unsigned int textureColorID;		//pour identifier les textures aupres de opengl
   unsigned int textureDetailID;
   void GenerateTextureMap( unsigned int size );
-  bool LoadTexture( char* filename );
-  bool LoadDetailMap( char* filename );
+  bool LoadTexture( const QString& filename );
+  bool LoadDetailMap( const QString& filename );
 
   //fonctions de lumiere
   void CalculateLighting( void );
@@ -129,7 +129,7 @@ public:
     return ( ( float )( heightMap.arrayHeightMap[( Z*sizeHeightMap )+X] )*scaleHeightMap );
   }
 
-  inline bool SaveTextureMap( char* filename )
+  inline bool SaveTextureMap( const QString& filename )
   {
     if( !myTexture.isNull( ) )
       return ( myTexture.save( filename , "BMP"));
@@ -166,7 +166,7 @@ public:
   inline bool isLighted()
   {	return paintLighting;}
 
-  inline bool LoadTile( TEXTURETYPE type, char* filename )
+  inline bool LoadTile( TEXTURETYPE type, const QString& filename )
   {	return textures.data[type].load( filename ); }
 
   inline void UnloadTile(TEXTURETYPE type)
