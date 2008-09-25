@@ -235,15 +235,6 @@ namespace
 		      GL_RGBA, GL_UNSIGNED_BYTE, glImg.bits());
     return to;
   }
-  // This function is dummy. See trick in .h
-  void forceInstanciation()
-  {
-    Drawer d;
-    const Board::ConstStackHandle* s = NULL;
-    d.drawTransparentPieces((*s)->begin(),(*s)->end(),(*s).stackCoord());
-    Board::Ghost* g = NULL;
-    d.drawTransparentPieces(g->stack.begin(),g->stack.end(),g->coord);
-  }
 }
 //************************************************************
 // Implementation of Drawer
@@ -399,9 +390,8 @@ Drawer::drawTransparentPiece(Color col,
   glPopMatrix();
   endTexture();
 }
-template <class O>
 void
-Drawer::drawTransparentPieces(O first,O last,const Board::Coord& c,float h,float a) const
+Drawer::drawTransparentPieces(Stack::const_iterator first,Stack::const_iterator last,const Board::Coord& c,float h,float a) const
 {
   startTexture();
   glPushMatrix();

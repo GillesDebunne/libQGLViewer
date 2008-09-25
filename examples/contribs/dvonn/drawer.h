@@ -29,16 +29,8 @@ namespace dvonn
     void drawWhitePiecePools(const Board&,bool lastTransparent) const;
     void drawBlackPiecePools(const Board&,bool lastTransparent) const;
 
-    void drawTransparentPiece(Color p,const Board::ConstStackHandle& c,
-			      float a=0.5f) const;
-    // Here we use a trick: we want to define the function for
-    // Stack::const_iterator only but we cannot forward declare it and we
-    // do not want to include dvonnBoard.h. So we declare a template and in
-    // the .cpp, we force the instantiation for Case::piece_const_iterator.
-    // Rq: no invocation with other type O will link!
-    template <class O>
-    void drawTransparentPieces(O first,O last,const Board::Coord& c,
-			       float h=0.0f,float a=0.5f) const;
+    void drawTransparentPiece(Color p,const Board::ConstStackHandle& c,float a=0.5f) const;
+    void drawTransparentPieces(Stack::const_iterator first,Stack::const_iterator last,const Board::Coord& c,float h=0.0f,float a=0.5f) const;
 
     void highlight(const Board::ConstStackHandle&) const;
     void highlightPieces(const Board::ConstStackHandle&) const;
