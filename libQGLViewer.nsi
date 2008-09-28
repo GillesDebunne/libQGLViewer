@@ -1,9 +1,12 @@
 Name libQGLViewer
 
 # TODO
-# Reimporter le refManuel tel qu'exporté dans /www
-# Reimporter les exemples tels qu'exportés dans /www
-# lancer lrelease
+# makeDist sur ubuntu
+# Dans windows, gestion des zip...
+# Tout compiler avec Visual, valider et nettoyer
+# Recompiler avec MinGW et valider.
+# Copier le zip et l'installer.exe sur dzsrv-linux
+# Y lancer 'makeDist web'
 
 # Defines
 !define REGKEY "SOFTWARE\$(^Name)"
@@ -60,13 +63,13 @@ InstallDir $PROGRAMFILES\libQGLViewer
 CRCCheck on
 XPStyle on
 ShowInstDetails show
-VIProductVersion 2.2.7.0
-VIAddVersionKey /LANG=${LANG_ENGLISH} ProductName libQGLViewer
+VIProductVersion "${VERSION}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} ProductName "${NAME}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} ProductVersion "${VERSION}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} CompanyName "${COMPANY}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} CompanyWebsite "${URL}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} FileVersion "${VERSION}"
-VIAddVersionKey /LANG=${LANG_ENGLISH} FileDescription ""
+VIAddVersionKey /LANG=${LANG_ENGLISH} FileDescription "${NAME} installer for version ${VERSION}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} LegalCopyright "GPL"
 InstallDirRegKey HKLM "${REGKEY}" Path
 ShowUninstDetails show
@@ -90,15 +93,13 @@ done${UNSECTION_ID}:
 Section libQGLViewer SEC0000
     SetOutPath $INSTDIR
     SetOverwrite on
-    File /oname=licence.txt LICENCE
-    File /oname=readme.txt README
+    File /r installer\*.txt
 
     WriteRegStr HKLM "${REGKEY}\Components" libQGLViewer 1
 SectionEnd
 
 Section /o -un.libQGLViewer UNSEC0000
-    Delete /REBOOTOK $INSTDIR\licence.txt 
-    Delete /REBOOTOK $INSTDIR\readme.txt
+    Delete /REBOOTOK $INSTDIR\*.txt 
     
     DeleteRegValue HKLM "${REGKEY}\Components" libQGLViewer
 SectionEnd
@@ -110,7 +111,8 @@ Section $(ExamplesSection) SEC0001
     SetOverwrite on
     
     File examples\animation\release\animation.exe
-    File examples\callback\release\callback.exe
+    File examples\callback\release\FIXcallback.exe
+    File examples\cameraLight\release\cameraLight.exe
     File examples\clippingPlane\release\clippingPlane.exe
     File examples\constrainedCamera\release\constrainedCamera.exe
     File examples\constrainedFrame\release\constrainedFrame.exe
@@ -143,12 +145,12 @@ Section $(ExamplesSection) SEC0001
     File examples\contribs\blobWar\AI\release\blobWarAI.exe
     File /r /x .svn examples\contribs\blobWar\BlobWarBoards
     File examples\contribs\cornerAxis\release\cornerAxis.exe
-    #File examples\contribs\dvonn\release\dvonn.exe
-    #File /r /x .svn examples\contribs\dvonn\images
-    #File /r /x .svn examples\contribs\dvonn\rules
+    File examples\contribs\dvonn\release\dvonn.exe
+    File /r /x .svn examples\contribs\dvonn\images
+    File /r /x .svn examples\contribs\dvonn\rules
     #File examples\contribs\eventRecorder\release\eventRecorder.exe
     #File examples\contribs\quarto\release\quarto.exe
-    #File examples\contribs\terrain\release\terrain.exe
+    File examples\contribs\terrain\release\terrain.exe
     File examples\contribs\textureViewer\release\textureViewer.exe
     File examples\contribs\thumbnail\release\thumbnail.exe
     #File examples\contribs\x3dViewer\release\x3dViewer.exe
@@ -220,18 +222,7 @@ SectionEnd
 Section $(Documentation) SEC0002
     SetOutPath $INSTDIR\doc
     SetOverwrite on
-    File /r installer\*
-    
-    #File /r doc\*.html
-    #File /r doc\*.css
-    #File doc\Doxyfile
-    #SetOutPath $INSTDIR\doc\refManual
-    #File /r doc\refManual\*
-    #SetOutPath $INSTDIR\doc\images
-    #File /r doc\images\*.jpg
-    #File /r doc\images\*.png
-    #SetOutPath $INSTDIR\doc\examples
-    #File /r doc\examples\*
+    File /r www\*
     
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     SetOutPath $SMPROGRAMS\$StartMenuGroup
@@ -259,6 +250,7 @@ Section $(Development) SEC0003
     #File QGLViewer\release\QGLViewer2.lib
     File /r QGLViewer\*.h
     File /r QGLViewer\*.qm
+    File libQGLViewer2.a
 
     # Installing library QGLViewer\release\QGLViewer2.dll
     !insertmacro InstallLib DLL $LibInstall REBOOT_PROTECTED QGLViewer\release\QGLViewer2.dll $SYSDIR\QGLViewer2.dll $SYSDIR

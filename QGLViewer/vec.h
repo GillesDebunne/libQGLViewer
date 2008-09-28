@@ -10,8 +10,6 @@
 # include <qdom.h>
 #endif
 
-// #include <qapplication.h>
-
 // Included by all files as vec.h is at the end of the include hierarchy
 #include "config.h" // Specific configuration options.
 
@@ -89,7 +87,7 @@ public:
   camera()->setPosition(v);
   \endcode
 
-  Note that standard vector types (stl, \c float[3], ...) implement this operator and can hence
+  Note that standard vector types (STL, \c float[3], ...) implement this operator and can hence
   be used in place of Vec. See also operator const float*() .*/
   template <class C>
   explicit Vec(const C& c) : x(c[0]), y(c[1]), z(c[2]) {}
@@ -105,7 +103,7 @@ public:
     return *this;
   }
 
-  /*! Set the current value. Maybe faster than using operator=() with a temporary Vec(x,y,z). */
+  /*! Set the current value. May be faster than using operator=() with a temporary Vec(x,y,z). */
   void setValue(float X, float Y, float Z)
   { x=X; y=Y; z=Z; }
 

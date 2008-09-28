@@ -11,9 +11,10 @@ version_release=`echo $version | cut -d"." -f3`
 
 libNameVersion="$libName-$version"
 tmpDir="/tmp/$libNameVersion"
-QGLViewerRootDir=`pwd`
-
+QGLViewerRootDir="$HOME/QGLViewer"
 wwwTarGZ="www.tar.gz"
+
+cd $QGLViewerRootDir
 
 # echo "$0 disabled for security"
 # exit
@@ -23,6 +24,7 @@ function error
   echo $1
   exit 1
 }
+
 
 if [[ $@ != 0 ]] && [[ $1 = "web" ]]
 then
@@ -149,6 +151,15 @@ START="PROJECT_NUMBER         = \"Version "
 FILE="doc/Doxyfile"
 checkVersion
 
+VERSION="$version"
+START="!define VERSION "
+FILE="libQGLViewer-setup.nsi"
+checkVersion
+
+VERSION="$version"
+START="VIProductVersion "
+FILE="libQGLViewer-setup.nsi"
+checkVersion
 
 
 ##################################################################
@@ -182,6 +193,10 @@ TARGET="^URL.*$WebURL"
 FILE="QGLViewer/qglviewer.spec"
 checkGrep
 
+TARGET="^!define URL $WebURL"
+FILE="libQGLViewer-setup.nsi"
+checkGrep
+
 TARGET="version=\"3.0\""
 FILE="QGLViewer/VRenderInterface.Qt3.ui"
 checkGrep
@@ -209,7 +224,7 @@ test -d $tmpDir || mkdir -p $tmpDir
 # ----------------------------------------------
 
 dos2unix -o -p CHANGELOG INSTALL README LICENCE GPL_EXCEPTION gpl-warning &> /tmp/error
-SOURCES="CHANGELOG INSTALL README LICENCE GPL_EXCEPTION gpl-warning"
+SOURCES="CHANGELOG INSTALL README LICENCE GPL_EXCEPTION gpl-warning libQGLViewer.pro"
 TARGET=""
 makeDist
 
@@ -332,11 +347,13 @@ cd $tmpDir
 ########### Filter root files
 export LC_TIME="en"
 date=`date "+%B %-d, %Y"`
-for f in "gpl-warning" "CHANGELOG" "INSTALL" "LICENCE" "README" "GPL_EXCEPTION"
+for f in "gpl-warning" "CHANGELOG" "INSTALL" "LICENCE" "README" "GPL_EXCEPTION" "libQGLViewer.pro"
 do
   sed s:"#VERSION#":"$version":g $f | sed s%"#WEBURL#"%"$WebURL"%g | sed s:"#DATE#":"$date":g > $f.filtered
   mv $f.filtered $f
 done
+
+mv "libQGLViewer.pro" "$libNameVersion.pro"
 
 
 ########### Filter translations

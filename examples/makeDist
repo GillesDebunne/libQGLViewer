@@ -15,6 +15,11 @@ test -d $tmp || tmp="/home/debunne/.tmp"
 indexUpToDate="Yes"
 
 
+function error
+{
+  echo $1
+  exit 1
+}
 
 function writeHeader() 
 {
@@ -69,18 +74,13 @@ EOF
 # Check all basic directories are present
 for name in $BASIC_EXAMPLE_DIRS
 do
-  test -d $name || (echo "Basic example $name is not found" exit)
+  test -d $name || error "Basic example $name is not found"
 done
 
 test -d $OUTPUT_DIR || mkdir -p $OUTPUT_DIR
 
-which source-highlight >& /dev/null
-if [ $? != 0 ]
-then
-    echo "Unable to find source-highlight - Abort"
-    exit
-fi
-
+which "FIXsource-highlight" >& /dev/null || error "Unable to find source-highlight - Abort"
+    
 export LC_TIME="en"
 date=`date "+%A, %B %-d, %Y"`
 unset LC_TIME
@@ -140,8 +140,10 @@ do
   #echo "   Creating $name example page"
   indexUpToDate="No"
 
-  test -f $IMAGES_DIR/$name.jpg || (echo "    No image found for $name - Aborting" ; exit)
-  test -f $name/$name.pro || (echo "    No .pro found for $name" ; exit)
+  test -f $IMAGES_DIR/$name.jpg || error "    No image found for $name - Aborting"
+  test -f $name/$name.pro || error "    No .pro found for $name"
+  grep "File examples\\$name\\$name.exe" ../libQGLViewer.nsi > /dev/null || error "ERROR : $name.exe not found in .nsi"
+  grep "CreateShortcut.*pedagogical.*$name.lnk.*$name.exe" ../libQGLViewer.nsi > /dev/null || error "ERROR : $name.lnk not found in .nsi"
 
   OUTPUT=$output
   writeHeader
@@ -257,8 +259,10 @@ EOF
   do
     test -d $contribsDir/$name || continue
 
-    test -f $IMAGES_DIR/$name.jpg || (echo "    No image found for $name" ; exit)
-    test -f $contribsDir/$name/$name.pro || (echo "    No .pro found for $name" ; exit)
+    test -f $IMAGES_DIR/$name.jpg || error "    No image found for $name"
+    test -f $contribsDir/$name/$name.pro || error "    No .pro found for $name"
+    grep "File examples\\$contribsDir\\$name\\$name.exe" ../libQGLViewer.nsi > /dev/null || error "ERROR : $name.exe not found in .nsi"
+    grep "CreateShortcut.*advanced.*$name.lnk.*$name.exe" ../libQGLViewer.nsi > /dev/null || error "ERROR : $name.lnk not found in .nsi"
 
     # echo "   - $name"
     echo "<a name=\""$name"\"></a>" >> $output
@@ -285,8 +289,8 @@ function makeExampleCell()
     echo "  <tr>" >> $output
   fi
   
-  test -f $dir$name/$name.pro || (echo "Unable to find $name.pro - Aborting" ; exit)
-  test -f $IMAGES_DIR/$name.jpg || (echo "Unable to find image for $name - Aborting" ; exit)
+  test -f $dir$name/$name.pro || error "Unable to find $name.pro - Aborting"
+  test -f $IMAGES_DIR/$name.jpg || error "Unable to find image for $name - Aborting"
 
   text=`awk 'BEGIN { p = 0; } /^#/ { print substr($0, 2); p=1; next; } { if (p==1) exit; }' $dir$name/$name.pro`
 
