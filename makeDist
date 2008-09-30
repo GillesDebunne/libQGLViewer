@@ -35,20 +35,24 @@ WebDir="/www"
 SrcDir="src"
 #echo "TEST mode $WebDir" && mkdir -p $WebDir/$SrcDir && touch $WebDir/$SrcDir/oldContent
 
-test -f $libNameVersion-all.tar.gz  || error "No archive file. WinSCP first"
+pwd
 
-tar xzf $libNameVersion-all.tar.gz
+test -f $libNameVersion-all.tar.gz  || error "No archive file. WinSCP first"
 
 rm $WebDir/*.html $WebDir/*.css
 rm -rf $WebDir/examples $WebDir/images $WebDir/refManual 
 
+cp $libNameVersion-all.tar.gz ~/.tmp
+cd ~/.tmp
+ls
+tar xzf $libNameVersion-all.tar.gz
+ls
 tar xzf $wwwTarGZ
 cp -r doc/* $WebDir
 rm -rf doc www.tar.gz
 
 mv $libNameVersion.tar.gz $libNameVersion.zip $WebDir/$SrcDir
 
-gzip -best $libNameVersion.tar
 
 cd $WebDir
 
