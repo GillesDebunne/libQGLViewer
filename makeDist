@@ -153,12 +153,12 @@ checkVersion
 
 VERSION="$version"
 START="!define VERSION "
-FILE="libQGLViewer-setup.nsi"
+FILE="libQGLViewer.nsi"
 checkVersion
 
 VERSION="$version"
 START="VIProductVersion "
-FILE="libQGLViewer-setup.nsi"
+FILE="libQGLViewer.nsi"
 checkVersion
 
 
@@ -193,8 +193,8 @@ TARGET="^URL.*$WebURL"
 FILE="QGLViewer/qglviewer.spec"
 checkGrep
 
-TARGET="^!define URL $WebURL"
-FILE="libQGLViewer-setup.nsi"
+TARGET="^\!define URL $WebURL"
+FILE="libQGLViewer.nsi"
 checkGrep
 
 TARGET="version=\"3.0\""
@@ -373,7 +373,7 @@ cd - > /dev/null
 ########### Create examples' web pages
 echo -n " examples"
 cd examples
-$QGLViewerRootDir/examples/makeDist
+$QGLViewerRootDir/examples/makeDist || error "Error in examples' makeDist"
 cd - > /dev/null
 
 

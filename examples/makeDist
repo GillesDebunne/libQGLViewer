@@ -17,7 +17,8 @@ indexUpToDate="Yes"
 
 function error
 {
-  echo $1
+  echo
+  echo "Error : $1"
   exit 1
 }
 
@@ -79,7 +80,7 @@ done
 
 test -d $OUTPUT_DIR || mkdir -p $OUTPUT_DIR
 
-which "FIXsource-highlight" >& /dev/null || error "Unable to find source-highlight - Abort"
+which "source-highlight" >& /dev/null || error "Unable to find source-highlight - Abort"
     
 export LC_TIME="en"
 date=`date "+%A, %B %-d, %Y"`
@@ -142,8 +143,14 @@ do
 
   test -f $IMAGES_DIR/$name.jpg || error "    No image found for $name - Aborting"
   test -f $name/$name.pro || error "    No .pro found for $name"
-  grep "File examples\\$name\\$name.exe" ../libQGLViewer.nsi > /dev/null || error "ERROR : $name.exe not found in .nsi"
-  grep "CreateShortcut.*pedagogical.*$name.lnk.*$name.exe" ../libQGLViewer.nsi > /dev/null || error "ERROR : $name.lnk not found in .nsi"
+  grep "File examples.$name.$name.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "$name.exe not found in .nsi"
+
+  if [ $isBasic -eq 0 ]
+  then
+    grep "CreateShortcut.*pedagogical.*$name.lnk.*$name.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "$name.lnk not found in .nsi"
+  else
+    grep "CreateShortcut.*basic.*$name.lnk.*$name.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "$name.lnk not found in .nsi"
+  fi
 
   OUTPUT=$output
   writeHeader
@@ -261,8 +268,16 @@ EOF
 
     test -f $IMAGES_DIR/$name.jpg || error "    No image found for $name"
     test -f $contribsDir/$name/$name.pro || error "    No .pro found for $name"
-    grep "File examples\\$contribsDir\\$name\\$name.exe" ../libQGLViewer.nsi > /dev/null || error "ERROR : $name.exe not found in .nsi"
-    grep "CreateShortcut.*advanced.*$name.lnk.*$name.exe" ../libQGLViewer.nsi > /dev/null || error "ERROR : $name.lnk not found in .nsi"
+    if [ -d $contribsDir/$name/Viewer ]
+    then
+      grep "File examples.$contribsDir.$name.Viewer.$name.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "$name.exe not found in .nsi"
+      grep "File examples.$contribsDir.$name.AI.${name}AI.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "${name}AI.exe not found in .nsi"
+      grep "CreateShortcut.*advanced.*$name.lnk.*$name.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "$name.lnk not found in .nsi"
+      grep "CreateShortcut.*advanced.*$name.lnk.*$name.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "$name.lnk not found in .nsi"
+    else
+      grep "File examples.$contribsDir.$name.$name.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "$name.exe not found in .nsi"
+      grep "CreateShortcut.*advanced.*$name.lnk.*$name.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "$name.lnk not found in .nsi"
+    fi
 
     # echo "   - $name"
     echo "<a name=\""$name"\"></a>" >> $output
