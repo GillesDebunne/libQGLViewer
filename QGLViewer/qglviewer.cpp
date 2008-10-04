@@ -27,28 +27,20 @@
 # include <qtextstream.h>
 # include <qtimer.h>
 # include <qimage.h>
+# include <qtextedit.h>
+# include <qkeysequence.h>
 # include <qdir.h>
-// Patch for enums names change
+  // Patch for enums names change
 # define KeyboardModifierMask KeyButtonMask
-// Patch for QMap API change
+  // Patch for QMap API change
 # define value data
-# if QT_VERSION >= 0x030000
-#  include <qtextedit.h>
-#  include <qkeysequence.h>
-# else
-#  include <qtextview.h>
-typedef QTextView QTextEdit;
-#  include <qtextstream.h>
-#  include <algorithm>
-#  include "keySequence.h"
-# endif
 #endif
 
 using namespace std;
 using namespace qglviewer;
 
 /*
-TXXXXXRANSLATOR qglviewer::QGLViewer
+TRANSLATOR qglviewer::QGLViewer
 
 Necessary for lupdate.
 */
