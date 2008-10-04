@@ -39,12 +39,6 @@
 using namespace std;
 using namespace qglviewer;
 
-/*
-TRANSLATOR qglviewer::QGLViewer
-
-Necessary for lupdate.
-*/
-
 // Static private variable
 #if QT_VERSION >= 0x040000
 QList<QGLViewer*> QGLViewer::QGLViewerPool_;
