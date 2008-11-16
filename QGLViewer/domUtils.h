@@ -1,5 +1,7 @@
+#include <qglobal.h>
+
 #if QT_VERSION > 0x040000
-# include <QDom>
+# include <QDomElement>
 # include <QString>
 # include <QStringList>
 # include <QColor>

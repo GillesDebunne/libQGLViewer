@@ -153,7 +153,6 @@ std::ostream& operator<<(std::ostream& out, const Board& b)
 	out << b.stateString().toLatin1().constData() << std::endl;
 #endif
 
-
 	out << b.undo_;
 
 	return out;
