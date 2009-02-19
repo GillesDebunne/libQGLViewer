@@ -12,7 +12,11 @@ bool TERRAIN::LoadHeightMap(const QString& filename, int size)
     UnloadHeightMap( );
 
   QFile pFile(filename);
-  if (!pFile.open(QIODevice::ReadOnly | QIODevice::Text))
+#if QT_VERSION >= 0x040000
+	if (!pFile.open(QIODevice::ReadOnly))
+#else
+	if (!pFile.open(IO_ReadOnly))
+#endif
     return false;
 
   heightMap.arrayHeightMap = new unsigned char [size*size];
@@ -36,7 +40,11 @@ bool TERRAIN::LoadHeightMap(const QString& filename, int size)
 bool TERRAIN::SaveHeightMap(const QString& filename )
 {
   QFile pFile(filename);
-  if (!pFile.open(QIODevice::WriteOnly | QIODevice::Text))
+#if QT_VERSION >= 0x040000
+	if (!pFile.open(QIODevice::WriteOnly))
+#else
+	if (!pFile.open(IO_WriteOnly))
+#endif
     return false;
 
   if( heightMap.arrayHeightMap==NULL )
