@@ -1,0 +1,380 @@
+diff -abur libQGLViewer-2.3.1/QGLViewer/VRender/Exporter.cpp libQGLViewer-2.3.1-py/QGLViewer/VRender/Exporter.cpp
+--- libQGLViewer-2.3.1/QGLViewer/VRender/Exporter.cpp	2008-09-30 20:30:04.000000000 +0200
++++ libQGLViewer-2.3.1-py/QGLViewer/VRender/Exporter.cpp	2008-10-07 18:19:05.343750000 +0200
+@@ -49,9 +49,13 @@
+ #if QT_VERSION >= 0x040000
+ # include <QFile>
+ # include <QMessageBox>
++# define WriteOnlyFlag QIODevice::WriteOnly
++# define TextFileFlag QIODevice::Text
+ #else
+ # include <qfile.h>
+ # include <qmessagebox.h>
++# define WriteOnlyFlag IO_WriteOnly
++# define TextFileFlag IO_Translate
+ #endif
+ 
+ using namespace vrender ;
+@@ -69,7 +73,7 @@
+ {
+ 	QFile file(filename);
+ 
+-	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
++	if (!file.open(WriteOnlyFlag | TextFileFlag)) {
+ 		QMessageBox::warning(NULL, QGLViewer::tr("Exporter error", "Message box window title"), QGLViewer::tr("Unable to open file %1.").arg(filename));
+ 		return;
+ 	}
+diff -abur libQGLViewer-2.3.1/QGLViewer/constraint.cpp libQGLViewer-2.3.1-py/QGLViewer/constraint.cpp
+--- libQGLViewer-2.3.1/QGLViewer/constraint.cpp	2008-09-30 20:30:04.000000000 +0200
++++ libQGLViewer-2.3.1-py/QGLViewer/constraint.cpp	2008-10-07 15:55:40.953125000 +0200
+@@ -117,7 +117,7 @@
+ /*! Depending on translationConstraintType(), constrain \p translation to be along an axis or
+   limited to a plane defined in the Frame local coordinate system by
+   translationConstraintDirection(). */
+-void LocalConstraint::constrainTranslation(Vec& translation, Frame* const frame)
++void LocalConstraint::constrainTranslation(Vec& translation, Frame* frame)
+ {
+   Vec proj;
+   switch (translationConstraintType())
+@@ -141,7 +141,7 @@
+ /*! When rotationConstraintType() is AxisPlaneConstraint::AXIS, constrain \p rotation to be a rotation
+   around an axis whose direction is defined in the Frame local coordinate system by
+   rotationConstraintDirection(). */
+-void LocalConstraint::constrainRotation(Quaternion& rotation, Frame* const)
++void LocalConstraint::constrainRotation(Quaternion& rotation, Frame*)
+ {
+   switch (rotationConstraintType())
+     {
+@@ -170,7 +170,7 @@
+ /*! Depending on translationConstraintType(), constrain \p translation to be along an axis or
+   limited to a plane defined in the world coordinate system by
+   translationConstraintDirection(). */
+-void WorldConstraint::constrainTranslation(Vec& translation, Frame* const frame)
++void WorldConstraint::constrainTranslation(Vec& translation, Frame* frame)
+ {
+   Vec proj;
+   switch (translationConstraintType())
+@@ -204,7 +204,7 @@
+ /*! When rotationConstraintType() is AxisPlaneConstraint::AXIS, constrain \p rotation to be a rotation
+   around an axis whose direction is defined in the world coordinate system by
+   rotationConstraintDirection(). */
+-void WorldConstraint::constrainRotation(Quaternion& rotation, Frame* const frame)
++void WorldConstraint::constrainRotation(Quaternion& rotation, Frame* frame)
+ {
+   switch (rotationConstraintType())
+     {
+@@ -232,14 +232,14 @@
+ 
+ /*! Creates a CameraConstraint, whose constrained directions are defined in the \p camera coordinate
+   system. */
+-CameraConstraint::CameraConstraint(const Camera* const camera)
++CameraConstraint::CameraConstraint(const Camera* camera)
+   : AxisPlaneConstraint(), camera_(camera)
+ {}
+ 
+ /*! Depending on translationConstraintType(), constrain \p translation to be along an axis or
+   limited to a plane defined in the camera() coordinate system by
+   translationConstraintDirection(). */
+-void CameraConstraint::constrainTranslation(Vec& translation, Frame* const frame)
++void CameraConstraint::constrainTranslation(Vec& translation, Frame* frame)
+ {
+   Vec proj;
+   switch (translationConstraintType())
+@@ -267,7 +267,7 @@
+ /*! When rotationConstraintType() is AxisPlaneConstraint::AXIS, constrain \p rotation to be a rotation
+   around an axis whose direction is defined in the camera() coordinate system by
+   rotationConstraintDirection(). */
+-void CameraConstraint::constrainRotation(Quaternion& rotation, Frame* const frame)
++void CameraConstraint::constrainRotation(Quaternion& rotation, Frame* frame)
+ {
+   switch (rotationConstraintType())
+     {
+diff -abur libQGLViewer-2.3.1/QGLViewer/constraint.h libQGLViewer-2.3.1-py/QGLViewer/constraint.h
+--- libQGLViewer-2.3.1/QGLViewer/constraint.h	2008-09-30 20:30:04.000000000 +0200
++++ libQGLViewer-2.3.1-py/QGLViewer/constraint.h	2008-10-07 15:55:13.218750000 +0200
+@@ -130,7 +130,7 @@
+ 
+     \p translation is expressed in local frame coordinate system. Use Frame::inverseTransformOf() to
+     express it in the world coordinate system if needed. */
+-    virtual void constrainTranslation(Vec& translation, Frame* const frame) { Q_UNUSED(translation); Q_UNUSED(frame); };
++    virtual void constrainTranslation(Vec& translation, Frame* frame) { Q_UNUSED(translation); Q_UNUSED(frame); };
+     /*! Filters the rotation applied to the \p frame. This default implementation is empty (no
+       filtering).
+ 
+@@ -139,7 +139,7 @@
+ 
+     Use Frame::inverseTransformOf() on the \p rotation Quaternion::axis() to express \p rotation in
+     the world coordinate system if needed. */
+-    virtual void constrainRotation(Quaternion& rotation, Frame* const frame) { Q_UNUSED(rotation); Q_UNUSED(frame); };
++    virtual void constrainRotation(Quaternion& rotation, Frame* frame) { Q_UNUSED(rotation); Q_UNUSED(frame); };
+   };
+ 
+   /*!
+@@ -209,7 +209,7 @@
+     /*! @name Translation constraint */
+     //@{
+     /*! Overloading of Constraint::constrainTranslation(). Empty */
+-    virtual void constrainTranslation(Vec& translation, Frame* const frame) { Q_UNUSED(translation); Q_UNUSED(frame); };
++    virtual void constrainTranslation(Vec& translation, Frame* frame) { Q_UNUSED(translation); Q_UNUSED(frame); };
+ 
+     void setTranslationConstraint(Type type, const Vec& direction);
+     /*! Sets the Type() of the translationConstraintType(). Default is AxisPlaneConstraint::FREE. */
+@@ -241,7 +241,7 @@
+     /*! @name Rotation constraint */
+     //@{
+     /*! Overloading of Constraint::constrainRotation(). Empty. */
+-    virtual void constrainRotation(Quaternion& rotation, Frame* const frame) { Q_UNUSED(rotation); Q_UNUSED(frame); };
++    virtual void constrainRotation(Quaternion& rotation, Frame* frame) { Q_UNUSED(rotation); Q_UNUSED(frame); };
+ 
+     void setRotationConstraint(Type type, const Vec& direction);
+     void setRotationConstraintType(Type type);
+@@ -282,8 +282,8 @@
+     /*! Virtual destructor. Empty. */
+     virtual ~LocalConstraint() {};
+ 
+-    virtual void constrainTranslation(Vec&     translation, Frame* const frame);
+-    virtual void constrainRotation   (Quaternion& rotation, Frame* const frame);
++    virtual void constrainTranslation(Vec&     translation, Frame* frame);
++    virtual void constrainRotation   (Quaternion& rotation, Frame* frame);
+   };
+ 
+ 
+@@ -302,8 +302,8 @@
+     /*! Virtual destructor. Empty. */
+     virtual ~WorldConstraint() {};
+ 
+-    virtual void constrainTranslation(Vec&     translation, Frame* const frame);
+-    virtual void constrainRotation   (Quaternion& rotation, Frame* const frame);
++    virtual void constrainTranslation(Vec&     translation, Frame* frame);
++    virtual void constrainRotation   (Quaternion& rotation, Frame* frame);
+   };
+ 
+ 
+@@ -323,14 +323,14 @@
+     /*! Virtual destructor. Empty. */
+     virtual ~CameraConstraint() {};
+ 
+-    virtual void constrainTranslation(Vec&     translation, Frame* const frame);
+-    virtual void constrainRotation   (Quaternion& rotation, Frame* const frame);
++    virtual void constrainTranslation(Vec&     translation, Frame* frame);
++    virtual void constrainRotation   (Quaternion& rotation, Frame* frame);
+ 
+     /*! Returns the associated Camera. Set using the CameraConstraint constructor. */
+     const Camera* camera() const { return camera_; };
+ 
+   private:
+-    const Camera* const camera_;
++    const Camera* camera_;
+   };
+ 
+ } // namespace qglviewer
+diff -abur libQGLViewer-2.3.1/QGLViewer/domUtils.h libQGLViewer-2.3.1-py/QGLViewer/domUtils.h
+--- libQGLViewer-2.3.1/QGLViewer/domUtils.h	2008-09-30 20:30:04.000000000 +0200
++++ libQGLViewer-2.3.1-py/QGLViewer/domUtils.h	2008-10-07 15:21:56.968750000 +0200
+@@ -20,8 +20,10 @@
+ 
+ *****************************************************************************/
+ 
++#include <qglobal.h>
+ #if QT_VERSION > 0x040000
+-# include <QDom>
++# include <QDomElement>
++# include <QDomDocument>
+ # include <QString>
+ # include <QStringList>
+ # include <QColor>
+diff -abur libQGLViewer-2.3.1/QGLViewer/manipulatedCameraFrame.h libQGLViewer-2.3.1-py/QGLViewer/manipulatedCameraFrame.h
+--- libQGLViewer-2.3.1/QGLViewer/manipulatedCameraFrame.h	2008-09-30 20:30:08.000000000 +0200
++++ libQGLViewer-2.3.1-py/QGLViewer/manipulatedCameraFrame.h	2008-10-07 15:22:22.578125000 +0200
+@@ -119,9 +119,9 @@
+     /*! @name Mouse event handlers */
+     //@{
+   protected:
+-    virtual void mouseReleaseEvent(QMouseEvent* const event, Camera* const camera);
+-    virtual void mouseMoveEvent   (QMouseEvent* const event, Camera* const camera);
+-    virtual void wheelEvent       (QWheelEvent* const event, Camera* const camera);
++    virtual void mouseReleaseEvent(QMouseEvent* event, Camera* camera);
++    virtual void mouseMoveEvent   (QMouseEvent* event, Camera* camera);
++    virtual void wheelEvent       (QWheelEvent* event, Camera* camera);
+     //@}
+ 
+     /*! @name Spinning */
+diff -abur libQGLViewer-2.3.1/QGLViewer/manipulatedFrame.h libQGLViewer-2.3.1-py/QGLViewer/manipulatedFrame.h
+--- libQGLViewer-2.3.1/QGLViewer/manipulatedFrame.h	2008-09-30 20:30:08.000000000 +0200
++++ libQGLViewer-2.3.1-py/QGLViewer/manipulatedFrame.h	2008-10-07 15:22:29.312500000 +0200
+@@ -239,11 +239,11 @@
+     /*! @name Mouse event handlers */
+     //@{
+   protected:
+-    virtual void mousePressEvent      (QMouseEvent* const event, Camera* const camera);
+-    virtual void mouseMoveEvent       (QMouseEvent* const event, Camera* const camera);
+-    virtual void mouseReleaseEvent    (QMouseEvent* const event, Camera* const camera);
+-    virtual void mouseDoubleClickEvent(QMouseEvent* const event, Camera* const camera);
+-    virtual void wheelEvent           (QWheelEvent* const event, Camera* const camera);
++    virtual void mousePressEvent      (QMouseEvent* event, Camera* camera);
++    virtual void mouseMoveEvent       (QMouseEvent* event, Camera* camera);
++    virtual void mouseReleaseEvent    (QMouseEvent* event, Camera* camera);
++    virtual void mouseDoubleClickEvent(QMouseEvent* event, Camera* camera);
++    virtual void wheelEvent           (QWheelEvent* event, Camera* camera);
+     //@}
+ 
+   public:
+@@ -255,7 +255,7 @@
+     /*! @name MouseGrabber implementation */
+     //@{
+   public:
+-    virtual void checkIfGrabsMouse(int x, int y, const Camera* const camera);
++    virtual void checkIfGrabsMouse(int x, int y, const Camera* camera);
+     //@}
+ 
+     /*! @name XML representation */
+@@ -268,7 +268,7 @@
+ 
+ #ifndef DOXYGEN
+   protected:
+-    Quaternion deformedBallQuaternion(int x, int y, float cx, float cy, const Camera* const camera);
++    Quaternion deformedBallQuaternion(int x, int y, float cx, float cy, const Camera* camera);
+ 
+     int action_; // Should be a QGLViewer::MouseAction, but include loop
+     Constraint* previousConstraint_; // When manipulation is without Contraint.
+diff -abur libQGLViewer-2.3.1/QGLViewer/mouseGrabber.h libQGLViewer-2.3.1-py/QGLViewer/mouseGrabber.h
+--- libQGLViewer-2.3.1/QGLViewer/mouseGrabber.h	2008-09-30 20:30:04.000000000 +0200
++++ libQGLViewer-2.3.1-py/QGLViewer/mouseGrabber.h	2008-10-07 15:22:34.984375000 +0200
+@@ -179,7 +179,7 @@
+ 
+     See examples in the <a href="#_details">detailed description</a> section and in the <a
+     href="../examples/mouseGrabber.html">mouseGrabber example</a>. */
+-    virtual void checkIfGrabsMouse(int x, int y, const Camera* const camera) = 0;
++    virtual void checkIfGrabsMouse(int x, int y, const Camera* camera) = 0;
+ 
+     /*! Returns \c true when the MouseGrabber grabs the QGLViewer's mouse events.
+ 
+@@ -248,23 +248,23 @@
+     href="../examples/mouseGrabber.html">mouseGrabber example</a> for examples.
+ 
+     See the \c QGLWidget::mousePressEvent() and the \c QMouseEvent documentations for details. */
+-    virtual void mousePressEvent(QMouseEvent* const event, Camera* const camera) { Q_UNUSED(event) Q_UNUSED(camera) };
++    virtual void mousePressEvent(QMouseEvent* event, Camera* camera) { Q_UNUSED(event) Q_UNUSED(camera) };
+     /*! Callback method called when the MouseGrabber grabsMouse() and a mouse button is double clicked.
+ 
+     See the \c QGLWidget::mouseDoubleClickEvent() and the \c QMouseEvent documentations for details. */
+-    virtual void mouseDoubleClickEvent(QMouseEvent* const event, Camera* const camera) { Q_UNUSED(event) Q_UNUSED(camera) };
++    virtual void mouseDoubleClickEvent(QMouseEvent* event, Camera* camera) { Q_UNUSED(event) Q_UNUSED(camera) };
+     /*! Mouse release event callback method. See mousePressEvent(). */
+-    virtual void mouseReleaseEvent(QMouseEvent* const event, Camera* const camera) { Q_UNUSED(event) Q_UNUSED(camera) };
++    virtual void mouseReleaseEvent(QMouseEvent* event, Camera* camera) { Q_UNUSED(event) Q_UNUSED(camera) };
+     /*! Callback method called when the MouseGrabber grabsMouse() and the mouse is moved while a
+       button is pressed.
+ 
+     This method will typically update the state of the MouseGrabber from the mouse displacement. See
+     the mousePressEvent() documentation for details. */
+-    virtual void mouseMoveEvent(QMouseEvent* const event, Camera* const camera) { Q_UNUSED(event) Q_UNUSED(camera) };
++    virtual void mouseMoveEvent(QMouseEvent* event, Camera* camera) { Q_UNUSED(event) Q_UNUSED(camera) };
+     /*! Callback method called when the MouseGrabber grabsMouse() and the mouse wheel is used.
+ 
+     See the \c QGLWidget::wheelEvent() and the \c QWheelEvent documentations for details. */
+-    virtual void wheelEvent(QWheelEvent* const event, Camera* const camera) { Q_UNUSED(event) Q_UNUSED(camera) };
++    virtual void wheelEvent(QWheelEvent* event, Camera* camera) { Q_UNUSED(event) Q_UNUSED(camera) };
+     //@}
+ 
+   private:
+diff -abur libQGLViewer-2.3.1/examples/contribs/agora/Viewer/agoraViewer.cpp libQGLViewer-2.3.1-py/examples/contribs/agora/Viewer/agoraViewer.cpp
+--- libQGLViewer-2.3.1/examples/contribs/agora/Viewer/agoraViewer.cpp	2008-09-30 20:30:04.000000000 +0200
++++ libQGLViewer-2.3.1-py/examples/contribs/agora/Viewer/agoraViewer.cpp	2008-10-07 16:10:13.984375000 +0200
+@@ -47,7 +47,7 @@
+ class BoardConstraint : public Constraint
+ {
+ public:
+-	virtual void constrainRotation(Quaternion& q, Frame * const fr)
++	virtual void constrainRotation(Quaternion& q, Frame * fr)
+ 	{
+ 		const Vec up = fr->transformOf(Vec(0.0, 0.0, 1.0));
+ 		Vec axis = q.axis();
+diff -abur libQGLViewer-2.3.1/examples/contribs/blobWar/Viewer/blobWarViewer.cpp libQGLViewer-2.3.1-py/examples/contribs/blobWar/Viewer/blobWarViewer.cpp
+--- libQGLViewer-2.3.1/examples/contribs/blobWar/Viewer/blobWarViewer.cpp	2008-09-30 20:30:04.000000000 +0200
++++ libQGLViewer-2.3.1-py/examples/contribs/blobWar/Viewer/blobWarViewer.cpp	2008-10-07 16:10:59.078125000 +0200
+@@ -47,7 +47,7 @@
+ class BoardConstraint : public Constraint
+ {
+ public:
+-  virtual void constrainRotation(Quaternion& q, Frame * const fr)
++  virtual void constrainRotation(Quaternion& q, Frame * fr)
+   {
+     const Vec up = fr->transformOf(Vec(0.0, 0.0, 1.0));
+     Vec axis = q.axis();
+diff -abur libQGLViewer-2.3.1/examples/contribs/dvonn/dvonnviewer.cpp libQGLViewer-2.3.1-py/examples/contribs/dvonn/dvonnviewer.cpp
+--- libQGLViewer-2.3.1/examples/contribs/dvonn/dvonnviewer.cpp	2008-09-30 20:30:04.000000000 +0200
++++ libQGLViewer-2.3.1-py/examples/contribs/dvonn/dvonnviewer.cpp	2008-10-07 16:16:41.203125000 +0200
+@@ -42,7 +42,7 @@
+   class BoardConstraint : public Constraint
+   {
+   public:
+-    virtual void constrainRotation(Quaternion& q, Frame * const fr)
++    virtual void constrainRotation(Quaternion& q, Frame * fr)
+       {
+ 	const Vec up = fr->transformOf(Vec(0.0, 0.0, 1.0));
+ 	Vec axis = q.axis();
+diff -abur libQGLViewer-2.3.1/examples/mouseGrabber/mouseGrabber.cpp libQGLViewer-2.3.1-py/examples/mouseGrabber/mouseGrabber.cpp
+--- libQGLViewer-2.3.1/examples/mouseGrabber/mouseGrabber.cpp	2008-09-30 20:30:04.000000000 +0200
++++ libQGLViewer-2.3.1-py/examples/mouseGrabber/mouseGrabber.cpp	2008-10-07 15:29:05.828125000 +0200
+@@ -25,7 +25,7 @@
+ using namespace qglviewer;
+ using namespace std;
+ 
+-void CameraPathPlayer::checkIfGrabsMouse(int x, int y, const Camera* const)
++void CameraPathPlayer::checkIfGrabsMouse(int x, int y, const Camera* )
+ {
+   // Rectangular activation array - May have to be tune depending on your default font size
+   setGrabsMouse((x < 80) && (y<yPos()) && ((yPos()-y) < 16));
+diff -abur libQGLViewer-2.3.1/examples/mouseGrabber/mouseGrabber.h libQGLViewer-2.3.1-py/examples/mouseGrabber/mouseGrabber.h
+--- libQGLViewer-2.3.1/examples/mouseGrabber/mouseGrabber.h	2008-09-30 20:30:04.000000000 +0200
++++ libQGLViewer-2.3.1-py/examples/mouseGrabber/mouseGrabber.h	2008-10-07 15:29:24.562500000 +0200
+@@ -26,11 +26,11 @@
+ {
+ public:
+   CameraPathPlayer(int nb) : pathNb(nb) {};
+-  void checkIfGrabsMouse(int x, int y, const qglviewer::Camera* const camera);
++  void checkIfGrabsMouse(int x, int y, const qglviewer::Camera* camera);
+   int yPos() { return 25*pathNb; };
+ 
+ protected:
+-  void mousePressEvent(QMouseEvent* const, qglviewer::Camera* const camera) { camera->playPath(pathNb); };
++  void mousePressEvent(QMouseEvent*, qglviewer::Camera* camera) { camera->playPath(pathNb); };
+ 
+ private:
+   int pathNb;
+diff -abur libQGLViewer-2.3.1/examples/multiSelect/manipulatedFrameSetConstraint.cpp libQGLViewer-2.3.1-py/examples/multiSelect/manipulatedFrameSetConstraint.cpp
+--- libQGLViewer-2.3.1/examples/multiSelect/manipulatedFrameSetConstraint.cpp	2008-09-30 20:30:04.000000000 +0200
++++ libQGLViewer-2.3.1-py/examples/multiSelect/manipulatedFrameSetConstraint.cpp	2008-10-07 16:14:22.187500000 +0200
+@@ -35,7 +35,7 @@
+   objects_.append(o);
+ }
+ 
+-void ManipulatedFrameSetConstraint::constrainTranslation(qglviewer::Vec &translation, Frame *const)
++void ManipulatedFrameSetConstraint::constrainTranslation(qglviewer::Vec &translation, Frame *)
+ {
+ #if QT_VERSION < 0x040000
+   for (QPtrList<Object>::iterator it=objects_.begin(), end=objects_.end(); it != end; ++it)
+@@ -45,7 +45,7 @@
+     (*it)->frame.translate(translation);
+ }
+ 
+-void ManipulatedFrameSetConstraint::constrainRotation(qglviewer::Quaternion &rotation, Frame *const frame)
++void ManipulatedFrameSetConstraint::constrainRotation(qglviewer::Quaternion &rotation, Frame * frame)
+ {
+   // A little bit of math. Easy to understand, hard to guess (tm).
+   // rotation is expressed in the frame local coordinates system. Convert it back to world coordinates.
+diff -abur libQGLViewer-2.3.1/examples/multiSelect/manipulatedFrameSetConstraint.h libQGLViewer-2.3.1-py/examples/multiSelect/manipulatedFrameSetConstraint.h
+--- libQGLViewer-2.3.1/examples/multiSelect/manipulatedFrameSetConstraint.h	2008-09-30 20:30:04.000000000 +0200
++++ libQGLViewer-2.3.1-py/examples/multiSelect/manipulatedFrameSetConstraint.h	2008-10-07 16:14:22.218750000 +0200
+@@ -33,8 +33,8 @@
+   void clearSet();
+   void addObjectToSet(Object* o);
+ 
+-  virtual void constrainTranslation(qglviewer::Vec &translation, qglviewer::Frame *const frame);
+-  virtual void constrainRotation(qglviewer::Quaternion &rotation, qglviewer::Frame *const frame);
++  virtual void constrainTranslation(qglviewer::Vec &translation, qglviewer::Frame * frame);
++  virtual void constrainRotation(qglviewer::Quaternion &rotation, qglviewer::Frame * frame);
+ 
+ private :
+ #if QT_VERSION < 0x040000
