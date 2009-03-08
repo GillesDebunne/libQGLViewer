@@ -23,7 +23,7 @@ private:
   static void warning(const QString& message)
   {
 #if QT_VERSION >= 0x040000
-    qWarning(message.toLatin1().constData());
+    qWarning("%s", message.toLatin1().constData());
 #else
     qWarning(message.latin1());
 #endif

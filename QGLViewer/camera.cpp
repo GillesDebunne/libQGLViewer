@@ -1501,11 +1501,12 @@ void Camera::addKeyFrameToPath(int i)
  QGLViewer::playPathKeyboardModifiers(). */
 void Camera::playPath(int i)
 {
-  if (kfi_.contains(i))
+  if (kfi_.contains(i)) {
     if (kfi_[i]->interpolationIsStarted())
       kfi_[i]->stopInterpolation();
     else
       kfi_[i]->startInterpolation();
+  }
 }
 
 /*! Resets the path of the keyFrameInterpolator() number \p i.
@@ -1515,14 +1516,15 @@ KeyFrameInterpolator::interpolationIsStarted()), resets it to is its starting po
 KeyFrameInterpolator::resetInterpolation()). If the path is played, simply stops interpolation. */
 void Camera::resetPath(int i)
 {
-  if (kfi_.contains(i))
+  if (kfi_.contains(i)) {
     if ((kfi_[i]->interpolationIsStarted()))
       kfi_[i]->stopInterpolation();
     else
       {
-	kfi_[i]->resetInterpolation();
-	kfi_[i]->interpolateAtTime(kfi_[i]->interpolationTime());
+		kfi_[i]->resetInterpolation();
+		kfi_[i]->interpolateAtTime(kfi_[i]->interpolationTime());
       }
+  }
 }
 
 /*! Deletes the keyFrameInterpolator() of index \p i.

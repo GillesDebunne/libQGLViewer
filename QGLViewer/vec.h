@@ -196,7 +196,7 @@ public:
     return Vec(a.x*k, a.y*k, a.z*k);
   }
 
-  /*! Returns the product of the vector with a scalar. */
+  /*! Returns the product of a scalar with the vector. */
   friend Vec operator*(float k, const Vec &a)
   {
     return a*k;
