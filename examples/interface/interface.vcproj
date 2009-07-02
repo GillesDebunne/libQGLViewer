@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding = "Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="8,00"
+	Name="interface"
+	Keyword="Qt4VSv1.0">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="."
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			ConfigurationType="1"
+			IntermediateDirectory="obj\"
+			UseOfMfc="0">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalIncludeDirectories="&quot;$(QTDIR)\include\QtCore&quot;,&quot;$(QTDIR)\include\QtCore&quot;,&quot;$(QTDIR)\include\QtGui&quot;,&quot;$(QTDIR)\include\QtGui&quot;,&quot;$(QTDIR)\include\QtOpenGL&quot;,&quot;$(QTDIR)\include\QtOpenGL&quot;,&quot;$(QTDIR)\include\QtXml&quot;,&quot;$(QTDIR)\include\QtXml&quot;,&quot;$(QTDIR)\include&quot;,&quot;$(QTDIR)\include\ActiveQt&quot;,&quot;moc&quot;,&quot;.&quot;,$(QTDIR)\mkspecs\win32-msvc2005"
+				AdditionalOptions="-Zm200 -w34100 -w34189 -Zm200 -w34100 -w34189 -w34100 -w34189"
+				AssemblerListingLocation="obj\"
+				BufferSecurityCheck="false"
+				DebugInformationFormat="0"
+				ExceptionHandling="1"
+				GeneratePreprocessedFile="0"
+				ObjectFile="obj\"
+				Optimization ="2"
+				PreprocessorDefinitions="QT_NO_DEBUG,NDEBUG,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_DLL,QT_THREAD_SUPPORT,QT_THREAD_SUPPORT,QT_DLL,QT_NO_DEBUG,QT_XML_LIB,QT_OPENGL_LIB,QT_GUI_LIB,QT_CORE_LIB,NDEBUG"
+				ProgramDataBaseFileName=".\"
+				RuntimeLibrary="2"
+				RuntimeTypeInfo="true"
+				SuppressStartupBanner="true"
+				TreatWChar_tAsBuiltInType="false"
+				WarningLevel="3"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="opengl32.lib glu32.lib gdi32.lib user32.lib QGLViewer.lib $(QTDIR)\lib\QtXml4.lib $(QTDIR)\lib\QtOpenGL4.lib $(QTDIR)\lib\QtGui4.lib $(QTDIR)\lib\QtCore4.lib"
+				AdditionalLibraryDirectories="$(QTDIR)\lib,"
+				GenerateDebugInformation="false"
+				IgnoreImportLibrary="true"
+				LinkIncremental="1"
+				OutputFile=".\interface.exe"
+				ProgramDatabaseFile=""
+				SubSystem="1"
+				SuppressStartupBanner="true"/>
+			<Tool
+				Name="VCMIDLTool"
+				DefaultCharType="0"
+				EnableErrorChecks="1"
+				WarningLevel="0"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="QT_NO_DEBUG,NDEBUG,UNICODE,WIN32,QT_LARGEFILE_SUPPORT,QT_DLL,QT_THREAD_SUPPORT,QT_THREAD_SUPPORT,QT_DLL,QT_NO_DEBUG,QT_XML_LIB,QT_OPENGL_LIB,QT_GUI_LIB,QT_CORE_LIB"/>
+		</Configuration>
+	</Configurations>
+	<Files>
+		<Filter
+			Name="Source Files"
+			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			<File
+				RelativePath="interface.cpp"/>
+			<File
+				RelativePath="main.cpp"/>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			<File
+				RelativePath="interface.h"/>
+		</Filter>
+		<Filter
+			Name="Generated Files"
+			Filter="cpp;c;cxx;moc;h;def;odl;idl;res;"
+			UniqueIdentifier="{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}">
+			<File
+				RelativePath="ui_viewerInterface.Qt4.h"/>
+		</Filter>
+		<Filter
+			Name="Form Files"
+			Filter="ui"
+			UniqueIdentifier="{99349809-55BA-4b9d-BF79-8FDBB0286EB3}"
+			ParseFiles="false">
+			<File
+				RelativePath="viewerInterface.Qt4.ui">
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCustomBuildTool"
+						AdditionalDependencies="$(QTDIR)\bin\uic.exe;viewerInterface.Qt4.ui"
+						CommandLine="$(QTDIR)\bin\uic.exe viewerInterface.Qt4.ui -o ui_viewerInterface.Qt4.h"
+						Description="UIC viewerInterface.Qt4.ui"
+						Outputs="ui_viewerInterface.Qt4.h"
+						Path="c:\Qt\4.3.3\bin"/>
+				</FileConfiguration>
+			</File>
+		</Filter>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

@@ -57,7 +57,7 @@ void Box::drawIfAllChildrenAreVisible(const CullingCamera* camera) const
 {
   static bool* entirely = new bool;
 
-  if (camera->aaBoxIsVisible(p1, p2, entirely))
+  if (camera->aaBoxIsVisible(p1, p2, entirely)) {
     if (*entirely)
       draw();
     else
@@ -66,4 +66,5 @@ void Box::drawIfAllChildrenAreVisible(const CullingCamera* camera) const
 	  child[i]->drawIfAllChildrenAreVisible(camera);
       else
 	draw();
+  }
 }

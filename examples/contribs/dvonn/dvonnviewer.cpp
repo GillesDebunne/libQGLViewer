@@ -630,8 +630,7 @@ DvonnViewer::mouseMoveEvent(QMouseEvent* e)
 #else
   if ((dragToPlay_ && e->stateAfter() == Qt::LeftButton) ||
 #endif
-      (!dragToPlay_ && !srcPicked_ .isNull()) &&
-      !camera()->frame()->isManipulated())
+      ( (!dragToPlay_) && (!srcPicked_.isNull()) && (!camera()->frame()->isManipulated()) ) )
   {
     if (game_->phase() == RedPlacementPhase ||
 	game_->phase() == PiecePlacementPhase)

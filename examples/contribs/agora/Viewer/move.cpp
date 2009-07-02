@@ -39,15 +39,16 @@ bool Move::isValid(const Board* const b) const
 	  abs(start().y()-end().y()) <= 1 &&
 	  start() != end() &&
 	  b->caseAt(start()).nbTop() > 0 &&
-	  b->caseAt(start()).topIsBlack() == b->blackPlays())
+	  b->caseAt(start()).topIsBlack() == b->blackPlays()) {
 	  if (goesUnder())
 		  return ((b->caseAt(start()).topAltitude() <= b->caseAt(end()).topAltitude()) && 
 				  (b->caseAt(end()).nbTop() > 0) &&
 				  (b->caseAt(end()).topIsBlack() != b->blackPlays()));
 	  else
 		  return ((b->caseAt(end()).nbTop() == 0) || 
-		          ((b->caseAt(start()).topAltitude() >= b->caseAt(end()).topAltitude()) && (b->caseAt(end()).topIsBlack() != b->blackPlays())));
-	return false;
+		          ((b->caseAt(start()).topAltitude() >= b->caseAt(end()).topAltitude()) && (b->caseAt(end()).topIsBlack() != b->blackPlays()))); 
+  }
+  return false;
 }
 
 void Move::updateBoard(const Board* b) const

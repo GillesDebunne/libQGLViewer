@@ -15,9 +15,6 @@
   <property name="windowTitle" >
    <string>BlobWar</string>
   </property>
-  <property name="windowIcon" >
-   <iconset/>
-  </property>
   <widget class="QWidget" name="widget" >
    <property name="geometry" >
     <rect>

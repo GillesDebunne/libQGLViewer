@@ -1,6 +1,18 @@
 # Artis
 MAIN_PATH = $$(HOME)/QGLViewer
-    
+
+!exists( $${MAIN_PATH}/QGLViewer/qglviewer.h ) {
+  exists( ../QGLViewer/qglviewer.h ) {
+    MAIN_PATH = ../..
+  }
+}
+
+!exists( $${MAIN_PATH}/QGLViewer/qglviewer.h ) {
+  exists( ../../QGLViewer/qglviewer.h ) {
+    MAIN_PATH = ../../..
+  }
+}
+
 isEmpty( INCLUDE_DIR ) {
   INCLUDE_DIR=$${MAIN_PATH}
 }

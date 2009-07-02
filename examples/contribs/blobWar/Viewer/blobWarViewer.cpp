@@ -264,7 +264,7 @@ void BlobWarViewer::playComputerMove(QString move, int duration)
 #if QT_VERSION < 0x040000
   qWarning(message.latin1());
 #else
-  qWarning(message.toLatin1().constData());
+  qWarning("%s", message.toLatin1().constData());
 #endif
   Move m(move);
   if (m.isValid(board_))

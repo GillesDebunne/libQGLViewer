@@ -12,9 +12,6 @@
   <property name="windowTitle" >
    <string>Agora</string>
   </property>
-  <property name="windowIcon" >
-   <iconset/>
-  </property>
   <widget class="QWidget" name="widget" >
    <layout class="QGridLayout" >
     <property name="leftMargin" >

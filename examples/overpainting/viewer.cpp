@@ -57,19 +57,19 @@ void Viewer::init()
 
 void Viewer::paintEvent(QPaintEvent *event)
 {
-	Q_UNUSED(event)
+    Q_UNUSED(event)
     QPainter painter;
     painter.begin(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
-	// Save current OpenGL state
+    // Save current OpenGL state
     glPushAttrib(GL_ALL_ATTRIB_BITS);
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
 
-	// Reset OpenGL parameters
+    // Reset OpenGL parameters
     glShadeModel(GL_SMOOTH);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
@@ -80,12 +80,11 @@ void Viewer::paintEvent(QPaintEvent *event)
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
     qglClearColor(backgroundColor());
 	
-	// Classical 3D drawing, usually performed by paintGL().
-	preDraw();
-	draw();
+    // Classical 3D drawing, usually performed by paintGL().
+    preDraw();
+    draw();
     postDraw();
-
-	// Restore OpenGL state
+    // Restore OpenGL state
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
     glMatrixMode(GL_PROJECTION);
@@ -100,6 +99,7 @@ void Viewer::paintEvent(QPaintEvent *event)
 QString Viewer::helpString() const
 {
   QString text("<h2>O v e r p a i n t</h2>");
-  text += ".";
+  text += "This example shows how to mix the 2D QPainter drawing with regular 3D in an OpenGL QGLViewer.<br>";
+  text += "The <code>paintEvent</code> method is overloaded to interleave the two drawing codes.";
   return text;
 }
