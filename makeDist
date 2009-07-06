@@ -365,7 +365,7 @@ echo -n "sources"
 cd QGLViewer
 
 lupdate QGLViewer.pro 2> /dev/null
-lrelease QGLViewer.pro 2> /tmp/lrelease
+lrelease QGLViewer.pro 2> /tmp/lrelease > /dev/null
 
 if [ `grep "untranslated" /tmp/lrelease | wc -l` != 0 ]
 then
@@ -591,8 +591,8 @@ cd ..
 zip -qr $libNameVersion.zip $libNameVersion
 
 
-windowsDir="/host/Users/debunne/Documents/Code/libQGLViewer/QGLViewer/trunk/"
-tar czf $windowsDir/$libNameVersion-all.tar.gz $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
+#windowsDir="/host/Users/debunne/Documents/Code/libQGLViewer/QGLViewer/trunk/"
+#tar czf $windowsDir/$libNameVersion-all.tar.gz $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
 cd - > /dev/null
 
 echo

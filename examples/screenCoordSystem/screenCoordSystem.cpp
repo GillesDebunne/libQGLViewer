@@ -91,7 +91,7 @@ void Viewer::draw()
   // Draw text id
   glDisable(GL_LIGHTING);
   for (i=0; i<nbSaucers; i++)
-    drawText(int(proj[i].x)-60, int(proj[i].y)+4, QString::number(i));
+    drawText(int(proj[i].x)-62, int(proj[i].y)+4, QString::number(i));
   glEnable(GL_LIGHTING);
 }
 

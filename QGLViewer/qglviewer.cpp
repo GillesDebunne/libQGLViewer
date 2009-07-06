@@ -157,6 +157,8 @@ void QGLViewer::defaultConstructor()
 #if QT_VERSION >= 0x040000
 	setAttribute(Qt::WA_NoSystemBackground);
 #endif
+
+	tileRegion_ = NULL;
 }
 
 #if QT_VERSION >= 0x040000
@@ -811,9 +813,9 @@ See the <a href="../examples/screenCoordSystem.html">screenCoordSystem example</
 Text is displayed only when textIsEnabled() (default). This mechanism allows the user to
 conveniently remove all the displayed text with a single keyboard shortcut.
 
-Use displayMessage() to drawText() for only a short amount of time.
+See also displayMessage() to drawText() for only a short amount of time.
 
-Use the QGLWidget::renderText(x,y,z, text) method (Qt version >= 3.1) to draw a text (fixed size,
+Uses the QGLWidget::renderText(x,y,z, text) method (Qt version >= 3.1) to draw a text (fixed size,
 facing the camera) located at a specific 3D position instead of 2D screen coordinates.
 
 The \c GL_MODELVIEW and \c GL_PROJECTION matrices are not modified by this method.
@@ -863,7 +865,6 @@ void QGLViewer::drawText(int x, int y, const QString& text, const QFont& fnt)
 	glPopAttrib();
 
 	stopScreenCoordinatesSystem();
-
 #else
 
 # if QT_VERSION < 0x030300 && defined Q_OS_UNIX
@@ -873,13 +874,17 @@ void QGLViewer::drawText(int x, int y, const QString& text, const QFont& fnt)
 	newFont.setRawMode(true);
 	newFont.setPixelSize(10);
 	newFont.setFixedPitch(true);
-#  if QT_VERSION >= 0x030200
+#   if QT_VERSION >= 0x030200
 	newFont.setStyleStrategy(QFont::OpenGLCompatible);
-#  endif
+#   endif
 	newFont.setStyleHint(QFont::AnyStyle, QFont::PreferBitmap);
 	renderText(x, y, text, newFont);
 # else
-	renderText(x, y, text, fnt);
+	if (tileRegion_ != NULL) {
+	  renderText((x-tileRegion_->xMin) * width() / (tileRegion_->xMax - tileRegion_->xMin), 
+                     (y-tileRegion_->yMin) * height() / (tileRegion_->yMax - tileRegion_->yMin), text, scaledFont(fnt));
+	} else
+	  renderText(x, y, text, fnt);
 # endif
 
 #endif
@@ -1038,10 +1043,16 @@ void QGLViewer::startScreenCoordinatesSystem(bool upward) const
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	if (upward)
-		glOrtho(0, width(), 0, height(), 0.0, -1.0);
+	if (tileRegion_ != NULL)
+	  if (upward)
+	    glOrtho(tileRegion_->xMin, tileRegion_->xMax, tileRegion_->yMin, tileRegion_->yMax, 0.0, -1.0);
+	  else
+	    glOrtho(tileRegion_->xMin, tileRegion_->xMax, tileRegion_->yMax, tileRegion_->yMin, 0.0, -1.0);
 	else
-		glOrtho(0, width(), height(), 0, 0.0, -1.0);
+	  if (upward)
+	    glOrtho(0, width(), 0, height(), 0.0, -1.0);
+	  else
+	    glOrtho(0, width(), height(), 0, 0.0, -1.0);
 
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();

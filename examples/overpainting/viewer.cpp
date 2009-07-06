@@ -103,3 +103,4 @@ QString Viewer::helpString() const
   text += "The <code>paintEvent</code> method is overloaded to interleave the two drawing codes.";
   return text;
 }
+

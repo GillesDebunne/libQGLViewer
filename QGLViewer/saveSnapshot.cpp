@@ -372,17 +372,19 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
     imageInterface = new ImageInterface(this, "", true);  // Make the dialog modal
 #endif
 
-  // 1 means never set
-  //if (imageInterface->imgWidth->value() == 1)
-  imageInterface->imgWidth->setValue(width());
-  //if (imageInterface->imgHeight->value() == 1)
-  imageInterface->imgHeight->setValue(height());
+  // 1 means never set : use current window size as default
+  if ((imageInterface->imgWidth->value() == 1) && (imageInterface->imgHeight->value() == 1))
+    {
+      imageInterface->imgWidth->setValue(width());
+      imageInterface->imgHeight->setValue(height());
+    }
+
   imageInterface->imgQuality->setValue(snapshotQuality());
 
   if (imageInterface->exec() == QDialog::Rejected)
     return true;
 
-  // Hide Closed dialog
+  // Hide closed dialog
   qApp->processEvents();
   
   setSnapshotQuality(imageInterface->imgQuality->value());
@@ -438,15 +440,19 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
       return false;
     }
 
+  // ProgressDialog disabled since it interfers with the screen grabing mecanism on some platforms. Too bad.
   // ProgressDialog::showProgressDialog(this);
 
-  double deltaX = 2.0 * xMin * subSize.width() / finalSize.width();
-  double deltaY = 2.0 * yMin * subSize.height() / finalSize.height();
+  double scaleX = subSize.width() / static_cast<double>(finalSize.width());
+  double scaleY = subSize.height() / static_cast<double>(finalSize.height());
+
+  double deltaX = 2.0 * xMin * scaleX;
+  double deltaY = 2.0 * yMin * scaleY;
 
   int nbX = finalSize.width() / subSize.width();
   int nbY = finalSize.height() / subSize.height();
 
-  // Extra subimage on the border if needed
+  // Extra subimage on the right/bottom border(s) if needed
   if (nbX * subSize.width() < finalSize.width())
     nbX++;
   if (nbY * subSize.height() < finalSize.height())
@@ -454,11 +460,35 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
 
   makeCurrent();
 
+  // tileRegion_ is used by startScreenCoordinatesSystem to appropriately set the local
+  // coordinate system when tiling
+  tileRegion_ = new TileRegion();
+  double tileXMin, tileWidth, tileYMin, tileHeight;
+  if ((expand && (newAspectRatio>aspectRatio)) || (!expand && (newAspectRatio<aspectRatio)))
+    {
+      double tileTotalWidth = newAspectRatio * height();
+      tileXMin = (width() - tileTotalWidth) / 2.0;
+      tileWidth = tileTotalWidth * scaleX;
+      tileYMin = 0.0;
+      tileHeight = height() * scaleY;
+      tileRegion_->textScale = 1.0 / scaleY;
+    }
+  else
+    {
+      double tileTotalHeight = width() / newAspectRatio;
+      tileYMin = (height() - tileTotalHeight) / 2.0;
+      tileHeight = tileTotalHeight * scaleY;
+      tileXMin = 0.0;
+      tileWidth = width() * scaleX;
+      tileRegion_->textScale = 1.0 / scaleX;
+    }
+
   int count=0;
   for (int i=0; i<nbX; i++)
     for (int j=0; j<nbY; j++)
       {
 	preDraw();
+
 	// Change projection matrix
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -467,7 +497,12 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
 	else
 	  glOrtho(-xMin + i*deltaX, -xMin + (i+1)*deltaX, yMin - (j+1)*deltaY, yMin - j*deltaY, zNear, zFar);
 	glMatrixMode(GL_MODELVIEW);
-	  
+
+	tileRegion_->xMin = tileXMin + i * tileWidth;
+	tileRegion_->xMax = tileXMin + (i+1) * tileWidth;
+	tileRegion_->yMin = tileYMin + j * tileHeight;
+	tileRegion_->yMax = tileYMin + (j+1) * tileHeight;
+
 	draw();
 	postDraw();
 
@@ -521,6 +556,9 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
   // #else
   // setCursor(QCursor(Qt::ArrowCursor));
   // #endif
+
+  delete tileRegion_;
+  tileRegion_ = NULL;
 
   if (imageInterface->whiteBackground->isChecked())
     setBackgroundColor(previousBGColor);

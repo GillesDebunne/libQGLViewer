@@ -518,6 +518,43 @@ public:
 
 private:
 	bool saveImageSnapshot(const QString& fileName);
+	
+#ifndef DOXYGEN
+	/* This class is used internally for screenshot that require tiling (image size size different
+	from window size). Only in that case, is the private tileRegion_ pointer non null.
+	It then contains the current tiled region, which is used by startScreenCoordinatesSystem
+	to adapt the coordinate system. Not using it would result in a tiled drawing of the parts
+	that use startScreenCoordinatesSystem. Also used by scaledFont for same purposes. */
+	class TileRegion { public : double xMin, yMin, xMax, yMax, textScale; };
+#endif
+
+public:
+	/*! Return a possibly scaled version of \p font, used for snapshot rendering.
+
+	This method usually simply returns \p font. However when rendering a screen snapshot using
+	saveSnapshot(), it returns a scaled version of the font, so that the size of the rendered text
+	on the snapshot is identical to what is displayed on screen, even if the snapshot uses image tiling
+	to create an image of dimensions different from those of the current window.
+
+	This method should be used in conjunction with the QGLWidget::renderText() function. Using
+	\code
+	renderText(x, y, z, "My Text", scaledFont(QFont()));
+	\endcode
+	will guarantee that this text will be properly displayed on arbitrary sized snapshots. 
+
+	Note that this method is not needed if you use drawText() which already calls it internally. */
+	QFont scaledFont(const QFont& font) const {
+	  if (tileRegion_ == NULL)
+	    return font;
+	  else {
+	    QFont f(font);
+	    if (f.pixelSize() == -1)
+	      f.setPointSizeF(f.pointSizeF() * tileRegion_->textScale);
+	    else
+	      f.setPixelSize(f.pixelSize() * tileRegion_->textScale);
+	    return f;
+	  }
+	}
 	//@}
 
 
@@ -1186,6 +1223,7 @@ private:
 	void initializeSnapshotFormats();
 	QString snapshotFileName_, snapshotFormat_;
 	int snapshotCounter_, snapshotQuality_;
+	TileRegion* tileRegion_;
 
 	// Q G L V i e w e r   p o o l
 #if QT_VERSION >= 0x040000
