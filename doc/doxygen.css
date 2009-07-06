@@ -1,6 +1,5 @@
 BODY,H1,H2,H3,H4,H5,H6,P,CENTER,TD,TH,UL,DL,DIV {
 	font-family: trebuchet ms, luxi sans, Geneva, Arial, Helvetica, sans-serif;
-	margin: 2px 0px 10px 0px;
 }
 BODY,TD {
        font-size: 90%;
@@ -13,7 +12,7 @@ H2 {
     color: #003;
     font-size: medium;
     background-color: #DDF;
-    padding : 2px 0px 1px 30px;
+    padding : 2px 0px 1px 10px;
     border: 1px solid #AAC;
     font-size: 110%;
 }
