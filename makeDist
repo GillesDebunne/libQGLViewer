@@ -1,7 +1,7 @@
 #!/bin/bash
 
 libName="libQGLViewer"
-version="2.3.2"
+version="2.3.3"
 
 WebURL="http://www.libqglviewer.com"
 
@@ -13,6 +13,7 @@ libNameVersion="$libName-$version"
 tmpDir="/tmp/$libNameVersion"
 QGLViewerRootDir="$HOME/QGLViewer"
 wwwTarGZ="www.tar.gz"
+allTarGZ="$libNameVersion-all.tar.gz"
 
 cd $QGLViewerRootDir
 
@@ -30,26 +31,22 @@ if [[ $@ != 0 ]] && [[ $1 = "web" ]]
 then
 echo "--- Publishing libQGLViewer version $version ---"
 
-#WebDir="$HOME/www"
 WebDir="/www"
 SrcDir="src"
 #echo "TEST mode $WebDir" && mkdir -p $WebDir/$SrcDir && touch $WebDir/$SrcDir/oldContent
 
-pwd
-
-test -f $libNameVersion-all.tar.gz  || error "No archive file. WinSCP first"
+cd ~/.tmp
+test -f $allTarGZ  || error "No archive file in .tmp dir."
 
 rm $WebDir/*.html $WebDir/*.css
 rm -rf $WebDir/examples $WebDir/images $WebDir/refManual 
 
-cp $libNameVersion-all.tar.gz ~/.tmp
-cd ~/.tmp
 ls
-tar xzf $libNameVersion-all.tar.gz
+tar xzf $allTarGZ
 ls
 tar xzf $wwwTarGZ
 cp -r doc/* $WebDir
-rm -rf doc www.tar.gz
+rm -rf doc $wwwTarGZ
 
 mv $libNameVersion.tar.gz $libNameVersion.zip $WebDir/$SrcDir
 
@@ -65,7 +62,9 @@ cd - > /dev/null
 echo "Checking links..."
 checkLinks.pl -r
 exit
-fi
+fi # Fin option web
+
+
 
 
 
@@ -227,8 +226,10 @@ test -d $tmpDir || mkdir -p $tmpDir
 
 # ----------------------------------------------
 
-dos2unix -o -p CHANGELOG INSTALL README LICENCE GPL_EXCEPTION gpl-warning &> /tmp/error
+
 SOURCES="CHANGELOG INSTALL README LICENCE GPL_EXCEPTION gpl-warning libQGLViewer.pro"
+dos2unix -o -p $SOURCES &> /tmp/error
+test -s /tmp/error && more /tmp/error && error "Error while converting newlines to Unix"
 TARGET=""
 makeDist
 
@@ -259,6 +260,7 @@ function makeDistExample()
   checkGrep
 
   dotPro="$DIR/$name.pro"
+  grep 'SUBDIRS.*\\.*' $dotPro && echo "Unhandled backslash in SUBDIRS"
   subDirs=$(grep "SUBDIRS" $dotPro | sed s%"SUBDIRS *= *"%%)
   if [[ ! -z $subDirs ]]
   then
@@ -365,13 +367,14 @@ echo -n "sources"
 cd QGLViewer
 
 lupdate QGLViewer.pro 2> /dev/null
-lrelease QGLViewer.pro 2> /tmp/lrelease > /dev/null
+lrelease QGLViewer.pro 2> /dev/null > /tmp/lrelease
 
-if [ `grep "untranslated" /tmp/lrelease | wc -l` != 0 ]
+if [ `grep "0 unfinished" /tmp/lrelease | wc -l` != 1 ]
 then
   echo "Untranslated QString exist - Aborting"
   exit
 fi
+
 cd - > /dev/null
 
 ########### Create examples' web pages
@@ -592,7 +595,12 @@ zip -qr $libNameVersion.zip $libNameVersion
 
 
 #windowsDir="/host/Users/debunne/Documents/Code/libQGLViewer/QGLViewer/trunk/"
-#tar czf $windowsDir/$libNameVersion-all.tar.gz $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
+#tar czf $windowsDir/$allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
+
+tar czf $allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
+echo "Copy to dzsrv-linux"
+scp $allTarGZ root@192.168.0.10:/var/www/html/libqglviewer/home/debunne/.tmp
+
 cd - > /dev/null
 
 echo

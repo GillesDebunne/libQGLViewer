@@ -696,14 +696,7 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
 #endif
     if (automatic)
 	{
-      // Viewer must be on top of other windows.
-      makeCurrent();
-      raise();
-      // Hack: Qt has problems if the frame buffer is grabbed after QFileDialog is displayed.
-      // We grab the frame buffer before, even if it might be not necessary (vectorial rendering).
-      // The problem could not be reproduced on a simple example to submit a Qt bug.
-      // However, only grabs the backgroundImage in the eponym example. May come from the driver.
-      QImage snapshot = grabFrameBuffer(true);
+      QImage snapshot = frameBufferSnapshot();
 #if QT_VERSION >= 0x040000
     saveOK = snapshot.save(fileInfo.filePath(), snapshotFormat().toLatin1().constData(), snapshotQuality());
 #else
@@ -715,6 +708,18 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
 
   if (!saveOK)
     QMessageBox::warning(this, "Snapshot problem", "Unable to save snapshot in\n"+fileInfo.filePath());
+}
+
+QImage QGLViewer::frameBufferSnapshot()
+{
+      // Viewer must be on top of other windows.
+      makeCurrent();
+      raise();
+      // Hack: Qt has problems if the frame buffer is grabbed after QFileDialog is displayed.
+      // We grab the frame buffer before, even if it might be not necessary (vectorial rendering).
+      // The problem could not be reproduced on a simple example to submit a Qt bug.
+      // However, only grabs the backgroundImage in the eponym example. May come from the driver.
+      return grabFrameBuffer(true);
 }
 
 /*! Same as saveSnapshot(), except that it uses \p fileName instead of snapshotFileName().
@@ -739,6 +744,13 @@ void QGLViewer::saveSnapshot(const QString& fileName, bool overwrite)
   setSnapshotCounter(previousCounter);
 }
 
+/*! Takes a snapshot of the current display and pastes it to the clipboard.
+*/
+void QGLViewer::snapshotToClipboard()
+{
+	QClipboard *cb = QApplication::clipboard();
+	cb->setImage(frameBufferSnapshot()); 
+}
 
 #if QT_VERSION < 0x030000
 // This code is largely inspired from Qt's method available in version 3

@@ -568,6 +568,7 @@ void QGLViewer::setDefaultShortcuts()
 	setShortcut(MOVE_CAMERA_DOWN,	Qt::Key_Down);
 	setShortcut(INCREASE_FLYSPEED,Qt::Key_Plus);
 	setShortcut(DECREASE_FLYSPEED,Qt::Key_Minus);
+	setShortcut(SNAPSHOT_TO_CLIPBOARD,Qt::CTRL+Qt::Key_C);
 
 	keyboardActionDescription_[DISPLAY_FPS] = tr("Toggles the display of the FPS", "DISPLAY_FPS action description");
 	keyboardActionDescription_[SAVE_SCREENSHOT] = tr("Saves a screenshot", "SAVE_SCREENSHOT action description");
@@ -587,6 +588,7 @@ void QGLViewer::setDefaultShortcuts()
 	keyboardActionDescription_[MOVE_CAMERA_DOWN] = tr("Moves camera down", "MOVE_CAMERA_DOWN action description");
 	keyboardActionDescription_[INCREASE_FLYSPEED] = tr("Increases fly speed", "INCREASE_FLYSPEED action description");
 	keyboardActionDescription_[DECREASE_FLYSPEED] = tr("Decreases fly speed", "DECREASE_FLYSPEED action description");
+	keyboardActionDescription_[SNAPSHOT_TO_CLIPBOARD] = tr("Copies a snapshot to clipboard", "SNAPSHOT_TO_CLIPBOARD action description");
 
 	// K e y f r a m e s   s h o r t c u t   k e y s
 	setPathKey(Qt::Key_F1,   1);
@@ -2364,8 +2366,8 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 // Defines the Alt+R shortcut. Call updateGL to refresh display.
 if ((e->key() == Qt::Key_R) && (e->modifiers() == Qt::AltModifier))
 {
-myResetFunction();
-updateGL();
+  myResetFunction();
+  updateGL();
 }
 else
 QGLViewer::keyPressEvent(e);
@@ -2467,12 +2469,13 @@ void QGLViewer::handleKeyboardAction(KeyboardAction id)
 	case DISPLAY_FPS :		toggleFPSIsDisplayed(); break;
 	case ENABLE_TEXT :		toggleTextIsEnabled(); break;
 	case EXIT_VIEWER :		saveStateToFileForAllViewers(); qApp->closeAllWindows(); break;
-	case SAVE_SCREENSHOT :	saveSnapshot(false, false); break;
+	case SAVE_SCREENSHOT :		saveSnapshot(false, false); break;
 	case FULL_SCREEN :		toggleFullScreen(); break;
-	case STEREO :		toggleStereoDisplay(); break;
+	case STEREO :			toggleStereoDisplay(); break;
 	case ANIMATION :		toggleAnimation(); break;
 	case HELP :			help(); break;
 	case EDIT_CAMERA :		toggleCameraIsEdited(); break;
+	case SNAPSHOT_TO_CLIPBOARD :	snapshotToClipboard(); break;
 	case CAMERA_MODE :
 		toggleCameraMode();
 		displayMessage(cameraIsInRevolveMode()?tr("Camera in revolve around mode", "Feedback message"):tr("Camera in fly mode", "Feedback message"));

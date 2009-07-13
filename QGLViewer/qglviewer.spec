@@ -151,6 +151,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Jul 14 2009 Gilles Debunne <contact@libQGLViewer.com> 2.3.3
+- New snapshotToClipboard method.
+
 * Jul 7 2009 Gilles Debunne <contact@libQGLViewer.com> 2.3.2
 - Fixed tiled snapshot rendering when using screen coordinates.
 

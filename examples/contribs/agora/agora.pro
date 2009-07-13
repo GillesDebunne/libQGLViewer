@@ -14,4 +14,3 @@
 
 TEMPLATE = subdirs
 SUBDIRS = AI Viewer
-

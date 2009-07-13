@@ -5,8 +5,10 @@
 
 #if QT_VERSION >= 0x040000
 # include <QMap>
+# include <QClipboard>
 #else
 # include <qmap.h>
+# include <qclipboard.h>
 #endif
 
 class QTabWidget;
@@ -502,19 +504,20 @@ public:
 	// Qt 2.3 does not support double default value parameters in slots.
 	// Remove "slots" from the following line to compile with Qt 2.3
 	public slots:
-		void saveSnapshot(bool automatic=true, bool overwrite=false);
+	void saveSnapshot(bool automatic=true, bool overwrite=false);
 
-		public slots:
-			void saveSnapshot(const QString& fileName, bool overwrite=false);
-			void setSnapshotFileName(const QString& name);
+	public slots:
+	void saveSnapshot(const QString& fileName, bool overwrite=false);
+	void setSnapshotFileName(const QString& name);
 
-			/*! Sets the snapshotFormat(). */
-			void setSnapshotFormat(const QString& format) { snapshotFormat_ = format; };
-			/*! Sets the snapshotCounter(). */
-			void setSnapshotCounter(int counter) { snapshotCounter_ = counter; };
-			/*! Sets the snapshotQuality(). */
-			void setSnapshotQuality(int quality) { snapshotQuality_ = quality; };
-			bool openSnapshotFormatDialog();
+	/*! Sets the snapshotFormat(). */
+	void setSnapshotFormat(const QString& format) { snapshotFormat_ = format; };
+	/*! Sets the snapshotCounter(). */
+	void setSnapshotCounter(int counter) { snapshotCounter_ = counter; };
+	/*! Sets the snapshotQuality(). */
+	void setSnapshotQuality(int quality) { snapshotQuality_ = quality; };
+	bool openSnapshotFormatDialog();
+	void snapshotToClipboard();
 
 private:
 	bool saveImageSnapshot(const QString& fileName);
@@ -531,16 +534,19 @@ private:
 public:
 	/*! Return a possibly scaled version of \p font, used for snapshot rendering.
 
-	This method usually simply returns \p font. However when rendering a screen snapshot using
-	saveSnapshot(), it returns a scaled version of the font, so that the size of the rendered text
-	on the snapshot is identical to what is displayed on screen, even if the snapshot uses image tiling
-	to create an image of dimensions different from those of the current window.
+	From a user's point of view, this method simply returns \p font and can be used transparently.
 
-	This method should be used in conjunction with the QGLWidget::renderText() function. Using
+	However when internally rendering a screen snapshot using saveSnapshot(), it returns a scaled version 
+	of the font, so that the size of the rendered text on the snapshot is identical to what is displayed on screen, 
+	even if the snapshot uses image tiling to create an image of dimensions different from those of the
+	current window. This scaled version will only be used when saveSnapshot() calls your draw() method
+	to generate the snapshot.
+
+	All your calls to QGLWidget::renderText() function hence should use this method. 
 	\code
 	renderText(x, y, z, "My Text", scaledFont(QFont()));
 	\endcode
-	will guarantee that this text will be properly displayed on arbitrary sized snapshots. 
+	will guarantee that this text will be properly displayed on arbitrary sized snapshots.	
 
 	Note that this method is not needed if you use drawText() which already calls it internally. */
 	QFont scaledFont(const QFont& font) const {
@@ -900,7 +906,7 @@ protected:
 	enum KeyboardAction { DRAW_AXIS, DRAW_GRID, DISPLAY_FPS, ENABLE_TEXT, EXIT_VIEWER,
 		SAVE_SCREENSHOT, CAMERA_MODE, FULL_SCREEN, STEREO, ANIMATION, HELP, EDIT_CAMERA,
 		MOVE_CAMERA_LEFT, MOVE_CAMERA_RIGHT, MOVE_CAMERA_UP, MOVE_CAMERA_DOWN,
-		INCREASE_FLYSPEED, DECREASE_FLYSPEED };
+		INCREASE_FLYSPEED, DECREASE_FLYSPEED, SNAPSHOT_TO_CLIPBOARD };
 public:
 	int shortcut(KeyboardAction action) const;
 #ifndef DOXYGEN
@@ -1221,6 +1227,7 @@ private:
 
 	// S n a p s h o t s
 	void initializeSnapshotFormats();
+	QImage frameBufferSnapshot();
 	QString snapshotFileName_, snapshotFormat_;
 	int snapshotCounter_, snapshotQuality_;
 	TileRegion* tileRegion_;
