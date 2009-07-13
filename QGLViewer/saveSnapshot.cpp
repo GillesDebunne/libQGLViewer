@@ -745,6 +745,8 @@ void QGLViewer::saveSnapshot(const QString& fileName, bool overwrite)
 }
 
 /*! Takes a snapshot of the current display and pastes it to the clipboard.
+
+This action is activated by the KeyboardAction::SNAPSHOT_TO_CLIPBOARD enum, binded to \c Ctrl+C by default.
 */
 void QGLViewer::snapshotToClipboard()
 {

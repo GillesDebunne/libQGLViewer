@@ -41,9 +41,8 @@ test -f $allTarGZ  || error "No archive file in .tmp dir."
 rm $WebDir/*.html $WebDir/*.css
 rm -rf $WebDir/examples $WebDir/images $WebDir/refManual 
 
-ls
 tar xzf $allTarGZ
-ls
+
 tar xzf $wwwTarGZ
 cp -r doc/* $WebDir
 rm -rf doc $wwwTarGZ
@@ -121,7 +120,9 @@ function makeDist()
 ##################################################################
 ############        Checking version coherence        ############
 ##################################################################
-echo "Checking version coherence"
+echo -n "Checking   : "
+
+echo -n "version"
 
 VERSION=$version_major
 START="%define version_major "
@@ -168,7 +169,7 @@ checkVersion
 ##################################################################
 ############          Checking file integrity         ############
 ##################################################################
-echo "Checking file integrity"
+echo -n " files"
 
 TARGET="Gilles Debunne <contact@libQGLViewer.com> $version"
 FILE="QGLViewer/qglviewer.spec"
@@ -212,7 +213,7 @@ TARGET="version=\"3.1\""
 FILE="examples/interface/viewerInterface.Qt3.ui"
 checkGrep
 
-
+echo
 
 
  
@@ -346,7 +347,7 @@ echo
 ##################################################################
 ############            Filtering  sources            ############
 ##################################################################
-echo -n "Filtering :  "
+echo -n "Filtering  : "
 
 cd $tmpDir
 
@@ -598,6 +599,7 @@ zip -qr $libNameVersion.zip $libNameVersion
 #tar czf $windowsDir/$allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
 
 tar czf $allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
+echo
 echo "Copy to dzsrv-linux"
 scp $allTarGZ root@192.168.0.10:/var/www/html/libqglviewer/home/debunne/.tmp
 
