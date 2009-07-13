@@ -94,7 +94,7 @@ contains( DEFINES, NO_VECTORIAL_RENDER ) {
 	VRender/NVector3.cpp \
 	VRender/VRender.cpp
 
-  HEADERS *= \
+  VRENDER_HEADERS = \
 	VRender/AxisAlignedBox.h \
 	VRender/Exporter.h \
 	VRender/gpc.h \
@@ -180,6 +180,8 @@ unix {
   INSTALLS *= target include documentation docImages docRefManual
 }
 
+# Must be done after install target definition
+HEADERS *= $${VRENDER_HEADERS}
 
 #		--  L i n u x  --
 linux-g++ {

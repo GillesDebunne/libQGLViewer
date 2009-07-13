@@ -55,7 +55,7 @@ cd $WebDir
 cd $SrcDir
 test -f md5sum.txt && rm md5sum.txt
 md5sum `find . -type f | sort` > md5sum.txt
-ls -1 | grep -v "^lib" | grep -v "index.php" | grep -v "md5sum.txt"
+ls -1 | grep -v "^lib" | grep -v "index.php" | grep -v "md5sum.txt"  | grep -v "licenseQGLViewer.pdf" && echo "Extra files in src"
 cd - > /dev/null
 
 echo "Checking links..."
@@ -324,7 +324,7 @@ done
 echo -n " doc"
 cd doc
 
-SOURCES="*.html *.css Doxyfile cwExtractor tabs.awk images/*jpg images/*png images/qglviewer.ico"
+SOURCES="*.html *.css Doxyfile cwExtractor tabs.awk images/*jpg images/*png images/*gif images/qglviewer.ico"
 TARGET="doc"
 makeDist
 
@@ -461,7 +461,7 @@ test -f installdox && rm installdox
 
 ## Changing header menu in doxygen pages ##
 # Removing unused pages
-rm -f files.html globals.html globals_*.html *_8*.html namespace*.html dir_*.html dirs.html functions_rela.html functions_vars.html functions_0x*.html
+rm -f files.html globals.html globals_*.html *_8*.html namespace*.html dir_*.html dirs.html functions_rela.html functions_vars.html functions_0x*.html classes.html
 
 # Patching functions pages
 for f in $(ls functions_*.html)
@@ -587,7 +587,13 @@ function addNamespace()
 addNamespace ManipulatedFrame Frame manipulatedFrame
 addNamespace ManipulatedCameraFrame ManipulatedFrame manipulatedCameraFrame
 
-find . -type f -a \( -name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html' -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb' \) -exec unix2dos -o -p {} \; &> /tmp/error
+for vcproj in $(find $QGLViewerRootDir/ -name '*.vcproj' -type f)
+do
+  target=$(echo $vcproj | sed s%"$QGLViewerRootDir/"%""%)
+  cp $vcproj $target
+done
+
+find . -type f -a \( -name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html' -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb' -o -name '*.vcproj' \) -exec unix2dos -o -p {} \; &> /tmp/error
 
 test -s /tmp/error && more /tmp/error && error "Error while converting newlines to DOS"
 

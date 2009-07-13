@@ -38,19 +38,7 @@ Unix systems
 <h2><img src="images/linux.png" width="49" height="54" alt="linux"/>Linux and Unix</h2>
 
 <h3>Compilation and installation</h3>
-Directly install the <a href="http://ftp.debian.org/debian/pool/main/libq/libqglviewer/">Debian package</a>, the <a href="http://www.freshports.org/graphics/libqglviewer/">FreeBSD port</a> or the pre-compiled RPM (built on Fedora Core 6 with gcc 4.1.1):
-<pre>
-rpm -Uvh <a href="#WEBURL#/src/libQGLViewer-#VERSION#.i586.rpm">libQGLViewer-#VERSION#.i586.rpm</a> <a href="#WEBURL#/src/libQGLViewer-devel-#VERSION#.i586.rpm">libQGLViewer-devel-#VERSION#.i586.rpm</a>
-</pre>
-
-Re-compile the RPM for optimal results or if you have a different configuration:
-<pre>
-rpmbuild --rebuild <a href="#WEBURL#/src/libQGLViewer-#VERSION#.src.rpm">libQGLViewer-#VERSION#.src.rpm</a>
-cd /usr/src/RPM/RPMS/i586/ (or /usr/src/redhat/RPMS/i586, see the rpmbuild last log lines)
-rpm -Uvh libQGLViewer-*#VERSION#.i?86.rpm
-</pre>
-
-or directly use the source tarball:
+Compile the library from its source tarball:
 <pre>
 tar -xzf <a href="#WEBURL#/src/libQGLViewer-#VERSION#.tar.gz">libQGLViewer-#VERSION#.tar.gz</a>
 cd libQGLViewer-#VERSION#/QGLViewer
@@ -64,20 +52,35 @@ You need root privileges to install the library, since default install paths are
 </p>
 
 
+Directly install the <a href="http://ftp.debian.org/debian/pool/main/libq/libqglviewer/">Debian package</a>, the <a href="http://www.freshports.org/graphics/libqglviewer/">FreeBSD port</a>.
+<!-- or the pre-compiled RPM (built on Fedora Core 6 with gcc 4.1.1):
+<pre>
+rpm -Uvh <a href="#WEBURL#/src/libQGLViewer-#VERSION#.i586.rpm">libQGLViewer-#VERSION#.i586.rpm</a> <a href="#WEBURL#/src/libQGLViewer-devel-#VERSION#.i586.rpm">libQGLViewer-devel-#VERSION#.i586.rpm</a>
+</pre>
+Re-compile the RPM for optimal results or if you have a different configuration:
+<pre>
+rpmbuild -XXX-rebuild <a href="#WEBURL#/src/libQGLViewer-#VERSION#.src.rpm">libQGLViewer-#VERSION#.src.rpm</a>
+cd /usr/src/RPM/RPMS/i586/ (or /usr/src/redhat/RPMS/i586, see the rpmbuild last log lines)
+rpm -Uvh libQGLViewer-*#VERSION#.i?86.rpm
+</pre>
+-->
+
 <h3>Custom installation</h3>
 With the rpm or when using <code>make install</code>, the following files are installed:
 <ul>
-<li>The library (<code>libQGLViewer-#VERSION#.so</code> and <code>libQGLViewer-#VERSION#.a</code>) in <code>/usr/lib</code></li>
+<li>The library (<code>libQGLViewer-#VERSION#.so</code>) in <code>/usr/lib</code></li>
 <li>The header files and designer plugin code in <code>/usr/include/QGLViewer</code></li>
 <li>The documentation and the examples in <code>/usr/share/doc/QGLViewer</code></li>
 </ul>
 
+<!--
 <p>
 &nbsp; <b>&raquo; RPM customization</b><br/>
 If you want to change the RPM installation prefix, say to <code>/usr/local</code> (default is
-<code>/usr</code>), use <code>rpm -Uvh --prefix /usr/local ...</code> in the rpm command line
+<code>/usr</code>), use <code>rpm -Uvh -XXX-prefix /usr/local ...</code> in the rpm command line
 instead.
 </p>
+-->
 
 <p>
 &nbsp; <b>&raquo; qmake customization</b><br/>
@@ -110,7 +113,7 @@ install libglut3-dev</code>.
 Once the library is compiled, you can <a href="compilation.html#unix">compile the examples</a>.
 
 <p>
-You may also want to install the <a href="#plugin">libQGLViewer designer plugin</a> (especially Qt4 users) to
+You may also want to install the <a href="#plugin">libQGLViewer designer plugin</a> to
 easily create user interfaces that integrate a QGLViewer using designer.
 </p>
 
@@ -122,13 +125,13 @@ easily create user interfaces that integrate a QGLViewer using designer.
 <h2><img src="images/linux.png" width="49" height="54" alt="linux"/> &nbsp;
 <img src="images/qt.png" width="38" height="40" alt="Qt"/> &nbsp; Qt installation on Linux</h2>
 
-You need to have the <a href="http://trolltech.com/downloads">Qt</a> library installed in order to run
+You need to have the <a href="http://www.qtsoftware.com/downloads">Qt</a> library installed in order to run
 libQGLViewer. Qt is probably already installed on your machine, or available on your distribution
 CDs. You may however have to install the <code>dev</code> development package.
 
 <p>
 Try to compile a simple Qt example and check the
-<a href="http://trolltech.com/developer/faqs">Qt FAQ</a> page in case of
+<a href="http://www.qtsoftware.com/developer/faqs">Qt FAQ</a> page in case of
 problem. Consider compiling one of the Qt OpenGL examples to test your configuration.
 </p>
 
@@ -207,11 +210,10 @@ Qt is available under two versions for the mac architecture :
 <ul>
 <li>The <code>Qt/Mac</code> native version (also called <code>macx</code>) designed for Aqua, and
 released as a GPL Free Edition. It can freely be <a
-href="http://trolltech.com/downloads">downloaded</a> from Trolltech.</li>
+href="http://www.qtsoftware.com/downloads">downloaded</a> from Qt Software.</li>
 
-<li>The <code>darwin</code> version, that relies on the <a
-href="http://www.apple.com/macosx/features/x11/">X11</a> implementation. You need to launch the X11 application to
-run your programs and have to install Qt using the <a href="http://trolltech.com/downloads">free
+<li>The <code>darwin</code> version, that relies on the X11 implementation. You need to launch the X11 application to
+run your programs and have to install Qt using the <a href="http://www.qtsoftware.com/downloads">free
 X11 edition</a>.</li>
 </ul>
 
