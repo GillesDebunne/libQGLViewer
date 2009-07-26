@@ -47,7 +47,7 @@ tar xzf $wwwTarGZ
 cp -r doc/* $WebDir
 rm -rf doc $wwwTarGZ
 
-mv $libNameVersion.tar.gz $libNameVersion.zip $WebDir/$SrcDir
+mv $libNameVersion.tar.gz $libNameVersion.zip $libName*$version*.deb $libName*$version*.rpm $WebDir/$SrcDir
 
 
 cd $WebDir
@@ -69,18 +69,6 @@ fi # Fin option web
 
 test -d /tmp || error "Run with web option on dzsrv-linux."
 
-
-echo "--- Packaging libQGLViewer version $version ---"
-
-# Convert possible Windows encoding
-find . -type f -a \( -name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html' -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb' \) -exec dos2unix -o -p {} \; &> /tmp/error
-grep -v "/\.svn/" /tmp/error
-if [[ "$?" -eq "0" ]]
-then
-  echo "Error while converting newlines"
-  grep -v "/\.svn/" /tmp/error
-  exit 1
-fi
 
 function checkGrep()
 {
@@ -117,6 +105,9 @@ function makeDist()
 
 
 
+echo "--- Packaging libQGLViewer version $version ---"
+
+
 ##################################################################
 ############        Checking version coherence        ############
 ##################################################################
@@ -134,7 +125,7 @@ START="%define version_minor "
 FILE="QGLViewer/qglviewer.spec"
 checkVersion
 
-VERSION=$version_revision
+VERSION=$version_release
 START="%define version_revision "
 FILE="QGLViewer/qglviewer.spec"
 checkVersion
@@ -170,6 +161,17 @@ checkVersion
 ############          Checking file integrity         ############
 ##################################################################
 echo -n " files"
+
+# Convert possible Windows encoding
+find . -type f -a \( -name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html' -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb' \) -exec dos2unix -o -p {} \; &> /tmp/error
+grep -v "/\.svn/" /tmp/error
+if [[ "$?" -eq "0" ]]
+then
+  echo "Error while converting newlines"
+  grep -v "/\.svn/" /tmp/error
+  exit 1
+fi
+
 
 TARGET="Gilles Debunne <contact@libQGLViewer.com> $version"
 FILE="QGLViewer/qglviewer.spec"
@@ -525,15 +527,6 @@ cp qglviewer.cw ../QGLViewer
 mv qglviewer.cw ../examples/interface
 rm cwExtractor
 
-
-  # Remove search engine (requires php).
-  #rm refManual/search.idx refManual/search.php
-  #for f in `ls refManual/*.html`
-   # do
-   # sed s%" <span class=\"search\".*</span>"%""% $f > $f.tmp
-   # mv $f.tmp $f
-  #done
-
 echo
 echo ">> All files set in $tmpDir"
 cd $tmpDir
@@ -549,14 +542,21 @@ cd $tmpDir
 echo "todo : statsDownload"
 #cp ../statsDownload/downloads.png ../statsDownload/examples.png $WebDir/images
 
-echo -n "Creating packages : "
+echo -n "Packaging   : "
 
 echo -n "web"
 tar czf ../$wwwTarGZ doc
 
-
+# Now remove search engine, not used in packages (since it requires php)
 rm doc/index.fr.html
 rm doc/refManual/search.php doc/refManual/search.idx
+
+for f in `ls doc/refManual/*.html`
+do
+ awk '/<form/ {s=1;next} /\/form/ {s=0;next} { if (s==0) {print;}} ' $f > $f.tmp
+ mv $f.tmp $f
+done
+
 
 # Tar 
 echo -n " tar"
@@ -601,10 +601,82 @@ cd ..
 zip -qr $libNameVersion.zip $libNameVersion
 
 
+
+
+
+
+echo -n " rpm"
+
+# Checking RPM configuration
+rpmDir=`grep '^%_topdir' $HOME/.rpmmacros | awk '{print $2}'`
+rpmTmpDir=`grep '^%_tmppath' $HOME/.rpmmacros | awk '{print $2}'`
+#rpmFindReq=`grep '^%__find_requires' $HOME/.rpmmacros | awk '{print $2}'`
+
+for dir in SRPMS RPMS SPECS SOURCES BUILD
+do
+  if [ ! -d $rpmDir/$dir ]
+  then
+    echo " - RPM dir ($rpmDir/$dir) not found - Aborting"
+    exit
+  fi
+done
+
+if [ ! -d $rpmTmpDir ]
+then
+  mkdir -p $rpmTmpDir
+fi
+
+#if [ ! -f $rpmFindReq ]
+#then
+#  echo " - RPM find requires ($rpmFindReq) not found - Aborting"
+#  exit
+#fi
+ 
+# Create RPM
+cp -f $libNameVersion.tar.gz $rpmDir/SOURCES
+cp -f $QGLViewerRootDir/QGLViewer/qglviewer.spec $rpmDir/SPECS/$libNameVersion.spec
+cd $rpmDir/SPECS/
+#echo " - RPM build... (see /tmp/QGLViewer.rpmbuild)"
+rpmbuild -ba $libNameVersion.spec >& /tmp/QGLViewer.rpmbuild
+if [ $? != 0 ]
+then
+  echo "Problem in RPM creation - Abort"
+  exit
+fi
+
+mv $rpmDir/RPMS/i386/$libNameVersion-1.i386.rpm $tmpDir/../$libNameVersion.i386.rpm
+mv $rpmDir/RPMS/i386/$libName-devel-$version-1.i386.rpm $tmpDir/../$libName-devel-$version.i386.rpm
+mv $rpmDir/SRPMS/$libNameVersion-1.src.rpm $tmpDir/../$libNameVersion.src.rpm
+
+
+
+
+
+echo -n " deb"
+cd $tmpDir/..
+rm -rf debian ; mkdir debian ; cd debian
+
+export LC_ALL="C"
+export LANGUAGE="C"
+sudo alien ../$libNameVersion.i386.rpm ../$libName-devel-$version.i386.rpm > /dev/null
+cp libqglviewer-devel_$version-2_i386.deb ../libqglviewer-devel_$version\_i386.deb
+cp libqglviewer_$version-2_i386.deb ../libqglviewer_$version\_i386.deb
+cd ..
+
+
+
+echo -n " installer"
+
+echo
+
 #windowsDir="/host/Users/debunne/Documents/Code/libQGLViewer/QGLViewer/trunk/"
 #tar czf $windowsDir/$allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
 
-tar czf $allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
+
+ls -l $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip $libName*$version*.rpm $libName*$version*.deb
+echo
+
+tar czf $allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip  $libName*$version*.rpm $libName*$version*.deb
 echo
 echo "Copy to dzsrv-linux"
 scp $allTarGZ root@192.168.0.10:/var/www/html/libqglviewer/home/debunne/.tmp
@@ -613,7 +685,6 @@ cd - > /dev/null
 
 echo
 exit
-
 
 
 
@@ -673,101 +744,6 @@ tar -czf $exName.tar.gz $exName
 
 
 
-
-
-
-
-if [[ $1 == "rpm" ]]
-then
-##################################################################
-############        Checking RPM configuration        ############
-##################################################################
-
-echo " - Checking RPM configuration"
-
-rpmDir=`grep '^%_topdir' $HOME/.rpmmacros | awk '{print $2}'`
-rpmTmpDir=`grep '^%_tmppath' $HOME/.rpmmacros | awk '{print $2}'`
-rpmFindReq=`grep '^%__find_requires' $HOME/.rpmmacros | awk '{print $2}'`
-
-for dir in SRPMS RPMS SPECS SOURCES BUILD
-do
-  if [ ! -d $rpmDir/$dir ]
-  then
-    echo " - RPM dir ($rpmDir/$dir) not found - Aborting"
-    exit
-  fi
-done
-
-if [ ! -d $rpmTmpDir ]
-then
-  echo " - RPM tmp dir ($rpmTmpDir) not found - Aborting"
-  exit
-fi
-
-if [ ! -f $rpmFindReq ]
-then
-  echo " - RPM find requires ($rpmFindReq) not found - Aborting"
-  exit
-fi
-
-##################################################################
-############                Create RPM                ############
-##################################################################
-
-function checkRPMUpdate() {
-  cd $tmpDir/..
-
-  action="Create"
-
-  if [ -f $tarName ]
-  then
-    mkdir previous$libName
-    cd previous$libName
-    tar -xzf ../$tarName
-    cd ..
-    diff -r $libNameVersion previous$libName/$libNameVersion > /tmp/qgldiff
-    if [ ! -s /tmp/qgldiff ]
-    then
-      echo " - Sources did not change"
-      if [ -f $rpmDir/SRPMS/$libNameVersion.src.rpm -a $rpmDir/SRPMS/$libNameVersion.src.rpm -nt $tarName ]
-      then
-        echo " - RPM is created and up to date"
-	action="None"
-      else
-        echo " - RPM is not up to date"    
-      fi
-    else
-      echo " - Sources have changed (see /tmp/qgldiff)"
-    fi
-    rm -rf previous$libName
-  fi
-}
-
-checkRPMUpdate
-
-if [ $action == "Create" ]
-then  
-  if [ `grep "^%__find_requires" ~/.rpmmacros | grep "/Bin/find-requires-non-nvidia" | wc -c` == 0 ]
-  then
-    echo "find-requires-non-nvidia not found in .rpmmacros - Abort"
-    exit
-  fi
-  tar -czf $tarName $libNameVersion
-  cp -f $tarName $rpmDir/SOURCES
-  cp -f $QGLViewerRootDir/QGLViewer/qglviewer.spec $rpmDir/SPECS/$libNameVersion.spec
-  cd $rpmDir/SPECS/
-  echo " - RPM build... (see /tmp/QGLViewer.rpmbuild)"
-  #echo " - ##### Commented"
-  rpmbuild -ba $libNameVersion.spec >& /tmp/QGLViewer.rpmbuild
-  if [ $? != 0 ]
-  then
-    echo "Problem in RPM creation - Abort"
-    exit
-  fi
-fi
-
-checkRPMUpdate
-fi
 
 
 

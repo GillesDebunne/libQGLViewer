@@ -51,36 +51,45 @@ make install
 You need root privileges to install the library, since default install paths are system directories.
 </p>
 
+<h3>Debian/Ubuntu packages</h3>
+libQGLViewer is available as a <a href="http://ftp.debian.org/debian/pool/main/libq/libqglviewer/">debian package</a> (many thanks to Artur).
+It should be available from standard debian depositories and can be installed using your usual package manager.
 
-Directly install the <a href="http://ftp.debian.org/debian/pool/main/libq/libqglviewer/">Debian package</a>, the <a href="http://www.freshports.org/graphics/libqglviewer/">FreeBSD port</a>.
-<!-- or the pre-compiled RPM (built on Fedora Core 6 with gcc 4.1.1):
+<p>As an alternative, you can use these debian packages generated using Alien and depending on the latest Qt version :</p>
 <pre>
-rpm -Uvh <a href="#WEBURL#/src/libQGLViewer-#VERSION#.i586.rpm">libQGLViewer-#VERSION#.i586.rpm</a> <a href="#WEBURL#/src/libQGLViewer-devel-#VERSION#.i586.rpm">libQGLViewer-devel-#VERSION#.i586.rpm</a>
+apt-get install <a href="#WEBURL#/src/libQGLViewer_#VERSION#-2_i386.deb">libQGLViewer_#VERSION#-2_i386.deb</a> <a href="#WEBURL#/src/libQGLViewer-devel_#VERSION#-2_i386.rpm">libQGLViewer-devel_#VERSION#-2_i386.rpm</a>
 </pre>
-Re-compile the RPM for optimal results or if you have a different configuration:
+
+<h3>RPM packages</h3>
+Use the following command line:
 <pre>
-rpmbuild -XXX-rebuild <a href="#WEBURL#/src/libQGLViewer-#VERSION#.src.rpm">libQGLViewer-#VERSION#.src.rpm</a>
-cd /usr/src/RPM/RPMS/i586/ (or /usr/src/redhat/RPMS/i586, see the rpmbuild last log lines)
+rpm -Uvh <a href="#WEBURL#/src/libQGLViewer-#VERSION#.i386.rpm">libQGLViewer-#VERSION#.i386.rpm</a> <a href="#WEBURL#/src/libQGLViewer-devel-#VERSION#.i386.rpm">libQGLViewer-devel-#VERSION#.i386.rpm</a>
+</pre>
+You can also re-compile the RPM for optimal results:
+<pre>
+rpmbuild --rebuild <a href="#WEBURL#/src/libQGLViewer-#VERSION#.src.rpm">libQGLViewer-#VERSION#.src.rpm</a>
+cd /usr/src/RPM/RPMS/i?86/ (or /usr/src/redhat/RPMS/i?86, see the rpmbuild last log lines)
 rpm -Uvh libQGLViewer-*#VERSION#.i?86.rpm
 </pre>
--->
+
+<p>
+Change the RPM installation prefix, say to <code>/usr/local</code> (default is
+<code>/usr</code>), using <code>rpm -Uvh --prefix /usr/local ...</code>.
+</p>
+
+
+
+<h3>FreeBSD</h3>
+the <a href="http://www.freshports.org/graphics/libqglviewer/">FreeBSD port</a>.
+
 
 <h3>Custom installation</h3>
-With the rpm or when using <code>make install</code>, the following files are installed:
+The following files are installed:
 <ul>
 <li>The library (<code>libQGLViewer-#VERSION#.so</code>) in <code>/usr/lib</code></li>
 <li>The header files and designer plugin code in <code>/usr/include/QGLViewer</code></li>
 <li>The documentation and the examples in <code>/usr/share/doc/QGLViewer</code></li>
 </ul>
-
-<!--
-<p>
-&nbsp; <b>&raquo; RPM customization</b><br/>
-If you want to change the RPM installation prefix, say to <code>/usr/local</code> (default is
-<code>/usr</code>), use <code>rpm -Uvh -XXX-prefix /usr/local ...</code> in the rpm command line
-instead.
-</p>
--->
 
 <p>
 &nbsp; <b>&raquo; qmake customization</b><br/>

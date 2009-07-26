@@ -207,7 +207,7 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 #else
   if (e->modifiers() == Qt::NoModifier)
 #endif
-	switch (e->key())
+  switch (e->key())
       {
       case Qt::Key_C :	//recreer le terrain
 	if (!myQuadtree.MakeTerrainFault( mapSize, 32, 0, 255, 3 ))
@@ -326,6 +326,9 @@ QString Viewer::helpString() const
   text += "Press <b>O</b> to switch shading on and off.<br>";
   text += "Press <b>L</b> to cycle through different light source positions (+45°).<br>";
   text += "Press <b>M</b> to toggle wireframe mesh display.<br><br>";
+  text += "Press <b>S</b> to toggle sky display.<br>";
+  text += "Press <b>T</b> to toggle tree display.<br>";
+  text += "Press <b>W</b> to toggle water display.<br><br>";
   text += "Press <b>C</b> to create a new fractal terrain.<br>";
   text += "Press <b>H</b> to load a terrain from a heightmap-file height128.raw.<br>";
   return text;

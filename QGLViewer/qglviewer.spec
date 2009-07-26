@@ -1,6 +1,6 @@
 %define version_major 2
 %define version_minor 3
-%define version_revision 0
+%define version_revision 3
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -12,12 +12,14 @@ Group:		Development/C++
 Source:		%{name}-%{version}.tar.gz
 URL:		http://www.libqglviewer.com
 Buildroot:      %{_tmppath}/%{name}-%{version}-buildroot
+Vendor:		Alma
+Requires: 	libqt >= 4.0.0
 
 %description
 libQGLViewer is a C++ library based on Qt that eases the creation of OpenGL 3D viewers. It provides
 some of the typical 3D viewer functionalities, such as the possibility to move the camera using the
 mouse, which lacks in most of the other APIs. Other features include mouse manipulated frames,
-interpolated keyFrames, object selection, stereo display, screenshot saving and much more. It can be
+interpolated keyFrames, object selection, stereo display, screenshot saving and much more. It is
 used by OpenGL beginners as well as to create complex applications, being fully customizable and
 easy to extend.
 
@@ -25,6 +27,7 @@ easy to extend.
 Summary: The libQGLViewer header files, documentation and examples.
 Group: Development/Libraries
 Requires: %{name} = 0:%{version}
+
 
 %description devel
 This package contains the header files for libQGLViewer. Install this package to develop programs
@@ -151,10 +154,10 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
-* Jul 14 2009 Gilles Debunne <contact@libQGLViewer.com> 2.3.3
+* Tue Jul 14 2009 Gilles Debunne <contact@libQGLViewer.com> 2.3.3
 - New snapshotToClipboard method.
 
-* Jul 7 2009 Gilles Debunne <contact@libQGLViewer.com> 2.3.2
+* Tue Jul 7 2009 Gilles Debunne <contact@libQGLViewer.com> 2.3.2
 - Fixed tiled snapshot rendering when using screen coordinates.
 
 * Wed Oct 1 2008 Gilles Debunne <contact@libQGLViewer.com> 2.3.1

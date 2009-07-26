@@ -198,4 +198,14 @@ QIcon QGLViewerPlugin::icon() const
   return QIcon(QPixmap(qglviewer_icon));
 }
 
+// ------------------------------------------------- //
+// Change this if desired:                           //
+// First parameter must match the TARGET in .pro     //
+// Second parameter is the class name defined in .h  //
+// ------------------------------------------------- //
 Q_EXPORT_PLUGIN2(QGLViewerPlugin, QGLViewerPlugin)
+
+// ------------- //
+// You're done ! //
+// ------------- //
+
