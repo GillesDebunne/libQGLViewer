@@ -37,19 +37,12 @@ Unix systems
 <a name="linux"></a>
 <h2><img src="images/linux.png" width="49" height="54" alt="linux"/>Linux and Unix</h2>
 
-<h3>Compilation and installation</h3>
-Compile the library from its source tarball:
-<pre>
-tar -xzf <a href="#WEBURL#/src/libQGLViewer-#VERSION#.tar.gz">libQGLViewer-#VERSION#.tar.gz</a>
-cd libQGLViewer-#VERSION#/QGLViewer
-qmake (see options below)
-make
-make install
-</pre>
-
-<p>
-You need root privileges to install the library, since default install paths are system directories.
-</p>
+The following files are installed:
+<ul>
+<li>The library (<code>libQGLViewer-#VERSION#.so</code>) in <code>/usr/lib</code></li>
+<li>The header files and designer plugin code in <code>/usr/include/QGLViewer</code></li>
+<li>The documentation and the examples in <code>/usr/share/doc/QGLViewer</code></li>
+</ul>
 
 <h3>Debian/Ubuntu packages</h3>
 libQGLViewer is available as a <a href="http://ftp.debian.org/debian/pool/main/libq/libqglviewer/">debian package</a> (many thanks to Artur).
@@ -57,7 +50,7 @@ It should be available from standard debian depositories and can be installed us
 
 <p>As an alternative, you can use these debian packages generated using Alien and depending on the latest Qt version :</p>
 <pre>
-apt-get install <a href="#WEBURL#/src/libQGLViewer_#VERSION#-2_i386.deb">libQGLViewer_#VERSION#-2_i386.deb</a> <a href="#WEBURL#/src/libQGLViewer-devel_#VERSION#-2_i386.rpm">libQGLViewer-devel_#VERSION#-2_i386.rpm</a>
+apt-get install <a href="#WEBURL#/src/libqglviewer_#VERSION#_i386.deb">libqglviewer_#VERSION#_i386.deb</a> <a href="#WEBURL#/src/libqglviewer-devel_#VERSION#_i386.deb">libqglviewer-devel_#VERSION#_i386.deb</a>
 </pre>
 
 <h3>RPM packages</h3>
@@ -80,19 +73,23 @@ Change the RPM installation prefix, say to <code>/usr/local</code> (default is
 
 
 <h3>FreeBSD</h3>
-the <a href="http://www.freshports.org/graphics/libqglviewer/">FreeBSD port</a>.
+Use the <a href="http://www.freshports.org/graphics/libqglviewer/">FreeBSD port</a>.
 
 
-<h3>Custom installation</h3>
-The following files are installed:
-<ul>
-<li>The library (<code>libQGLViewer-#VERSION#.so</code>) in <code>/usr/lib</code></li>
-<li>The header files and designer plugin code in <code>/usr/include/QGLViewer</code></li>
-<li>The documentation and the examples in <code>/usr/share/doc/QGLViewer</code></li>
-</ul>
+<h3>Compilation and installation</h3>
+You can also compile the library from its source tarball:
+<pre>
+tar -xzf <a href="#WEBURL#/src/libQGLViewer-#VERSION#.tar.gz">libQGLViewer-#VERSION#.tar.gz</a>
+cd libQGLViewer-#VERSION#/QGLViewer
+qmake (see options below)
+make
+make install
+</pre>
 
 <p>
-&nbsp; <b>&raquo; qmake customization</b><br/>
+You need root privileges to install the library, since default install paths are system directories.
+</p>
+
 Optional <code>qmake</code> parameters let you customize your <code>make install</code> target installation directories:
 </p>
 <pre>

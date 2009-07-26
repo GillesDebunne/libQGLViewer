@@ -27,6 +27,7 @@ function error
 }
 
 
+
 if [[ $@ != 0 ]] && [[ $1 = "web" ]]
 then
 echo "--- Publishing libQGLViewer version $version ---"
@@ -47,7 +48,7 @@ tar xzf $wwwTarGZ
 cp -r doc/* $WebDir
 rm -rf doc $wwwTarGZ
 
-mv $libNameVersion.tar.gz $libNameVersion.zip $libName*$version*.deb $libName*$version*.rpm $WebDir/$SrcDir
+mv $libNameVersion.tar.gz $libNameVersion.zip libqglviewer*$version*.deb $libName*$version*.rpm $WebDir/$SrcDir
 
 
 cd $WebDir
@@ -659,8 +660,8 @@ rm -rf debian ; mkdir debian ; cd debian
 export LC_ALL="C"
 export LANGUAGE="C"
 sudo alien ../$libNameVersion.i386.rpm ../$libName-devel-$version.i386.rpm > /dev/null
-cp libqglviewer-devel_$version-2_i386.deb ../libqglviewer-devel_$version\_i386.deb
-cp libqglviewer_$version-2_i386.deb ../libqglviewer_$version\_i386.deb
+cp libqglviewer-devel_$version-2_i386.deb ../libqglviewer-devel_${version}_i386.deb
+cp libqglviewer_$version-2_i386.deb ../libqglviewer_${version}_i386.deb
 cd ..
 
 
@@ -672,11 +673,7 @@ echo
 #windowsDir="/host/Users/debunne/Documents/Code/libQGLViewer/QGLViewer/trunk/"
 #tar czf $windowsDir/$allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
 
-
-ls -l $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip $libName*$version*.rpm $libName*$version*.deb
-echo
-
-tar czf $allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip  $libName*$version*.rpm $libName*$version*.deb
+tar czf $allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip  $libName*$version*.rpm libqglviewer*$version*.deb
 echo
 echo "Copy to dzsrv-linux"
 scp $allTarGZ root@192.168.0.10:/var/www/html/libqglviewer/home/debunne/.tmp
