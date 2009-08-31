@@ -9,7 +9,7 @@ using namespace std;
 /*! Constructs a Quaternion that will rotate from the \p from direction to the \p to direction.
 
 Note that this rotation is not uniquely defined. The selected axis is usually orthogonal to \p from
-and \p to. However, this method is robust and can handle small or almost identical vectors. */
+and \p to, minimizing the rotation angle. This method is robust and can handle small or almost identical vectors. */
 Quaternion::Quaternion(const Vec& from, const Vec& to)
 {
   const float epsilon = 1E-10f;

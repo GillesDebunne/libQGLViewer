@@ -462,7 +462,7 @@ public:
 	saveAs pop-up dialog otherwise.
 
 	The available formats are those handled by Qt. Classical values are \c "JPEG", \c "PNG",
-	\c "PPM, \c "BMP". Use the following code to get the actual list:
+	\c "PPM", \c "BMP". Use the following code to get the actual list:
 	\code
 	QList<QByteArray> formatList = QImageReader::supportedImageFormats();
 	// or with Qt version 2 or 3:
@@ -555,7 +555,11 @@ public:
 	  else {
 	    QFont f(font);
 	    if (f.pixelSize() == -1)
+#if QT_VERSION >= 0x040000
 	      f.setPointSizeF(f.pointSizeF() * tileRegion_->textScale);
+#else
+	      f.setPointSizeFloat(f.pointSizeFloat() * tileRegion_->textScale);
+#endif
 	    else
 	      f.setPixelSize(f.pixelSize() * tileRegion_->textScale);
 	    return f;

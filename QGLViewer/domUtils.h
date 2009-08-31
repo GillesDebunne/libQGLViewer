@@ -1,11 +1,12 @@
-#include <qglobal.h>
 
 #if QT_VERSION > 0x040000
+# include <QGlobal>
 # include <QDomElement>
 # include <QString>
 # include <QStringList>
 # include <QColor>
 #else
+# include <qapplication.h>
 # include <qdom.h>
 # include <qstring.h>
 # include <qstringlist.h>
@@ -25,7 +26,7 @@ private:
 #if QT_VERSION >= 0x040000
     qWarning("%s", message.toLatin1().constData());
 #else
-    qWarning(message.latin1());
+    qWarning("%s", message.latin1());
 #endif
   }
 

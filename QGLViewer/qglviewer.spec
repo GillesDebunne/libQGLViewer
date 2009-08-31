@@ -1,6 +1,6 @@
 %define version_major 2
 %define version_minor 3
-%define version_revision 3
+%define version_revision 4
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -154,6 +154,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Tue Sep 1 2009 Gilles Debunne <contact@libQGLViewer.com> 2.3.4
+- Patches for Qt3 compilation.
+
 * Tue Jul 14 2009 Gilles Debunne <contact@libQGLViewer.com> 2.3.3
 - New snapshotToClipboard method.
 

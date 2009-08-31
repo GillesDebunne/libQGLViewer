@@ -10,7 +10,7 @@
 
 TEMPLATE = lib
 TARGET = QGLViewer
-VERSION = 2.3.3
+VERSION = 2.3.4
 CONFIG -= debug debug_and_release
 CONFIG *= release qt opengl warn_on shared thread create_prl rtti
 
@@ -47,10 +47,6 @@ QT_VERSION=$$[QT_VERSION]
 
 contains( QT_VERSION, "^4.*" ) {
   QT *= xml opengl
-  CONFIG(debug, debug|release) {
-    unix: TARGET = $$join(TARGET,,,_debug)
-    win32: TARGET = $$join(TARGET,,d)
-  }
 }
 
 !isEmpty( QGLVIEWER_STATIC ) {
@@ -231,12 +227,15 @@ macx|darwin-g++ {
 
 #		--  W i n d o w s  --
 win32 {
+  CONFIG -= release
+  CONFIG += debug_and_release build_all
+
   staticlib {
     DEFINES *= QGLVIEWER_STATIC
   } else {
     DEFINES *= CREATE_QGLVIEWER_DLL
   }
-
+ 
   MOC_DIR = moc
   OBJECTS_DIR = obj
 
@@ -257,3 +256,11 @@ win32 {
     }
   }
 }
+
+contains( QT_VERSION, "^4.*" ) {
+  CONFIG(debug, debug|release) {
+    unix: TARGET = $$join(TARGET,,,_debug)
+    win32: TARGET = $$join(TARGET,,d)
+  }
+}
+

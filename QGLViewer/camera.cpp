@@ -216,12 +216,17 @@ float Camera::zFar() const
 
 /*! Defines the Camera type().
 
-Prefix the type with Camera, as in: \code camera()->setType(Camera::ORTHOGRAPHIC); // or even
-qglviewer::Camera::ORTHOGRAPHIC if you do not use namespace \endcode */
+Changing the camera Type alters the viewport and the objects' size can be changed. This method garantees that the two frustum match in a plane normal to viewDirection(), passing through the Revolve Around Point (RAP).
+
+Prefix the type with \c Camera if needed, as in: 
+\code 
+camera()->setType(Camera::ORTHOGRAPHIC); 
+// or even qglviewer::Camera::ORTHOGRAPHIC if you do not use namespace 
+\endcode */
 void Camera::setType(Type type)
 {
   // make ORTHOGRAPHIC frustum fit PERSPECTIVE (at least in plane normal to viewDirection(), passing
-  // through RAP) Done only when CHANGING type since orthoCoef_ may have been changed with a
+  // through RAP). Done only when CHANGING type since orthoCoef_ may have been changed with a
   // setRevolveAroundPoint() in the meantime.
   if ( (type == Camera::ORTHOGRAPHIC) && (type_ == Camera::PERSPECTIVE) )
     orthoCoef_ = tan(fieldOfView()/2.0);
@@ -1025,7 +1030,9 @@ void Camera::fitScreenRegion(const QRect& rectangle)
 
  When \p noMove is \c true (default), the Camera position() is left unchanged, which is an intuitive
  behavior when the Camera is in a walkthrough fly mode (see the QGLViewer::MOVE_FORWARD and
- QGLViewer::MOVE_BACKWARD QGLViewer::MouseAction). */
+ QGLViewer::MOVE_BACKWARD QGLViewer::MouseAction). 
+
+ See also setViewDirection(), lookAt() and setOrientation(). */
 void Camera::setUpVector(const Vec& up, bool noMove)
 {
   Quaternion q(Vec(0.0, 1.0, 0.0), frame()->transformOf(up));
@@ -1361,7 +1368,56 @@ void Camera::getViewport(GLint viewport[4]) const
 
  If you call this method several times with no change in the matrices, consider precomputing the
  projection times modelview matrix to save computation time if required (\c P x \c M in the \c
- gluProject man page). */
+ gluProject man page). 
+
+ Here is the code corresponding to what this method does (kindly submitted by Robert W. Kuhn) :
+ \code
+ Vec project(Vec point)
+ {
+	GLint    Viewport[4];
+	GLdouble Projection[16], Modelview[16]; 
+	GLdouble matrix[16];
+
+	// Precomputation begin
+	glGetIntegerv(GL_VIEWPORT         , Viewport);
+	glGetDoublev (GL_MODELVIEW_MATRIX , Modelview);
+	glGetDoublev (GL_PROJECTION_MATRIX, Projection); 
+
+	for (unsigned short m=0; m<4; ++m)
+	{
+		for (unsigned short l=0; l<4; ++l)
+		{
+			double sum = 0.0;
+			for (unsigned short k=0; k<4; ++k)
+				sum += Projection[l+4*k]*Modelview[k+4*m];
+			matrix[l+4*m] = sum;
+		}
+	}
+	// Precomputation end
+		
+	GLdouble v[4], vs[4];
+	v[0]=point[0]; v[1]=point[1]; v[2]=point[2]; v[3]=1.0;
+
+	vs[0]=matrix[0 ]*v[0] + matrix[4 ]*v[1] + matrix[8 ]*v[2] + matrix[12 ]*v[3];
+	vs[1]=matrix[1 ]*v[0] + matrix[5 ]*v[1] + matrix[9 ]*v[2] + matrix[13 ]*v[3];
+	vs[2]=matrix[2 ]*v[0] + matrix[6 ]*v[1] + matrix[10]*v[2] + matrix[14 ]*v[3];
+	vs[3]=matrix[3 ]*v[0] + matrix[7 ]*v[1] + matrix[11]*v[2] + matrix[15 ]*v[3];
+
+	vs[0] /= vs[3];
+	vs[1] /= vs[3];
+	vs[2] /= vs[3];
+
+	vs[0] = vs[0] * 0.5 + 0.5;
+	vs[1] = vs[1] * 0.5 + 0.5;
+	vs[2] = vs[2] * 0.5 + 0.5;
+
+	vs[0] = vs[0] * Viewport[2] + Viewport[0];
+	vs[1] = vs[1] * Viewport[3] + Viewport[1];
+
+	return Vec(vs[0], Viewport[3]-vs[1], vs[2]);	
+  }
+ \endcode
+ */
 Vec Camera::projectedCoordinatesOf(const Vec& src, const Frame* frame) const
 {
   GLdouble x,y,z;
@@ -1655,9 +1711,13 @@ void Camera::initFromDOMElement(const QDomElement& element)
 {
   QDomElement child=element.firstChild().toElement();
 
+#if QT_VERSION >= 0x040000
   QMutableMapIterator<int, KeyFrameInterpolator*> it(kfi_);
   while (it.hasNext()) {
     it.next();
+#else
+  for (QMap<int, KeyFrameInterpolator*>::Iterator it = kfi_.begin(), end=kfi_.end(); it != end; ++it) {
+#endif
     deletePath(it.key());
   }
 

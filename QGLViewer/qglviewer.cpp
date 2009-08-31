@@ -1503,25 +1503,25 @@ if ( ((e->state() & Qt::KeyButtonMask) == myModifiers) &&
 
 // With Qt 4, use instead :
 if ((e->button() == myButton) && (e->modifiers() == myModifiers))
-myMouseBehavior = true;
+  myMouseBehavior = true;
 else
-QGLViewer::mousePressEvent(e);
+  QGLViewer::mousePressEvent(e);
 }
 
 void Viewer::mouseMoveEvent(QMouseEvent *e)
 {
 if (myMouseBehavior)
-// Use e->x() and e->y() as you want...
+  // Use e->x() and e->y() as you want...
 else
-QGLViewer::mouseMoveEvent(e);
+  QGLViewer::mouseMoveEvent(e);
 }
 
 void Viewer::mouseReleaseEvent(QMouseEvent* e)
 {
 if (myMouseBehavior)
-myMouseBehavior = false;
+  myMouseBehavior = false;
 else
-QGLViewer::mouseReleaseEvent(e);
+  QGLViewer::mouseReleaseEvent(e);
 }
 \endcode */
 void QGLViewer::mouseMoveEvent(QMouseEvent* e)
@@ -2869,9 +2869,9 @@ void QGLViewer::setMouseBinding(int state, MouseHandler handler, MouseAction act
 		(action == ZOOM_ON_REGION)))
 	{
 #if QT_VERSION >= 0x040000
-		qWarning("%s", QString("Cannot bind " + mouseActionString(action) + " to FRAME").toLatin1().constData());
+		qWarning("Cannot bind %s to FRAME", mouseActionString(action).toLatin1().constData());
 #else
-		qWarning("Cannot bind " + mouseActionString(action) + " to FRAME");
+		qWarning("Cannot bind %s to FRAME", mouseActionString(action).latin1());
 #endif
 	}
 	else
@@ -2958,16 +2958,16 @@ void QGLViewer::setWheelBinding(QtKeyboardModifiers modifiers, MouseHandler hand
 	//#CONNECTION# ManipulatedFrame::wheelEvent and ManipulatedCameraFrame::wheelEvent switches
 	if ((action != ZOOM) && (action != MOVE_FORWARD) && (action != MOVE_BACKWARD) && (action != NO_MOUSE_ACTION))
 #if QT_VERSION >= 0x040000
-		qWarning("%s", QString("Cannot bind " + mouseActionString(action) + " to wheel").toLatin1().constData());
+		qWarning("Cannot bind %s to wheel", mouseActionString(action).toLatin1().constData());
 #else
-		qWarning("Cannot bind " + mouseActionString(action) + " to wheel");
+		qWarning("Cannot bind %s to wheel",  + mouseActionString(action).latin1());
 #endif
 	else
 		if ((handler == FRAME) && (action != ZOOM) && (action != NO_MOUSE_ACTION))
 #if QT_VERSION >= 0x040000
-			qWarning("%s", QString("Cannot bind " + mouseActionString(action) + " to FRAME wheel").toLatin1().constData());
+			qWarning("Cannot bind %s to FRAME wheel", mouseActionString(action).toLatin1().constData());
 #else
-			qWarning("Cannot bind " + mouseActionString(action) + " to FRAME wheel");
+			qWarning("Cannot bind %s to FRAME wheel", mouseActionString(action).latin1());
 #endif
 		else
 		{
@@ -3809,9 +3809,9 @@ void QGLViewer::initFromDOMElement(const QDomElement& element)
 	if (version[0] != '2')
 		// Patches for previous versions should go here when the state file syntax is modified.
 #if QT_VERSION >= 0x040000
-		qWarning("%s", QString("State file created using QGLViewer version "+version+" may not be correctly read."+QGLViewerVersionString()).toLatin1().constData());
+		qWarning("State file created using QGLViewer version %s may not be correctly read.", version.toLatin1().constData());
 #else
-		qWarning("State file created using QGLViewer version "+version+" may not be correctly read.");
+		qWarning("State file created using QGLViewer version %s may not be correctly read.", version.latin1());
 #endif
 
 	QDomElement child=element.firstChild().toElement();
