@@ -1,13 +1,18 @@
 #!/bin/bash
 
-tmp="/home/debunne/.tmp"
+tmp="/tmp"
 tmpDir="$tmp/LogsQGLViewer"
 statFile="stats.txt"
 test -d $tmpDir && rm -f $tmpDir/*
 test -d $tmpDir || mkdir $tmpDir
 
 # Mind the order (src.rpm must be before rpm, lib3ds before the rest) !!
-types="lib3ds examples-linux examples-mac examples-win src.rpm devel rpm tar dll zip"
+#types="lib3ds examples-linux examples-mac examples-win src.rpm devel rpm  tar dll zip "
+#        11       10                9            8           7      6    5   4   3   2
+
+types="lib3ds examples-linux examples-mac examples-win src.rpm devel rpm deb tar dll zip installer.exe"
+#        2       3                4            5           6      7    8   9   10  11  12      13
+
 
 for f in `ls -1 -- 200?.[0-9][0-9]* | sort -n`
 do
@@ -52,9 +57,9 @@ do
   do
   if [ $ipAddress -eq 0 ]
   then
-    line="$(awk 'BEGIN {SUM=0} {SUM+=$2} END {print SUM}' $output.$t)\t$line"
+    line="$line\t$(awk 'BEGIN {SUM=0} {SUM+=$2} END {print SUM}' $output.$t)"
   else
-    line="`awk '{print $2}' $output.$t | sort -n | uniq | wc -l`\t$line"
+    line="$line\t`awk '{print $2}' $output.$t | sort -n | uniq | wc -l`"
   fi
   done
   line="$nogz\t$line"
