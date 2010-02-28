@@ -37,14 +37,14 @@ public:
   QPushButton* ResetButton, *QuitButton;
   QPopupMenu *GagnantPopUp;
 
-public slots:
+public Q_SLOTS:
   virtual void New();
   virtual void Exit();
   virtual void changeTour();
   virtual void piecePlacee();
   virtual void finDeJeu();
 
-signals:
+Q_SIGNALS:
   void updategl();
 
 protected:

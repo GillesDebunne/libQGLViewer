@@ -1,6 +1,6 @@
 TEMPLATE = lib
 
-CONFIG *= dll plugin
+CONFIG *= dll plugin no_keywords
 TARGET  = qglviewerplugin
 
 QT_VERSION=$$[QT_VERSION]

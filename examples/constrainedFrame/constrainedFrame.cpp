@@ -7,7 +7,7 @@
 using namespace qglviewer;
 using namespace std;
 
-static AxisPlaneConstraint::Type nextTranslationConstraintType(const AxisPlaneConstraint::Type& type)
+AxisPlaneConstraint::Type Viewer::nextTranslationConstraintType(const AxisPlaneConstraint::Type& type)
 {
   switch (type)
     {
@@ -19,7 +19,7 @@ static AxisPlaneConstraint::Type nextTranslationConstraintType(const AxisPlaneCo
     }
 }
 
-static AxisPlaneConstraint::Type nextRotationConstraintType(const AxisPlaneConstraint::Type& type)
+AxisPlaneConstraint::Type Viewer::nextRotationConstraintType(const AxisPlaneConstraint::Type& type)
 {
   switch (type)
     {

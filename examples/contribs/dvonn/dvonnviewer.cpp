@@ -110,7 +110,7 @@ DvonnViewer::advanceAnimateMove()
   {
     animateTimer_->stop();
     animateT_ = -1.0f;
-    emit requested(animateMove_);
+    Q_EMIT requested(animateMove_);
   }
   updateGL();
 }
@@ -130,7 +130,7 @@ DvonnViewer::animateMove(Game::Move m)
     }
     else
     {
-      emit requested(m);
+      Q_EMIT requested(m);
     }
   }
 }
@@ -142,7 +142,7 @@ DvonnViewer::advanceAnimateScore()
   {
     scoreTimer_->stop();
     scoreT_ = -1.0f;
-    emit requested(scoreMove_);
+    Q_EMIT requested(scoreMove_);
   }
   updateGL();
 }
@@ -686,7 +686,7 @@ DvonnViewer::commitDstPicked()
     if (piecePicked_ && !dstPicked_.isNull())
     {
       Player p = game_->theOnePlaying();
-      emit requested(Game::Placement(game_->phase() == RedPlacementPhase?Red:colorOf(p),
+      Q_EMIT requested(Game::Placement(game_->phase() == RedPlacementPhase?Red:colorOf(p),
 		     dstPicked_.stackCoord()));
       updateGL();
     }
@@ -695,7 +695,7 @@ DvonnViewer::commitDstPicked()
   {
     if (!srcPicked_.isNull() && !dstPicked_.isNull())
     {
-      emit requested(Game::Move(srcPicked_.stackCoord(),
+      Q_EMIT requested(Game::Move(srcPicked_.stackCoord(),
 				dstPicked_.stackCoord()));
     }
   }

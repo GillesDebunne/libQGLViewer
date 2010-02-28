@@ -114,7 +114,7 @@ namespace qglviewer {
     Frame(const Frame& frame);
     Frame& operator=(const Frame& frame);
 
-  signals:
+  Q_SIGNALS:
     /*! This signal is emitted whenever the position() or the orientation() of the Frame is modified.
 
     Connect this signal to any object that must be notified:
@@ -183,7 +183,7 @@ namespace qglviewer {
 
     Use setPosition() to define the world coordinates position(). Use
     setTranslationWithConstraint() to take into account the potential constraint() of the Frame. */
-    void setTranslation(const Vec& translation) { t_ = translation; emit modified(); };
+    void setTranslation(const Vec& translation) { t_ = translation; Q_EMIT modified(); };
     void setTranslation(float x, float y, float z);
     void setTranslationWithConstraint(Vec& translation);
 
@@ -197,7 +197,7 @@ namespace qglviewer {
      Use setOrientation() to define the world coordinates orientation(). The potential
      constraint() of the Frame is not taken into account, use setRotationWithConstraint()
      instead. */
-    void setRotation(const Quaternion& rotation) { q_ = rotation; emit modified(); };
+    void setRotation(const Quaternion& rotation) { q_ = rotation; Q_EMIT modified(); };
     void setRotation(double q0, double q1, double q2, double q3);
     void setRotationWithConstraint(Quaternion& rotation);
 
@@ -379,7 +379,7 @@ namespace qglviewer {
     //@{
   public:
     virtual QDomElement domElement(const QString& name, QDomDocument& document) const;
-  public slots:
+  public Q_SLOTS:
     virtual void initFromDOMElement(const QDomElement& element);
     //@}
 

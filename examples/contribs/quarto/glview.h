@@ -19,7 +19,7 @@ public:
   virtual void init();
   virtual void setPieces(SetOfPiece *sop) { setofpiece=sop; };
 
-signals:
+Q_SIGNALS:
   void update();
 
 protected:
@@ -50,7 +50,7 @@ protected:
   virtual void drawWithId() { draw(); };
   virtual void applySelection(int);
 
-signals:
+Q_SIGNALS:
   void changeJoueur();
 };
 
@@ -74,7 +74,7 @@ protected :
   virtual void drawWithId();
   virtual void applySelection(int);
 
-signals:
+Q_SIGNALS:
   void piecePlacee();
   void endGame();
 

@@ -75,7 +75,7 @@ public:
   /*! Returns \c true between calls to startRecording() and stopRecording(). */
   bool isRecording() const { return isRecording_; };
 
-public slots:
+public Q_SLOTS:
 void startRecording();
   void stopRecording();
   void toggleRecording();
@@ -150,7 +150,7 @@ public:
     window (see openReplayInterfaceWindow()). */
   int snapshotFrameRate() const { return snapshotFrameRate_; };
 
-public slots:
+public Q_SLOTS:
 /*! Sets the manipulatedFrameIsRestored() value. Default value is \c true. */
 void setManipulatedFrameIsRestored(bool restored=true) { manipulatedFrameIsRestored_ = restored; };
   /*! Sets the cameraIsRestored() value. Default value is \c true. */
@@ -169,7 +169,7 @@ void setManipulatedFrameIsRestored(bool restored=true) { manipulatedFrameIsResto
   /*! @name Record extra events */
   //@{
 public:
-  signals:
+  Q_SIGNALS:
   /*! This signal is emitted during replay() when a custom event should be replayed back. Custom
     events are recorded using recordCustomEvent(). Connect this signal to slots that are able to
     reproduce this event.
@@ -178,7 +178,7 @@ public:
     select which custom event to reproduce. */
   void replayCustomEvent(int id);
 
-public slots:
+public Q_SLOTS:
 void recordFrameState();
   void recordCustomEvent(int id=0);
   //@}
@@ -186,7 +186,7 @@ void recordFrameState();
 protected:
   bool eventFilter(QObject *o, QEvent *e);
 
-private slots:
+private Q_SLOTS:
 void changeImageSize(int i);
   void selectSnapshotName();
   void triggerNextEvent();

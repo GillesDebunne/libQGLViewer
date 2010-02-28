@@ -18,6 +18,9 @@ private:
 
   qglviewer::ManipulatedFrame* frame;
 
+  static qglviewer::AxisPlaneConstraint::Type nextTranslationConstraintType(const qglviewer::AxisPlaneConstraint::Type& type);
+  static qglviewer::AxisPlaneConstraint::Type nextRotationConstraintType(const qglviewer::AxisPlaneConstraint::Type& type);
+
   void changeConstraint();
   qglviewer::AxisPlaneConstraint* constraints[3];
   unsigned short activeConstraint;

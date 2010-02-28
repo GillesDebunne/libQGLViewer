@@ -18,7 +18,7 @@ public:
   EventRecorder* eventRecorder() const { return eventRecorder_; };
 
 public:
-signals:
+Q_SIGNALS:
   /*! Signal emitted by the default QGLViewer::resetBeforeReplay() function. Connect this signal to
   any object that should be notified before qglviewer::EventRecorder::replay() starts replaying a scenario.
 
@@ -26,7 +26,7 @@ signals:
   (in that case, simply overload the resetBeforeReplay() function). */
   void replayStarted();
 
-protected slots:
+protected Q_SLOTS:
   /*! This function is called before the eventRecorder() starts to replay a scenario. It should
   reset the scene state to the state is was when qglviewer::EventRecorder::startRecording() was
   called, so that the replay starts from the same state.
@@ -40,7 +40,7 @@ protected slots:
   method or connect this signal to any object that shouyld be notified. You probably want to call
   updateGL() at the end of this function, so that the first snapshot actually corresponds to the
   state you have reset. */
-  virtual void resetBeforeReplay() { emit replayStarted(); };
+  virtual void resetBeforeReplay() { Q_EMIT replayStarted(); };
 
   void setManipulatedFrame(qglviewer::ManipulatedFrame* fr);
 

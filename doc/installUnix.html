@@ -25,8 +25,8 @@ Unix systems
 </h1>
 
 <div class="summary">
-<b>&raquo;</b> Installation on Linux and Unix : <a href="#linux">libQGLViewer</a> and <a href="#qt-linux">Qt</a><br/>
-<b>&raquo;</b> Installation on Macintosh : <a href="#mac">libQGLViewer</a> and <a href="#qt-mac">Qt</a><br/>
+<b>&raquo;</b> Installation on Linux and Unix: <a href="#linux">libQGLViewer</a> and <a href="#qt-linux">Qt</a><br/>
+<b>&raquo;</b> Installation on Mac: <a href="#mac">libQGLViewer</a> and <a href="#qt-mac">Qt</a><br/>
 <b>&raquo;</b> <a href="#plugin">QGLViewer designer plugin</a> installation<br/>
 <b>&raquo;</b> <a href="#troubleshooting">Troubleshooting</a><br/>
 </div>
@@ -108,12 +108,12 @@ DOC_DIR        PREFIX/share/doc
 When set, the <code>QGLVIEWER_STATIC</code> qmake option will compile a static version of the
 library.
 
-<p>
+<div class="small">
 If your Qt version is lower than 3.1, you need to link with the <code>glut</code> library: uncomment
-a line in <code>QGLViewer.pro</code> as explained there.<br/>
-<code>glut</code> can be installed from the <code>freeglut-devel</code> rpm or using <code>apt-get
+a line in <code>QGLViewer.pro</code> as explained there. <code>glut</code> can be installed from the <code>freeglut-devel</code> rpm or using <code>apt-get
 install libglut3-dev</code>.
-</p>
+</div>
+
 
 <h3>Next steps</h3>
 Once the library is compiled, you can <a href="compilation.html#unix">compile the examples</a>.
@@ -168,35 +168,43 @@ Source this file or open a new shell to take these values into account. If you i
 <br/>
 <br/>
 
+
 <a name="mac"></a>
 <h2><img src="images/mac.png" width="55" height="54" alt="mac"/> Mac OS X</h2>
 
-The installation procedure is essentially identical to the one described in the <a
-href="#linux">Linux section</a>:
+<h3>Using Xcode</h3>
 <pre>
 tar -xzf <a href="#WEBURL#/src/libQGLViewer-#VERSION#.tar.gz">libQGLViewer-#VERSION#.tar.gz</a>
 cd libQGLViewer-#VERSION#/QGLViewer
-qmake INCLUDE_DIR=/usr/local/include (for instance, see below) 
+qmake -spec macx-xcode
+</pre>
+
+Then open and build the resulting Xcode project. Run <code>make install</code> to install the documentation in <code>/Developer/Documentation/QGLViewer</code>.
+
+<h3>Using <code>make</code></h3>
+
+The installation procedure is essentially identical to the one described in the <a
+href="#linux">Linux section</a>: 
+<pre>
+tar -xzf <a href="#WEBURL#/src/libQGLViewer-#VERSION#.tar.gz">libQGLViewer-#VERSION#.tar.gz</a>
+cd libQGLViewer-#VERSION#/QGLViewer
+qmake -spec macx-g++
 make
 make install
 </pre>
 
+See the <a href="#linux">Linux section</a> for details and install paths customization. 
+
+<h3>Next steps</h3>
+
+Xcode and <code>make</code> both generate a <i>Framework</i> by default. Uncomment a line in <code>QGLViewer.pro</code> to create a <code>.dylib</code> instead.
+
 <p>
-There is an include mismatch when the library is installed in <code>/usr/lib</code> (default) which results
-in a <code>template with C linkage</code> error message. That's why you need to customize the <code>INCLUDE_DIR</code>.
-I unfortunately do not have a mac at hand to investigate. Let me know if you try. Do not forget to use the same 
-<code>qmake</code> line when you compile the examples.
+Once the library is installed, you can <a href="compilation.html#mac">compile the examples</a>.
 </p>
 
-See the <a href="#linux">Linux section</a> for details and install paths customization. Once the
-library is installed, <a href="compilation.html#mac">compile the examples</a> and test them:
 
-<pre>
-cd ../examples
-qmake
-make
-</pre>
-
+<div class="small">
 With Qt3, threads are activated with the <code>darwin-g++</code> version and disabled with <code>macx</code>.
 Add or remove <code>thread</code> in the <code>CONFIG</code> section of <code>.pro</code> files
 if this does not correspond to your Qt configuration.
@@ -205,13 +213,15 @@ if this does not correspond to your Qt configuration.
 If your Qt version is lower than 3.1, you need to link with the <code>glut</code> library. Install
 <code>glut</code> and uncomment a line in <code>QGLViewer.pro</code> as explained.
 </p>
-
+</div>
 
 
 <a name="qt-mac"></a>
 <h2><img src="images/mac.png" width="55" height="54" alt="mac"/> &nbsp;
 <img src="images/qt.png" width="38" height="40" alt="Qt"/> &nbsp; Qt installation on Mac</h2>
 
+The easiest way to develop Qt applications on a Mac is to download Xcode from the <a href="http://developer.apple.com/technology/xcode.html">apple web site</a> and then to install a Qt package from the <a href="http://qt.nokia.com/downloads">nokia web site</a>.
+<!--
 Qt is available under two versions for the mac architecture :
 <ul>
 <li>The <code>Qt/Mac</code> native version (also called <code>macx</code>) designed for Aqua, and
@@ -257,7 +267,7 @@ or <code>darwin-g++</code> for X11. Compile a simple Qt example to check your co
 If you installed <code>libQGLViewer</code> in a custom directory, add the path to this directory in
 <code>DYLD_LIBRARY_PATH</code> as is done above for <code>${QTDIR}/lib</code>.
 </p>
-
+-->
 
 <br/>
 <br/>

@@ -1,5 +1,6 @@
 # Artis
 MAIN_PATH = $$(HOME)/QGLViewer
+MAIN_PATH = $$(HOME)/Documents/Code/trunk
 
 !exists( $${MAIN_PATH}/QGLViewer/qglviewer.h ) {
   exists( ../QGLViewer/qglviewer.h ) {

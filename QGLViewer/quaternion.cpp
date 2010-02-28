@@ -298,7 +298,8 @@ Use matrix() if you do not need to store this matrix and simply want to alter th
 matrix. See also getInverseMatrix() and Frame::getMatrix(). */
 void Quaternion::getMatrix(GLdouble m[4][4]) const
 {
-  const double q00 = 2.0l * q[0] * q[0];
+
+	const double q00 = 2.0l * q[0] * q[0];
   const double q11 = 2.0l * q[1] * q[1];
   const double q22 = 2.0l * q[2] * q[2];
 

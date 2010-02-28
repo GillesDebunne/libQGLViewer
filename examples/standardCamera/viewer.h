@@ -10,7 +10,7 @@ public :
   Viewer(StandardCamera* camera);
 
 public :
- signals :
+ Q_SIGNALS :
   void cameraChanged();
 
 protected :

@@ -1,6 +1,6 @@
 #include <fstream>
 #include <stdio.h>
-#include "board.h"
+#include "../Viewer/board.h"
 
 int main (int argc, char ** argv)
 {    

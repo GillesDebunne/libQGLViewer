@@ -1,6 +1,6 @@
 %define version_major 2
 %define version_minor 3
-%define version_revision 4
+%define version_revision 5
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -154,6 +154,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Sun Mar 1 2010 Gilles Debunne <contact@libQGLViewer.com> 2.3.5
+- Mac compilation improvements, no_keywords CONFIG option.
+
 * Tue Sep 1 2009 Gilles Debunne <contact@libQGLViewer.com> 2.3.4
 - Patches for Qt3 compilation.
 

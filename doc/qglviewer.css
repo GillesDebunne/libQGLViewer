@@ -13,7 +13,7 @@ h2 {
   color: #003;
   font-size: larger;
   background-color: #ddddff;
-  padding : 2px 0px 2px 20px;
+  padding : 5px 0px 2px 20px;
   margin-top : 50px;
   border:1px solid #aaaacc;
 }
@@ -24,9 +24,8 @@ h3 {
   color: #003;
   font-size: medium;
   background-color: #eeeeff;
-  margin-left : 5px;
-  padding-left : 10px;
-  padding-top : 2px;
+  margin-left : 0px;
+  padding : 6px 0 4px 10px;
   border:1px solid #aaaacc;
 }
 
@@ -77,6 +76,14 @@ div.summary {
   border: 1px solid #AAC;
   padding: 4px 0px 0px 20px;
   margin: 5px 20% 0px 20%;
+}
+
+div.small {
+  font-size:small;
+  font-style:italic;
+  margin: 10px 0px;
+  padding-top: 10px;
+  border-top:1px solid #CCC;
 }
 
 span.redStar { color:red; font-size:x-large; }

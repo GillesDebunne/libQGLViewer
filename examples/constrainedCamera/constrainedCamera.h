@@ -16,6 +16,9 @@ private:
   int transDir;
   int rotDir;
 
+  static qglviewer::AxisPlaneConstraint::Type nextTranslationConstraintType(const qglviewer::AxisPlaneConstraint::Type& type);
+  static qglviewer::AxisPlaneConstraint::Type nextRotationConstraintType(const qglviewer::AxisPlaneConstraint::Type& type);
+
   void changeConstraint();
   qglviewer::AxisPlaneConstraint* constraints[2];
   unsigned short activeConstraint;

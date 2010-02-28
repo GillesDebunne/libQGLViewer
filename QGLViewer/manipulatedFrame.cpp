@@ -174,7 +174,7 @@ void ManipulatedFrame::spin()
 void ManipulatedFrame::spinUpdate()
 {
   spin();
-  emit spun();
+  Q_EMIT spun();
 }
 
 #ifndef DOXYGEN
@@ -397,7 +397,7 @@ void ManipulatedFrame::mouseMoveEvent(QMouseEvent* const event, Camera* const ca
   if (action_ != QGLViewer::NO_MOUSE_ACTION)
     {
       prevPos_ = event->pos();
-      emit manipulated();
+      Q_EMIT manipulated();
     }
 }
 
@@ -461,7 +461,7 @@ void ManipulatedFrame::wheelEvent(QWheelEvent* const event, Camera* const camera
       if (referenceFrame())
 	trans = referenceFrame()->transformOf(trans);
       translate(trans);
-      emit manipulated();
+      Q_EMIT manipulated();
     }
 
   // #CONNECTION# startAction should always be called before

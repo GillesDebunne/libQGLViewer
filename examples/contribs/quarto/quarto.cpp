@@ -174,7 +174,7 @@ void Quarto::init(bool begin)
 void Quarto::New()
 {
   init(false);
-  emit updategl();
+  Q_EMIT updategl();
 }
 
 void Quarto::Exit()

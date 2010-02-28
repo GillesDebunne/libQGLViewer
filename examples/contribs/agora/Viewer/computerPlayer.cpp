@@ -144,7 +144,7 @@ void ComputerPlayer::readFromStdout()
 #else
   QString result = QString((process_->readAllStandardOutput()).trimmed());
 #endif
-  emit moveMade(result, duration);
+  Q_EMIT moveMade(result, duration);
 #if QT_VERSION < 0x040000
   delete process_;
 #else

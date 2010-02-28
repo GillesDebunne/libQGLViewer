@@ -747,7 +747,7 @@ void EventRecorder::replayNextEvent()
 	  qglviewer()->updateGL();
 	  break;
 	case QEvent::User:
-	  emit replayCustomEvent((int)(eventRecords_[nextReplayEvent_].event.frameState));
+	  Q_EMIT replayCustomEvent((int)(eventRecords_[nextReplayEvent_].event.frameState));
 	  break;
 	default:
 	  qWarning("Unknown event type " + QString::number(eventRecords_[nextReplayEvent_].type));

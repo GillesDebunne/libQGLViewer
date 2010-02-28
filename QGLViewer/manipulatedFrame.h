@@ -92,7 +92,7 @@ namespace qglviewer {
     ManipulatedFrame(const ManipulatedFrame& mf);
     ManipulatedFrame& operator=(const ManipulatedFrame& mf);
 
-    signals:
+    Q_SIGNALS:
     /*! This signal is emitted when ever the ManipulatedFrame is manipulated (i.e. rotated or
     translated) using the mouse. Connect this signal to any object that should be notified.
 
@@ -120,7 +120,7 @@ namespace qglviewer {
 
     /*! @name Manipulation sensitivity */
     //@{
-  public slots:
+  public Q_SLOTS:
     /*! Defines the rotationSensitivity(). */
     void setRotationSensitivity(float sensitivity) { rotSensitivity_ = sensitivity; };
     /*! Defines the translationSensitivity(). */
@@ -200,7 +200,7 @@ namespace qglviewer {
      The spinningQuaternion() axis is defined in the ManipulatedFrame coordinate system. You can use
      Frame::transformOfFrom() to convert this axis from an other Frame coordinate system. */
     Quaternion spinningQuaternion() const { return spinningQuaternion_; }
-  public slots:
+  public Q_SLOTS:
   /*! Defines the spinningQuaternion(). Its axis is defined in the ManipulatedFrame coordinate
     system. */
     void setSpinningQuaternion(const Quaternion& spinningQuaternion) { spinningQuaternion_ = spinningQuaternion; }
@@ -208,9 +208,9 @@ namespace qglviewer {
     /*! Stops the spinning motion started using startSpinning(). isSpinning() will return \c false
       after this call. */
     virtual void stopSpinning() { spinningTimer_.stop(); isSpinning_ = false; };
-  protected slots:
+  protected Q_SLOTS:
     virtual void spin();
-  private slots:
+  private Q_SLOTS:
     void spinUpdate();
     //@}
 
@@ -240,7 +240,7 @@ namespace qglviewer {
     //@{
   public:
     virtual QDomElement domElement(const QString& name, QDomDocument& document) const;
-  public slots:
+  public Q_SLOTS:
     virtual void initFromDOMElement(const QDomElement& element);
     //@}
 

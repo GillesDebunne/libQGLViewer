@@ -32,10 +32,10 @@ public:
   void fadeOut(const dvonn::Board::Ghosts* g);
   void animateMove(dvonn::Game::Move m);
   void stopAllAnimations();
-signals:
+Q_SIGNALS:
   void requested(dvonn::Game::Placement);
   void requested(dvonn::Game::Move);
-public slots:
+public Q_SLOTS:
   void toggleTexture(bool);
   void toggleLight(bool);
   void toggleShowPossible(bool);
@@ -44,7 +44,7 @@ public slots:
   void toggleShowAnimation(bool);
   void toggleDragToPlay(bool);
   void animateScore();
-protected slots:
+protected Q_SLOTS:
   void advanceFadeOut();
   void advanceAnimateMove();
   void advanceAnimateScore();

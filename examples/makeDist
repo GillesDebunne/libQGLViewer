@@ -2,7 +2,7 @@
 # composite -geometry +14+12 @ ~/background.jpg #.bis.jpg to #.jpg
 
 IMAGES_DIR="../doc/images"
-QGLVIEWER_HOME_DIR="$HOME/QGLViewer"
+QGLVIEWER_HOME_DIR="/Users/debunne/Documents/Code/trunk"
 OUTPUT_DIR="../doc/examples"
 VERSION=`grep -a "^version=" $QGLVIEWER_HOME_DIR/makeDist | sed s/"version=\"\(.*\)\""/"\1"/`
 
@@ -83,7 +83,7 @@ test -d $OUTPUT_DIR || mkdir -p $OUTPUT_DIR
 which "source-highlight" >& /dev/null || error "Unable to find source-highlight - Abort"
     
 export LC_TIME="en"
-date=`date "+%A, %B %-d, %Y"`
+date=`date "+%A, %B %d, %Y"`
 unset LC_TIME
 
 # Create the examples HTML files with included code

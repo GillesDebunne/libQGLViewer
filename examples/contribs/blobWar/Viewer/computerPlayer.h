@@ -29,10 +29,10 @@ public:
   void play(bool blue, const QString& stateFileName);
 
 public:
-  signals:
+  Q_SIGNALS:
   void moveMade(QString move, int duration);
  
-private slots:
+private Q_SLOTS:
   void selectProgram();
   void readFromStdout();
   

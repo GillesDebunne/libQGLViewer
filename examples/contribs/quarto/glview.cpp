@@ -120,7 +120,7 @@ void GLViewPieces::applySelection(int select)
   if(select!=-1) {
     setofpiece->setSelected(select);
     updateGL();
-    emit changeJoueur();
+    Q_EMIT changeJoueur();
   }
 }
 
@@ -151,9 +151,9 @@ void GLViewJeu::applySelection(int select)
     setofpiece->placeSelectedPiece(select);
     jeu.placePiece(select, setofpiece->getPiece());
     updateGL();
-    emit update();
-    emit piecePlacee();
-    if(jeu.analyze()) emit endGame();
+    Q_EMIT update();
+    Q_EMIT piecePlacee();
+    if(jeu.analyze()) Q_EMIT endGame();
   }
 }
 

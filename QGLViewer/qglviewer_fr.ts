@@ -85,11 +85,6 @@
         <translation>%1Hz</translation>
     </message>
     <message>
-        <source>About libQGLViewer</source>
-        <comment>About message box title</comment>
-        <translation>A propos de libQGLViewer</translation>
-    </message>
-    <message>
         <source>Toggles the display of the FPS</source>
         <comment>DISPLAY_FPS action description</comment>
         <translation>Active ou non l&apos;affichage de la fréquence d&apos;affiichage</translation>
@@ -196,10 +191,6 @@
     <message>
         <source>(no button)</source>
         <translation>(pas de bouton)</translation>
-    </message>
-    <message>
-        <source>libQGLViewer, version %1.&lt;br&gt;A versatile 3D viewer based on OpenGL and Qt.&lt;br&gt;Copyright 2002-%2 Gilles Debunne.&lt;br&gt;&lt;code&gt;%3&lt;/code&gt;</source>
-        <translation>libQGLViewer, version %1.&lt;br&gt;Un visualiseur 3D générique basé sur OpenGL et Qt.&lt;br&gt;Copyright 2002-%2 Gilles Debunne.&lt;br&gt;&lt;code&gt;%3&lt;/code&gt;</translation>
     </message>
     <message>
         <source>Rotates</source>
@@ -379,11 +370,6 @@
         <translation>Aide</translation>
     </message>
     <message>
-        <source>About</source>
-        <comment>About button in help window</comment>
-        <translation>A propos</translation>
-    </message>
-    <message>
         <source>Path %1 deleted</source>
         <comment>Feedback message</comment>
         <translation>Chemin %1 supprimé</translation>
@@ -447,26 +433,6 @@
     <message>
         <source>Unable to open file %1</source>
         <translation>Le fichier %1 ne peut être ouvert</translation>
-    </message>
-    <message>
-        <source>Ctrl+</source>
-        <comment>Modifier key</comment>
-        <translation>Ctrl+</translation>
-    </message>
-    <message>
-        <source>Alt+</source>
-        <comment>Modifier key</comment>
-        <translation>Alt+</translation>
-    </message>
-    <message>
-        <source>Shift+</source>
-        <comment>Modifier key</comment>
-        <translation>Shift+</translation>
-    </message>
-    <message>
-        <source>Meta+</source>
-        <comment>Modifier key</comment>
-        <translation>Méta+</translation>
     </message>
     <message>
         <source>Left</source>
@@ -553,6 +519,15 @@
     <message>
         <source>Visibility optimization</source>
         <translation>Optimisation de la visibilité</translation>
+    </message>
+    <message>
+        <source>&amp;About</source>
+        <comment>Help window about title</comment>
+        <translation>À propos</translation>
+    </message>
+    <message>
+        <source>&lt;h1&gt;libQGLViewer&lt;/h1&gt;&lt;h3&gt;Version %1&lt;/h3&gt;&lt;br&gt;A versatile 3D viewer based on OpenGL and Qt&lt;br&gt;Copyright 2002-%2 Gilles Debunne&lt;br&gt;&lt;code&gt;%3&lt;/code&gt;</source>
+        <translation>&lt;h1&gt;libQGLViewer&lt;/h1&gt;&lt;h3&gt;Version %1&lt;/h3&gt;&lt;br&gt;Un afficheur 3D généraliste basé sur OpenGL et Qt&lt;br&gt;Copyright 2002-%2 Gilles Debunne&lt;br&gt;&lt;code&gt;%3&lt;/code&gt;</translation>
     </message>
 </context>
 <context>

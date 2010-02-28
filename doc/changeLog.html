@@ -19,6 +19,31 @@
 
 <h1>Change Log</h1>
 
+<h2>March 1st 2010 - 2.3.5</h2>
+<b>New features</b>
+<ul>
+ <li>Mouse shortcuts displayed in help window use native display for Ctrl/Command/Alt/Option... keys.</li>
+ <li>New mouse bindings added on Mac architecture to enable camera translation using the Option key (no right button on the touchpad).</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+  <li>Tuning <code>DYLD_LIBRARY_PATH</code> is no longer needed to run the examples on Mac architecture (Linux soon to come).</li>
+  <li>Use of <code>CONFIG += no_keywords</code> so that the library can be used with Boost.</li>
+  <li>Smoother compilation on Mac, now creating a Framework by default. Compilation documentation <a href="compilation.html">updated</a>.</li>
+  <li><code>GL_DEPTH_TEST</code> disabled before rendering frame rate to fix a weird display on Mac (bugfinder FX).</li>
+  <li>The <code>About</code> button has been moved to a cleaner new tab in the help window.</li>
+  <li><code>WIN32</code> added to default <code>DEFINES</code> to fix compilation problems with Visual Studio when using the Intel compiler (bugfinder Jiawen).</li>
+  <li>The examples applications now have a nice associated icon (Mac and Windows).</li>
+  <li><code>restoreStateFromFile</code> updates camera aspect ratio when loading window's size.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li>The <code>aboutQGLViewer()</code> method now displays the help window 'About' tab.</li>
+</ul>
+
+
 <h2>September 1st 2009 - 2.3.4</h2>
 <b>Bug fixes or improvements</b>
 <ul>

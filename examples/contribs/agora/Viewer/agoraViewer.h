@@ -19,7 +19,7 @@ public:
   AgoraViewer(QWidget* parent=NULL);
 #endif
   
-public slots:
+public Q_SLOTS:
   // F i l e   m e n u
   void load();
   void save();
@@ -53,7 +53,7 @@ protected :
   
   void play(const Move& m);
 
-private slots:
+private Q_SLOTS:
   void simplePlay();
   void playComputerMove(QString move, int duration);
   void playNextMove();

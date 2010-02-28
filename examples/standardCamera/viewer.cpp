@@ -61,7 +61,7 @@ void Viewer::showMessage()
   QString std = ((StandardCamera*)camera())->isStandard()?"Standard camera":"QGLViewer camera";
   QString type = camera()->type() == Camera::PERSPECTIVE?"Perspective":"Orthographic";
   displayMessage(std + " - " + type);
-  emit cameraChanged();
+  Q_EMIT cameraChanged();
 }
 
 void Viewer::keyPressEvent(QKeyEvent *e)
@@ -92,7 +92,7 @@ void Viewer::wheelEvent(QWheelEvent *e)
 #endif
   {
     ((StandardCamera*)camera())->changeOrthoFrustumSize(e->delta());
-    emit cameraChanged();
+    Q_EMIT cameraChanged();
     updateGL();
   }
   else

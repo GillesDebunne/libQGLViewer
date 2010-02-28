@@ -31,7 +31,7 @@ class DvonnWindowImpl : public DvonnWindow
   Q_OBJECT
 public:
   DvonnWindowImpl(dvonn::Game* g);
-public slots:
+public Q_SLOTS:
   void load();
   void save();
   void saveAs();
@@ -52,7 +52,7 @@ protected:
   QString labelFor(dvonn::Player);
   QString labelFor(dvonn::Phase);
   void updateStatusBar();
-protected slots:
+protected Q_SLOTS:
   void animateScore();
 private:
   dvonn::Game*  game_;

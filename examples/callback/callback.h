@@ -11,6 +11,6 @@ class Scene : public QObject
 public :
   Scene(const QGLViewer* const v);
 
-public slots:
+public Q_SLOTS:
   void draw();
 };

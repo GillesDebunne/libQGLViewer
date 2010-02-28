@@ -6,7 +6,7 @@ class QObj : public QObject
 {
   Q_OBJECT
 
-public slots:
+public Q_SLOTS:
   void slotMod() { cout << "modified" << endl; }
   void slotMan() { cout << "manipulated" << endl; }
   void slotKFI() { cout << "interpolated" << endl; }
