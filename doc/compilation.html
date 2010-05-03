@@ -55,7 +55,15 @@ HEADERS = myViewer.h
 SOURCES = myViewer.cpp main.cpp
 
 INCLUDEPATH *= C:/Users/debunne/Documents/libQGLViewer-#VERSION#
+
+# Windows
 LIBS *= -LC:/Users/debunne/Documents/libQGLViewer-#VERSION#/QGLViewer -lQGLViewer#VERSION_MAJOR#
+
+# Linux
+LIBS *= -L/home/debunne/libQGLViewer-#VERSION#/QGLViewer -lQGLViewer
+
+# Mac if you compiled a framework in /Library/Frameworks (default)
+LIBS *= -framework QGLViewer
 </pre>
 
 
@@ -211,7 +219,8 @@ Read Apple's
 as well as Qt's "<a href="http://qt.nokia.com/doc/4.6/deployment-mac.html">Deploying an Application on Mac OS X</a>" guides for details.
 </p>
 
-
+Tune the <code>QMAKE_LFLAGS</code> variable if the library was not installed in the default <code>/Library/Frameworks</code> directory. Use the
+<code>LIBS *= -L/path/to/lib -lQGLViewer</code> Unix syntax if you compiled a dylib instead of a framework.
 <!--
 
 The compilation on Mac is essentially identical to the one described above in the linux section (<code>libQGLViewer.so</code> is named <code>libQGLViewer.dylib</code> instead).

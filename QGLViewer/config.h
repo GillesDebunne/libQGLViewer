@@ -78,7 +78,7 @@
 # include <qvaluevector.h>
 #endif
 
-# Support for no_keyword CONFIG option on Qt3 version
+// Support for no_keyword CONFIG option on Qt3 version
 #if QT_VERSION < 0x040000
 # define Q_SLOTS slots
 # define Q_SIGNALS signals
