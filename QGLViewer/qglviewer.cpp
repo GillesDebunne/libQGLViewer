@@ -1840,7 +1840,11 @@ static QString keyboardModifiersString(QtKeyboardModifiers m, bool noButton=fals
 #endif
 
 	if (keySequence.length() > 0)
+#if QT_VERSION >= 0x040000
 		return QKeySequence(keySequence+"X").toString(QKeySequence::NativeText).replace("X", "");
+#else
+		return QString(QKeySequence(keySequence+"X")).replace("X", "");
+#endif
 	else
 		return QString();
 }
@@ -2263,7 +2267,11 @@ QString QGLViewer::keyboardString() const
 /*! Displays the help window "About" tab. See help() for details. */
 void QGLViewer::aboutQGLViewer() {
 	help();
-	helpWidget()->setCurrentIndex(3);
+#if QT_VERSION >= 0x040000
+ 	helpWidget()->setCurrentIndex(3);
+#else
+	helpWidget()->setCurrentPage(3);
+#endif
 }
 
 	

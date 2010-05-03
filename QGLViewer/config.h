@@ -6,7 +6,7 @@
 #ifndef QGLVIEWER_CONFIG_H
 #define QGLVIEWER_CONFIG_H
 
-#define QGLVIEWER_VERSION 0x020305
+#define QGLVIEWER_VERSION 0x020306
 
 // Needed for Qt < 4 (?)
 #ifndef QT_CLEAN_NAMESPACE
@@ -76,6 +76,13 @@
 # define qMax(a,b) QMAX(a,b)
 # include <qptrlist.h>
 # include <qvaluevector.h>
+#endif
+
+# Support for no_keyword CONFIG option on Qt3 version
+#if QT_VERSION < 0x040000
+# define Q_SLOTS slots
+# define Q_SIGNALS signals
+# define Q_EMIT emit
 #endif
 
 // For deprecated methods

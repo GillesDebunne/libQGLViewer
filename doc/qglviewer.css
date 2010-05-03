@@ -50,13 +50,14 @@ div.banner {
   background-color: #eef;
   border: 2px solid #AAC;
   text-align: center;
-  padding:4px;
+  padding-top:7px;
+  padding-bottom:4px;
 }
 
 a.qindex {
        font-weight: bold;
        color: #0000AA;
-       padding: 0px 10px 1px 10px;
+       padding: 3px 10px 1px 10px;
        margin: 1px 2%;
        border: 1px solid #eef;
 }

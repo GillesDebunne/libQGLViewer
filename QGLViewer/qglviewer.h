@@ -627,8 +627,8 @@ public:
 		incremented in this method (frame-rate independent animation) or computed from actual time (for
 		instance using QTime::elapsed()) for real-time animations.
 
-		Note that KeyFrameInterpolator (which regularly updates a Frame) do not use this method but rather
-		rely on a QTimer signal-slot mechanism.
+                Note that KeyFrameInterpolator (which regularly updates a Frame) does not use this method
+                to animate a Frame, but rather rely on a QTimer signal-slot mechanism.
 
 		See the <a href="../examples/animation.html">animation example</a> for an illustration. */
 		virtual void animate() { Q_EMIT animateNeeded(); };

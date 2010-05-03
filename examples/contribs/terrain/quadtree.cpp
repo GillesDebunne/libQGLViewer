@@ -1,5 +1,4 @@
 // TP OpenGL: Joerg Liebelt, Serigne Sow
-#include <stdio.h>
 #include "quadtree.h"
 
 #define SQR( number )		( number*number )

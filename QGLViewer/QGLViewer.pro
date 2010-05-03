@@ -10,7 +10,7 @@
 
 TEMPLATE = lib
 TARGET = QGLViewer
-VERSION = 2.3.5
+VERSION = 2.3.6
 CONFIG -= debug debug_and_release
 CONFIG *= release qt opengl warn_on shared thread create_prl rtti no_keywords
 
@@ -160,7 +160,8 @@ unix {
 
   # install header
   include.path = $${INCLUDE_DIR}/QGLViewer
-  include.files = $${QGL_HEADERS} qglviewer.cw $$replace(TRANSLATIONS, .ts, .qm)
+  # Should be $$replace(TRANSLATIONS, .ts, .qm), but replace appeared in Qt 4.3
+  include.files = $${QGL_HEADERS} qglviewer.cw qglviewer_fr.qm
 
   # install documentation html
   documentation.path = $${DOC_DIR}

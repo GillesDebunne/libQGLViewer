@@ -6,7 +6,7 @@ BEGIN { p=0; inli=0; search=""; }
 /href=\"index.html\"/ { if (p==1) { gsub("index.html", "../index.html"); main=$0; } }
 
 /<li/ { if ((p==1) && (search=="")) inli=1; }
-/search.php/ { if (inli==1) { searchFound=1; } }
+/SearchBox/ { if (inli==1) { searchFound=1; } }
 /<\/li>/ {
 if (inli==1) {
   if (searchFound==1) {

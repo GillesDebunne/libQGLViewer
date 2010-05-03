@@ -5,6 +5,7 @@
 
 #include "terrain.h"
 #include <qgl.h>
+#include <stdio.h>
 
 #define QT_LR_NODE 0
 #define QT_LL_NODE 1

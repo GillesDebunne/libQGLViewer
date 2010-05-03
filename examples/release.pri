@@ -2,6 +2,7 @@ QT *= xml opengl
 
 CONFIG -= debug debug_and_release
 CONFIG += release qt opengl warn_on thread rtti console embed_manifest_exe no_keywords
+
 # --------------------------------------------------------------------------------------
 
 # The remaining of this configuration tries to automatically detect the library paths.
@@ -13,7 +14,6 @@ CONFIG += release qt opengl warn_on thread rtti console embed_manifest_exe no_ke
 # Change these paths according to your configuration.
 
 # --------------------------------------------------------------------------------------
-
 
 QT_VERSION=$$[QT_VERSION]
 
