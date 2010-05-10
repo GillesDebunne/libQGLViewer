@@ -82,7 +82,7 @@ unix|win32-g++ {
 
     !exists( $${INCLUDE_DIR}/QGLViewer/qglviewer.h ) {
       #contains( LIB_NAME, ".*QGLViewer.framework.*" ) {
-	# Mac: try to use the Headers provided with the Framework
+	# TODO Mac: try to use the Headers provided with the Framework
         #exists( $${LIB_DIR}/$${LIB_NAME}/Headers ) {
       #} else {
         exists( ../../QGLViewer/qglviewer.h ) {
@@ -102,53 +102,32 @@ unix|win32-g++ {
 
 
   macx|darwin-g++ {
+message( DEBUG on mac $$LIB_NAME libdir=$$LIB_DIR )
     # On Mac, the lib path can actually be specified in the executable using install_name_tool
     contains( LIB_NAME, ".*QGLViewer.framework.*" ) {
       !contains( LIB_DIR, ".*/Library/Frameworks/*$" ) {
-        QMAKE_POST_LINK=install_name_tool -change QGLViewer.framework/Versions/#VERSION_MAJOR#/QGLViewer $${LIB_DIR_ABSOLUTE_PATH}/QGLViewer.framework/Versions/#VERSION_MAJOR#/QGLViewer $${TARGET}.app/Contents/MacOS/$${TARGET}
+        QMAKE_LFLAGS += -F$${LIB_DIR}
+        !plugin:QMAKE_POST_LINK=install_name_tool -change QGLViewer.framework/Versions/#VERSION_MAJOR#/QGLViewer $${LIB_DIR_ABSOLUTE_PATH}/QGLViewer.framework/Versions/#VERSION_MAJOR#/QGLViewer $${TARGET}.app/Contents/MacOS/$${TARGET}
       }
+      LIBS += -framework QGLViewer
     } else {
-        QMAKE_POST_LINK=install_name_tool -change libQGLViewer.#VERSION_MAJOR#.dylib $${LIB_DIR_ABSOLUTE_PATH}/libQGLViewer.#VERSION_MAJOR#.dylib $${TARGET}.app/Contents/MacOS/$${TARGET}
+        !plugin:QMAKE_POST_LINK=install_name_tool -change libQGLViewer.#VERSION_MAJOR#.dylib $${LIB_DIR_ABSOLUTE_PATH}/libQGLViewer.#VERSION_MAJOR#.dylib $${TARGET}.app/Contents/MacOS/$${TARGET}
+        LIBS *= -L$${LIB_DIR} -lQGLViewer
     }
   } else {
-    # Fix this: linux config with -Wl,rpath,... and no more LD_LIB_PATH
-    contains( LIB_DIR, "^\.\./.*" ) {
-      LIB_PATH_VARIABLE_NAME = LD_LIBRARY_PATH
-	  CURRENT_LIB_PATH = $$system(echo \$LD_LIBRARY_PATH)
-	
-      # Check the the lib path was not yet modified
-      !contains(CURRENT_LIB_PATH, "(^|.*:)$${LIB_DIR_ABSOLUTE_PATH}/*(:.*|$)" ) {
-        message( libQGLViewer has been found in the $${LIB_DIR_ABSOLUTE_PATH} directory. )
-        message( "Since this is not a standard directory, you need to set your $${LIB_PATH_VARIABLE_NAME} variable" )
-        message( so that it is found when you run your program. Run the following commands in your shell: )
-        #message( )
-        contains( CURRENT_SHELL, ".*csh" ) {
-          message( > setenv $${LIB_PATH_VARIABLE_NAME} $${SET_LIB_PATH_PREFIX}$${LIB_DIR_ABSOLUTE_PATH} )
-        } else {
-          message( > export $${LIB_PATH_VARIABLE_NAME}=$${SET_LIB_PATH_PREFIX}$${LIB_DIR_ABSOLUTE_PATH} )
-        }
-        message( > make )
-        #message( An alternative is to copy $${LIB_NAME} in this directory or to a standard directory such as /usr/lib )
-        #message( See QGLViewer doc/compilation.html for details )
-        #message( )
-        #message( You can now type \'make\' to compile this project )
-      }
+    isEmpty(QMAKE_RPATH) {
+      !plugin:QMAKE_LFLAGS += -Wl,-rpath,$${LIB_DIR_ABSOLUTE_PATH}
+    } else {
+      !plugin:QMAKE_RPATHDIR *= $${LIB_DIR_ABSOLUTE_PATH}
     }
+    LIBS *= -L$${LIB_DIR} -lQGLViewer
   }
-
 
   # Paths were correctly detected
   INCLUDEPATH *= $${INCLUDE_DIR}
   DEPENDPATH  *= $${INCLUDE_DIR}
 
-  isEmpty( QGLVIEWER_STATIC ) {
-    contains( LIB_NAME, ".*QGLViewer.framework.*" ) {
-      QMAKE_LFLAGS += -F$${LIB_DIR}
-      LIBS += -framework QGLViewer
-    } else {
-      LIBS *= -L$${LIB_DIR} -lQGLViewer ### CHANGE add TEST LINUX  -Wl,-rpath,$${LIB_DIR_ABSOLUTE_PATH}
-    }
-  } else {
+  !isEmpty( QGLVIEWER_STATIC ) {
     LIBS *= $${LIB_DIR}/$${LIB_NAME}
   }
 

@@ -73,10 +73,10 @@ LIBS *= -framework QGLViewer
 Launch the Qt command prompt from the <i>Start</i> menu. Then simply type :
 
 <pre>
-cd path\to\simpleViewer
+cd path\to\myApp
 qmake
 mingw32-make
-simpleViewer
+myApp
 </pre>
 
 Some <code>dll</code>s need to be found in order to run your program :
@@ -141,10 +141,10 @@ Visual with Administrator priviledges. With Qt 2.3, you also have to add <code>/
 Using the Unix command line, the compilation is as simple as:
 
 <pre>
-cd path/to/simpleViewer
+cd path/to/myApp
 qmake
 make
-simpleViewer
+myApp
 </pre>
 
 <!--
@@ -193,7 +193,7 @@ href="installUnix.html#linux">libQGLViewer on Unix</a> installation pages.
 
 <h3>Using Xcode</h3>
 <pre>
-cd path/to/simpleViewer
+cd path/to/myApp
 qmake -spec macx-xcode
 </pre>
 
@@ -202,10 +202,16 @@ Then open and build the resulting Xcode project.
 <h3>Using <code>make</code></h3>
 
 <pre>
-cd path/to/simpleViewer
+cd path/to/myApp
 qmake -spec macx-g++
 make
-simpleViewer
+myApp
+</pre>
+
+<h3>Using Qt Creator</h3>
+
+<pre>
+open myApp.pro 
 </pre>
 
 <h3>Next steps</h3>

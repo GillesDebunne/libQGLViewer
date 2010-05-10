@@ -1,16 +1,12 @@
-# Artis
-MAIN_PATH = $$(HOME)/QGLViewer
-MAIN_PATH = $$(HOME)/Documents/Code/trunk
-
 !exists( $${MAIN_PATH}/QGLViewer/qglviewer.h ) {
   exists( ../QGLViewer/qglviewer.h ) {
-    MAIN_PATH = ../..
+    MAIN_PATH = $$system(cd ..;pwd)
   }
 }
 
 !exists( $${MAIN_PATH}/QGLViewer/qglviewer.h ) {
   exists( ../../QGLViewer/qglviewer.h ) {
-    MAIN_PATH = ../../..
+    MAIN_PATH = $$system(cd ../..;pwd)
   }
 }
 
@@ -24,7 +20,3 @@ isEmpty( LIB_DIR ) {
 
 include( release.pri )
 
-unix {
-  #include ( ../../Code/simpleOutput.prf )
-  #CONFIG += simpleOutput.prf moc resource
-}
