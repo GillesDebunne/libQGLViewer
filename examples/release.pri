@@ -81,16 +81,16 @@ unix|win32-g++ {
     INCLUDE_DIR = $${PREFIX}/include
 
     !exists( $${INCLUDE_DIR}/QGLViewer/qglviewer.h ) {
-      #contains( LIB_NAME, ".*QGLViewer.framework.*" ) {
-	# TODO Mac: try to use the Headers provided with the Framework
-        #exists( $${LIB_DIR}/$${LIB_NAME}/Headers ) {
+	  # qmake does not support Headers/QGLViewer FRAMEWORK_HEADERS.path
+	  #exists( $${LIB_DIR}/QGLViewer.framework/Headers/qglviewer.h ) {
+      #  INCLUDE_DIR = $${LIB_DIR}/QGLViewer.framework/Headers
       #} else {
         exists( ../../QGLViewer/qglviewer.h ) {
-        # message( libQGLViewer header files were not installed in standard $${INCLUDE_DIR} directory )
-        # message( Headers were found in ../.. which will be set as the INCLUDE_DIR )
-        # message( )
-        INCLUDE_DIR = ../..
-      }
+          # message( libQGLViewer header files were not installed in standard $${INCLUDE_DIR} directory )
+          # message( Headers were found in ../.. which will be set as the INCLUDE_DIR )
+          INCLUDE_DIR = ../..
+        }
+      #}
     }
   }
 
@@ -102,9 +102,9 @@ unix|win32-g++ {
 
 
   macx|darwin-g++ {
-message( DEBUG on mac $$LIB_NAME libdir=$$LIB_DIR )
-    # On Mac, the lib path can actually be specified in the executable using install_name_tool
+    # On Mac, the lib path can be specified in the executable using install_name_tool
     contains( LIB_NAME, ".*QGLViewer.framework.*" ) {
+      # If framework was not found in a standard directory
       !contains( LIB_DIR, ".*/Library/Frameworks/*$" ) {
         QMAKE_LFLAGS += -F$${LIB_DIR}
         !plugin:QMAKE_POST_LINK=install_name_tool -change QGLViewer.framework/Versions/#VERSION_MAJOR#/QGLViewer $${LIB_DIR_ABSOLUTE_PATH}/QGLViewer.framework/Versions/#VERSION_MAJOR#/QGLViewer $${TARGET}.app/Contents/MacOS/$${TARGET}
@@ -139,7 +139,7 @@ message( DEBUG on mac $$LIB_NAME libdir=$$LIB_DIR )
     }
   }
 
-  # Remove debugging options
+  # Remove debugging options in release mode makes files much smaller
   release:QMAKE_CFLAGS_RELEASE -= -g
   release:QMAKE_CXXFLAGS_RELEASE -= -g
 
@@ -184,6 +184,14 @@ win32 {
   }
 
   LIBS *= -L$${LIB_PATH} -lQGLViewer#VERSION_MAJOR#
+
+  # TODO icon on windows
+  # Add rc file to distribution, tune relative path, add .ico in path and check that relative ico path works
+  # ../../.. above for contribs ? 
+  #RC_FILE = ../qglviewer.rc
 }}
 
-ICON = $${INCLUDEPATH}/QGLViewer/qglviewer.icns
+macx|darwin-g++ {
+  ICON = $${INCLUDEPATH}/QGLViewer/qglviewer.icns
+}
+

@@ -1568,7 +1568,7 @@ void Camera::playPath(int i)
 /*! Resets the path of the keyFrameInterpolator() number \p i.
 
 If this path is \e not being played (see playPath() and
-KeyFrameInterpolator::interpolationIsStarted()), resets it to is its starting position (see
+KeyFrameInterpolator::interpolationIsStarted()), resets it to its starting position (see
 KeyFrameInterpolator::resetInterpolation()). If the path is played, simply stops interpolation. */
 void Camera::resetPath(int i)
 {

@@ -30,8 +30,7 @@ They apply to the provided <a href="examples/index.html">examples</a> as well as
 <h2>Tuning the <code>.pro</code></h2>
 
 Qt uses a <code>.pro</code> file to tune the compilation settings. The one that comes with the examples is pretty involved since it 
-tries to automatically detect a number of parameters, and it can be simplified for your projects. The three important variables that
-have to be set in order to use libQGLViewer are:
+tries to automatically detect where the library and headers files are located. It can be simplified for your projects. The three important variables that have to be set in order to use libQGLViewer are:
 <ul>
 <li><code><b>INCLUDEPATH</b></code> which must indicates where to find the QGLViewer's include files. Since the <code>#include</code>s use a <code>QGLViewer/qglviewer.h</code> syntax, 
 the <code>QGLViewer</code> suffix should be omitted in this path: If libQGLViewer was installed in the <code>/xxx/yyy/QGLViewer</code> directory, you will set this variable to <code>INCLUDEPATH *= /xxx/yyy</code>.<br /> <br /></li>
@@ -161,12 +160,11 @@ write permission). If you have downloaded the tarball instead, simply go to the
 
 <div class="small">
 
-You may be prompted with an <code>error while loading shared libraries</code> message when executing the program. 
-Either copy <code>libQGLViewer.so</code> (created when you compiled the QGLViewer library) to this directory, 
+The use of <code>-Wl,-rpath</code> in the compilation options should make your executable find the library. In case you are prompted with an <code>error while loading shared libraries</code> message when executing the program, fix the path. 
+An other option is to copy <code>libQGLViewer.so</code> (created when you compiled the QGLViewer library) to this directory, 
 or (better) move it to a standard library directory (such as <code>/usr/lib</code>, as is done when you <code>make install</code>).
-
 <br/>
- 
+<!-- 
 If you don't have sufficient privileges to do that, you can also add the path to the <code>libQGLViewer.so</code> to
 your default library path (use <code>LD_LIBRARYN32_PATH</code> instead on some Unix flavors):
 
@@ -174,6 +172,7 @@ your default library path (use <code>LD_LIBRARYN32_PATH</code> instead on some U
 [bash] > export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/path/to/qglviewerlib
 [tcsh] > setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:/path/to/qglviewerlib
 </pre>
+-->
 
 Some configurations may require you to add <code>LIBS *= -lXi</code> in the <code>.pro</code> file.
 Debian users may have to replace <code>-lQGLViewer</code> by <code>-lQGLViewer-2</code> in their <code>.pro</code>.

@@ -160,7 +160,7 @@ unix {
 
   # install header
   include.path = $${INCLUDE_DIR}/QGLViewer
-  # Should be $$replace(TRANSLATIONS, .ts, .qm), but replace appeared in Qt 4.3
+  # Should be $$replace(TRANSLATIONS, .ts, .qm), but 'replace' only appeared in Qt 4.3
   include.files = $${QGL_HEADERS} qglviewer.cw qglviewer_fr.qm
 
   # install documentation html
@@ -228,31 +228,31 @@ irix-cc|irix-n32 {
 }
 
 
-#               -------------------
+#       -------------------
 #		--  M a c O S X  --
-#               -------------------
+#       -------------------
 macx|darwin-g++ {
-  # This option is used to create a mac framework. Comment out to create a dylib instead.
+  # This setting creates a Mac framework. Comment out this line to create a dylib instead.
   CONFIG *= lib_bundle
 
   include.files *= qglviewer.icns
 
   lib_bundle {
     FRAMEWORK_HEADERS.version = Versions
-    FRAMEWORK_HEADERS.files = $${QGL_HEADERS} qglviewer.icns $$replace(TRANSLATIONS, .ts, .qm)
+    # Should be $$replace(TRANSLATIONS, .ts, .qm), but 'replace' is only available in Qt 4.3
+    FRAMEWORK_HEADERS.files = $${QGL_HEADERS} qglviewer.icns qglviewer_fr.qm
     FRAMEWORK_HEADERS.path = Headers
     QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
 
     DESTDIR = /Library/Frameworks/
 
     #QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/
-    QMAKE_LFLAGS_SONAME  = -Wl,-install_name,
-
+    #QMAKE_LFLAGS_SONAME  = -Wl,-install_name,
 
     # Framework already installed, with includes
     INSTALLS -= include target
   } else {
-           #QMAKE_LFLAGS_SONAME  = -Wl,-install_name,libQGLViewer.dylib
+    #QMAKE_LFLAGS_SONAME  = -Wl,-install_name,libQGLViewer.dylib
   }
 
   # GLUT for Macintosh architecture
