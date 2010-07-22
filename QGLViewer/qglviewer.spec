@@ -154,8 +154,8 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
-* Sat May 1 2010 Gilles Debunne <contact@libQGLViewer.com> 2.3.6
-- Minor fixes for Qt3 and gcc 4.3 compilation.
+* Sat May 29 2010 Gilles Debunne <contact@libQGLViewer.com> 2.3.6
+- Minor fixes for Qt3 and gcc 4.3 compilation. No more LD_LIBRARY_PATH tuning.
 
 * Sun Mar 1 2010 Gilles Debunne <contact@libQGLViewer.com> 2.3.5
 - Mac compilation improvements, no_keywords CONFIG option.

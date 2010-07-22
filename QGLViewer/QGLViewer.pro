@@ -165,7 +165,7 @@ unix {
 
   # install documentation html
   documentation.path = $${DOC_DIR}
-  documentation.files = ../doc/*.html ../doc/*.css
+  documentation.files = ../doc/*.html ../doc/*.css  ../doc/*.qch
 
   # install documentation images
   docImages.path = $${DOC_DIR}/images
@@ -307,7 +307,7 @@ win32 {
 contains( QT_VERSION, "^4.*" ) {
   CONFIG(debug, debug|release) {
     unix: TARGET = $$join(TARGET,,,_debug)
-    win32: TARGET = $$join(TARGET,,d)
+    win32: TARGET = $$join(TARGET,,,d)
   }
 }
 

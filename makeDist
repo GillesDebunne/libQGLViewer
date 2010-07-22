@@ -540,7 +540,7 @@ done
 
 # Creating assistant qch file
 awk '/<section title="Namespace List"/ { skip=1 } /<\/toc>/ { print"      </section>"; skip=0 } { if (skip==0) print }' index.qhp > index.filtered.qhp
-qhelpgenerator index.filtered.qhp -o libQGLViewer-$version.qch > /dev/null
+qhelpgenerator index.filtered.qhp -o ../libQGLViewer-$version.qch > /dev/null
 rm index.qhp index2.qhp
 
 cd - > /dev/null
@@ -631,6 +631,10 @@ zip -qr $libNameVersion.zip $libNameVersion
 
 echo 
 echo "Stop packaging on mac, no rpm or deb created."
+echo "Creating $allTarGZ to update web site"
+tar czf $allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
+echo "scp $allTarGZ debunne@213.244.2.83"
+
 exit
 
 echo -n " rpm"
@@ -700,7 +704,7 @@ echo
 #windowsDir="/host/Users/debunne/Documents/Code/libQGLViewer/QGLViewer/trunk/"
 #tar czf $windowsDir/$allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
 
-tar czf $allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip  $libName*$version*.rpm libqglviewer*$version*.deb
+tar czf $allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip $libName*$version*.rpm libqglviewer*$version*.deb
 echo
 echo "Copy to dzsrv-linux"
 scp $allTarGZ root@192.168.0.10:/var/www/html/libqglviewer/home/debunne/.tmp

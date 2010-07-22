@@ -34,6 +34,7 @@ unix|win32-g++ {
   }
   win32-g++ {
     LIB_NAME = libQGLViewer*.a
+    LIB_DIR = C:\Windows\System32
   }
 
   !isEmpty( QGLVIEWER_STATIC ) {
@@ -43,13 +44,13 @@ unix|win32-g++ {
   # LIB_DIR
   isEmpty( LIB_DIR ) {
     LIB_DIR = $${PREFIX}/lib
-
-    !exists( $${LIB_DIR}/$${LIB_NAME} ) {
-      exists( ../../QGLViewer/$${LIB_NAME} ) {
-        #message( The library was found in ../../QGLViewer which will be set as the LIB_DIR )
-        LIB_DIR = ../../QGLViewer
-      }
-    }  
+  }
+  
+  !exists( $${LIB_DIR}/$${LIB_NAME} ) {
+    exists( ../../QGLViewer/$${LIB_NAME} ) {
+      #message( The library was found in ../../QGLViewer which will be set as the LIB_DIR )
+      LIB_DIR = ../../QGLViewer
+    }
   }
 
   macx|darwin-g++ {
@@ -62,6 +63,20 @@ unix|win32-g++ {
           #message( The framework was found in ../../QGLViewer which will be set as the LIB_DIR )
           LIB_DIR = ../../QGLViewer
         }
+      }
+    }
+  }
+
+  win32-g++ {
+    !exists( $${LIB_DIR}/$${LIB_NAME} ) {
+      exists( ../../QGLViewer/Release/$${LIB_NAME} ) {
+        LIB_DIR = ../../QGLViewer/Release
+      }
+    }
+
+    !exists( $${LIB_DIR}/$${LIB_NAME} ) {
+      exists( ../../QGLViewer/Debug/$${LIB_NAME} ) {
+        LIB_DIR = ../../QGLViewer/Debug
       }
     }
   }
