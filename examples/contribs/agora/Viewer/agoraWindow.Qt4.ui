@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>AgoraWindow</class>
- <widget class="QMainWindow" name="AgoraWindow" >
-  <property name="geometry" >
+ <widget class="QMainWindow" name="AgoraWindow">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,36 +10,24 @@
     <height>482</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Agora</string>
   </property>
-  <widget class="QWidget" name="widget" >
-   <layout class="QGridLayout" >
-    <property name="leftMargin" >
+  <widget class="QWidget" name="widget">
+   <layout class="QGridLayout">
+    <property name="margin">
      <number>3</number>
     </property>
-    <property name="topMargin" >
-     <number>3</number>
-    </property>
-    <property name="rightMargin" >
-     <number>3</number>
-    </property>
-    <property name="bottomMargin" >
-     <number>3</number>
-    </property>
-    <property name="horizontalSpacing" >
+    <property name="spacing">
      <number>6</number>
     </property>
-    <property name="verticalSpacing" >
-     <number>6</number>
-    </property>
-    <item row="0" column="0" >
-     <widget class="AgoraViewer" native="1" name="agoraViewer" />
+    <item row="0" column="0">
+     <widget class="AgoraViewer" name="agoraViewer" native="true"/>
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar" >
-   <property name="geometry" >
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
@@ -46,231 +35,231 @@
      <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="fileMenu" >
-    <property name="geometry" >
+   <widget class="QMenu" name="fileMenu">
+    <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>148</width>
-      <height>147</height>
+      <width>131</width>
+      <height>134</height>
      </rect>
     </property>
-    <property name="title" >
+    <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="fileOpenAction" />
-    <addaction name="fileSaveAction" />
-    <addaction name="fileSaveAsAction" />
-    <addaction name="separator" />
-    <addaction name="fileExitAction" />
+    <addaction name="fileOpenAction"/>
+    <addaction name="fileSaveAction"/>
+    <addaction name="fileSaveAsAction"/>
+    <addaction name="separator"/>
+    <addaction name="fileExitAction"/>
    </widget>
-   <widget class="QMenu" name="PopupMenu" >
-    <property name="geometry" >
+   <widget class="QMenu" name="PopupMenu">
+    <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>186</width>
-      <height>94</height>
+      <width>178</width>
+      <height>84</height>
      </rect>
     </property>
-    <property name="title" >
+    <property name="title">
      <string>&amp;Display</string>
     </property>
-    <addaction name="togglePossibleMoveAction" />
-    <addaction name="toggleAnimationAction" />
+    <addaction name="togglePossibleMoveAction"/>
+    <addaction name="toggleAnimationAction"/>
    </widget>
-   <widget class="QMenu" name="helpMenu" >
-    <property name="geometry" >
+   <widget class="QMenu" name="helpMenu">
+    <property name="geometry">
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>150</width>
-      <height>94</height>
+      <width>133</width>
+      <height>84</height>
      </rect>
     </property>
-    <property name="title" >
+    <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="helpRulesAction" />
-    <addaction name="helpAboutAction" />
+    <addaction name="helpRulesAction"/>
+    <addaction name="helpAboutAction"/>
    </widget>
-   <widget class="QMenu" name="editMenu" >
-    <property name="geometry" >
+   <widget class="QMenu" name="editMenu">
+    <property name="geometry">
      <rect>
       <x>71</x>
       <y>123</y>
-      <width>193</width>
-      <height>231</height>
+      <width>188</width>
+      <height>215</height>
      </rect>
     </property>
-    <property name="title" >
+    <property name="title">
      <string>&amp;Game</string>
     </property>
-    <addaction name="gameNewGameAction" />
-    <addaction name="separator" />
-    <addaction name="gameUndoAction" />
-    <addaction name="gameRedoAction" />
-    <addaction name="separator" />
-    <addaction name="gameWhiteIsHumanAction" />
-    <addaction name="gameConfigureWhitePlayerAction" />
-    <addaction name="separator" />
-    <addaction name="gameBlackIsHumanAction" />
-    <addaction name="gameConfigureBlackPlayerAction" />
+    <addaction name="gameNewGameAction"/>
+    <addaction name="separator"/>
+    <addaction name="gameUndoAction"/>
+    <addaction name="gameRedoAction"/>
+    <addaction name="separator"/>
+    <addaction name="gameWhiteIsHumanAction"/>
+    <addaction name="gameConfigureWhitePlayerAction"/>
+    <addaction name="separator"/>
+    <addaction name="gameBlackIsHumanAction"/>
+    <addaction name="gameConfigureBlackPlayerAction"/>
    </widget>
-   <addaction name="fileMenu" />
-   <addaction name="editMenu" />
-   <addaction name="PopupMenu" />
-   <addaction name="helpMenu" />
+   <addaction name="fileMenu"/>
+   <addaction name="editMenu"/>
+   <addaction name="PopupMenu"/>
+   <addaction name="helpMenu"/>
   </widget>
-  <action name="fileOpenAction" >
-   <property name="iconText" >
+  <action name="fileOpenAction">
+   <property name="iconText">
     <string>Load game</string>
    </property>
-   <property name="toolTip" >
+   <property name="toolTip">
     <string>Load a saved game</string>
    </property>
-   <property name="shortcut" >
+   <property name="shortcut">
     <string>Ctrl+O</string>
    </property>
   </action>
-  <action name="fileSaveAction" >
-   <property name="iconText" >
+  <action name="fileSaveAction">
+   <property name="iconText">
     <string>Save</string>
    </property>
-   <property name="shortcut" >
+   <property name="shortcut">
     <string>Ctrl+S</string>
    </property>
   </action>
-  <action name="fileSaveAsAction" >
-   <property name="iconText" >
+  <action name="fileSaveAsAction">
+   <property name="iconText">
     <string>Save As</string>
    </property>
-   <property name="shortcut" >
+   <property name="shortcut">
     <string/>
    </property>
   </action>
-  <action name="fileExitAction" >
-   <property name="iconText" >
+  <action name="fileExitAction">
+   <property name="iconText">
     <string>Exit</string>
    </property>
-   <property name="shortcut" >
+   <property name="shortcut">
     <string>Esc</string>
    </property>
   </action>
-  <action name="gameUndoAction" >
-   <property name="iconText" >
+  <action name="gameUndoAction">
+   <property name="iconText">
     <string>Undo</string>
    </property>
-   <property name="shortcut" >
+   <property name="shortcut">
     <string>Ctrl+Z</string>
    </property>
   </action>
-  <action name="gameRedoAction" >
-   <property name="iconText" >
+  <action name="gameRedoAction">
+   <property name="iconText">
     <string>Redo</string>
    </property>
-   <property name="shortcut" >
+   <property name="shortcut">
     <string>Ctrl+Y</string>
    </property>
   </action>
-  <action name="helpRulesAction" >
-   <property name="iconText" >
+  <action name="helpRulesAction">
+   <property name="iconText">
     <string>Rules of Agora</string>
    </property>
-   <property name="shortcut" >
+   <property name="shortcut">
     <string/>
    </property>
   </action>
-  <action name="helpAboutAction" >
-   <property name="iconText" >
+  <action name="helpAboutAction">
+   <property name="iconText">
     <string>About</string>
    </property>
-   <property name="shortcut" >
+   <property name="shortcut">
     <string/>
    </property>
   </action>
-  <action name="gameNewGameAction" >
-   <property name="iconText" >
+  <action name="gameNewGameAction">
+   <property name="iconText">
     <string>New game</string>
    </property>
-   <property name="shortcut" >
+   <property name="shortcut">
     <string>Ctrl+N</string>
    </property>
   </action>
-  <action name="toggleAnimationAction" >
-   <property name="checkable" >
+  <action name="toggleAnimationAction">
+   <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="checked" >
+   <property name="checked">
     <bool>true</bool>
    </property>
-   <property name="iconText" >
+   <property name="iconText">
     <string>Animate moves</string>
    </property>
   </action>
-  <action name="togglePossibleMoveAction" >
-   <property name="checkable" >
+  <action name="togglePossibleMoveAction">
+   <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="checked" >
+   <property name="checked">
     <bool>true</bool>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Show possible moves</string>
    </property>
-   <property name="iconText" >
+   <property name="iconText">
     <string>Show possible moves</string>
    </property>
   </action>
-  <action name="gameWhiteIsHumanAction" >
-   <property name="checkable" >
+  <action name="gameWhiteIsHumanAction">
+   <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="checked" >
+   <property name="checked">
     <bool>true</bool>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>White player is human</string>
    </property>
-   <property name="iconText" >
+   <property name="iconText">
     <string>White player is human</string>
    </property>
   </action>
-  <action name="gameBlackIsHumanAction" >
-   <property name="checkable" >
+  <action name="gameBlackIsHumanAction">
+   <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="checked" >
+   <property name="checked">
     <bool>true</bool>
    </property>
-   <property name="iconText" >
+   <property name="iconText">
     <string>Black player is human</string>
    </property>
   </action>
-  <action name="gameConfigureWhitePlayerAction" >
-   <property name="enabled" >
+  <action name="gameConfigureWhitePlayerAction">
+   <property name="enabled">
     <bool>false</bool>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Configure white player</string>
    </property>
-   <property name="iconText" >
+   <property name="iconText">
     <string>Configure white player</string>
    </property>
   </action>
-  <action name="gameConfigureBlackPlayerAction" >
-   <property name="enabled" >
+  <action name="gameConfigureBlackPlayerAction">
+   <property name="enabled">
     <bool>false</bool>
    </property>
-   <property name="text" >
+   <property name="text">
     <string>Configure black player</string>
    </property>
-   <property name="iconText" >
+   <property name="iconText">
     <string>Configure black player</string>
    </property>
   </action>
  </widget>
- <layoutdefault spacing="6" margin="11" />
+ <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
    <class>AgoraViewer</class>

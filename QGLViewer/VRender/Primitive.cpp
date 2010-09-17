@@ -80,7 +80,7 @@ void Polygone::initNormal()
 	Vector3 normalmax = Vector3(0.0,0.0,0.0) ;
 	FLOAT v12norm = (vertex(1)-vertex(0)).norm() ;
 
-	for(int i=0;i<nbVertices();i++)
+        for(unsigned int i=0;i<nbVertices();i++)
 	{
 		Vector3 v1(vertex(i)) ;
 		Vector3 v2(vertex(i+1));

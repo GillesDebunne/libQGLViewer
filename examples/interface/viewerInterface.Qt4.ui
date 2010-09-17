@@ -1,80 +1,70 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>Dialog</class>
- <widget class="QDialog" name="Dialog" >
-  <property name="geometry" >
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>642</width>
-    <height>475</height>
+    <width>650</width>
+    <height>468</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Interface</string>
   </property>
-  <layout class="QVBoxLayout" >
-   <property name="spacing" >
+  <layout class="QVBoxLayout">
+   <property name="spacing">
     <number>6</number>
    </property>
-   <property name="leftMargin" >
-    <number>8</number>
-   </property>
-   <property name="topMargin" >
-    <number>8</number>
-   </property>
-   <property name="rightMargin" >
-    <number>8</number>
-   </property>
-   <property name="bottomMargin" >
+   <property name="margin">
     <number>8</number>
    </property>
    <item>
-    <widget class="Viewer" native="1" name="viewer" />
+    <widget class="Viewer" name="viewer" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" >
-     <property name="spacing" >
+    <layout class="QHBoxLayout">
+     <property name="spacing">
       <number>6</number>
      </property>
-     <property name="leftMargin" >
-      <number>0</number>
-     </property>
-     <property name="topMargin" >
-      <number>0</number>
-     </property>
-     <property name="rightMargin" >
-      <number>0</number>
-     </property>
-     <property name="bottomMargin" >
+     <property name="margin">
       <number>0</number>
      </property>
      <item>
-      <widget class="QCheckBox" name="FPSCheckBox" >
-       <property name="text" >
+      <widget class="QCheckBox" name="FPSCheckBox">
+       <property name="text">
         <string>FPS</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="GridCheckBox" >
-       <property name="text" >
+      <widget class="QCheckBox" name="GridCheckBox">
+       <property name="text">
         <string>Grid</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="AxisCheckBox" >
-       <property name="text" >
+      <widget class="QCheckBox" name="AxisCheckBox">
+       <property name="text">
         <string>Axis</string>
        </property>
       </widget>
      </item>
      <item>
       <spacer>
-       <property name="orientation" >
+       <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="sizeHint" >
+       <property name="sizeHint" stdset="0">
         <size>
          <width>141</width>
          <height>31</height>
@@ -83,8 +73,8 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="cancelButton" >
-       <property name="text" >
+      <widget class="QPushButton" name="cancelButton">
+       <property name="text">
         <string>Quit</string>
        </property>
       </widget>
@@ -108,11 +98,11 @@
    <receiver>Dialog</receiver>
    <slot>reject()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>628</x>
      <y>460</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>493</x>
      <y>446</y>
     </hint>
@@ -124,11 +114,11 @@
    <receiver>viewer</receiver>
    <slot>setFPSIsDisplayed(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>41</x>
      <y>449</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>41</x>
      <y>263</y>
     </hint>
@@ -140,11 +130,11 @@
    <receiver>viewer</receiver>
    <slot>setAxisIsDrawn(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>150</x>
      <y>441</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>150</x>
      <y>239</y>
     </hint>
@@ -156,11 +146,11 @@
    <receiver>viewer</receiver>
    <slot>setGridIsDrawn(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>94</x>
      <y>449</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>94</x>
      <y>234</y>
     </hint>
@@ -172,11 +162,11 @@
    <receiver>GridCheckBox</receiver>
    <slot>setChecked(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>72</x>
      <y>414</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>73</x>
      <y>444</y>
     </hint>
@@ -188,11 +178,11 @@
    <receiver>AxisCheckBox</receiver>
    <slot>setChecked(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>126</x>
      <y>346</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>129</x>
      <y>453</y>
     </hint>
@@ -204,11 +194,11 @@
    <receiver>FPSCheckBox</receiver>
    <slot>setChecked(bool)</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>18</x>
      <y>419</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>21</x>
      <y>450</y>
     </hint>

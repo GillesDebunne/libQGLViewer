@@ -37,7 +37,7 @@ void BSPSortMethod::sortPrimitives(std::vector<PtrPrimitive>& primitive_tab,VRen
 	BSPTree tree;
 	Polygone *P;
 
-	int N = primitive_tab.size()/200 +1;
+        unsigned int N = primitive_tab.size()/200 +1;
 	int nbinserted = 0;
 
 	vector<PtrPrimitive> segments_and_points;	// Store segments and points for pass 2, because polygons are deleted
@@ -542,7 +542,7 @@ BSPNode::BSPNode(Polygone *P)
 void BSPNode::initEquation(const Polygone *P,double & a, double & b, double & c, double & d)
 {
 	Vector3 n(0.,0.,0.);
-	int j = 0;
+        unsigned int j = 0;
 
 	while((j < P->nbVertices())&& n.infNorm() <= 0.00001)
 	{
@@ -552,9 +552,9 @@ void BSPNode::initEquation(const Polygone *P,double & a, double & b, double & c,
 
 	if(n.infNorm() <= 0.00001)
 	{
-		int ind = P->nbVertices();
+                unsigned int ind = P->nbVertices();
 
-		for(int i=0;i<P->nbVertices();i++)
+                for(unsigned int i=0;i<P->nbVertices();i++)
 			if((P->vertex(i+1)-P->vertex(i)).infNorm() > 0.00001)
 			{
 				ind = i;

@@ -17,7 +17,7 @@ void BackFaceCullingOptimizer::optimize(std::vector<PtrPrimitive>& primitives_ta
 	for(unsigned int i=0;i<primitives_tab.size();++i)
 		if((P = dynamic_cast<Polygone *>(primitives_tab[i])) != NULL)
 		{
-			for(int j=0;j<P->nbVertices();++j)
+                        for(unsigned int j=0;j<P->nbVertices();++j)
 				if(( (P->vertex(j+2) - P->vertex(j+1))^(P->vertex(j+1) - P->vertex(j))).z() > 0.0 )
 				{
 					delete primitives_tab[i] ;

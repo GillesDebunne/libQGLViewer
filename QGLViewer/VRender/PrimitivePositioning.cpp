@@ -124,7 +124,7 @@ int PrimitivePositioning::computeRelativePosition(const Polygone *P,const Segmen
 
 	double t1,t2 ;
 
-	for(int i=0;i<P->nbVertices();++i)
+        for(unsigned int i=0;i<P->nbVertices();++i)
 		if(intersectSegments_XY(Vector2(S->vertex(0)),Vector2(S->vertex(1)),Vector2(P->vertex(i)),Vector2(P->vertex(i+1)),_EPS,t1,t2))
 			intersections.push_back(t1) ;
 
@@ -403,7 +403,7 @@ gpc_polygon PrimitivePositioning::createGPCPolygon_XY(const Polygone *P)
 	gpc_p_verts->num_vertices = P->nbVertices() ;
 	gpc_p_verts->vertex = new gpc_vertex[P->nbVertices()] ;
 
-	for(int i=0;i<P->nbVertices();++i)
+        for(unsigned int i=0;i<P->nbVertices();++i)
 	{
 		gpc_p_verts->vertex[i].x = P->vertex(i).x() ;
 		gpc_p_verts->vertex[i].y = P->vertex(i).y() ;

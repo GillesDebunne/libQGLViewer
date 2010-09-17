@@ -257,7 +257,7 @@ void TopologicalSortUtils::topologicalSort(vector< vector<int> >& precedence_gra
 	vector<bool> already_rendered(primitive_tab.size(),false) ;
 	int nb_skews = 0 ;
 
-	int info_cnt = primitive_tab.size()/200 + 1 ;
+        unsigned int info_cnt = primitive_tab.size()/200 + 1 ;
 	int nbrendered = 0 ;
 
 	// 1 - sorts primitives by rendering order
@@ -406,7 +406,7 @@ void TopologicalSortUtils::recursTopologicalSort(	vector< vector<int> >& precede
 			// 0.5 - determine cycle beginning
 
 			int cycle_beginning_index = -1 ;
-			for(int i=ancestors.size()-1; i >= 0 && cycle_beginning_index < 0;--i)
+                        for(int i=(int)(ancestors.size())-1; i >= 0 && cycle_beginning_index < 0;--i)
 				if(ancestors[i] == precedence_graph[indx][j])
 					cycle_beginning_index = i ;
 #ifdef DEBUG_TS
@@ -471,7 +471,7 @@ void TopologicalSortUtils::recursTopologicalSort(	vector< vector<int> >& precede
 
 					vector<int> old_prec = vector<int>(precedence_graph[ancestors[i3]]) ;
 
-					int upper_indx = precedence_graph.size() ;
+                                        unsigned int upper_indx = precedence_graph.size() ;
 					int lower_indx = ancestors[i3] ;
 
 					//  Updates the precedence graph downwards.
@@ -642,7 +642,3 @@ void TopologicalSortUtils::recursTopologicalSort(	vector< vector<int> >& precede
 	ancestors.pop_back() ;
 }
 } // namespace
-
-
-
-

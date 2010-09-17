@@ -1,63 +1,46 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>ComputerPlayerInterface</class>
- <widget class="QDialog" name="ComputerPlayerInterface" >
-  <property name="geometry" >
+ <widget class="QDialog" name="ComputerPlayerInterface">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>303</width>
-    <height>124</height>
+    <height>125</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Player configuration</string>
   </property>
-  <layout class="QVBoxLayout" >
-   <property name="spacing" >
+  <layout class="QVBoxLayout">
+   <property name="spacing">
     <number>6</number>
    </property>
-   <property name="leftMargin" >
-    <number>10</number>
-   </property>
-   <property name="topMargin" >
-    <number>10</number>
-   </property>
-   <property name="rightMargin" >
-    <number>10</number>
-   </property>
-   <property name="bottomMargin" >
+   <property name="margin">
     <number>10</number>
    </property>
    <item>
-    <layout class="QHBoxLayout" >
-     <property name="spacing" >
+    <layout class="QHBoxLayout">
+     <property name="spacing">
       <number>6</number>
      </property>
-     <property name="leftMargin" >
-      <number>0</number>
-     </property>
-     <property name="topMargin" >
-      <number>0</number>
-     </property>
-     <property name="rightMargin" >
-      <number>0</number>
-     </property>
-     <property name="bottomMargin" >
+     <property name="margin">
       <number>0</number>
      </property>
      <item>
-      <widget class="QLabel" name="programText" >
-       <property name="text" >
+      <widget class="QLabel" name="programText">
+       <property name="text">
         <string>Program</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="programNameLineEdit" />
+      <widget class="QLineEdit" name="programNameLineEdit"/>
      </item>
      <item>
-      <widget class="QPushButton" name="browseButton" >
-       <property name="text" >
+      <widget class="QPushButton" name="browseButton">
+       <property name="text">
         <string>Browse</string>
        </property>
       </widget>
@@ -65,44 +48,35 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" >
-     <property name="spacing" >
+    <layout class="QHBoxLayout">
+     <property name="spacing">
       <number>6</number>
      </property>
-     <property name="leftMargin" >
-      <number>0</number>
-     </property>
-     <property name="topMargin" >
-      <number>0</number>
-     </property>
-     <property name="rightMargin" >
-      <number>0</number>
-     </property>
-     <property name="bottomMargin" >
+     <property name="margin">
       <number>0</number>
      </property>
      <item>
-      <widget class="QLabel" name="maxTimeText" >
-       <property name="text" >
+      <widget class="QLabel" name="maxTimeText">
+       <property name="text">
         <string>Allowed time</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QSpinBox" name="allowedTimeSpinBox" >
-       <property name="toolTip" >
+      <widget class="QSpinBox" name="allowedTimeSpinBox">
+       <property name="toolTip">
         <string>Maximum computer program reflexion time</string>
        </property>
-       <property name="suffix" >
+       <property name="suffix">
         <string> milliseconds</string>
        </property>
-       <property name="minimum" >
+       <property name="minimum">
         <number>1</number>
        </property>
-       <property name="maximum" >
+       <property name="maximum">
         <number>100000</number>
        </property>
-       <property name="value" >
+       <property name="value">
         <number>1000</number>
        </property>
       </widget>
@@ -110,31 +84,22 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" >
-     <property name="spacing" >
+    <layout class="QHBoxLayout">
+     <property name="spacing">
       <number>6</number>
      </property>
-     <property name="leftMargin" >
-      <number>0</number>
-     </property>
-     <property name="topMargin" >
-      <number>0</number>
-     </property>
-     <property name="rightMargin" >
-      <number>0</number>
-     </property>
-     <property name="bottomMargin" >
+     <property name="margin">
       <number>0</number>
      </property>
      <item>
       <spacer>
-       <property name="orientation" >
+       <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="sizeType" >
+       <property name="sizeType">
         <enum>QSizePolicy::Expanding</enum>
        </property>
-       <property name="sizeHint" >
+       <property name="sizeHint" stdset="0">
         <size>
          <width>10</width>
          <height>20</height>
@@ -143,21 +108,21 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="okButton" >
-       <property name="text" >
+      <widget class="QPushButton" name="okButton">
+       <property name="text">
         <string>Ok</string>
        </property>
       </widget>
      </item>
      <item>
       <spacer>
-       <property name="orientation" >
+       <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="sizeType" >
+       <property name="sizeType">
         <enum>QSizePolicy::Expanding</enum>
        </property>
-       <property name="sizeHint" >
+       <property name="sizeHint" stdset="0">
         <size>
          <width>10</width>
          <height>20</height>
@@ -166,21 +131,21 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="cancelButton" >
-       <property name="text" >
+      <widget class="QPushButton" name="cancelButton">
+       <property name="text">
         <string>Cancel</string>
        </property>
       </widget>
      </item>
      <item>
       <spacer>
-       <property name="orientation" >
+       <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="sizeType" >
+       <property name="sizeType">
         <enum>QSizePolicy::Expanding</enum>
        </property>
-       <property name="sizeHint" >
+       <property name="sizeHint" stdset="0">
         <size>
          <width>10</width>
          <height>20</height>
@@ -192,7 +157,7 @@
    </item>
   </layout>
  </widget>
- <layoutdefault spacing="6" margin="11" />
+ <layoutdefault spacing="6" margin="11"/>
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <resources/>
  <connections>
@@ -202,11 +167,11 @@
    <receiver>ComputerPlayerInterface</receiver>
    <slot>accept()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>86</x>
      <y>96</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>25</x>
      <y>97</y>
     </hint>
@@ -218,11 +183,11 @@
    <receiver>ComputerPlayerInterface</receiver>
    <slot>reject()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>221</x>
      <y>95</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>273</x>
      <y>95</y>
     </hint>
