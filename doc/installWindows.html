@@ -46,16 +46,27 @@ If you want to compile the library from its sources, first download and install 
 Then download and unzip <a href="#WEBURL#/src/libQGLViewer-#VERSION#.zip">libQGLViewer-#VERSION#.zip</a>.
 </p>
 
-<a name="mingw"></a>&bull; If you use the <b>MinGW</b> compiler (available when you install the OpenSource Qt 4 version), 
+Depending on your environment:
+<li>
+<ul><a name="mingw"></a><b>MinGW</b> (available when you install the OpenSource Qt 4 version): 
 launch the <i>Qt 4.x Command Prompt</i> from the <i>Start</i> menu and type:
 <pre>
 cd \path\to\libQGLViewer-#VERSION#\QGLViewer
 qmake
 mingw32-make
-</pre>
+</pre></ul>
 
-<a name="qtVisual"></a>&bull; If you use the Qt integration in <b>Visual Studio</b> (provided with the commercial Qt edition),
-open <code>QGLViewer/QGLViewer.pro</code> using the <i>Qt - Open solution from .pro file</i> menu and generate the solution<span class="redStar">*</span>.
+<ul><a name="qtcreator"></a><b>QtCreator</b>: open the <code>QGLViewer/QGLViewer.pro</code> project file and build the library.</ul>
+
+<ul><a name="qtVisual"></a><b>Visual Studio</b>: install the Qt Visual Studio add-in, open <code>QGLViewer/QGLViewer.pro</code> and build the solution
+<span class="redStar">*</span>.
+<br/>
+Otherwise, generate the <code>.vcproj</code> file by typing <code>qmake -t vclib QGLViewer.pro -spec win32-msvc2010</code> (adapt to your configuration) in a Qt command prompt window. Open the project and build the library.
+<br/>
+This <a href="http://www.qtcentre.org/wiki/index.php?title=Qt4_with_Visual_Studio">page</a> explains how to use Qt with Visual Studio.
+</ul>
+
+</li>
 
 <p>
 Copy the resulting <code>QGLViewer#VERSION_MAJOR#.dll</code> to a system
@@ -82,8 +93,6 @@ A <code>LNK4068 /MACHINE</code> warning message can be fixed by editing <i>Proje
 <p>
 Visual Studio 6 only: Use <i>File-Open workspace</i> to open the <code>.dsp</code> generated file, and select <i>Release</i> as the <i>Build/Active Configuration</i>.
 </p>
-
-If needed, the <code>.vcproj</code> file can be generated from the <code>.pro</code> file by typing <code>qmake -t vclib QGLViewer.pro</code> in a Qt command line.
 
 <!--
 <p>

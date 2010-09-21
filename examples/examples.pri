@@ -1,12 +1,14 @@
 !exists( $${MAIN_PATH}/QGLViewer/qglviewer.h ) {
   exists( ../QGLViewer/qglviewer.h ) {
-    MAIN_PATH = $$system(cd ..;pwd)
+    win32-g++: MAIN_PATH = $$system(cd .. && cd)
+    else: MAIN_PATH = $$system(cd ..;pwd)
   }
 }
 
 !exists( $${MAIN_PATH}/QGLViewer/qglviewer.h ) {
   exists( ../../QGLViewer/qglviewer.h ) {
-    MAIN_PATH = $$system(cd ../..;pwd)
+    win32-g++: MAIN_PATH = $$system(cd ../.. && cd)
+    else: MAIN_PATH = $$system(cd ../..;pwd)
   }
 }
 
@@ -15,7 +17,7 @@ isEmpty( INCLUDE_DIR ) {
 }
 
 isEmpty( LIB_DIR ) {
-    LIB_DIR=$${MAIN_PATH}/QGLViewer
+    #LIB_DIR=$${MAIN_PATH}/QGLViewer
 }
 
 include( release.pri )

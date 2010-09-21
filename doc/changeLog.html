@@ -23,11 +23,17 @@
 <b>Bug fixes or improvements</b>
 <ul>
   <li>Added Debug and Release dirs in search paths for lib on Win32 minGw.</li>
-  <li>QGLViewer.vcproj...</li>
-  <li>Warnings in VRender with Visual Studio.</li>
-  <li>Path autodetection fix for MinGW.</li>
-todo : Win32 icons
+  <li>Made MinGw also create a debug version of the lib (thanks Eric).</li>
+  <li>Warnings in VRender with Visual Studio removed.</li>
+  <li>A few missing <code>double</code> replacement in <code>Quaterion</code> (thanks Pierre).</li>
+  <li>Application icon added on Windozs platforms.</li>    todo: path for contribs, transparent bg
 </ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li>New created viewers go in the first available position in <code>QGLViewerPool()</code> instead of always being appended (suggester Pierre).</li>
+</ul>
+
 
 <h2>May 29th 2010 - 2.3.6</h2>
 <b>Bug fixes or improvements</b>
@@ -37,6 +43,7 @@ todo : Win32 icons
   <li>Use of the <code>-Wl,-rpath</code> option eliminates the need for <code>LD_LIBRARY_PATH</code> tuning on Linux..</li>
   <li>New <code>.qch</code> file available to import documentation into Qt's assistant (suggester Laurent).</li>
 </ul>
+
 
 <h2>March 1st 2010 - 2.3.5</h2>
 <b>New features</b>

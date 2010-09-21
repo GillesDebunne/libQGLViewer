@@ -12,10 +12,10 @@ Note that this rotation is not uniquely defined. The selected axis is usually or
 and \p to, minimizing the rotation angle. This method is robust and can handle small or almost identical vectors. */
 Quaternion::Quaternion(const Vec& from, const Vec& to)
 {
-  const float epsilon = 1E-10f;
+  const double epsilon = 1E-10f;
 
-  const float fromSqNorm = from.squaredNorm();
-  const float toSqNorm   = to.squaredNorm();
+  const double fromSqNorm = from.squaredNorm();
+  const double toSqNorm   = to.squaredNorm();
   // Identity Quaternion when one vector is null
   if ((fromSqNorm < epsilon) || (toSqNorm < epsilon))
     {
@@ -25,7 +25,7 @@ Quaternion::Quaternion(const Vec& from, const Vec& to)
   else
     {
       Vec axis = cross(from, to);
-      const float axisSqNorm = axis.squaredNorm();
+      const double axisSqNorm = axis.squaredNorm();
 
       // Aligned vectors, pick any axis, not aligned with from or to
       if (axisSqNorm < epsilon)
@@ -298,8 +298,7 @@ Use matrix() if you do not need to store this matrix and simply want to alter th
 matrix. See also getInverseMatrix() and Frame::getMatrix(). */
 void Quaternion::getMatrix(GLdouble m[4][4]) const
 {
-
-	const double q00 = 2.0l * q[0] * q[0];
+  const double q00 = 2.0l * q[0] * q[0];
   const double q11 = 2.0l * q[1] * q[1];
   const double q22 = 2.0l * q[2] * q[2];
 

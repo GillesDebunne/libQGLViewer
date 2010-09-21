@@ -29,10 +29,18 @@
 #  define M_PI 3.14159265358979323846f
 # endif
 # ifndef QGLVIEWER_STATIC
-#  ifdef CREATE_QGLVIEWER_DLL
-#   define QGLVIEWER_EXPORT  __declspec(dllexport)
-#  else
-#   define QGLVIEWER_EXPORT  __declspec(dllimport)
+#   ifdef CREATE_QGLVIEWER_DLL
+#     if QT_VERSION >= 0x040500
+#       define QGLVIEWER_EXPORT Q_DECL_EXPORT
+#     else
+#       define QGLVIEWER_EXPORT  __declspec(dllexport)
+#     endif
+#   else
+#     if QT_VERSION >= 0x040500
+#       define QGLVIEWER_EXPORT Q_DECL_IMPORT
+#     else
+#       define QGLVIEWER_EXPORT  __declspec(dllimport)
+#     endif
 #  endif
 # endif
 # ifndef __MINGW32__

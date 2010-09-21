@@ -10,9 +10,8 @@
 
 TEMPLATE = lib
 TARGET = QGLViewer
-VERSION = 2.3.6
-CONFIG -= debug debug_and_release
-CONFIG *= release qt opengl warn_on shared thread create_prl rtti no_keywords
+VERSION = 2.3.7
+CONFIG *= qt opengl warn_on shared thread create_prl rtti no_keywords
 
 QGL_HEADERS = qglviewer.h \
 	  camera.h \
@@ -116,10 +115,13 @@ contains( DEFINES, NO_VECTORIAL_RENDER ) {
 
 
 
-#               --------------- 
+#               ---------------
 #		--  U n i x  --
-#               --------------- 
+#               ---------------
 unix {
+  CONFIG -= debug debug_and_release
+  CONFIG *= release
+
   # INCLUDE_DIR and LIB_DIR specify where to install the include files and the library.
   # Use qmake INCLUDE_DIR=... LIB_DIR=... , or qmake PREFIX=... to customize your installation.
   isEmpty( PREFIX ) {
@@ -240,7 +242,7 @@ macx|darwin-g++ {
   lib_bundle {
     FRAMEWORK_HEADERS.version = Versions
     # Should be $$replace(TRANSLATIONS, .ts, .qm), but 'replace' is only available in Qt 4.3
-    FRAMEWORK_HEADERS.files = $${QGL_HEADERS} qglviewer.icns qglviewer_fr.qm
+    FRAMEWORK_HEADERS.files = $${QGL_HEADERS} qglviewer.cw qglviewer.icns qglviewer_fr.qm
     FRAMEWORK_HEADERS.path = Headers
     QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
 
@@ -271,8 +273,7 @@ macx|darwin-g++ {
 #               ---------------------
 win32 {
   # Windows requires a debug lib version to link against debug applications
-  CONFIG -= release
-  CONFIG += debug_and_release build_all
+  CONFIG *= debug_and_release build_all
 
   # Needed by Intel C++, (icl.exe) so that WINGDIAPI is a defined symbol in gl.h.
   DEFINES *= WIN32
@@ -282,9 +283,6 @@ win32 {
   } else {
     DEFINES *= CREATE_QGLVIEWER_DLL
   }
- 
-  MOC_DIR = moc
-  OBJECTS_DIR = obj
 
   # Use the DLL version of Qt (Qt3 only)
   DEFINES *= QT_DLL QT_THREAD_SUPPORT
@@ -304,10 +302,11 @@ win32 {
   }
 }
 
+
 contains( QT_VERSION, "^4.*" ) {
-  CONFIG(debug, debug|release) {
-    unix: TARGET = $$join(TARGET,,,_debug)
-    win32: TARGET = $$join(TARGET,,,d)
-  }
+   build_pass:CONFIG(debug, debug|release) {
+     unix: TARGET = $$join(TARGET,,,_debug)
+     else: TARGET = $$join(TARGET,,,d)
+   }
 }
 

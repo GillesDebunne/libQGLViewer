@@ -84,16 +84,21 @@ void QGLViewer::defaultConstructor()
 	// if (glGetString(GL_VERSION) == 0)
 	// qWarning("Unable to get OpenGL version, context may not be available - Check your configuration");
 
-	QGLViewer::QGLViewerPool_.append(this);
+#if QT_VERSION >= 0x040000
+	int poolIndex = QGLViewer::QGLViewerPool_.indexOf(NULL);
+	setFocusPolicy(Qt::StrongFocus);
+#else
+	int poolIndex = QGLViewer::QGLViewerPool_.findRef(NULL);
+	setFocusPolicy(QWidget::StrongFocus);
+#endif
+
+        if (poolIndex >= 0)
+          QGLViewer::QGLViewerPool_.replace(poolIndex, this);
+        else
+	  QGLViewer::QGLViewerPool_.append(this);
 
 	camera_ = new Camera();
 	setCamera(camera());
-
-#if QT_VERSION >= 0x040000
-	setFocusPolicy(Qt::StrongFocus);
-#else
-	setFocusPolicy(QWidget::StrongFocus);
-#endif
 
 	setDefaultShortcuts();
 	setDefaultMouseBindings();
@@ -104,10 +109,10 @@ void QGLViewer::defaultConstructor()
 	setSnapshotQuality(95);
 
 	fpsTime_.start();
-	fpsCounter_		= 0;
-	f_p_s_			= 0.0;
-	fpsString_		= tr("%1Hz", "Frames per seconds, in Hertz").arg("?");
-	visualHint_		= 0;
+	fpsCounter_     = 0;
+	f_p_s_          = 0.0;
+	fpsString_      = tr("%1Hz", "Frames per seconds, in Hertz").arg("?");
+	visualHint_     = 0;
 	previousPathId_	= 0;
 	// prevPos_ is not initialized since pos() is not meaningful here. It will be set by setFullScreen().
 

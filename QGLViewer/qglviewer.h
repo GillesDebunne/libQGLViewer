@@ -1054,18 +1054,17 @@ private:
 	/*! @name QGLViewer pool */
 	//@{
 public:
-	/*! Returns a \c QList (see Qt documentation) that contains pointers to all the created
-	QGLViewers. Note that this list may contain \c NULL pointers if the associated viewer has been deleted.
+	/*! Returns a \c QList that contains pointers to all the created QGLViewers.
+        Note that this list may contain \c NULL pointers if the associated viewer has been deleted.
 
-	Can be useful to apply a method or to connect a signal to all the viewers.
+	Can be useful to apply a method or to connect a signal to all the viewers:
+        \code
+	foreach (QGLViewer* viewer, QGLViewer::QGLViewerPool())
+ 	  connect(myObject, SIGNAL(IHaveChangedSignal()), viewer, SLOT(updateGL()));
+	\endcode
 
 	\attention With Qt version 3, this method returns a \c QPtrList instead. Use a \c QPtrListIterator
-	to iterate on the list:
-	\code
-	QPtrListIterator<QGLViewer> it(QGLViewer::QGLViewerPool());
-	for (QGLViewer* viewer; (viewer = it.current()) != NULL; ++it)
-	connect(myObject, SIGNAL(mySignal), viewer, SLOT(updateGL()));
-	\endcode */
+	to iterate on the list instead.*/
 #if QT_VERSION >= 0x040000
 	static const QList<QGLViewer*>& QGLViewerPool() { return QGLViewer::QGLViewerPool_; };
 #else
@@ -1077,12 +1076,13 @@ public:
 	can be used to identify the different created QGLViewers (see stateFileName() for an application
 	example).
 
-	When a QGLViewer is deleted, the following QGLViewers' indexes are shifted down. Returns -1 if the
-	QGLViewer could not be found (which should not be possible). */
+	When a QGLViewer is deleted, the QGLViewers' indexes are preserved and NULL is set for that index.
+        When a QGLViewer is created, it is placed in the first available position in that list.
+        Returns -1 if the QGLViewer could not be found (which should not be possible). */
 #if QT_VERSION >= 0x040000
 	static int QGLViewerIndex(const QGLViewer* const viewer) { return QGLViewer::QGLViewerPool_.indexOf(const_cast<QGLViewer*>(viewer)); };
 #else
-	static int QGLViewerIndex(const QGLViewer* const viewer) { return QGLViewer::QGLViewerPool_.find(viewer); };
+	static int QGLViewerIndex(const QGLViewer* const viewer) { return QGLViewer::QGLViewerPool_.findRef(viewer); };
 #endif
 	//@}
 
