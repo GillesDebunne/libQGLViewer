@@ -169,7 +169,7 @@ checkVersion
 echo -n " files"
 
 # Convert possible Windows encoding
-find . -type f -a \( -name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html' -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb' \) -exec dos2unix -o -p -q {} \; &> /tmp/error
+find . -type f -a \( -name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html' -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb' \) -exec dos2unix -o -p {} \; &> /tmp/error
 grep -v "/\.svn/" /tmp/error
 if [[ "$?" -eq "0" ]]
 then
@@ -242,7 +242,7 @@ test -d $tmpDir || mkdir -p $tmpDir
 
 
 SOURCES="CHANGELOG INSTALL README LICENCE GPL_EXCEPTION gpl-warning libQGLViewer.pro"
-dos2unix -o -p -q $SOURCES &> /tmp/error
+dos2unix -o -p $SOURCES &> /tmp/error
 test -s /tmp/error && more /tmp/error && error "Error while converting newlines to Unix"
 TARGET=""
 makeDist
@@ -443,7 +443,7 @@ rm gpl-warning
 vRenderCopyright="$QGLViewerRootDir/QGLViewer/VRender/copyright"
 test -f $vRenderCopyright || error "No copyright in VRender"
 
-dos2unix -o -p -q $vRenderCopyright
+dos2unix -o -p $vRenderCopyright
 
 for f in `find QGLViewer/VRender -name '*.h' -o -name '*.cpp'`
 do
@@ -620,7 +620,7 @@ addNamespace ManipulatedCameraFrame ManipulatedFrame manipulatedCameraFrame
 #  cp $vcproj $target
 #done
 
-find . -type f -a \( -name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html' -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb' -o -name '*.vcproj' \) -exec unix2dos -q -o -k {} \; &> /tmp/error
+find . -type f -a \( -name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html' -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb' -o -name '*.vcproj' \) -exec unix2dos -o {} \; &> /tmp/error
 
 test -s /tmp/error && more /tmp/error && error "Error while converting newlines to DOS"
 
