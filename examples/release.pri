@@ -213,11 +213,6 @@ win32 {
     ########error( You should run qmake LIB_DIR=/path/to/QGLViewer/$${LIB_FILE_NAME} )
   }
 
-
-                                        release:LIB_DIR = ../../QGLViewer/Release
-                                        !release|debug:LIB_DIR = ../../QGLViewer/Debug
-
-
   win32-g++ {
     # The actual directory where the library/framework was found
     # LIB_DIR_ABSOLUTE_PATH = $$system(cd $${LIB_DIR} && cd)
@@ -228,7 +223,6 @@ win32 {
       LIBS *= $${LIB_DIR}/$${LIB_FILE_NAME}
     }
   }
-
 
   !win32-g++ {
     # Use the Qt DLL version. Only needed with Qt3

@@ -1,6 +1,6 @@
 %define version_major 2
 %define version_minor 3
-%define version_revision 6
+%define version_revision 7
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -154,6 +154,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Thu Oct 28 2010 Gilles Debunne <contact@libQGLViewer.com> 2.3.7
+- Fixes for compilation on windows.
+
 * Sat May 29 2010 Gilles Debunne <contact@libQGLViewer.com> 2.3.6
 - Minor fixes for Qt3 and gcc 4.3 compilation. No more LD_LIBRARY_PATH tuning.
 

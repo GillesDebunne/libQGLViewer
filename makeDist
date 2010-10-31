@@ -18,6 +18,9 @@ allTarGZ="$libNameVersion-all.tar.gz"
 
 cd $QGLViewerRootDir
 
+DOS2UNIX="dos2unix -o -p -q"
+UNIX2DOS="unix2dos -o -q"
+
 # echo "$0 disabled for security"
 # exit
 
@@ -169,11 +172,11 @@ checkVersion
 echo -n " files"
 
 # Convert possible Windows encoding
-find . -type f -a \( -name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html' -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb' \) -exec dos2unix -o -p {} \; &> /tmp/error
+find . -type f -a \( -name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html' -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb' \) -exec $DOS2UNIX {} \; > /tmp/error 2>&1 
 grep -v "/\.svn/" /tmp/error
 if [[ "$?" -eq "0" ]]
 then
-  echo "Error while converting newlines"
+  echo "Error while converting newlines, see /tmp/error"
   grep -v "/\.svn/" /tmp/error
   exit 1
 fi
@@ -242,7 +245,7 @@ test -d $tmpDir || mkdir -p $tmpDir
 
 
 SOURCES="CHANGELOG INSTALL README LICENCE GPL_EXCEPTION gpl-warning libQGLViewer.pro"
-dos2unix -o -p $SOURCES &> /tmp/error
+$DOS2UNIX $SOURCES &> /tmp/error
 test -s /tmp/error && more /tmp/error && error "Error while converting newlines to Unix"
 TARGET=""
 makeDist
@@ -338,7 +341,7 @@ done
 echo -n " doc"
 cd doc
 
-SOURCES="*.html *.css Doxyfile cwExtractor tabs.awk images/*jpg images/*png images/*gif images/qglviewer.ico"
+SOURCES="*.html *.css Doxyfile tabs.awk images/*jpg images/*png images/*gif images/qglviewer.ico" #cwExtractor
 TARGET="doc"
 makeDist
 
@@ -415,10 +418,12 @@ function replaceIncludeRelease()
     path="$path/\.\."
   done
   
+  rcpath=$(echo $path | sed s%"/\\\.\\\."%""%)
+
   if [[ $(grep "^include.*examples.pri" $PRO) ]]
   then
     grep -v "^include.*examples.pri" $PRO > /tmp/proPatched.tmp
-    sed s%"\.\./\.\."%"$path"% examples/release.pri > /tmp/release.pri
+    sed s%"\.\./\.\."%"$path"% examples/release.pri | sed s%"\.\./qglviewer.rc"%"$rcpath/qglviewer.rc"% > /tmp/release.pri
     cat /tmp/proPatched.tmp /tmp/release.pri > $PRO
   fi
 }
@@ -443,7 +448,7 @@ rm gpl-warning
 vRenderCopyright="$QGLViewerRootDir/QGLViewer/VRender/copyright"
 test -f $vRenderCopyright || error "No copyright in VRender"
 
-dos2unix -o -p $vRenderCopyright
+$DOS2UNIX $vRenderCopyright
 
 for f in `find QGLViewer/VRender -name '*.h' -o -name '*.cpp'`
 do
@@ -541,15 +546,15 @@ done
 # Creating assistant qch file
 awk '/<section title="Namespace List"/ { skip=1 } /<\/toc>/ { print"      </section>"; skip=0 } { if (skip==0) print }' index.qhp > index.filtered.qhp
 qhelpgenerator index.filtered.qhp -o ../libQGLViewer-$version.qch > /dev/null
-rm index.qhp index2.qhp
+rm index.qhp index.filtered.qhp
 
 cd - > /dev/null
 
 # cwExtrator
-./cwExtractor
-cp qglviewer.cw ../QGLViewer
-mv qglviewer.cw ../examples/interface
-rm cwExtractor
+#./cwExtractor
+#cp qglviewer.cw ../QGLViewer
+#mv qglviewer.cw ../examples/interface
+#rm cwExtractor
 
 echo
 echo ">> All files set in $tmpDir"
@@ -620,7 +625,7 @@ addNamespace ManipulatedCameraFrame ManipulatedFrame manipulatedCameraFrame
 #  cp $vcproj $target
 #done
 
-find . -type f -a \( -name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html' -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb' -o -name '*.vcproj' \) -exec unix2dos -o {} \; &> /tmp/error
+find . -type f -a \( -name '*.cpp' -o -name '*.h' -o -name '*.ui' -o -name '*.html' -o -name '*.txt' -o -name '*.pro' -o -name '*.pri' -o -name '*.ui' -o -name '*.ago' -o -name '*.css' -o -name '*.bwb' -o -name '*.vcproj' \) -exec $UNIX2DOS {} \; &> /tmp/error
 
 test -s /tmp/error && more /tmp/error && error "Error while converting newlines to DOS"
 

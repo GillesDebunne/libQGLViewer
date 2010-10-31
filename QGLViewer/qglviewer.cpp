@@ -2578,8 +2578,8 @@ void QGLViewer::setShortcut(KeyboardAction action, int key)
 
 /*! Returns the keyboard shortcut associated to a given QGLViewer::KeyboardAction.
 
-Result is an \c int defined using Qt enumerated values, as in \c Qt::Key_Q or \c
-Qt::CTRL+Qt::Key_X. Use Qt::MODIFIER_MASK to separate the key from the state keys. Returns \c 0 if
+Result is an \c int defined using Qt enumerated values, as in \c Qt::Key_Q or
+\c Qt::CTRL + Qt::Key_X. Use Qt::MODIFIER_MASK to separate the key from the state keys. Returns \c 0 if
 the KeyboardAction is disabled (not binded). Set using setShortcut().
 
 If you want to define keyboard shortcuts for custom actions (say, open a scene file), overload
