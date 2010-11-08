@@ -44,9 +44,6 @@ QString Viewer::helpString() const
   text += "A GUI can be added to a QGLViewer widget using Qt's <i>Designer</i>. Signals and slots ";
   text += "can then be connected to and from the viewer.<br><br>";
   text += "You can install the QGLViewer designer plugin to make the QGLViewer appear as a ";
-  text += "standard Qt widget in the Designer's widget tabs. See installation pages for details.<br><br>";
-  text += "An other option (with Qt version 2 or 3) is to add a <i>Custom Widget</i> in Designer. ";
-  text += "All the available QGLViewer's signals and slots are listed in a <code>qglviewer.cw</code> ";
-  text += "(custom widget) file, located in the QGLViewer <code>include</code> directory.";
+  text += "standard Qt widget in the Designer's widget tabs. See installation pages for details.";
   return text;
 }

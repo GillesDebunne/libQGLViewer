@@ -1,6 +1,7 @@
+
 %define version_major 2
 %define version_minor 3
-%define version_revision 7
+%define version_revision 8
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -71,7 +72,7 @@ make clean
 rm -rf $RPM_BUILD_ROOT
 %{__install} -d $RPM_BUILD_ROOT%{includeDir}
 %{__install} --mode=644 QGLViewer/*.h $RPM_BUILD_ROOT%{includeDir}
-%{__install} --mode=644 QGLViewer/qglviewer.cw $RPM_BUILD_ROOT%{includeDir}
+#%{__install} --mode=644 QGLViewer/qglviewer.cw $RPM_BUILD_ROOT%{includeDir}
 
 %{__install} -d $RPM_BUILD_ROOT%{libDir}
 %{__install} --mode=644 QGLViewer/libQGLViewer.so.%{version} $RPM_BUILD_ROOT%{libDir}
@@ -130,7 +131,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 %dir %{includeDir}
 %{includeDir}/*.h
-%{includeDir}/qglviewer.cw
+#%{includeDir}/qglviewer.cw
 
 %dir %{includeDir}/designerPlugin
 %{includeDir}/designerPlugin/*
@@ -154,6 +155,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Sun Nov 7 2010 Gilles Debunne <contact@libQGLViewer.com> 2.3.8
+- Support for Qt3 signal/slot cw file removed.
+
 * Thu Oct 28 2010 Gilles Debunne <contact@libQGLViewer.com> 2.3.7
 - Fixes for compilation on windows.
 

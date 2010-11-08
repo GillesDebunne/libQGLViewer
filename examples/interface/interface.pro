@@ -11,13 +11,6 @@
 # plugins for the classes you will derive from QGLViewer. Select your architecture in the <a
 # href="../download.html">download page</a> for details on the plugin compilation and installation.
 
-# With Qt version 3, an alternative to the plugin technique is to use the
-# <code>qglviewer.cw</code> (custom widget) file located in this directory (also available in the
-# QGLViewer header file directory). It describes all the QGLViewer signals and slots. Add a "Custom
-# Widget" using the <i>Tools/Custom</i> designer menu, and use <i>Load Descriptions...</i> to load
-# the <code>.cw</code> file. This file can be extended with new signals and slots, in case you added
-# some to your QGLViewer sub-class, thus creating a new custom widget description.
-
 # Here we use three slots and three signals (axis, grid and fps) to connect to and from the
 # interface and the viewer.
 

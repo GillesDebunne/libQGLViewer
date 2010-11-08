@@ -1,7 +1,7 @@
 #!/bin/bash
 
 libName="libQGLViewer"
-version="2.3.7"
+version="2.3.8"
 
 WebURL="http://www.libqglviewer.com"
 
@@ -638,7 +638,7 @@ echo
 echo "Stop packaging on mac, no rpm or deb created."
 echo "Creating $allTarGZ to update web site"
 tar czf $allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
-echo "scp $allTarGZ debunne@213.244.2.83"
+echo "scp /tmp/$allTarGZ debunne@213.244.2.83:"
 
 exit
 

@@ -10,7 +10,7 @@
 
 TEMPLATE = lib
 TARGET = QGLViewer
-VERSION = 2.3.7
+VERSION = 2.3.8
 CONFIG *= qt opengl warn_on shared thread create_prl rtti no_keywords
 
 QGL_HEADERS = qglviewer.h \
@@ -163,7 +163,7 @@ unix {
   # install header
   include.path = $${INCLUDE_DIR}/QGLViewer
   # Should be $$replace(TRANSLATIONS, .ts, .qm), but 'replace' only appeared in Qt 4.3
-  include.files = $${QGL_HEADERS} qglviewer.cw qglviewer_fr.qm
+  include.files = $${QGL_HEADERS} qglviewer_fr.qm
 
   # install documentation html
   documentation.path = $${DOC_DIR}
@@ -242,7 +242,7 @@ macx|darwin-g++ {
   lib_bundle {
     FRAMEWORK_HEADERS.version = Versions
     # Should be $$replace(TRANSLATIONS, .ts, .qm), but 'replace' is only available in Qt 4.3
-    FRAMEWORK_HEADERS.files = $${QGL_HEADERS} qglviewer.cw qglviewer.icns qglviewer_fr.qm
+    FRAMEWORK_HEADERS.files = $${QGL_HEADERS} qglviewer.icns qglviewer_fr.qm
     FRAMEWORK_HEADERS.path = Headers
     QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
 
