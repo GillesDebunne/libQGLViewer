@@ -156,7 +156,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Sun Nov 7 2010 Gilles Debunne <contact@libQGLViewer.com> 2.3.8
-- Support for Qt3 signal/slot cw file removed.
+- Vec operations return double, Support for Qt3 signal/slot cw file removed.
 
 * Thu Oct 28 2010 Gilles Debunne <contact@libQGLViewer.com> 2.3.7
 - Fixes for compilation on windows.

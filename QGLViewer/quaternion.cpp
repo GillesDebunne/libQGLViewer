@@ -180,7 +180,7 @@ void Quaternion::getAxisAngle(Vec& axis, float& angle) const
 {
   angle = 2.0*acos(q[3]);
   axis = Vec(q[0], q[1], q[2]);
-  const float sinus = axis.norm();
+  const double sinus = axis.norm();
   if (sinus > 1E-8)
     axis /= sinus;
 
@@ -197,7 +197,7 @@ It is null for an identity Quaternion. See also angle() and getAxisAngle(). */
 Vec Quaternion::axis() const
 {
   Vec res = Vec(q[0], q[1], q[2]);
-  const float sinus = res.norm();
+  const double sinus = res.norm();
   if (sinus > 1E-8)
     res /= sinus;
   return (acos(q[3]) <= M_PI/2.0) ? res : -res;
@@ -209,9 +209,9 @@ Vec Quaternion::axis() const
  axis() direction.
 
  See also axis() and getAxisAngle(). */
-float Quaternion::angle() const
+double Quaternion::angle() const
 {
-  const float angle = 2.0 * acos(q[3]);
+  const double angle = 2.0 * acos(q[3]);
   return (angle <= M_PI) ? angle : 2.0*M_PI - angle;
 }
 
@@ -414,9 +414,9 @@ void Quaternion::getInverseRotationMatrix(float m[3][3]) const
  negate()). */
 Quaternion Quaternion::slerp(const Quaternion& a, const Quaternion& b, float t, bool allowFlip)
 {
-  float cosAngle = Quaternion::dot(a, b);
+  double cosAngle = Quaternion::dot(a, b);
 
-  float c1, c2;
+  double c1, c2;
   // Linear interpolation for close orientations
   if ((1.0 - fabs(cosAngle)) < 0.01)
     {
@@ -426,8 +426,8 @@ Quaternion Quaternion::slerp(const Quaternion& a, const Quaternion& b, float t, 
   else
     {
       // Spherical interpolation
-      float angle    = acos(fabs(cosAngle));
-      float sinAngle = sin(angle);
+      double angle    = acos(fabs(cosAngle));
+      double sinAngle = sin(angle);
       c1 = sin(angle * (1.0 - t)) / sinAngle;
       c2 = sin(angle * t) / sinAngle;
     }
@@ -456,13 +456,13 @@ Quaternion Quaternion::squad(const Quaternion& a, const Quaternion& tgA, const Q
 /*! Returns the logarithm of the Quaternion. See also exp(). */
 Quaternion Quaternion::log()
 {
-  float len = sqrt(q[0]*q[0] + q[1]*q[1] + q[2]*q[2]);
+  double len = sqrt(q[0]*q[0] + q[1]*q[1] + q[2]*q[2]);
 
   if (len < 1E-6)
     return Quaternion(q[0], q[1], q[2], 0.0);
   else
     {
-      float coef = acos(q[3]) / len;
+      double coef = acos(q[3]) / len;
       return Quaternion(q[0]*coef, q[1]*coef, q[2]*coef, 0.0);
     }
 }
@@ -470,13 +470,13 @@ Quaternion Quaternion::log()
 /*! Returns the exponential of the Quaternion. See also log(). */
 Quaternion Quaternion::exp()
 {
-  float theta = sqrt(q[0]*q[0] + q[1]*q[1] + q[2]*q[2]);
+  double theta = sqrt(q[0]*q[0] + q[1]*q[1] + q[2]*q[2]);
 
   if (theta < 1E-6)
     return Quaternion(q[0], q[1], q[2], cos(theta));
   else
     {
-      float coef = sin(theta) / theta;
+      double coef = sin(theta) / theta;
       return Quaternion(q[0]*coef, q[1]*coef, q[2]*coef, cos(theta));
     }
 }
@@ -525,10 +525,10 @@ Quaternion Quaternion::randomQuaternion()
 {
   // The rand() function is not very portable and may not be available on your system.
   // Add the appropriate include or replace by an other random function in case of problem.
-  double seed = rand()/(float)RAND_MAX;
+  double seed = rand()/(double)RAND_MAX;
   double r1 = sqrt(1.0 - seed);
   double r2 = sqrt(seed);
-  double t1 = 2.0 * M_PI * (rand()/(float)RAND_MAX);
-  double t2 = 2.0 * M_PI * (rand()/(float)RAND_MAX);
+  double t1 = 2.0 * M_PI * (rand()/(double)RAND_MAX);
+  double t2 = 2.0 * M_PI * (rand()/(double)RAND_MAX);
   return Quaternion(sin(t1)*r1, cos(t1)*r1, sin(t2)*r2, cos(t2)*r2);
 }

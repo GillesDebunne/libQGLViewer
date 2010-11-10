@@ -191,13 +191,13 @@ public:
   }
 
   /*! Returns the product of the vector with a scalar. */
-  friend Vec operator*(const Vec &a, float k)
+  friend Vec operator*(const Vec &a, double k)
   {
     return Vec(a.x*k, a.y*k, a.z*k);
   }
 
   /*! Returns the product of a scalar with the vector. */
-  friend Vec operator*(float k, const Vec &a)
+  friend Vec operator*(double k, const Vec &a)
   {
     return a*k;
   }
@@ -206,7 +206,7 @@ public:
 
   Too small \p k values are \e not tested (unless the library was compiled with the "debug" Qt \c
   CONFIG flag) and may result in \c NaN values. */
-  friend Vec operator/(const Vec &a, float k)
+  friend Vec operator/(const Vec &a, double k)
   {
 #ifndef QT_NO_DEBUG
     if (fabs(k) < 1.0E-10)
@@ -224,7 +224,7 @@ public:
   /*! Returns \c true when the squaredNorm() of the difference vector is lower than 1E-10. */
   friend bool operator==(const Vec &a, const Vec &b)
   {
-    const float epsilon = 1.0E-10f;
+    const double epsilon = 1.0E-10f;
     return (a-b).squaredNorm() < epsilon;
   }
 
@@ -243,7 +243,7 @@ public:
   }
 
   /*! Multiply the vector by a scalar \p k. */
-  Vec& operator*=(float k)
+  Vec& operator*=(double k)
   {
     x *= k; y *= k; z *= k;
     return *this;
@@ -253,7 +253,7 @@ public:
 
   An absolute \p k value lower than 1E-10 will print a warning if the library was compiled with the
   "debug" Qt \c CONFIG flag. Otherwise, no test is performed for efficiency reasons. */
-  Vec& operator/=(float k)
+  Vec& operator/=(double k)
   {
 #ifndef QT_NO_DEBUG
     if (fabs(k)<1.0E-10)
@@ -264,7 +264,7 @@ public:
   }
 
   /*! Dot product of the two Vec. */
-  friend float operator*(const Vec &a, const Vec &b)
+  friend double operator*(const Vec &a, const Vec &b)
   {
     return a.x*b.x + a.y*b.y + a.z*b.z;
   }
@@ -290,21 +290,21 @@ public:
   //@{
 #ifndef DOXYGEN
   /*! This method is deprecated since version 2.0. Use squaredNorm() instead. */
-  float sqNorm() const { return x*x + y*y + z*z; }
+  double sqNorm() const { return x*x + y*y + z*z; }
 #endif
 
   /*! Returns the \e squared norm of the Vec. */
-  float squaredNorm() const { return x*x + y*y + z*z; }
+  double squaredNorm() const { return x*x + y*y + z*z; }
 
   /*! Returns the norm of the vector. */
-  float norm() const { return sqrt(x*x + y*y + z*z); }
+  double norm() const { return sqrt(x*x + y*y + z*z); }
 
   /*! Normalizes the Vec and returns its original norm.
 
   Normalizing a null vector will result in \c NaN values. */
-  float normalize()
+  double normalize()
   {
-    const float n = norm();
+    const double n = norm();
 #ifndef QT_NO_DEBUG
     if (n < 1.0E-10)
       qWarning("Vec::normalize: normalizing a null vector (norm=%f)", n);

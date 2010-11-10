@@ -115,7 +115,7 @@ namespace qglviewer {
 		/*! @name Accessing values */
 		//@{
 		Vec axis() const;
-		float angle() const;
+		double angle() const;
 		void getAxisAngle(Vec& axis, float& angle) const;
 
 		/*! Bracket operator, with a constant return value. \p i must range in [0..3]. See the Quaternion(double, double, double, double) documentation. */

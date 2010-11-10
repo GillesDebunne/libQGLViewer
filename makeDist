@@ -638,7 +638,7 @@ echo
 echo "Stop packaging on mac, no rpm or deb created."
 echo "Creating $allTarGZ to update web site"
 tar czf $allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
-echo "scp /tmp/$allTarGZ debunne@213.244.2.83:"
+echo "scp /tmp/$allTarGZ debunne@www.libqglviewer.compiled:"
 
 exit
 

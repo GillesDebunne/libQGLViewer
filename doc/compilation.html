@@ -22,20 +22,20 @@
 
 These instructions assume that you have <a href="download.html">installed</a> Qt and libQGLViewer. They detail how to compile a program that uses the libQGLViewer library.
 
-<p>
-They apply to the provided <a href="examples/index.html">examples</a> as well as to your own programs.
-</p>
-
 
 <h2>Tuning the <code>.pro</code></h2>
 
-Qt uses a <code>.pro</code> file to tune the compilation settings. The one that comes with the examples is pretty involved since it 
-tries to automatically detect where the library and headers files are located. It can be simplified for your projects. The three important variables that have to be set in order to use libQGLViewer are:
+<p>
+Qt uses a <code>.pro</code> file to tune the compilation settings. The one that comes with the <a href="examples/index.html">examples</a> is pretty involved since it 
+tries to automatically detect where the library and headers files are located. You should not change it, and the examples should compile out of the box.
+</p>
+
+However, you can create a simplified <code>.pro</code> for your own projects. The three important variables that have to be set in order to use libQGLViewer are:
 <ul>
 <li><code><b>INCLUDEPATH</b></code> which must indicates where to find the QGLViewer's include files. Since the <code>#include</code>s use a <code>QGLViewer/qglviewer.h</code> syntax, 
 the <code>QGLViewer</code> suffix should be omitted in this path: If libQGLViewer was installed in the <code>/xxx/yyy/QGLViewer</code> directory, you will set this variable to <code>INCLUDEPATH *= /xxx/yyy</code>.<br /> <br /></li>
 
-<li><code><b>LIBS</b></code> which tells that your program links with libQGLViewer. Use <code>LIBS *= -L<i>/path/to/lib</i> -lQGLViewer#VERSION_MAJOR#</code>, where <code></i>/path/to/lib</i></code> is the path to the libQGLViewer lib, named <code>libQGLViewer#VERSION_MAJOR#.{so|a|dylib}</code> or <code>QGLViewer#VERSION_MAJOR#.lib</code> depending on your architecture.
+<li><code><b>LIBS</b></code> which tells that your program links with libQGLViewer. Use <code>LIBS *= -L<i>/path/to/lib</i> -lQGLViewer#VERSION_MAJOR#</code>, where <code></i>/path/to/lib</i></code> is the path to the libQGLViewer lib, named <code>libQGLViewer#VERSION_MAJOR#.{so|a|dylib}</code> or <code>QGLViewer#VERSION_MAJOR#.lib</code> depending on your architecture. Use <code>-framework QGLViewer</code> instead if you compiled a Framework instead of a <code>dylib</code> on Mac (default).
 <br />
 <br />
 </li>
@@ -204,7 +204,7 @@ Then open and build the resulting Xcode project.
 cd path/to/myApp
 qmake -spec macx-g++
 make
-myApp
+open myApp.app
 </pre>
 
 <h3>Using Qt Creator</h3>
