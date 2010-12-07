@@ -51,6 +51,13 @@ unix {
     }
   }
 
+  !exists( $${LIB_DIR}/$${LIB_NAME} ) {
+    exists( ../../QGLViewer-build-desktop/$${LIB_NAME} ) {
+      #message( The library was found in ../../QGLViewer-build-desktop which will be set as the LIB_DIR )
+      LIB_DIR = ../../QGLViewer-build-desktop
+    }
+  }
+
   macx|darwin-g++ {
     !exists( $${LIB_DIR}/$${LIB_NAME} ) {
       # DYLIB was not found, try to find FrameWork instead
@@ -62,6 +69,14 @@ unix {
           LIB_DIR = ../../QGLViewer
         }
       }
+
+      !exists( $${LIB_DIR}/$${LIB_NAME} ) {
+        exists( ../../QGLViewer-build-desktop/$${LIB_NAME} ) {
+          #message( The framework was found in ../../QGLViewer-build-desktop which will be set as the LIB_DIR )
+          LIB_DIR = ../../QGLViewer-build-desktop
+        }
+      }
+
     }
   }
 
@@ -191,7 +206,6 @@ win32 {
 
   !exists( $${LIB_DIR}/$${LIB_FILE_NAME} ) {
     exists( ../../QGLViewer/$${LIB_FILE_NAME} ) {
-      #message( The library was found in ../../QGLViewer which will be set as the LIB_DIR )
       LIB_DIR = ../../QGLViewer
     }
   }
@@ -205,6 +219,24 @@ win32 {
   !exists( $${LIB_DIR}/$${LIB_FILE_NAME} ) {
     exists( ../../QGLViewer/Debug/$${LIB_FILE_NAME} ) {
       LIB_DIR = ../../QGLViewer/Debug
+    }
+  }
+
+  !exists( $${LIB_DIR}/$${LIB_FILE_NAME} ) {
+    exists( ../../QGLViewer-build-desktop/$${LIB_FILE_NAME} ) {
+      LIB_DIR = ../../QGLViewer-build-desktop
+    }
+  }
+
+  !exists( $${LIB_DIR}/$${LIB_FILE_NAME} ) {
+     exists( ../../QGLViewer-build-desktop/Release/$${LIB_FILE_NAME} ) {
+       LIB_DIR = ../../QGLViewer/Release-build-desktop
+     }
+  }
+
+  !exists( $${LIB_DIR}/$${LIB_FILE_NAME} ) {
+    exists( ../../QGLViewer/Debug-build-desktop/$${LIB_FILE_NAME} ) {
+      LIB_DIR = ../../QGLViewer/Debug-build-desktop
     }
   }
 

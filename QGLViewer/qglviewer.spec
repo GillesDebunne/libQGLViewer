@@ -1,7 +1,7 @@
 
 %define version_major 2
 %define version_minor 3
-%define version_revision 8
+%define version_revision 9
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -155,6 +155,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Sat Dec 4 2010 Gilles Debunne <contact@libQGLViewer.com> 2.3.9
+- Vec switched to double.
+
 * Sun Nov 7 2010 Gilles Debunne <contact@libQGLViewer.com> 2.3.8
 - Vec operations return double, Support for Qt3 signal/slot cw file removed.
 

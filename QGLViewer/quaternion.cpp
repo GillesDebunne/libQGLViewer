@@ -270,7 +270,7 @@ Quaternion::Quaternion(const QDomElement& element)
 #else
   for (unsigned int i=0; i<attribute.count(); ++i)
 #endif
-    q[i] = DomUtils::floatFromDom(element, attribute[i], ((i<3)?0.0f:1.0f));
+    q[i] = DomUtils::doubleFromDom(element, attribute[i], ((i<3)?0.0f:1.0f));
 }
 
 /*! Returns the Quaternion associated 4x4 OpenGL rotation matrix.

@@ -56,12 +56,12 @@ class QGLVIEWER_EXPORT Vec
 public:
   /*! The internal data representation is public. One can use v.x, v.y, v.z. See also operator[](). */
 #if defined (DOXYGEN) || defined (QGLVIEWER_UNION_NOT_SUPPORTED)
-  float x, y, z;
+  double x, y, z;
 #else
   union
   {
-    struct { float x, y, z; };
-    float v_[3];
+    struct { double x, y, z; };
+    double v_[3];
   };
 #endif
 
@@ -71,7 +71,7 @@ public:
   Vec() : x(0.0), y(0.0), z(0.0) {}
 
   /*! Standard constructor with the x, y and z values. */
-  Vec(float X, float Y, float Z) : x(X), y(Y), z(Z) {}
+  Vec(double X, double Y, double Z) : x(X), y(Y), z(Z) {}
 
   /*! Universal explicit converter from any class to Vec. You can use your own vector class everywhere
   a \c const \c Vec& parameter is required, as long as it implements the \c operator[ ]:
@@ -80,15 +80,15 @@ public:
   class MyVec
   {
     // ...
-    float operator[](int i) const { returns x, y or z when i=0, 1 or 2; }
+    double operator[](int i) const { returns x, y or z when i=0, 1 or 2; }
   }
 
   MyVec v(...);
   camera()->setPosition(v);
   \endcode
 
-  Note that standard vector types (STL, \c float[3], ...) implement this operator and can hence
-  be used in place of Vec. See also operator const float*() .*/
+  Note that standard vector types (STL, \c double[3], ...) implement this operator and can hence
+  be used in place of Vec. See also operator const double*() .*/
   template <class C>
   explicit Vec(const C& c) : x(c[0]), y(c[1]), z(c[2]) {}
   // Should NOT be explicit to prevent conflicts with operator<<.
@@ -104,7 +104,7 @@ public:
   }
 
   /*! Set the current value. May be faster than using operator=() with a temporary Vec(x,y,z). */
-  void setValue(float X, float Y, float Z)
+  void setValue(double X, double Y, double Z)
   { x=X; y=Y; z=Z; }
 
   // Universal equal operator which allows the use of any type in place of Vec,
@@ -120,7 +120,7 @@ public:
   /*! @name Accessing the value */
   //@{
   /*! Bracket operator, with a constant return value. \p i must range in [0..2]. */
-  float operator[](int i) const {
+  double operator[](int i) const {
 #ifdef QGLVIEWER_UNION_NOT_SUPPORTED
     return (&x)[i];
 #else
@@ -129,7 +129,7 @@ public:
   }
 
   /*! Bracket operator returning an l-value. \p i must range in [0..2]. */
-  float& operator[](int i) {
+  double& operator[](int i) {
 #ifdef QGLVIEWER_UNION_NOT_SUPPORTED
     return (&x)[i];
 #else
@@ -138,8 +138,8 @@ public:
   }
 
 #ifndef DOXYGEN
-  /*! This method is deprecated since version 2.0. Use operator const float* instead. */
-  const float* address() const { qWarning("Vec::address() is deprecated, use operator const float* instead."); return operator const float*(); };
+  /*! This method is deprecated since version 2.0. Use operator const double* instead. */
+  const double* address() const { qWarning("Vec::address() is deprecated, use operator const double* instead."); return operator const double*(); };
 #endif
 
   /*! Conversion operator returning the memory address of the vector.
@@ -147,10 +147,10 @@ public:
   Very convenient to pass a Vec pointer as a parameter to OpenGL functions:
   \code
   Vec pos, normal;
-  glNormal3fv(normal);
-  glVertex3fv(pos);
+  glNormal3dv(normal);
+  glVertex3dv(pos);
   \endcode */
-  operator const float*() const {
+  operator const double*() const {
 #ifdef QGLVIEWER_UNION_NOT_SUPPORTED
     return &x;
 #else
@@ -160,13 +160,30 @@ public:
 
   /*! Non const conversion operator returning the memory address of the vector.
 
-  Useful to pass a Vec to a method that requires and fills a \c float*, as provided by certain libraries. */
-  operator float*() {
+  Useful to pass a Vec to a method that requires and fills a \c double*, as provided by certain libraries. */
+  operator double*() {
 #ifdef QGLVIEWER_UNION_NOT_SUPPORTED
     return &x;
 #else
     return v_;
 #endif
+  }
+
+  /*! Conversion operator returning the memory address of the vector.
+
+  Very convenient to pass a Vec pointer as a parameter to OpenGL functions:
+  \code
+  Vec pos, normal;
+  glNormal3fv(normal);
+  glVertex3fv(pos);
+  \endcode
+  \note The returned float array is a static shared by all \c Vec instances. */
+  operator const float*() const {
+	static float* const result = new float[3];
+	result[0] = (float)x;
+	result[1] = (float)y;
+	result[2] = (float)z;
+	return result;
   }
   //@}
 

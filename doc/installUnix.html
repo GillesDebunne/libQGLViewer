@@ -12,21 +12,21 @@
 
 <div class="banner">
   <a class="qindex" href="index.html">Home</a>
-  <a class="qindex" href="refManual/hierarchy.html">Documentation</a>
   <a class="qindex highlight" href="download.html">Download</a>
   <a class="qindex" href="examples/index.html">Examples</a>
+  <a class="qindex" href="refManual/hierarchy.html">Documentation</a>
   <a class="qindex" href="developer.html">Developer</a>
 </div>
 
 <h1>libQGLViewer installation<br/>
-<a href="#linux"><img src="images/linux.png" width="49" height="54" style="vertical-align:middle" alt="linux"/></a>
-Unix systems
 <a href="#mac"><img src="images/mac.png" width="55" height="54" style="vertical-align:middle" alt="mac"/></a>
+Unix systems
+<a href="#linux"><img src="images/linux.png" width="49" height="54" style="vertical-align:middle" alt="linux"/></a>
 </h1>
 
 <div class="summary">
-<b>&raquo;</b> Installation on Linux and Unix: <a href="#linux">libQGLViewer</a> and <a href="#qt-linux">Qt</a><br/>
 <b>&raquo;</b> Installation on Mac: <a href="#mac">libQGLViewer</a> and <a href="#qt-mac">Qt</a><br/>
+<b>&raquo;</b> Installation on Linux and Unix: <a href="#linux">libQGLViewer</a> and <a href="#qt-linux">Qt</a><br/>
 <b>&raquo;</b> <a href="#plugin">QGLViewer designer plugin</a> installation<br/>
 <b>&raquo;</b> <a href="#troubleshooting">Troubleshooting</a><br/>
 </div>
@@ -34,160 +34,24 @@ Unix systems
 
 
 
-<a name="linux"></a>
-<h2><img src="images/linux.png" width="49" height="54" alt="linux"/>Linux and Unix</h2>
-
-The following files are installed:
-<ul>
-<li>The library (<code>libQGLViewer-#VERSION#.so</code>) in <code>/usr/lib</code></li>
-<li>The header files and designer plugin code in <code>/usr/include/QGLViewer</code></li>
-<li>The documentation and the examples in <code>/usr/share/doc/QGLViewer</code></li>
-</ul>
-
-<h3>Debian/Ubuntu packages</h3>
-libQGLViewer is available as a <a href="http://ftp.debian.org/debian/pool/main/libq/libqglviewer/">debian package</a> (many thanks to Artur).
-It should be available from standard debian depositories and can be installed using your usual package manager.
-
-<p>As an alternative, you can use these debian packages generated using Alien and depending on the latest Qt version :</p>
-<pre>
-apt-get install <a href="#WEBURL#/src/libqglviewer_#VERSION#_i386.deb">libqglviewer_#VERSION#_i386.deb</a> <a href="#WEBURL#/src/libqglviewer-devel_#VERSION#_i386.deb">libqglviewer-devel_#VERSION#_i386.deb</a>
-</pre>
-
-<h3>RPM packages</h3>
-Use the following command line:
-<pre>
-rpm -Uvh <a href="#WEBURL#/src/libQGLViewer-#VERSION#.i386.rpm">libQGLViewer-#VERSION#.i386.rpm</a> <a href="#WEBURL#/src/libQGLViewer-devel-#VERSION#.i386.rpm">libQGLViewer-devel-#VERSION#.i386.rpm</a>
-</pre>
-You can also re-compile the RPM for optimal results:
-<pre>
-rpmbuild --rebuild <a href="#WEBURL#/src/libQGLViewer-#VERSION#.src.rpm">libQGLViewer-#VERSION#.src.rpm</a>
-cd /usr/src/RPM/RPMS/i?86/ (or /usr/src/redhat/RPMS/i?86, see the rpmbuild last log lines)
-rpm -Uvh libQGLViewer-*#VERSION#.i?86.rpm
-</pre>
-
-<p>
-Change the RPM installation prefix, say to <code>/usr/local</code> (default is
-<code>/usr</code>), using <code>rpm -Uvh --prefix /usr/local ...</code>.
-</p>
-
-
-
-<h3>FreeBSD</h3>
-Use the <a href="http://www.freshports.org/graphics/libqglviewer/">FreeBSD port</a>.
-
-
-<h3>Compilation and installation</h3>
-You can also compile the library from its source tarball:
-<pre>
-tar -xzf <a href="#WEBURL#/src/libQGLViewer-#VERSION#.tar.gz">libQGLViewer-#VERSION#.tar.gz</a>
-cd libQGLViewer-#VERSION#/QGLViewer
-qmake (see options below)
-make
-make install
-</pre>
-
-<p>
-You need root privileges to install the library, since default install paths are system directories.
-</p>
-
-Optional <code>qmake</code> parameters let you customize your <code>make install</code> target installation directories:
-</p>
-<pre>
-qmake [PREFIX=...] [INCLUDE_DIR=...] [LIB_DIR=...] [DOC_DIR=...] [QGLVIEWER_STATIC=yes]
-</pre>
-
-A typical usage would be <code>qmake PREFIX=$HOME</code>. Default values are:
-<pre>
-- Param -      - Default value -
-PREFIX         /usr
-LIB_DIR        PREFIX/lib
-INCLUDE_DIR    PREFIX/include
-DOC_DIR        PREFIX/share/doc
-</pre>
-
-When set, the <code>QGLVIEWER_STATIC</code> qmake option will compile a static version of the
-library.
-
-<div class="small">
-If your Qt version is lower than 3.1, you need to link with the <code>glut</code> library: uncomment
-a line in <code>QGLViewer.pro</code> as explained there. <code>glut</code> can be installed from the <code>freeglut-devel</code> rpm or using <code>apt-get
-install libglut3-dev</code>.
-</div>
-
-
-<h3>Next steps</h3>
-Once the library is compiled, you can <a href="compilation.html#unix">compile the examples</a>.
-
-<p>
-You may also want to install the <a href="#plugin">libQGLViewer designer plugin</a> to
-easily create user interfaces that integrate a QGLViewer using designer.
-</p>
-
-
-
-
-
-<a name="qt-linux"></a>
-<h2><img src="images/linux.png" width="49" height="54" alt="linux"/> &nbsp;
-<img src="images/qt.png" width="38" height="40" alt="Qt"/> &nbsp; Qt installation on Linux</h2>
-
-You need to have the <a href="http://www.qtsoftware.com/downloads">Qt</a> library installed in order to run
-libQGLViewer. Qt is probably already installed on your machine, or available on your distribution
-CDs. You may however have to install the <code>dev</code> development package.
-
-<p>
-Try to compile a simple Qt example and check the
-<a href="http://www.qtsoftware.com/developer/faqs">Qt FAQ</a> page in case of
-problem. Consider compiling one of the Qt OpenGL examples to test your configuration.
-</p>
-
-With Qt version 3, you need to set some shell variables. If your shell is <code>bash</code> or
-<code>zsh</code> (use <code>echo $SHELL</code> to know), add these lines to your
-<code>.profile</code>:
-
-<pre>
-export QTDIR=/usr/lib/qt3 (or /usr/lib/qt-3.3 or /usr/share/qt...)
-export PATH=${PATH}:${QTDIR}/bin
-export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${QTDIR}/lib
-</pre>
-
-If you use <code>tcsh</code> or <code>csh</code> instead, add these lines to your <code>.login</code>:
-
-<pre>
-setenv QTDIR /usr/lib/qt3 (or /usr/lib/qt-3.3 or /usr/share/qt...)
-setenv PATH ${PATH}:${QTDIR}/bin
-setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${QTDIR}/lib
-</pre>
-
-Source this file or open a new shell to take these values into account. If you installed
-<code>libQGLViewer</code> in a custom directory, add the path to this directory in
-<code>LD_LIBRARY_PATH</code> as is done above for <code>${QTDIR}/lib</code>.
-
-
-<br/>
-<br/>
-<br/>
-
-
 <a name="mac"></a>
 <h2><img src="images/mac.png" width="55" height="54" alt="mac"/> Mac OS X</h2>
 
+<a href="#WEBURL#/src/libQGLViewer-#VERSION#.tar.gz">Download</a> and decompress the sources, then open the <code>libQGLViewer-#VERSION#/QGLViewer</code> folder.
+
+<h3>Using Qt Creator</h3>
+Open <code>QGLViewer.pro</code> and "build all".
+
 <h3>Using Xcode</h3>
+Create the Xcode project by running these lines in a terminal:
 <pre>
-tar -xzf <a href="#WEBURL#/src/libQGLViewer-#VERSION#.tar.gz">libQGLViewer-#VERSION#.tar.gz</a>
-cd libQGLViewer-#VERSION#/QGLViewer
+cd path/to/libQGLViewer-#VERSION#/QGLViewer
 qmake -spec macx-xcode
 </pre>
 
-Then open and build the resulting Xcode project. Run <code>make install</code> to install the documentation in <code>/Developer/Documentation/QGLViewer</code>.
-
 <h3>Using <code>make</code></h3>
-
-The installation procedure is essentially identical to the one described in the <a
-href="#linux">Linux section</a>: 
 <pre>
-tar -xzf <a href="#WEBURL#/src/libQGLViewer-#VERSION#.tar.gz">libQGLViewer-#VERSION#.tar.gz</a>
-cd libQGLViewer-#VERSION#/QGLViewer
+cd path/to/libQGLViewer-#VERSION#/QGLViewer
 qmake -spec macx-g++
 make
 make install
@@ -197,14 +61,20 @@ See the <a href="#linux">Linux section</a> for details and install paths customi
 
 <h3>Next steps</h3>
 
-Xcode and <code>make</code> both generate a <i>Framework</i> by default. Uncomment a line in <code>QGLViewer.pro</code> to create a <code>.dylib</code> instead.
+Once the library is installed, you can <a href="compilation.html#mac">compile the examples</a>. 
 
 <p>
-Once the library is installed, you can <a href="compilation.html#mac">compile the examples</a>.
+Install the <a href="#plugin">libQGLViewer designer plugin</a> to
+easily create user interfaces that integrate a QGLViewer using designer.
 </p>
 
 
+
 <div class="small">
+Run <code>make install</code> to install the documentation in <code>/Developer/Documentation/QGLViewer</code>.
+
+<p>A <i>Framework</i> is created by default. Uncomment a line in <code>QGLViewer.pro</code> if you want to create a <code>.dylib</code> instead.</p>
+
 With Qt3, threads are activated with the <code>darwin-g++</code> version and disabled with <code>macx</code>.
 Add or remove <code>thread</code> in the <code>CONFIG</code> section of <code>.pro</code> files
 if this does not correspond to your Qt configuration.
@@ -220,7 +90,9 @@ If your Qt version is lower than 3.1, you need to link with the <code>glut</code
 <h2><img src="images/mac.png" width="55" height="54" alt="mac"/> &nbsp;
 <img src="images/qt.png" width="38" height="40" alt="Qt"/> &nbsp; Qt installation on Mac</h2>
 
-The easiest way to develop Qt applications on a Mac is to download Xcode from the <a href="http://developer.apple.com/technology/xcode.html">apple web site</a> and then to install a Qt package from the <a href="http://qt.nokia.com/downloads">nokia web site</a>.
+Install Qt from the <a href="http://qt.nokia.com/downloads">nokia web site</a>.
+Then use the provided Qt Creator or download Xcode from the <a href="http://developer.apple.com/technology/xcode.html">apple web site</a>.
+
 <!--
 Qt is available under two versions for the mac architecture :
 <ul>
@@ -272,6 +144,151 @@ If you installed <code>libQGLViewer</code> in a custom directory, add the path t
 <br/>
 <br/>
 <br/>
+
+
+
+<a name="linux"></a>
+<h2><img src="images/linux.png" width="49" height="54" alt="linux"/>Linux and Unix</h2>
+
+<!--
+<h3>Debian/Ubuntu packages</h3>
+libQGLViewer is available as a <a href="http://ftp.debian.org/debian/pool/main/libq/libqglviewer/">debian package</a> (many thanks to Artur).
+It should be available from standard debian depositories and can be installed using your usual package manager.
+
+<p>As an alternative, you can use these debian packages generated using Alien and depending on the latest Qt version :</p>
+<pre>
+apt-get install <a href="#WEBURL#/src/libqglviewer_#VERSION#_i386.deb">libqglviewer_#VERSION#_i386.deb</a> <a href="#WEBURL#/src/libqglviewer-devel_#VERSION#_i386.deb">libqglviewer-devel_#VERSION#_i386.deb</a>
+</pre>
+
+<h3>RPM packages</h3>
+Use the following command line:
+<pre>
+rpm -Uvh <a href="#WEBURL#/src/libQGLViewer-#VERSION#.i386.rpm">libQGLViewer-#VERSION#.i386.rpm</a> <a href="#WEBURL#/src/libQGLViewer-devel-#VERSION#.i386.rpm">libQGLViewer-devel-#VERSION#.i386.rpm</a>
+</pre>
+You can also re-compile the RPM for optimal results:
+<pre>
+rpmbuild - !!!!!!!!!!!!!!!!!!!!!! FIXME !!!!!!!!!!!!!!!!!!!!! -rebuild <a href="#WEBURL#/src/libQGLViewer-#VERSION#.src.rpm">libQGLViewer-#VERSION#.src.rpm</a>
+cd /usr/src/RPM/RPMS/i?86/ (or /usr/src/redhat/RPMS/i?86, see the rpmbuild last log lines)
+rpm -Uvh libQGLViewer-*#VERSION#.i?86.rpm
+</pre>
+
+<p>
+Change the RPM installation prefix, say to <code>/usr/local</code> (default is
+<code>/usr</code>), using <code>rpm -Uvh -  !!!!!!!!!!!!!!!!!!! FIXME !!!!!!!!!!!!!!!!!!!! -prefix /usr/local ...</code>.
+</p>
+
+
+
+<h3>FreeBSD</h3>
+Use the <a href="http://www.freshports.org/graphics/libqglviewer/">FreeBSD port</a>.
+-->
+
+<a href="#WEBURL#/src/libQGLViewer-#VERSION#.tar.gz">Download</a> and decompress the sources, then go to the <code>libQGLViewer-#VERSION#/QGLViewer</code> folder.
+
+<pre>
+tar -xzf <a href="#WEBURL#/src/libQGLViewer-#VERSION#.tar.gz">libQGLViewer-#VERSION#.tar.gz</a>
+cd libQGLViewer-#VERSION#/QGLViewer
+</pre>
+
+<h3>Using Qt Creator</h3>
+Open <code>QGLViewer.pro</code> and "build all". Optionaly <code>make install</code> to install the application system wide.
+
+<h3>Using <code>make</code></h3>
+<pre>
+qmake (see options below)
+make
+make install (optional)
+</pre>
+
+The following files are installed (you need root privileges to <code>install</code>, since these are system directories):
+<ul>
+<li>The library (<code>libQGLViewer-#VERSION#.so</code>) in <code>/usr/lib</code></li>
+<li>The header files and designer plugin code in <code>/usr/include/QGLViewer</code></li>
+<li>The documentation and the examples in <code>/usr/share/doc/QGLViewer</code></li>
+</ul>
+
+
+Optional <code>qmake</code> parameters let you customize your <code>make install</code> target installation directories:
+</p>
+<pre>
+qmake [PREFIX=...] [INCLUDE_DIR=...] [LIB_DIR=...] [DOC_DIR=...] [QGLVIEWER_STATIC=yes]
+</pre>
+
+A typical usage would be <code>qmake PREFIX=$HOME</code>. Default values are:
+<pre>
+- Param -      - Default value -
+PREFIX         /usr
+LIB_DIR        PREFIX/lib
+INCLUDE_DIR    PREFIX/include
+DOC_DIR        PREFIX/share/doc
+</pre>
+
+The <code>QGLVIEWER_STATIC=yes</code> option will compile a static version of the library.
+
+<div class="small">
+If your Qt version is lower than 3.1, you need to link with the <code>glut</code> library: uncomment
+a line in <code>QGLViewer.pro</code> as explained there. <code>glut</code> can be installed from the <code>freeglut-devel</code> rpm or using <code>apt-get
+install libglut3-dev</code>.
+</div>
+
+
+<h3>Next steps</h3>
+Once the library is compiled, you can <a href="compilation.html#unix">compile the examples</a>.
+
+<p>
+You may also want to install the <a href="#plugin">libQGLViewer designer plugin</a> to
+easily create user interfaces that integrate a QGLViewer using designer.
+</p>
+
+
+
+
+
+<a name="qt-linux"></a>
+<h2><img src="images/linux.png" width="49" height="54" alt="linux"/> &nbsp;
+<img src="images/qt.png" width="38" height="40" alt="Qt"/> &nbsp; Qt installation on Linux</h2>
+
+Qt is probably already installed on your machine, or available on your distribution's repository.
+You may however have to install the <code>dev</code> development package.
+You can also directly <a href="http://qt.nokia.com/downloads">download it</a>. 
+
+<p>
+Try to compile a simple Qt example and check the
+<a href="http://developer.qt.nokia.com/faq">Qt FAQ</a> page in case of
+problems. Consider compiling one of the Qt OpenGL examples to test your configuration.
+</p>
+
+<!--
+<div class="small">
+With Qt version 3, you need to set some shell variables. If your shell is <code>bash</code> or
+<code>zsh</code> (use <code>echo $SHELL</code> to know), add these lines to your
+<code>.profile</code>:
+
+<pre>
+export QTDIR=/usr/lib/qt3 (or /usr/lib/qt-3.3 or /usr/share/qt...)
+export PATH=${PATH}:${QTDIR}/bin
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${QTDIR}/lib
+</pre>
+
+If you use <code>tcsh</code> or <code>csh</code> instead, add these lines to your <code>.login</code>:
+
+<pre>
+setenv QTDIR /usr/lib/qt3 (or /usr/lib/qt-3.3 or /usr/share/qt...)
+setenv PATH ${PATH}:${QTDIR}/bin
+setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${QTDIR}/lib
+</pre>
+
+Source this file or open a new shell to take these values into account. If you installed
+<code>libQGLViewer</code> in a custom directory, add the path to this directory in
+<code>LD_LIBRARY_PATH</code> as is done above for <code>${QTDIR}/lib</code>.
+</div>
+-->
+
+<br/>
+<br/>
+<br/>
+
+
 
 
 <a name="plugin"></a>

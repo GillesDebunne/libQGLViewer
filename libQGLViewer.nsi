@@ -7,10 +7,13 @@ Name libQGLViewer
 # Recompiler avec MinGW et valider.
 # Copier le zip et l'installer.exe sur dzsrv-linux
 # Y lancer 'makeDist web'
+#
+# www.tar.gz genere a mettre dans www a la racine, sans le prefixe doc
+#
 
 # Defines
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION 2.3.8
+!define VERSION 2.3.9
 !define COMPANY "Gilles Debunne"
 !define URL http://www.libqglviewer.com/
 
@@ -63,7 +66,7 @@ InstallDir $PROGRAMFILES\libQGLViewer
 CRCCheck on
 XPStyle on
 ShowInstDetails show
-VIProductVersion 2.3.8
+VIProductVersion 2.3.9.0
 VIAddVersionKey /LANG=${LANG_ENGLISH} ProductName "${NAME}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} ProductVersion "${VERSION}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} CompanyName "${COMPANY}"
@@ -93,7 +96,7 @@ done${UNSECTION_ID}:
 Section libQGLViewer SEC0000
     SetOutPath $INSTDIR
     SetOverwrite on
-    File /r installer\*.txt
+    #File /r $INSTDIR\*.txt
 
     WriteRegStr HKLM "${REGKEY}\Components" libQGLViewer 1
 SectionEnd
@@ -110,56 +113,59 @@ Section $(ExamplesSection) SEC0001
     SetOutPath $INSTDIR\$(examples)
     SetOverwrite on
     
-    File examples\animation\animation.exe
-    File examples\callback\callback.exe
-    File examples\cameraLight\cameraLight.exe
-    File examples\clippingPlane\clippingPlane.exe
-    File examples\constrainedCamera\constrainedCamera.exe
-    File examples\constrainedFrame\constrainedFrame.exe
-    File examples\drawLight\drawLight.exe
-    File examples\fastDraw\fastDraw.exe
-    File examples\frameTransform\frameTransform.exe
-    File examples\frustumCulling\frustumCulling.exe
-    File examples\interface\interface.exe
-    File examples\keyboardAndMouse\keyboardAndMouse.exe
-    File examples\keyFrames\keyFrames.exe
-    File examples\luxo\luxo.exe
-    File examples\manipulatedFrame\manipulatedFrame.exe
-    File examples\mouseGrabber\mouseGrabber.exe
-    File examples\multiSelect\multiSelect.exe
-    File examples\multiView\multiView.exe
-    File examples\overpainting\overpainting.exe
-    File examples\screenCoordSystem\screenCoordSystem.exe
-    File examples\select\select.exe
-    File examples\simpleViewer\simpleViewer.exe
-    File examples\standardCamera\standardCamera.exe
-    File examples\stereoViewer\stereoViewer.exe
+    File examples\animation\release\animation.exe
+    File examples\callback\release\callback.exe
+    File examples\cameraLight\release\cameraLight.exe
+    File examples\clippingPlane\release\clippingPlane.exe
+    File examples\constrainedCamera\release\constrainedCamera.exe
+    File examples\constrainedFrame\release\constrainedFrame.exe
+    File examples\drawLight\release\drawLight.exe
+    File examples\fastDraw\release\fastDraw.exe
+    File examples\frameTransform\release\frameTransform.exe
+    File examples\frustumCulling\release\frustumCulling.exe
+    File examples\interface\release\interface.exe
+    File examples\keyboardAndMouse\release\keyboardAndMouse.exe
+    File examples\keyFrames\release\keyFrames.exe
+    File examples\luxo\release\luxo.exe
+    File examples\manipulatedFrame\release\manipulatedFrame.exe
+    File examples\mouseGrabber\release\mouseGrabber.exe
+    File examples\multiSelect\release\multiSelect.exe
+    File examples\multiView\release\multiView.exe
+    File examples\overpainting\release\overpainting.exe
+    File examples\screenCoordSystem\release\screenCoordSystem.exe
+    File examples\select\release\select.exe
+    File examples\simpleViewer\release\simpleViewer.exe
+    File examples\standardCamera\release\standardCamera.exe
+    File examples\stereoViewer\release\stereoViewer.exe
     
     #File examples\contribs\3dsViewer\3dsViewer.exe
-    File examples\contribs\agora\Viewer\agora.exe
-    File examples\contribs\agora\AI\agoraAI.exe
+    File examples\contribs\agora\Viewer\release\agora.exe
+    File examples\contribs\agora\AI\release\agoraAI.exe
     File /r /x .svn examples\contribs\agora\AgoraBoards
-    File examples\contribs\anaglyph\anaglyph.exe
-    File examples\contribs\backgroundImage\backgroundImage.exe
-    File examples\contribs\blobWar\Viewer\blobWar.exe
-    File examples\contribs\blobWar\AI\blobWarAI.exe
+    File examples\contribs\anaglyph\release\anaglyph.exe
+    File examples\contribs\backgroundImage\release\backgroundImage.exe
+    File examples\contribs\blobWar\Viewer\release\blobWar.exe
+    File examples\contribs\blobWar\AI\release\blobWarAI.exe
     File /r /x .svn examples\contribs\blobWar\BlobWarBoards
-    File examples\contribs\cornerAxis\cornerAxis.exe
-    File examples\contribs\dvonn\dvonn.exe
-    File /r /x .svn examples\contribs\dvonn\images
-    File /r /x .svn examples\contribs\dvonn\rules
+    File examples\contribs\cornerAxis\release\cornerAxis.exe
+    #File examples\contribs\dvonn\release\dvonn.exe
+    #File /r /x .svn examples\contribs\dvonn\images
+    #File /r /x .svn examples\contribs\dvonn\rules
     #File examples\contribs\eventRecorder\eventRecorder.exe
     #File examples\contribs\quarto\quarto.exe
-    File examples\contribs\terrain\terrain.exe
-    File examples\contribs\textureViewer\textureViewer.exe
-    File examples\contribs\thumbnail\thumbnail.exe
+    #File examples\contribs\terrain\release\terrain.exe
+    File examples\contribs\textureViewer\release\textureViewer.exe
+    File examples\contribs\thumbnail\release\thumbnail.exe
     #File examples\contribs\x3dViewer\x3dViewer.exe
     
-    File C:\Qt\4.4.0\bin\QtGui4.dll
-    File C:\Qt\4.4.0\bin\QtCore4.dll
-    File C:\Qt\4.4.0\bin\QtOpenGL4.dll
-    File C:\Qt\4.4.0\bin\QtXml4.dll
-    File "C:\Program Files\MinGW\bin\mingwm10.dll"
+	#File examples\qglviewer.rc
+	#File examples\qglviewer.ico
+	
+    File C:\Qt\2010.05\bin\QtGui4.dll
+    File C:\Qt\2010.05\bin\QtCore4.dll
+    File C:\Qt\2010.05\bin\QtOpenGL4.dll
+    File C:\Qt\2010.05\bin\QtXml4.dll
+    File "C:\Qt\2010.05\mingw\bin\mingwm10.dll"
     
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     SetOutPath $SMPROGRAMS\$StartMenuGroup
@@ -251,10 +257,10 @@ Section $(Development) SEC0003
     #File QGLViewer\QGLViewer2.lib
     File /r QGLViewer\*.h
     File /r QGLViewer\*.qm
-    File libQGLViewer2.a
+    File QGLViewer\release\libQGLViewer2.a
 
     # Installing library QGLViewer\QGLViewer2.dll
-    !insertmacro InstallLib DLL $LibInstall REBOOT_PROTECTED QGLViewer\QGLViewer2.dll $SYSDIR\QGLViewer2.dll $SYSDIR
+    !insertmacro InstallLib DLL $LibInstall REBOOT_PROTECTED QGLViewer\release\QGLViewer2.dll $SYSDIR\QGLViewer2.dll $SYSDIR
     
     WriteRegStr HKLM "${REGKEY}\Components" Development 1
 SectionEnd

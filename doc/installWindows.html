@@ -16,9 +16,9 @@
 
 <div class="banner">
   <a class="qindex" href="index.html">Home</a>
-  <a class="qindex" href="refManual/hierarchy.html">Documentation</a>
   <a class="qindex highlight" href="download.html">Download</a>
   <a class="qindex" href="examples/index.html">Examples</a>
+  <a class="qindex" href="refManual/hierarchy.html">Documentation</a>
   <a class="qindex" href="developer.html">Developer</a>
 </div>
 
@@ -47,33 +47,29 @@ Then download and unzip <a href="#WEBURL#/src/libQGLViewer-#VERSION#.zip">libQGL
 </p>
 
 Depending on your environment:
-<li>
-<ul><a name="mingw"></a><b>MinGW</b> (available when you install the OpenSource Qt 4 version): 
+<ul>
+<li><a name="mingw"></a><b>MinGW</b> (available when you install the OpenSource Qt 4 version): 
 launch the <i>Qt 4.x Command Prompt</i> from the <i>Start</i> menu and type:
 <pre>
 cd \path\to\libQGLViewer-#VERSION#\QGLViewer
 qmake
 mingw32-make
-</pre></ul>
+</pre></li>
 
-<ul><a name="qtcreator"></a><b>QtCreator</b>: open the <code>QGLViewer/QGLViewer.pro</code> project file and build the library.</ul>
+<li><a name="qtcreator"></a><b>QtCreator</b>: open the <code>QGLViewer/QGLViewer.pro</code> project file and "build all".</li>
 
-<ul><a name="qtVisual"></a><b>Visual Studio</b>: install the Qt Visual Studio add-in, open <code>QGLViewer/QGLViewer.pro</code> and build the solution
-<span class="redStar">*</span>.
-<br/>
-Otherwise, generate the <code>.vcproj</code> file by typing <code>qmake -t vclib QGLViewer.pro -spec win32-msvc2010</code> (adapt to your configuration) in a Qt command prompt window. Open the project and build the library.
-<br/>
-This <a href="http://www.qtcentre.org/wiki/index.php?title=Qt4_with_Visual_Studio">page</a> explains how to use Qt with Visual Studio.
-</ul>
-
+<li><a name="qtVisual"></a><b>Visual Studio</b>: install the Qt Visual Studio add-in, open <code>QGLViewer/QGLViewer.pro</code> and build the solution
+<span class="redStar">*</span>. This <a href="http://www.qtcentre.org/wiki/index.php?title=Qt4_with_Visual_Studio">page</a> explains how to use Qt with Visual Studio.
 </li>
 
-<p>
-Copy the resulting <code>QGLViewer#VERSION_MAJOR#.dll</code> to a system
-shared directory such as <code>C:\Windows\System32</code>. An other option is to copy it to every executable's directory.
+</ul>
 
 <p>
-Then see the <a href="compilation.html">compilation with libQGLViewer</a> page for details on examples' compilation.
+Then copy the generated <code>QGLViewer#VERSION_MAJOR#.dll</code> and <code>QGLViewer#VERSION_MAJOR#d.dll</code> to a system
+shared directory such as <code>C:\Windows\System32</code>. An other option is to copy the <code>dll</code> in every executable's directory.
+
+<p>
+See the <a href="compilation.html">compilation with libQGLViewer</a> page for details on examples' compilation.
 </p>
 
 
@@ -87,12 +83,11 @@ Then see the <a href="compilation.html">compilation with libQGLViewer</a> page f
 <tr class="even"><td>Tools - Add-Ins manager</td><td>Tools - Customize - Add-ins and Macro Files/QMsDev Add in</td></tr>
 </table>
 -->
-<span class="redStar">*</span>
-A <code>LNK4068 /MACHINE</code> warning message can be fixed by editing <i>Project - Properties of QGLViewer - Configuration properties - Link editor - Advanced - Target Computer</i>.
+<span class="redStar">*</span> You can generate the <code>.vcproj</code> file by typing <code>qmake -t vclib QGLViewer.pro -spec win32-msvc2010</code> (adapt to your configuration) in a Qt command prompt window.
 
-<p>
+<p>A <code>LNK4068 /MACHINE</code> warning message can be fixed by editing <i>Project - Properties of QGLViewer - Configuration properties - Link editor - Advanced - Target Computer</i>.</p>
+
 Visual Studio 6 only: Use <i>File-Open workspace</i> to open the <code>.dsp</code> generated file, and select <i>Release</i> as the <i>Build/Active Configuration</i>.
-</p>
 
 <!--
 <p>

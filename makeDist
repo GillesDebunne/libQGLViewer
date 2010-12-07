@@ -1,7 +1,7 @@
 #!/bin/bash
 
 libName="libQGLViewer"
-version="2.3.8"
+version="2.3.9"
 
 WebURL="http://www.libqglviewer.com"
 
@@ -314,7 +314,7 @@ function makeDistExample()
 
 cd examples
 
-SOURCES="examples.pro release.pri contribs/contribs.pro"
+SOURCES="examples.pro qglviewer.rc qglviewer.ico release.pri contribs/contribs.pro"
 TARGET="examples"
 makeDist
 
@@ -638,7 +638,7 @@ echo
 echo "Stop packaging on mac, no rpm or deb created."
 echo "Creating $allTarGZ to update web site"
 tar czf $allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
-echo "scp /tmp/$allTarGZ debunne@www.libqglviewer.compiled:"
+echo "scp /tmp/$allTarGZ debunne@www.libqglviewer.com:"
 
 exit
 
