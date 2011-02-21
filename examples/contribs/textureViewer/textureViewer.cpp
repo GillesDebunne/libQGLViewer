@@ -100,7 +100,7 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 {
   switch (e->key())
     {
-    case Qt::Key_L : loadImage(); break;
+    case Qt::Key_L : loadImage(); updateGL(); break;
     default:         QGLViewer::keyPressEvent(e);
     }
 }
