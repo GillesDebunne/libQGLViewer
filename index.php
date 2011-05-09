@@ -4,6 +4,19 @@
   <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
   <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
   <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 </head>
 <body>
 
@@ -37,7 +50,7 @@ if(is_dir($dir))
     sort($files);
 
     for ($i=0;$i<count($files);$i++) {
-        echo '<tr><td><a href="'.$files[$i].'">'.$files[$i].'</a><td><td>'.(int)(filesize($files[$i])/1024).' kb</td>'."\n";
+        echo '<tr><td><a href="'.$files[$i].'" onClick="javascript: _gaq.push([\'_trackPageview\', \'/downloads/map\']);">'.$files[$i].'</a><td><td>'.(int)(filesize($files[$i])/1024).' kb</td>'."\n";
     }
 }
 
