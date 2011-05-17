@@ -138,7 +138,7 @@ Section $(ExamplesSection) SEC0001
     File examples\standardCamera\release\standardCamera.exe
     File examples\stereoViewer\release\stereoViewer.exe
     
-    #File examples\contribs\3dsViewer\3dsViewer.exe
+    #File examples\contribs\3dsViewer\release\3dsViewer.exe
     File examples\contribs\agora\Viewer\release\agora.exe
     File examples\contribs\agora\AI\release\agoraAI.exe
     File /r /x .svn examples\contribs\agora\AgoraBoards
@@ -151,12 +151,12 @@ Section $(ExamplesSection) SEC0001
     #File examples\contribs\dvonn\release\dvonn.exe
     #File /r /x .svn examples\contribs\dvonn\images
     #File /r /x .svn examples\contribs\dvonn\rules
-    #File examples\contribs\eventRecorder\eventRecorder.exe
-    #File examples\contribs\quarto\quarto.exe
+    #File examples\contribs\eventRecorder\release\eventRecorder.exe
+    #File examples\contribs\quarto\release\quarto.exe
     #File examples\contribs\terrain\release\terrain.exe
     File examples\contribs\textureViewer\release\textureViewer.exe
     File examples\contribs\thumbnail\release\thumbnail.exe
-    #File examples\contribs\x3dViewer\x3dViewer.exe
+    #File examples\contribs\x3dViewer\release\x3dViewer.exe
     
 	#File examples\qglviewer.rc
 	#File examples\qglviewer.ico

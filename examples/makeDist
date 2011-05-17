@@ -156,7 +156,7 @@ do
 
   test -f $IMAGES_DIR/$name.jpg || error "    No image found for $name - Aborting"
   test -f $name/$name.pro || error "    No .pro found for $name"
-  grep "File examples.$name.$name.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "$name.exe not found in .nsi"
+  grep "File examples.$name.release.$name.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "$name.exe not found in .nsi"
 
   if [ $isBasic -eq 0 ]
   then
@@ -283,12 +283,12 @@ EOF
     test -f $contribsDir/$name/$name.pro || error "    No .pro found for $name"
     if [ -d $contribsDir/$name/Viewer ]
     then
-      grep "File examples.$contribsDir.$name.Viewer.$name.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "$name.exe not found in .nsi"
-      grep "File examples.$contribsDir.$name.AI.${name}AI.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "${name}AI.exe not found in .nsi"
+      grep "File examples.$contribsDir.$name.Viewer.release.$name.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "$name.exe not found in .nsi"
+      grep "File examples.$contribsDir.$name.AI.release.${name}AI.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "${name}AI.exe not found in .nsi"
       grep "CreateShortcut.*advanced.*$name.lnk.*$name.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "$name.lnk not found in .nsi"
       grep "CreateShortcut.*advanced.*$name.lnk.*$name.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "$name.lnk not found in .nsi"
     else
-      grep "File examples.$contribsDir.$name.$name.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "$name.exe not found in .nsi"
+      grep "File examples.$contribsDir.$name.release.$name.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "$name.exe not found in .nsi"
       grep "CreateShortcut.*advanced.*$name.lnk.*$name.exe" $QGLVIEWER_HOME_DIR/libQGLViewer.nsi > /dev/null || error "$name.lnk not found in .nsi"
     fi
 

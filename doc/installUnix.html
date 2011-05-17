@@ -50,7 +50,7 @@ Unix systems
 <a name="mac"></a>
 <h2><img src="images/mac.png" width="55" height="54" alt="mac"/> Mac OS X</h2>
 
-<a href="#WEBURL#/src/libQGLViewer-#VERSION#.tar.gz" onClick="javascript: _gaq.push(['_trackPageview', '/downloads/map']);">Download</a> and decompress the sources, then open the <code>libQGLViewer-#VERSION#/QGLViewer</code> folder.
+<a href="#WEBURL#/src/libQGLViewer-#VERSION#.tar.gz" onClick="javascript: _gaq.push(['_trackPageview', 'libQGLViewer-#VERSION#.tar.gz']);">Download</a> and decompress the sources, then open the <code>libQGLViewer-#VERSION#/QGLViewer</code> folder.
 
 <h3>Using Qt Creator</h3>
 Open <code>QGLViewer.pro</code> and "build all".
@@ -170,17 +170,17 @@ It should be available from standard debian depositories and can be installed us
 
 <p>As an alternative, you can use these debian packages generated using Alien and depending on the latest Qt version :</p>
 <pre>
-apt-get install <a href="#WEBURL#/src/libqglviewer_#VERSION#_i386.deb" onClick="javascript: _gaq.push(['_trackPageview', '/downloads/map']);">libqglviewer_#VERSION#_i386.deb</a> <a href="#WEBURL#/src/libqglviewer-devel_#VERSION#_i386.deb" onClick="javascript: _gaq.push(['_trackPageview', '/downloads/map']);">libqglviewer-devel_#VERSION#_i386.deb</a>
+apt-get install <a href="#WEBURL#/src/libqglviewer_#VERSION#_i386.deb" onClick="javascript: _gaq.push(['_trackPageview', 'libqglviewer_#VERSION#_i386.deb']);">libqglviewer_#VERSION#_i386.deb</a> <a href="#WEBURL#/src/libqglviewer-devel_#VERSION#_i386.deb" onClick="javascript: _gaq.push(['_trackPageview', 'libqglviewer-devel_#VERSION#_i386.deb']);">libqglviewer-devel_#VERSION#_i386.deb</a>
 </pre>
 
 <h3>RPM packages</h3>
 Use the following command line:
 <pre>
-rpm -Uvh <a href="#WEBURL#/src/libQGLViewer-#VERSION#.i386.rpm" onClick="javascript: _gaq.push(['_trackPageview', '/downloads/map']);">libQGLViewer-#VERSION#.i386.rpm</a> <a href="#WEBURL#/src/libQGLViewer-devel-#VERSION#.i386.rpm" onClick="javascript: _gaq.push(['_trackPageview', '/downloads/map']);">libQGLViewer-devel-#VERSION#.i386.rpm</a>
+rpm -Uvh <a href="#WEBURL#/src/libQGLViewer-#VERSION#.i386.rpm" onClick="javascript: _gaq.push(['_trackPageview', 'libQGLViewer-#VERSION#.i386.rpm']);">libQGLViewer-#VERSION#.i386.rpm</a> <a href="#WEBURL#/src/libQGLViewer-devel-#VERSION#.i386.rpm" onClick="javascript: _gaq.push(['_trackPageview', 'libQGLViewer-devel-#VERSION#.i386.rpm']);">libQGLViewer-devel-#VERSION#.i386.rpm</a>
 </pre>
 You can also re-compile the RPM for optimal results:
 <pre>
-rpmbuild - !!!!!!!!!!!!!!!!!!!!!! FIXME !!!!!!!!!!!!!!!!!!!!! -rebuild <a href="#WEBURL#/src/libQGLViewer-#VERSION#.src.rpm" onClick="javascript: _gaq.push(['_trackPageview', '/downloads/map']);">libQGLViewer-#VERSION#.src.rpm</a>
+rpmbuild - !!!!!!!!!!!!!!!!!!!!!! FIXME !!!!!!!!!!!!!!!!!!!!! -rebuild <a href="#WEBURL#/src/libQGLViewer-#VERSION#.src.rpm" onClick="javascript: _gaq.push(['_trackPageview', 'libQGLViewer-#VERSION#.src.rpm']);">libQGLViewer-#VERSION#.src.rpm</a>
 cd /usr/src/RPM/RPMS/i?86/ (or /usr/src/redhat/RPMS/i?86, see the rpmbuild last log lines)
 rpm -Uvh libQGLViewer-*#VERSION#.i?86.rpm
 </pre>
@@ -196,10 +196,10 @@ Change the RPM installation prefix, say to <code>/usr/local</code> (default is
 Use the <a href="http://www.freshports.org/graphics/libqglviewer/">FreeBSD port</a>.
 -->
 
-<a href="#WEBURL#/src/libQGLViewer-#VERSION#.tar.gz" onClick="javascript: _gaq.push(['_trackPageview', '/downloads/map']);">Download</a> and decompress the sources, then go to the <code>libQGLViewer-#VERSION#/QGLViewer</code> folder.
+<a href="#WEBURL#/src/libQGLViewer-#VERSION#.tar.gz" onClick="javascript: _gaq.push(['_trackPageview', 'libQGLViewer-#VERSION#.tar.gz']);">Download</a> and decompress the sources, then go to the <code>libQGLViewer-#VERSION#/QGLViewer</code> folder.
 
 <pre>
-tar -xzf <a href="#WEBURL#/src/libQGLViewer-#VERSION#.tar.gz" onClick="javascript: _gaq.push(['_trackPageview', '/downloads/map']);">libQGLViewer-#VERSION#.tar.gz</a>
+tar -xzf <a href="#WEBURL#/src/libQGLViewer-#VERSION#.tar.gz" onClick="javascript: _gaq.push(['_trackPageview', 'libQGLViewer-#VERSION#.tar.gz']);">libQGLViewer-#VERSION#.tar.gz</a>
 cd libQGLViewer-#VERSION#/QGLViewer
 </pre>
 
@@ -383,9 +383,9 @@ message. See the <a href="compilation.html#mac">mac example section</a>.</li>
 
 <li><b>lib3ds</b>: this library is needed to compile the <a
 href="examples/contribs.html#3dsViewer">3dsViewer example</a>. Download the patched <a
-href="#WEBURL#/src/lib3ds-1.2.0-1.i686.rpm" onClick="javascript: _gaq.push(['_trackPageview', '/downloads/map']);">lib3ds-1.2.0-1.i686.rpm</a> or the sources (<a
-href="#WEBURL#/src/lib3ds-1.2.0-1.src.rpm" onClick="javascript: _gaq.push(['_trackPageview', '/downloads/map']);">lib3ds-1.2.0-1.src.rpm</a> or <a
-href="#WEBURL#/src/lib3ds-1.2.0.tar.gz" onClick="javascript: _gaq.push(['_trackPageview', '/downloads/map']);">lib3ds-1.2.0.tar.gz</a>).</li>
+href="#WEBURL#/src/lib3ds-1.2.0-1.i686.rpm" onClick="javascript: _gaq.push(['_trackPageview', 'lib3ds-1.2.0-1.i686.rpm']);">lib3ds-1.2.0-1.i686.rpm</a> or the sources (<a
+href="#WEBURL#/src/lib3ds-1.2.0-1.src.rpm" onClick="javascript: _gaq.push(['_trackPageview', 'lib3ds-1.2.0-1.src.rpm']);">lib3ds-1.2.0-1.src.rpm</a> or <a
+href="#WEBURL#/src/lib3ds-1.2.0.tar.gz" onClick="javascript: _gaq.push(['_trackPageview', 'lib3ds-1.2.0.tar.gz']);">lib3ds-1.2.0.tar.gz</a>).</li>
 <!--
 <li><b>libX3DTK</b>: this library is needed to compile the <a
 hNOref="examples/x3dViewer.html">x3dViewer example</a>. Download the library from the

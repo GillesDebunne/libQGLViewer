@@ -573,6 +573,9 @@ echo "todo : statsDownload"
 
 echo -n "Packaging   : "
 
+export LC_ALL="C"
+export LANGUAGE="C"
+
 echo -n "web"
 tar czf ../$wwwTarGZ doc
 
@@ -639,7 +642,12 @@ echo "Stop packaging on mac, no rpm or deb created."
 echo "Creating $allTarGZ to update web site"
 tar czf $allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
 echo "scp /tmp/$allTarGZ debunne@www.libqglviewer.com:"
+echo "scp /tmp/$wwwTarGZ debunne@www.libqglviewer.com:"
 
+echo "ssh debunne@www.libqglviewer.com"
+echo "tar xzf $allTarGZ"
+echo "tar xzf $wwwTarGZ"
+echo "Copy to /var/www/html/libqglviewer/www"
 exit
 
 echo -n " rpm"
@@ -693,8 +701,6 @@ echo -n " deb"
 cd $tmpDir/..
 rm -rf debian ; mkdir debian ; cd debian
 
-export LC_ALL="C"
-export LANGUAGE="C"
 sudo alien ../$libNameVersion.i386.rpm ../$libName-devel-$version.i386.rpm > /dev/null
 cp libqglviewer-devel_$version-2_i386.deb ../libqglviewer-devel_${version}_i386.deb
 cp libqglviewer_$version-2_i386.deb ../libqglviewer_${version}_i386.deb
