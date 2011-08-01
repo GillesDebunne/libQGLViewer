@@ -1,7 +1,7 @@
 
 %define version_major 2
 %define version_minor 3
-%define version_revision 9
+%define version_revision 10
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -155,6 +155,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Wed Jun 14 2011 Gilles Debunne <contact@libQGLViewer.com> 2.3.10
+- Patches in designerPlugin and Qt3 support with Visual 2008.
+
 * Sat Dec 4 2010 Gilles Debunne <contact@libQGLViewer.com> 2.3.9
 - Vec switched to double.
 

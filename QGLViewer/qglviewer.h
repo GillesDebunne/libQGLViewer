@@ -74,9 +74,9 @@ public:
 			// MOC_SKIP_END
 # endif
 			defaultConstructor(); }
-#endif
 
-#if QT_VERSION >= 0x040000
+#else
+
 	explicit QGLViewer(QWidget* parent=0, const QGLWidget* shareWidget=0, Qt::WFlags flags=0);
 	explicit QGLViewer(QGLContext *context, QWidget* parent=0, const QGLWidget* shareWidget=0, Qt::WFlags flags=0);
 	explicit QGLViewer(const QGLFormat& format, QWidget* parent=0, const QGLWidget* shareWidget=0, Qt::WFlags flags=0);

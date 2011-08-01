@@ -167,7 +167,7 @@ void QGLViewer::defaultConstructor()
 	tileRegion_ = NULL;
 }
 
-#if QT_VERSION >= 0x040000
+#if QT_VERSION >= 0x040000 && !defined QT3_SUPPORT
 /*! Constructor. See \c QGLWidget documentation for details.
 
 All viewer parameters (display flags, scene parameters, associated objects...) are set to their default values. See

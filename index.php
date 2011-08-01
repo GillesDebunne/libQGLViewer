@@ -50,7 +50,7 @@ if(is_dir($dir))
     sort($files);
 
     for ($i=0;$i<count($files);$i++) {
-        echo '<tr><td><a href="'.$files[$i].'" onClick="javascript: _gaq.push([\'_trackPageview\', \''.$files[$i].'\']);">'.$files[$i].'</a><td><td>'.(int)(filesize($files[$i])/1024).' kb</td>'."\n";
+        echo '<tr><td><a href="'.$files[$i].'" onclick="javascript: _gaq.push([\'_trackPageview\', \''.$files[$i].'\']);">'.$files[$i].'</a><td><td>'.(int)(filesize($files[$i])/1024).' kb</td>'."\n";
     }
 }
 
