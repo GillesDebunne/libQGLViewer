@@ -140,7 +140,8 @@ START="VERSION = "
 FILE="QGLViewer/QGLViewer.pro"
 checkVersion
 
-hexVersion="0x0${version_major}0${version_minor}0${version_release}"
+vrelease=$(echo "obase=16; ${version_release}" | bc  | awk '{printf "%02s\n",$0}')
+hexVersion="0x0${version_major}0${version_minor}${vrelease}"
 VERSION=$hexVersion
 START="#define QGLVIEWER_VERSION "
 FILE="QGLViewer/config.h"
