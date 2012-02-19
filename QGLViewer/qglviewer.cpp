@@ -2350,7 +2350,7 @@ void QGLViewer::help()
 						   "<h3>Version %1</h3><br>"																	  
 						   "A versatile 3D viewer based on OpenGL and Qt<br>"
 						   "Copyright 2002-%2 Gilles Debunne<br>"
-						   "<code>%3</code>").arg(QGLViewerVersionString()).arg("2010").arg("http://www.libqglviewer.com") +
+						   "<code>%3</code>").arg(QGLViewerVersionString()).arg("2012").arg("http://www.libqglviewer.com") +
 						   QString("</center>");
 				break;
 		default : break;

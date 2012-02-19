@@ -1,7 +1,7 @@
 
 %define version_major 2
 %define version_minor 3
-%define version_revision 10
+%define version_revision 12
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -155,6 +155,12 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Tue Feb 14 2012 Gilles Debunne <contact@libQGLViewer.com> 2.3.12
+- Fixed compilation for windows/Qt 4.8, better designer installation, removed setPhysicalDistanceToScreen.
+
+* Thu Nov 17 2011 Gilles Debunne <contact@libQGLViewer.com> 2.3.11
+- Unneeded Qt3 reference removed.
+
 * Wed Jun 14 2011 Gilles Debunne <contact@libQGLViewer.com> 2.3.10
 - Patches in designerPlugin and Qt3 support with Visual 2008.
 

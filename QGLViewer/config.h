@@ -6,7 +6,7 @@
 #ifndef QGLVIEWER_CONFIG_H
 #define QGLVIEWER_CONFIG_H
 
-#define QGLVIEWER_VERSION 0x020300A
+#define QGLVIEWER_VERSION 0x02030C
 
 // Needed for Qt < 4 (?)
 #ifndef QT_CLEAN_NAMESPACE
@@ -59,6 +59,13 @@
 # include <QGLWidget>
 #else
 # include <qgl.h>
+#endif
+
+// GLU was removed from Qt in version 4.8 
+#ifdef Q_OS_MAC
+# include <OpenGL/glu.h>
+#else
+# include <GL/glu.h>
 #endif
 
 // Old Qt versions require GLUT for text rendering

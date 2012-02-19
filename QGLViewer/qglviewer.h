@@ -227,8 +227,8 @@ public:
 
 		This is equivalent to:
 		\code
-		setSceneCenter((m+M)/2.0);
-		setSceneRadius(0.5*(M-m).norm());
+		setSceneCenter((min+max) / 2.0);
+		setSceneRadius((max-min).norm() / 2.0);
 		\endcode */
 		void setSceneBoundingBox(const qglviewer::Vec& min, const qglviewer::Vec& max) { camera()->setSceneBoundingBox(min,max); }
 
@@ -340,7 +340,6 @@ public:
 	See Camera::loadProjectionMatrixStereo() and Camera::loadModelViewMatrixStereo().
 
 	The stereo parameters are defined by the camera(). See qglviewer::Camera::setIODistance(),
-	qglviewer::Camera::setPhysicalDistanceToScreen(),
 	qglviewer::Camera::setPhysicalScreenWidth() and
 	qglviewer::Camera::setFocusDistance(). */
 	bool displaysInStereo() const { return stereo_; }

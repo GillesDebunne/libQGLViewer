@@ -135,11 +135,16 @@ when you test your interface. All the viewers' signals and slots are available a
 To compile the plugin, open the <code>designerPlugin.pro</code> file to create your workspace.
 Install the resulting plugin library (<code>qglviewerplugin.dll</code>) in <code>$QTDIR\plugins\designer</code> and/or
 <code>C:\Program Files\QtSoftware\Qt VS Integration\plugins</code> to use it with the Visual Studio
-integrated designer. Note that you also have to install the <code>QGLViewer#VERSION_MAJOR#.dll</code> in <code>C:\Windows\System32</code> (as described above).
-Although successfully tested, this procedure does not seem to be sufficient with certain configurations, any explanation is more than welcome.
+integrated designer.
 </p>
 
-To create your own designer plugin for your derived QGLViewer class, start from this code and change a few lines as explained in the source.
+Make sure you are building and using the <i>Release</i> version of <code>QGLViewer#VERSION_MAJOR#.dll</code>. 
+Note that you also have to install <code>QGLViewer#VERSION_MAJOR#.dll</code> in <code>C:\Windows\System32</code> (as described above).
+Copying this file to <code>$QTDir\bin</code> sometimes also seems necessary.
+
+<p>
+	To create your own designer plugin for your derived QGLViewer class, start from this code and change a few lines as explained in the source.
+</p>
 
 <!--
 <p>

@@ -43,8 +43,7 @@ Camera::Camera()
 
   // Stereo parameters
   setIODistance(0.062f);
-  setPhysicalDistanceToScreen(0.5f);
-  setPhysicalScreenWidth(0.4f);
+  setPhysicalScreenWidth(0.5f);
   // focusDistance is set from setFieldOfView()
 
   // #CONNECTION# Camera copy constructor
@@ -113,7 +112,6 @@ Camera& Camera::operator=(const Camera& camera)
   setIODistance(camera.IODistance());
   setFocusDistance(camera.focusDistance());
   setPhysicalScreenWidth(camera.physicalScreenWidth());
-  setPhysicalDistanceToScreen(camera.physicalDistanceToScreen());
 
   orthoCoef_ = camera.orthoCoef_;
 
@@ -1664,7 +1662,6 @@ QDomElement Camera::domElement(const QString& name, QDomDocument& document) cons
 
   QDomElement stereoNode = document.createElement("Stereo");
   stereoNode.setAttribute("IODist", QString::number(IODistance()));
-  stereoNode.setAttribute("distToScreen", QString::number(physicalDistanceToScreen()));
   stereoNode.setAttribute("focusDistance", QString::number(focusDistance()));
   stereoNode.setAttribute("physScreenWidth", QString::number(physicalScreenWidth()));
   de.appendChild(stereoNode);
@@ -1755,9 +1752,8 @@ void Camera::initFromDOMElement(const QDomElement& element)
       if (child.tagName() == "Stereo")
 	{
 	  setIODistance(DomUtils::floatFromDom(child, "IODist", 0.062f));
-	  setPhysicalDistanceToScreen(DomUtils::floatFromDom(child, "distToScreen", 0.5f));
 	  setFocusDistance(DomUtils::floatFromDom(child, "focusDistance", focusDistance()));
-	  setPhysicalScreenWidth(DomUtils::floatFromDom(child, "physScreenWidth", 0.4f));
+	  setPhysicalScreenWidth(DomUtils::floatFromDom(child, "physScreenWidth", 0.5f));
 	}
 
       if (child.tagName() == "KeyFrameInterpolator")

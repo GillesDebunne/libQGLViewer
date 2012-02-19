@@ -10,7 +10,7 @@
 
 TEMPLATE = lib
 TARGET = QGLViewer
-VERSION = 2.3.10
+VERSION = 2.3.12
 CONFIG *= qt opengl warn_on shared thread create_prl rtti no_keywords
 
 QGL_HEADERS = qglviewer.h \
@@ -53,18 +53,18 @@ contains( QT_VERSION, "^4.*" ) {
   CONFIG *= staticlib
 }
 
-#               -----------------------------------
-#		--  I m a g e I n t e r f a c e  --
-#               -----------------------------------
+# -----------------------------------
+# --  I m a g e I n t e r f a c e  --
+# -----------------------------------
 contains( QT_VERSION, "^4.*" ) {
   FORMS *= ImageInterface.Qt4.ui
 } else {
   FORMS *= ImageInterface.Qt3.ui
 }
 
-#               ---------------------------------------------
-#		--  V e c t o r i a l   R e n d e r i n g  --
-#               ---------------------------------------------
+# ---------------------------------------------
+# --  V e c t o r i a l   R e n d e r i n g  --
+# ---------------------------------------------
 # In case of compilation troubles with vectorial rendering, uncomment this line
 # DEFINES *= NO_VECTORIAL_RENDER
 
@@ -115,9 +115,9 @@ contains( DEFINES, NO_VECTORIAL_RENDER ) {
 
 
 
-#               ---------------
-#		--  U n i x  --
-#               ---------------
+# ---------------
+# --  U n i x  --
+# ---------------
 unix {
   CONFIG -= debug debug_and_release
   CONFIG *= release
@@ -193,9 +193,9 @@ unix {
   INSTALLS *= target include documentation docImages docRefManual
 }
 
-#               -----------------
-#		--  L i n u x  --
-#               -----------------
+# -----------------
+# --  L i n u x  --
+# -----------------
 linux-g++ {
   # Patch for gcc 3.2.0 and 3.3.1-2
   system( g++ --version | grep " 3\.2\.0 " > /dev/null )|system( g++ --version | grep " 3\.3\.1\-2" > /dev/null ) {
@@ -206,9 +206,9 @@ linux-g++ {
 }
 
 
-#               -----------------------
-#		--  S G I   I r i x  --
-#               -----------------------
+# -----------------------
+# --  S G I   I r i x  --
+# -----------------------
 irix-cc|irix-n32 {
   QMAKE_CFLAGS_RELEASE   -= -O3 -O2 -OPT:Olimit=30000
   QMAKE_LFLAGS_RELEASE   -= -O3 -O2 -OPT:Olimit=30000
@@ -230,9 +230,9 @@ irix-cc|irix-n32 {
 }
 
 
-#       -------------------
-#		--  M a c O S X  --
-#       -------------------
+# -------------------
+# --  M a c O S X  --
+# -------------------
 macx|darwin-g++ {
   # This setting creates a Mac framework. Comment out this line to create a dylib instead.
   CONFIG *= lib_bundle
@@ -268,9 +268,9 @@ macx|darwin-g++ {
 }
 
 
-#               ---------------------
-#		--  W i n d o w s  --
-#               ---------------------
+# ---------------------
+# --  W i n d o w s  --
+# ---------------------
 win32 {
   # Windows requires a debug lib version to link against debug applications
   CONFIG *= debug_and_release build_all
@@ -309,4 +309,3 @@ contains( QT_VERSION, "^4.*" ) {
      else: TARGET = $$join(TARGET,,,d)
    }
 }
-

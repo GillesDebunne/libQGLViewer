@@ -32,5 +32,3 @@ contains( QT_VERSION, "^4.*" ) {
 }
 
 include( ../examples/examples.pri )
-
-win32:RC_FILE =

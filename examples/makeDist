@@ -93,7 +93,7 @@ done
 
 test -d $OUTPUT_DIR || mkdir -p $OUTPUT_DIR
 
-which "source-highlight" >& /dev/null || error "Unable to find source-highlight - Abort"
+#which "source-highlight" >& /dev/null || error "Unable to find source-highlight - Abort"
     
 export LC_TIME="en"
 date=`date "+%A, %B %d, %Y"`
@@ -206,24 +206,19 @@ do
     done
     fileList="$fileList $file"
   done
-  
 
   for file in $fileList
     do
     echo "<h2>$(echo $file | sed s#$name/##)</h2>" >> $output
-    source-highlight -s cpp -f html -i $file >> $output
-    #cat $tmp/src-high.html >> $output
-    #echo "<pre>" >> $output
-    #sed 's/&/\&amp;/g;s/</\&lt;/g;s/>/\&gt;/g' $tmp/src-high >> $output
-    #echo "</pre>" >> $output
+    #source-highlight -s cpp -f html -i $file >> $output
+    echo "<pre>" >> $output
+    sed 's/&/\&amp;/g;s/</\&lt;/g;s/>/\&gt;/g' $file >> $output
+    echo "</pre>" >> $output
     echo -e "\n" >> $output
   done
 
   writeFooter
 done
-
-
-
 
 
 # Create the contrib examples HTML files with simple description

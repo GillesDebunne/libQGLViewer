@@ -442,7 +442,7 @@ public Q_SLOTS:
     This value is only meaningful when the MouseAction bindings is QGLViewer::MOVE_FORWARD or
     QGLViewer::MOVE_BACKWARD.
 
-    Set to 0.5% of the sceneRadius() by setSceneRadius(). See also setFlySpeed(). */
+    Set to 1% of the sceneRadius() by setSceneRadius(). See also setFlySpeed(). */
     float flySpeed() const { return frame()->flySpeed(); };
   public Q_SLOTS:
     /*! Sets the Camera flySpeed().
@@ -463,39 +463,23 @@ public Q_SLOTS:
 
     /*! Returns the physical distance between the user's eyes and the screen (in meters).
 
-    Default value is 0.5m.
-
-    Used by loadModelViewMatrixStereo() and loadProjectionMatrixStereo() for stereo display. Value
-    is set using setPhysicalDistanceToScreen().
-
-    physicalDistanceToScreen() and focusDistance() represent the same distance. The first one is
+    physicalDistanceToScreen() and focusDistance() represent the same distance. The former is
     expressed in physical real world units, while the latter is expressed in OpenGL virtual world
-    units. Use their ratio to convert distances between these worlds.
+    units.
 
-    Use the following code to detect a reality center configuration (using its screen aspect ratio)
-    and to automatically set physical distances accordingly:
-    \code
-    QDesktopWidget screen;
-    if (fabs((float)screen.width() / (float)screen.height()) > 2.0)
-    {
-      camera()->setPhysicalDistanceToScreen(4.0);
-      camera()->setPhysicalScreenWidth(10.0);
-    }
-    \endcode */
-    float physicalDistanceToScreen() const { return physicalDistanceToScreen_; };
+	This is a helper function. It simply returns physicalScreenWidth() / tan(horizontalFieldOfView() / 2.0); */
+    float physicalDistanceToScreen() const { return physicalScreenWidth() / tan(horizontalFieldOfView() / 2.0); };
 
-    /*! Returns the physical screen width, in meters. Default value is 0.4m (average monitor).
+    /*! Returns the physical screen width, in meters. Default value is 0.5m (average monitor width).
 
     Used for stereo display only (see loadModelViewMatrixStereo() and loadProjectionMatrixStereo()).
-    Set using setPhysicalScreenWidth().
-
-    See physicalDistanceToScreen() for reality center automatic configuration. */
+    Set using setPhysicalScreenWidth(). */
     float physicalScreenWidth() const { return physicalScreenWidth_; };
 
     /*! Returns the focus distance used by stereo display, expressed in OpenGL units.
 
     This is the distance in the virtual world between the Camera and the plane where the horizontal
-    stereo parallax is null (the stereo left and right images are superimposed).
+    stereo parallax is null (the stereo left and right cameras' lines of sigth cross at this distance).
 
     This distance is the virtual world equivalent of the real-world physicalDistanceToScreen().
 
@@ -507,8 +491,10 @@ public Q_SLOTS:
     /*! Sets the IODistance(). */
     void setIODistance(float distance) { IODistance_ = distance; };
 
-    /*! Sets the physicalDistanceToScreen(). */
-    void setPhysicalDistanceToScreen(float distance) { physicalDistanceToScreen_ = distance; };
+#ifndef DOXYGEN
+	/*! This method is deprecated. Use setPhysicalScreenWidth() instead. */
+	void setPhysicalDistanceToScreen(float distance) { Q_UNUSED(distance); qWarning("setPhysicalDistanceToScreen is deprecated, use setPhysicalScreenWidth instead"); };
+#endif
 
     /*! Sets the physical screen (monitor or projected wall) width (in meters). */
     void setPhysicalScreenWidth(float width) { physicalScreenWidth_ = width; };
@@ -546,7 +532,6 @@ public Q_SLOTS:
     // S t e r e o   p a r a m e t e r s
     float IODistance_;		     // inter-ocular distance, in meters
     float focusDistance_;	     // in scene units
-    float physicalDistanceToScreen_; // in meters
     float physicalScreenWidth_;	     // in meters
 
     // P o i n t s   o f   V i e w s   a n d   K e y F r a m e s
