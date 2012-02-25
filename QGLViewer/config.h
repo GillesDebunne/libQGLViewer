@@ -6,7 +6,7 @@
 #ifndef QGLVIEWER_CONFIG_H
 #define QGLVIEWER_CONFIG_H
 
-#define QGLVIEWER_VERSION 0x02030C
+#define QGLVIEWER_VERSION 0x02030D
 
 // Needed for Qt < 4 (?)
 #ifndef QT_CLEAN_NAMESPACE

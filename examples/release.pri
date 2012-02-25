@@ -162,7 +162,6 @@ unix {
 
 
 win32 {
-  ###### Uncomment this line to compile a debug version of your application
   CONFIG *= debug_and_release
 
   # Seems to be needed for Visual Studio with Intel compiler
@@ -217,8 +216,20 @@ win32 {
   }
 
   !exists( $${LIB_DIR}/$${LIB_FILE_NAME} ) {
+     exists( ../../QGLViewer/release/$${LIB_FILE_NAME} ) {
+       LIB_DIR = ../../QGLViewer/release
+     }
+  }
+
+  !exists( $${LIB_DIR}/$${LIB_FILE_NAME} ) {
     exists( ../../QGLViewer/Debug/$${LIB_FILE_NAME} ) {
       LIB_DIR = ../../QGLViewer/Debug
+    }
+  }
+
+  !exists( $${LIB_DIR}/$${LIB_FILE_NAME} ) {
+    exists( ../../QGLViewer/debug/$${LIB_FILE_NAME} ) {
+      LIB_DIR = ../../QGLViewer/debug
     }
   }
 
@@ -230,19 +241,31 @@ win32 {
 
   !exists( $${LIB_DIR}/$${LIB_FILE_NAME} ) {
      exists( ../../QGLViewer-build-desktop/Release/$${LIB_FILE_NAME} ) {
-       LIB_DIR = ../../QGLViewer/Release-build-desktop
+       LIB_DIR = ../../QGLViewer-build-desktop/Release
      }
   }
 
   !exists( $${LIB_DIR}/$${LIB_FILE_NAME} ) {
-    exists( ../../QGLViewer/Debug-build-desktop/$${LIB_FILE_NAME} ) {
-      LIB_DIR = ../../QGLViewer/Debug-build-desktop
+     exists( ../../QGLViewer-build-desktop/release/$${LIB_FILE_NAME} ) {
+       LIB_DIR = ../../QGLViewer-build-desktop/release
+     }
+  }
+
+  !exists( $${LIB_DIR}/$${LIB_FILE_NAME} ) {
+    exists( ../../QGLViewer-build-desktop/Debug/$${LIB_FILE_NAME} ) {
+      LIB_DIR = ../../QGLViewer-build-desktop/Debug
+    }
+  }
+
+  !exists( $${LIB_DIR}/$${LIB_FILE_NAME} ) {
+    exists( ../../QGLViewer-build-desktop/debug/$${LIB_FILE_NAME} ) {
+      LIB_DIR = ../../QGLViewer-build-desktop/debug
     }
   }
 
   !exists( $${LIB_DIR}/$${LIB_FILE_NAME} ) {
     message( Unable to find $${LIB_FILE_NAME} in $${LIB_DIR} )
-    ########error( You should run qmake LIB_DIR=/path/to/QGLViewer/$${LIB_FILE_NAME} )
+    error( Use qmake LIB_DIR=/path/to/QGLViewer/$${LIB_FILE_NAME} )
   }
 
   win32-g++ {

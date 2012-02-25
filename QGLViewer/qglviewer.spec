@@ -1,7 +1,7 @@
 
 %define version_major 2
 %define version_minor 3
-%define version_revision 12
+%define version_revision 13
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -155,6 +155,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Tue Feb 24 2012 Gilles Debunne <contact@libQGLViewer.com> 2.3.13
+- Handle lower case compilation folder names on windows/Qt 4.8.
+
 * Tue Feb 14 2012 Gilles Debunne <contact@libQGLViewer.com> 2.3.12
 - Fixed compilation for windows/Qt 4.8, better designer installation, removed setPhysicalDistanceToScreen.
 

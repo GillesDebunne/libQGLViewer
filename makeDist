@@ -1,7 +1,7 @@
 #!/bin/bash
 
 libName="libQGLViewer"
-version="2.3.12"
+version="2.3.13"
 
 WebURL="http://www.libqglviewer.com"
 
@@ -20,6 +20,7 @@ cd $QGLViewerRootDir
 
 DOS2UNIX="" #"dos2unix -o -q"
 UNIX2DOS="" #"unix2dos -o -q"
+DOXYGEN="/Applications/Doxygen.app/Contents/Resources/doxygen"
 
 # echo "$0 disabled for security"
 # exit
@@ -483,7 +484,7 @@ do
 done
 
 ################################ Doxygen ###
-doxygen Doxyfile
+$DOXYGEN Doxyfile
 #cd latex ; make clear ; make pdf > /dev/null ; cp refman.pdf $WebDir/qglviewer.pdf
 rm doxygen.css Doxyfile
 
