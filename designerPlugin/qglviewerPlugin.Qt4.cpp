@@ -1,5 +1,6 @@
 #include "qglviewerPlugin.Qt4.h"
 #include <QGLViewer/qglviewer.h>
+#include <QtDesigner/qdesignerexportwidget.h>
 
 // This code generates a QGLViewer designer plugin for Qt 4.
 
@@ -12,11 +13,16 @@
 // Grep these comments in the code below and change the code accordingly //
 // --------------------------------------------------------------------- //
 
+#ifdef Q_OS_WIN32
+#  if QT_VERSION < 0x040100
+#    define QDESIGNER_WIDGET_EXPORT QGLVIEWER_EXPORT
+#  endif
+#endif
 
 // ------------------------------------------------------------- //
 // Change the base class name, as well as the include path above //
 // ------------------------------------------------------------- //
-class Viewer : public QGLViewer
+class QDESIGNER_WIDGET_EXPORT Viewer : public QGLViewer
 {
 public:
   explicit Viewer(QWidget* parent=NULL)

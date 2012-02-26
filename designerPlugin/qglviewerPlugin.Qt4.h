@@ -1,4 +1,3 @@
-#include <QtDesigner/QDesignerContainerExtension>
 #include <QtDesigner/QDesignerCustomWidgetInterface>
 
 #include <QtCore/qplugin.h>

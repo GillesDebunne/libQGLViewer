@@ -23,7 +23,7 @@ target.path = $${PREFIX}/designer
 INSTALLS += target
 
 contains( QT_VERSION, "^4.*" ) {
-  CONFIG *= designer debug_and_release
+  CONFIG *= designer release
   HEADERS = qglviewerPlugin.Qt4.h
   SOURCES = qglviewerPlugin.Qt4.cpp
 } else {
