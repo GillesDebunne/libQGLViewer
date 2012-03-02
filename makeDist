@@ -1,7 +1,7 @@
 #!/bin/bash
 
 libName="libQGLViewer"
-version="2.3.13"
+version="2.3.14"
 
 WebURL="http://www.libqglviewer.com"
 

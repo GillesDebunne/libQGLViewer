@@ -60,9 +60,12 @@ unix {
 
   macx|darwin-g++ {
     !exists( $${LIB_DIR}/$${LIB_NAME} ) {
-      # DYLIB was not found, try to find FrameWork instead
+      # DYLIB was not found, try to find Framework instead
       LIB_NAME = QGLViewer.framework/QGLViewer
-      LIB_DIR = /Library/Frameworks
+      LIB_DIR = ~/Library/Frameworks
+      # qmake does not handle tilde
+      LIB_DIR = $$system(cd $${LIB_DIR};pwd)
+
       !exists( $${LIB_DIR}/$${LIB_NAME} ) {
         exists( ../../QGLViewer/$${LIB_NAME} ) {
           #message( The framework was found in ../../QGLViewer which will be set as the LIB_DIR )

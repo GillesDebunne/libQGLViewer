@@ -296,12 +296,12 @@ void WATER::Render()
 
   //ici, transmission des vertex listes vers la memoire; on passe la liste des vertex sur laquelle on a cree
   //un pointeur avec glVertexPointer; acces exlusif pendant l'operation
-  glLockArraysEXT( 0, numVertices );
+  //glLockArraysEXT( 0, numVertices );
 
   //dessiner l'eau
   glDrawElements( GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, polyIndexArray );
 
-  glUnlockArraysEXT( );
+  //glUnlockArraysEXT( );
 
   //desactiver vertex arrays
   glDisableClientState( GL_VERTEX_ARRAY );

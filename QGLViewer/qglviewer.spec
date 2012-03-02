@@ -1,7 +1,7 @@
 
 %define version_major 2
 %define version_minor 3
-%define version_revision 13
+%define version_revision 14
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -155,7 +155,10 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
-* Tue Feb 24 2012 Gilles Debunne <contact@libQGLViewer.com> 2.3.13
+* Fri Mar 2 2012 Gilles Debunne <contact@libQGLViewer.com> 2.3.14
+- Added symbol export for designer on windows. Framework installed in user's library folder on mac.
+
+* Fri Feb 24 2012 Gilles Debunne <contact@libQGLViewer.com> 2.3.13
 - Handle lower case compilation folder names on windows/Qt 4.8.
 
 * Tue Feb 14 2012 Gilles Debunne <contact@libQGLViewer.com> 2.3.12

@@ -13,7 +13,7 @@ Name libQGLViewer
 
 # Defines
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION 2.3.13
+!define VERSION 2.3.14
 !define COMPANY "Gilles Debunne"
 !define URL http://www.libqglviewer.com/
 
@@ -66,7 +66,7 @@ InstallDir $PROGRAMFILES\libQGLViewer
 CRCCheck on
 XPStyle on
 ShowInstDetails show
-VIProductVersion 2.3.13
+VIProductVersion 2.3.14
 VIAddVersionKey /LANG=${LANG_ENGLISH} ProductName "${NAME}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} ProductVersion "${VERSION}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} CompanyName "${COMPANY}"

@@ -10,7 +10,7 @@
 
 TEMPLATE = lib
 TARGET = QGLViewer
-VERSION = 2.3.13
+VERSION = 2.3.14
 CONFIG *= qt opengl warn_on shared thread create_prl rtti no_keywords
 
 QGL_HEADERS = qglviewer.h \
@@ -246,7 +246,7 @@ macx|darwin-g++ {
     FRAMEWORK_HEADERS.path = Headers
     QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
 
-    DESTDIR = /Library/Frameworks/
+    DESTDIR = ~/Library/Frameworks/
 
     #QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/
     #QMAKE_LFLAGS_SONAME  = -Wl,-install_name,
