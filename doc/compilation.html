@@ -34,7 +34,8 @@
 <h1>Compilation with libQGLViewer</h1>
 
 These instructions assume that you have <a href="download.html">installed</a> Qt and libQGLViewer.<br/>
-They detail how to compile a program (that we will call <code>myApp</code>) that uses the libQGLViewer library.
+They detail how to compile a program that uses the libQGLViewer library.
+They assume you created a folder for your project (probably a copy of one of the <a hreh="examples/index.html">examples</a>), with your sources and a <code>myApp.pro</code> project file. 
 
 <p>
 <a href="#windows"><img src="images/windows.png" width="55" height="54" align="middle" alt="windows"/></a> &nbsp; &nbsp; &nbsp; &nbsp;
@@ -106,7 +107,7 @@ Visual with Administrator priviledges. With Qt 2.3, you also have to add <code>/
  -->
 
 <div class="small">
-See also how to <a href="#pro">create your own configuration</a> or the advices for <a href="installWindows.html">libQGLViewer installation on Windows</a>.
+See also how to <a href="#pro">customize your .pro</a> or the advices for <a href="installWindows.html">libQGLViewer installation on Windows</a>.
 </div>
 
 
@@ -138,22 +139,21 @@ open myApp.app
 </pre>
 
 
-<h3>Next steps</h3>
+<h3>Path customization</h3>
 
-You will have an error message if the libQGLViewer library is not found at runtime. Either install it in a standard directory (see the <a
-href="installUnix.html#mac">installation page</a>) or use <code>install_name</code> to set its path in your program. 
+The standard installation will install the libQGLViewer framework in <code>~/Library/Frameworks</code>, where it can be
+accessed from any application.
 
 <p>
-Read Apple's
+Use <code>install_name</code> and read Apple's
 "<a href="http://developer.apple.com/mac/library/documentation/MacOSX/Conceptual/BPFrameworks/Tasks/CreatingFrameworks.html">Creating a Framework</a>" 
-as well as Qt's "<a href="http://qt.nokia.com/doc/4.6/deployment-mac.html">Deploying an Application on Mac OS X</a>" guides for details.
+as well as Qt's "<a href="http://qt.nokia.com/doc/4.6/deployment-mac.html">Deploying an Application on Mac OS X</a>" if you customize your path.
 </p>
 
-Tune the <code>QMAKE_LFLAGS</code> variable if the library was not installed in the default <code>/Library/Frameworks</code> directory. Use the
-<code>LIBS *= -L/path/to/lib -lQGLViewer</code> Unix syntax if you compiled a dylib instead of a framework.
+Use the <code>LIBS *= -L/path/to/lib -lQGLViewer</code> Unix syntax if you compiled a dylib instead of a framework.
 
 <div class="small">
-See also how to <a href="#pro">create your own configuration</a> or the <a href="installUnix.html#mac">libQGLViewer on Mac</a> installation page.
+See also how to <a href="#pro">customize your .pro</a> or the <a href="installUnix.html#mac">libQGLViewer on Mac</a> installation page.
 </div>
 
 <!--
@@ -220,8 +220,9 @@ write permission). If you have downloaded the tarball instead, simply go to the
 
 <div class="small">
 
-The use of <code>-Wl,-rpath</code> in the compilation options should make your executable find the library. In case you are prompted with an <code>error while loading shared libraries</code> message when executing the program, fix that path. 
-An other option is to copy <code>libQGLViewer.so</code> (created when you compiled the QGLViewer library) to this directory, 
+libQGLViewer uses the <code>-Wl,-rpath</code> syntax so that your executable finds the library.
+In case you are prompted with an <code>error while loading shared libraries</code> message when executing the program, fix that path. 
+An other option is to copy <code>libQGLViewer.so</code> (created when you compiled the QGLViewer library) to your app's directory, 
 or (better) move it to a standard library directory (such as <code>/usr/lib</code>, as is done when you <code>make install</code>).
 <br/>
 <!-- 
@@ -238,7 +239,7 @@ Some configurations may require you to add <code>LIBS *= -lXi</code> in the <cod
 Debian users may have to replace <code>-lQGLViewer</code> by <code>-lQGLViewer-2</code> in their <code>.pro</code>.
 
 <p>
-See also how to <a href="#pro">create your own configuration</a> or the <a href="installUnix.html#linux">libQGLViewer on Unix</a> installation page.
+See also how to <a href="#pro">customize your .pro</a> or the <a href="installUnix.html#linux">libQGLViewer on Unix</a> installation page.
 </p>
 </div>
 
@@ -250,7 +251,7 @@ See also how to <a href="#pro">create your own configuration</a> or the <a href=
 
 
 <a name="pro"></a>
-<h2>Creating the <code>.pro</code> for your application</h2>
+<h2>Customize the <code>.pro</code> for your application</h2>
 
 <p>
 Qt uses a <code>.pro</code> file to tune the compilation settings. The one that comes with the <a href="examples/index.html">examples</a> is pretty involved since it 
@@ -259,12 +260,12 @@ tries to automatically detect where the library and headers files are located. T
 
 <br/>
 
-However, you can create a simplified <code>.pro</code> for your own projects. These three important variables have to be set in order to use libQGLViewer:
+However, you can create a simplified <code>.pro</code> for your own projects. You need to set these three important variables in order to use libQGLViewer:
 <ul>
 <li><code><b>INCLUDEPATH</b></code> which must indicates where to find the QGLViewer's include files. Since the <code>#include</code>s use a <code>QGLViewer/qglviewer.h</code> syntax, 
-the <code>QGLViewer</code> suffix should be omitted in this path: If libQGLViewer was installed in the <code>/xxx/yyy/QGLViewer</code> directory, you will set this variable to <code>INCLUDEPATH *= /xxx/yyy</code>.<br /> <br /></li>
+the <code>QGLViewer</code> suffix should be omitted in this path (if libQGLViewer was installed in the <code>/xxx/yyy/QGLViewer</code> directory, you will set this variable to <code>INCLUDEPATH *= /xxx/yyy</code>).<br /> <br /></li>
 
-<li><code><b>LIBS</b></code> which tells that your program links with libQGLViewer. Use <code>LIBS *= -L<i>/path/to/lib</i> -lQGLViewer#VERSION_MAJOR#</code>, where <code></i>/path/to/lib</i></code> is the path to the libQGLViewer lib, named <code>libQGLViewer#VERSION_MAJOR#.{so|a|dylib}</code> or <code>QGLViewer#VERSION_MAJOR#.lib</code> depending on your architecture. Use <code>-framework QGLViewer</code> instead if you compiled a Framework instead of a <code>dylib</code> on Mac (default).
+<li><code><b>LIBS</b></code> which tells that your program links with libQGLViewer. Use <code>LIBS *= -L<i>/path/to/lib</i> -lQGLViewer#VERSION_MAJOR#</code>, where <code></i>/path/to/lib</i></code> is the path to the libQGLViewer lib (named <code>libQGLViewer#VERSION_MAJOR#.{so|a|dylib}</code> or <code>QGLViewer#VERSION_MAJOR#.lib</code> depending on your architecture). Use <code>-framework QGLViewer</code> instead if you compiled a Framework instead of a <code>dylib</code> on Mac (default).
 <br />
 <br />
 </li>
@@ -284,11 +285,11 @@ SOURCES = myViewer.cpp main.cpp
 
 # Windows
 INCLUDEPATH *= C:/Users/login/Documents/libQGLViewer-#VERSION#
-LIBS *= -LC:/Users/debunne/Documents/libQGLViewer-#VERSION#/QGLViewer -lQGLViewer#VERSION_MAJOR#
+LIBS *= -LC:/Users/login/Documents/libQGLViewer-#VERSION#/QGLViewer -lQGLViewer#VERSION_MAJOR#
 
 # Linux
 INCLUDEPATH *= /home/login/Documents/libQGLViewer-#VERSION#
-LIBS *= -L/home/debunne/libQGLViewer-#VERSION#/QGLViewer -lQGLViewer
+LIBS *= -L/home/login/libQGLViewer-#VERSION#/QGLViewer -lQGLViewer
 
 # Mac 
 INCLUDEPATH *= /Users/login/Documents/libQGLViewer-#VERSION#
@@ -299,11 +300,10 @@ LIBS *= -framework QGLViewer
 If you use Visual Studio, instead of editing the <code>.pro</code>, you can add the QGLViewer's headers path (without the trailing <code>QGLViewer</code>) to <i>C/C++ / General / Additional Include Directories</i> 
 and add <code>QGLViewer#VERSION_MAJOR#.lib</code> to the <i>Linker / Input / Additional Dependencies</i> using the project properties. 
 These settings can also be shared by all your projects by setting the <i>Tools / Options / Directories</i> Include and Library values.
-
-<p>
+<br/>
 A <code>fatal error C1083: 'QDomElement' : No such file or directory</code> is fixed by adding 
 <code>XML library</code> and <code>OpenGL library</code> in <i>Project - Add Qt module</i>.
-</p>
+
 </div>
 
 
@@ -312,9 +312,9 @@ A <code>fatal error C1083: 'QDomElement' : No such file or directory</code> is f
 <h2>Going further</h2>
 
 Now that your program compiles and runs, you can start improving it. You will probably start by changing the <code>draw()</code> method to define your own scene. 
-Overload the <code>init()</code> function to initialize your scene as well as the OpenGL parameters (such as textures and objects). 
+Overload the <code>init()</code> function to initialize your scene as well as the OpenGL state (such as textures and objects). 
 <a href="introduction.html">Read the principles</a> of the library for details. If not already done, try out the 
-different <a href="examples/index.html">examples</a> and feel free to cut and paste code for the functionnalities you need.
+different <a href="examples/index.html">examples</a> and feel free to cut and paste code for the functionalities you need.
 
 <h2>Localizing your application</h2>
 
@@ -333,7 +333,7 @@ See the Qt Linguist Manual for an explanation of the Qt translation model. Here 
 
 This assumes that <code>qglviewer_*.qm</code> is located in your application directory. If it is not the case, copy it or use the overloaded <code>load</code> method:
 <pre>
-  translator.load(QString("qglviewer_") + locale, "C:\\Users\\debunne\\Documents\\Code\\libQGLViewer\\QGLViewer"); // for instance
+  translator.load(QString("qglviewer_") + locale, "C:\\Users\\login\\Documents\\Code\\libQGLViewer\\QGLViewer"); // for instance
 </pre>
 
 QGLViewer translation files are available in the QGLViewer's header directory.
