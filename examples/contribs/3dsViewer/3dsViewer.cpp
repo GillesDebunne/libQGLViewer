@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <qfiledialog.h>
+#include <QKeyEvent>
 
 using namespace std;
 using namespace qglviewer;
@@ -67,7 +68,8 @@ void Viewer::loadFile()
   initScene();
 
   float min[3], max[3];
-  lib3ds_file_bounding_box(file, min, max);
+  lib3ds_file_bounding_box_of_objects(file, true, true, true, min, max);
+  //lib3ds_file_bounding_box(file, min, max);
   setSceneBoundingBox(Vec(min), Vec(max));
   
   if (!file->cameras)

@@ -13,7 +13,7 @@
 }
 
 isEmpty( INCLUDE_DIR ) {
-  INCLUDE_DIR=$${MAIN_PATH}
+  #INCLUDE_DIR=$${MAIN_PATH}
 }
 
 isEmpty( LIB_DIR ) {

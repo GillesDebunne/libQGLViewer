@@ -1,7 +1,7 @@
 
 %define version_major 2
 %define version_minor 3
-%define version_revision 14
+%define version_revision 17
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -155,6 +155,12 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Tue Apr 10 2012 Gilles Debunne <contact@libQGLViewer.com> 2.3.16
+- Added -lGLU library when linking on Linux.
+
+* Thu Mar 8 2012 Gilles Debunne <contact@libQGLViewer.com> 2.3.15
+- Added a QGLViewer prefix so that headers are correctly when using the framework on mac.
+
 * Fri Mar 2 2012 Gilles Debunne <contact@libQGLViewer.com> 2.3.14
 - Added symbol export for designer on windows. Framework installed in user's library folder on mac.
 

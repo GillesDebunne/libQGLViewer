@@ -84,8 +84,8 @@ unix {
   }
 
   !exists( $${LIB_DIR}/$${LIB_NAME} ) {
-    message( Unable to find $${LIB_NAME} in $${LIB_DIR} )
-    error( You should run qmake LIB_DIR=/path/to/QGLViewer/$${LIB_NAME} )
+    message( Unable to find $${LIB_NAME} in $${LIB_DIR}. Make sure you have built it. )
+    message( You should run qmake LIB_DIR=/path/to/QGLViewer/$${LIB_NAME} )
   }
 
   # The actual directory where the library/framework was found
@@ -96,18 +96,22 @@ unix {
   isEmpty( INCLUDE_DIR ) {
     INCLUDE_DIR = $${PREFIX}/include
   }
-  
+
+  macx|darwin-g++ {  
+	  !exists( $${INCLUDE_DIR}/QGLViewer/qglviewer.h ) {
+          INCLUDE_DIR=$${LIB_DIR}/QGLViewer.framework
+	      exists( $${LIB_DIR}/QGLViewer.framework/Headers/QGLViewer/qglviewer.h ) {
+	         INCLUDE_DIR = $${LIB_DIR}/QGLViewer.framework/Headers
+	      }
+	  }
+  }
+
   !exists( $${INCLUDE_DIR}/QGLViewer/qglviewer.h ) {
-    # qmake does not support Headers/QGLViewer FRAMEWORK_HEADERS.path
-    #exists( $${LIB_DIR}/QGLViewer.framework/Headers/qglviewer.h ) {
-    #  INCLUDE_DIR = $${LIB_DIR}/QGLViewer.framework/Headers
-    #} else {
     exists( ../../QGLViewer/qglviewer.h ) {
       # message( libQGLViewer header files were not installed in standard $${INCLUDE_DIR} directory )
       # message( Headers were found in ../.. which will be set as the INCLUDE_DIR )
       INCLUDE_DIR = ../..
     }
-    #}
   }
 
   !exists( $${INCLUDE_DIR}/QGLViewer/qglviewer.h ) {
@@ -130,12 +134,15 @@ unix {
         LIBS *= -L$${LIB_DIR} -lQGLViewer
     }
   } else {
-    isEmpty(QMAKE_RPATH) {
+    isEmpty(QMAKE_LFLAGS_RPATH) {
       !plugin:QMAKE_LFLAGS += -Wl,-rpath,$${LIB_DIR_ABSOLUTE_PATH}
     } else {
       !plugin:QMAKE_RPATHDIR *= $${LIB_DIR_ABSOLUTE_PATH}
     }
     LIBS *= -L$${LIB_DIR} -lQGLViewer
+
+	# Qt 4.8 removed the GLU dependency
+    QMAKE_LIBS_OPENGL *= -lGLU
   }
 
   # Paths were correctly detected

@@ -31,7 +31,7 @@ PROJECT_NAME           = libQGLViewer
 # This could be handy for archiving the generated documentation or 
 # if some version control system is used.
 
-PROJECT_NUMBER         = "Version 2.3.14"
+PROJECT_NUMBER         = "Version 2.3.17"
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) 
 # base path where the generated documentation will be put. 
@@ -901,7 +901,7 @@ QCH_FILE               =
 # Qt Help Project output. For more information please see 
 # http://doc.trolltech.com/qthelpproject.html#namespace
 
-QHP_NAMESPACE          = com.libqglviewer.2.3.14
+QHP_NAMESPACE          = com.libqglviewer.2.3.17
 
 # The QHP_VIRTUAL_FOLDER tag specifies the namespace to use when generating 
 # Qt Help Project output. For more information please see 
