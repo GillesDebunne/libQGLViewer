@@ -89,18 +89,14 @@ A.codeRef:link { font-weight: normal; color: #0000FF}
 A.codeRef:visited { font-weight: normal; color: #0000FF}
 A:hover { text-decoration: none; background-color: #f2f2ff }
 DL.el { margin-left: -1cm }
-.fragment {
-       font-family: monospace, fixed;
-       font-size: 95%;
-}
-pre { margin:0px; padding:3px; }
-PRE.fragment {
 
+div.fragment {
+    font-family: monospace, fixed;
 	  border: 1px solid #CCC;
 	    border-bottom: 2px solid #888;
-	      border-right: 3px solid #888;
+	      border-right: 2px solid #888;
 	        background-color: #F5F5F5;
-		  padding: 4px;
+		  padding: 6px;
 		    margin: 0px 20px 0px 25px;
 }
 DIV.ah { background-color: black; font-weight: bold; color: #ffffff; margin-bottom: 3px; margin-top: 3px }
@@ -292,11 +288,12 @@ HR { height: 1px;
 .memdoc{
   padding-left: 10px;
 }
-.memproto {
+div.memproto {
   background-color: white;
   width: 100%;
   border: 0;
   font-weight: bold;
+  font-size:large;
 }
 .paramkey {
   text-align: right;

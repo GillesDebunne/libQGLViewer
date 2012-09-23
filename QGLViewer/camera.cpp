@@ -1951,7 +1951,7 @@ See the <a href="../examples/frustumCulling.html">frustumCulling example</a> for
 This format is compatible with the \c glClipPlane() function. One camera frustum plane can hence be
 applied in an other viewer to visualize the culling results:
 \code
- // Retrieve plance equations
+ // Retrieve plane equations
  GLdouble coef[6][4];
  mainViewer->camera()->getFrustumPlanesCoefficients(coef);
 

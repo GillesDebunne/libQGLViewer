@@ -467,8 +467,8 @@ public Q_SLOTS:
     expressed in physical real world units, while the latter is expressed in OpenGL virtual world
     units.
 
-	This is a helper function. It simply returns physicalScreenWidth() / tan(horizontalFieldOfView() / 2.0); */
-    float physicalDistanceToScreen() const { return physicalScreenWidth() / tan(horizontalFieldOfView() / 2.0); };
+	This is a helper function. It simply returns physicalScreenWidth() / 2.0 / tan(horizontalFieldOfView() / 2.0); */
+    float physicalDistanceToScreen() const { return physicalScreenWidth() / 2.0f / tan(horizontalFieldOfView() / 2.0); };
 
     /*! Returns the physical screen width, in meters. Default value is 0.5m (average monitor width).
 

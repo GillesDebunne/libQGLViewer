@@ -21,6 +21,8 @@ cd $QGLViewerRootDir
 DOS2UNIX="" #"dos2unix -o -q"
 UNIX2DOS="" #"unix2dos -o -q"
 DOXYGEN="/Applications/Doxygen.app/Contents/Resources/doxygen"
+QT_PATH="/Users/debunne/QtSDK/desktop/Qt/4.8.1/gcc/bin"
+PATH=$QT_PATH:$PATH
 
 # echo "$0 disabled for security"
 # exit
@@ -484,7 +486,15 @@ do
 done
 
 ################################ Doxygen ###
-$DOXYGEN Doxyfile
+if [[ -f $DOXYGEN ]]
+then
+    $DOXYGEN Doxyfile
+else
+	echo
+	echo "Doxygen not found ($DOXYGEN)"
+    exit 1
+fi
+
 #cd latex ; make clear ; make pdf > /dev/null ; cp refman.pdf $WebDir/qglviewer.pdf
 rm doxygen.css Doxyfile
 
@@ -494,16 +504,34 @@ test -f installdox && rm installdox
 
 ## Changing header menu in doxygen pages ##
 # Removing unused pages
-rm -f files.html globals.html globals_*.html *_8*.html namespace*.html dir_*.html dirs.html functions_rela.html functions_vars.html functions_0x*.html classes.html
+if [[ -f patchingDoxygenIsPainful ]]
+then
+    rm -f files.html globals.html globals_*.html *_8*.html namespace*.html dir_*.html dirs.html functions_rela.html functions_vars.html functions_0x*.html classes.html
 
-# Patching functions pages
-for f in $(ls functions_*.html)
-do
-  newName=$(echo $f | sed s%"_func"%%)
-  grep -v "^Here is a list" $f | sed s%"functions_func"%"functions"%g | sed s%"| <a[^>]*>Variables</a>"%""%g | sed s%"| <a[^>]*>Related&nbsp;Functions</a>"%""%g | sed s%"<a[^>]*>All</a> |"%""%g > $newName-bis
-  rm -r $f
-  mv $newName-bis $newName
-done
+    # Patching functions pages
+    for f in $(ls functions_*.html)
+    do
+      newName=$(echo $f | sed s%"_func"%%)
+      grep -v "^Here is a list" $f | sed s%"functions_func"%"functions"%g | sed s%"| <a[^>]*>Variables</a>"%""%g | sed s%"| <a[^>]*>Related&nbsp;Functions</a>"%""%g | sed s%"<a[^>]*>All</a> |"%""%g > $newName-bis
+      rm -r $f
+      mv $newName-bis $newName
+    done
+
+	# Changing header menus
+	for f in $(ls *.html)
+	do
+		No time to keep up with doxygen output changes
+	    awk -f ../tabs.awk $f > /tmp/tabs
+	    mv /tmp/tabs $f
+	done
+
+	# Removing useless empty lines
+	for f in `ls *.html`
+	do
+	  awk '/<tr><td colspan="2"><p><a class="anchor"/ { skip=1; next} { if (skip==1) { skip=0; next } print} GILLES' $f > $f.tmp
+	  mv $f.tmp $f
+	done
+fi
 
 # Changing hierarchy page
 sed s%"This inheritance.*alphabetically:"%% hierarchy.html > /tmp/hierarchy.html
@@ -516,11 +544,11 @@ do
   mv /tmp/qgl $f
 done
 
-# Changing header menus
+# Changing link to main page
 for f in $(ls *.html)
 do
-    awk -f ../tabs.awk $f > /tmp/tabs
-    mv /tmp/tabs $f
+    sed s%"<a href=\"index.html\"><span>Main"%"<a href=\"../index.html\"><span>Main"%g $f > /tmp/qgl
+    mv /tmp/qgl $f
 done
 rm ../tabs.awk
 
@@ -548,12 +576,6 @@ do
   mv $f.tmp $f
 done
 
-# Removing useless empty lines
-for f in `ls *.html`
-do
-  awk '/<tr><td colspan="2"><p><a class="anchor"/ { skip=1; next} { if (skip==1) { skip=0; next } print}' $f > $f.tmp
-  mv $f.tmp $f
-done
 
 # Creating assistant qch file
 awk '/<section title="Files"/ { skip=1 } /<\/toc>/ { print"      </section>"; skip=0 } { if (skip==0) print }' index.qhp > index.filtered.qhp

@@ -67,14 +67,13 @@ qmake -spec macx-xcode
 cd path/to/libQGLViewer-#VERSION#/QGLViewer
 qmake -spec macx-g++
 make
-make install
 </pre>
 
 See the <a href="#linux">Linux section</a> for details and install paths customization. 
 
 <h3>Next steps</h3>
 
-Once the library is installed, you can <a href="compilation.html#mac">compile the examples</a>. 
+Once the library is compiled, you can <a href="compilation.html#mac">compile the examples</a>. 
 
 <p>
 Install the <a href="#plugin">libQGLViewer designer plugin</a> to
@@ -84,7 +83,7 @@ easily create user interfaces that integrate a QGLViewer using designer.
 
 
 <div class="small">
-Run <code>make install</code> to install the documentation in <code>/Developer/Documentation/QGLViewer</code>.
+You can <code>make install</code> to install the documentation in <code>/Developer/Documentation/QGLViewer</code>.
 
 <p>A <i>Framework</i> is created by default. Uncomment a line in <code>QGLViewer.pro</code> if you want to create a <code>.dylib</code> instead.</p>
 
@@ -210,7 +209,7 @@ Open <code>QGLViewer.pro</code> and "build all". Optionaly <code>make install</c
 <pre>
 qmake (see options below)
 make
-make install (optional)
+sudo make install [optional]
 </pre>
 
 The following files are installed (you need root privileges to <code>install</code>, since these are system directories):

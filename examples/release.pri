@@ -79,18 +79,16 @@ unix {
           LIB_DIR = ../../QGLViewer-build-desktop
         }
       }
-
     }
   }
 
   !exists( $${LIB_DIR}/$${LIB_NAME} ) {
     message( Unable to find $${LIB_NAME} in $${LIB_DIR}. Make sure you have built it. )
-    message( You should run qmake LIB_DIR=/path/to/QGLViewer/$${LIB_NAME} )
+    error( You should run qmake LIB_DIR=/path/to/QGLViewer/$${LIB_NAME} )
   }
 
   # The actual directory where the library/framework was found
   LIB_DIR_ABSOLUTE_PATH = $$system(cd $${LIB_DIR};pwd)
-
 
   # INCLUDE_DIR
   isEmpty( INCLUDE_DIR ) {
@@ -128,7 +126,7 @@ unix {
         QMAKE_LFLAGS += -F$${LIB_DIR}
         !plugin:QMAKE_POST_LINK=install_name_tool -change QGLViewer.framework/Versions/#VERSION_MAJOR#/QGLViewer $${LIB_DIR_ABSOLUTE_PATH}/QGLViewer.framework/Versions/#VERSION_MAJOR#/QGLViewer $${TARGET}.app/Contents/MacOS/$${TARGET}
       }
-      LIBS += -framework QGLViewer
+      LIBS += -F$${LIB_DIR} -framework QGLViewer
     } else {
         !plugin:QMAKE_POST_LINK=install_name_tool -change libQGLViewer.#VERSION_MAJOR#.dylib $${LIB_DIR_ABSOLUTE_PATH}/libQGLViewer.#VERSION_MAJOR#.dylib $${TARGET}.app/Contents/MacOS/$${TARGET}
         LIBS *= -L$${LIB_DIR} -lQGLViewer

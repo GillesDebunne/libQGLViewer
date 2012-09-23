@@ -155,6 +155,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Thu May 24 2012 Gilles Debunne <contact@libQGLViewer.com> 2.3.17
+- Compilation of the examples using a framework fixed on Mac. 
+
 * Tue Apr 10 2012 Gilles Debunne <contact@libQGLViewer.com> 2.3.16
 - Added -lGLU library when linking on Linux.
 
