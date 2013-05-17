@@ -84,7 +84,7 @@ unix {
 
   !exists( $${LIB_DIR}/$${LIB_NAME} ) {
     message( Unable to find $${LIB_NAME} in $${LIB_DIR}. Make sure you have built it. )
-    error( You should run qmake LIB_DIR=/path/to/QGLViewer/$${LIB_NAME} )
+    message( If you have, you should run qmake LIB_DIR=/path/to/QGLViewer/$${LIB_NAME} )
   }
 
   # The actual directory where the library/framework was found

@@ -20,7 +20,7 @@ cd $QGLViewerRootDir
 
 DOS2UNIX="" #"dos2unix -o -q"
 UNIX2DOS="" #"unix2dos -o -q"
-DOXYGEN="/Applications/Doxygen.app/Contents/Resources/doxygen"
+DOXYGEN=$(which doxygen)
 QT_PATH="/Users/debunne/QtSDK/desktop/Qt/4.8.1/gcc/bin"
 PATH=$QT_PATH:$PATH
 
