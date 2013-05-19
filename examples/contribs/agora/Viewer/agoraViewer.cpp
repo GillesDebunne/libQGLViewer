@@ -10,7 +10,7 @@
 #include <qtimer.h>
 
 #if QT_VERSION >= 0x040000
-# include "ui_agoraWindow.Qt4.h"
+# include "ui_agoraWindow.h"
 class AgoraWindow : public QMainWindow, public Ui::AgoraWindow {};
 #else
 # include <qmainwindow.h>
@@ -533,7 +533,7 @@ void AgoraViewer::finalizeUndoRedo()
 
 void AgoraViewer::about()
 {
-	QMessageBox::about(this, "A g o  r a", "A g o r a\nCreated by Gilles Debunne\nVersion 2.0 - January 2008");
+	QMessageBox::about(this, "A g o r a", "A g o r a\nCreated by Gilles Debunne\nVersion 2.0 - January 2008");
 }
 
 void AgoraViewer::displayRules()

@@ -1,7 +1,7 @@
 #include <qapplication.h>
 
 #if QT_VERSION >= 0x040000
-# include "ui_agoraWindow.Qt4.h"
+# include "ui_agoraWindow.h"
   class AgoraWindow : public QMainWindow, public Ui::AgoraWindow
   {
   public:

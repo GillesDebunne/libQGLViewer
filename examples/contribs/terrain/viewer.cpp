@@ -256,7 +256,7 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 	myTree.switchTree();
 	updateGL();
 	break;
-      case Qt::Key_L:		//switch direction de lumiere (en pas de 45°)
+      case Qt::Key_L:		//switch direction de lumiere (en pas de 45Â°)
 	myQuadtree.StepLightingDirection();
 	myQuadtree.CalculateLighting( );
 	updateGL();
@@ -299,7 +299,7 @@ bool Viewer::CheckExtension( const QString& szExtensionName )
       uiNextExtension= strcspn( szSupExt, " " );
 
       //check the extension to the one given in the argument list
-      if( szExtensionName==szSupExt, uiNextExtension )
+      if( szExtensionName==szSupExt )
 	{
 	  //the extension is supported
 	  // printf( "Your video card supports extension: %s", szExtensionName );
@@ -324,7 +324,7 @@ QString Viewer::helpString() const
   text += "You can toggle the display of water (<b>W</b>), trees (<b>T</b>) and sky (<b>S</b>).<br><br>";
   text += "Press <b>X</b> to switch texturing on and off.<br>";
   text += "Press <b>O</b> to switch shading on and off.<br>";
-  text += "Press <b>L</b> to cycle through different light source positions (+45°).<br>";
+  text += "Press <b>L</b> to cycle through different light source positions (+45Â°).<br>";
   text += "Press <b>M</b> to toggle wireframe mesh display.<br><br>";
   text += "Press <b>S</b> to toggle sky display.<br>";
   text += "Press <b>T</b> to toggle tree display.<br>";

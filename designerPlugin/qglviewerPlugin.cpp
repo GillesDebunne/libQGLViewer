@@ -1,8 +1,8 @@
-#include "qglviewerPlugin.Qt4.h"
+#include "qglviewerPlugin.h"
 #include <QGLViewer/qglviewer.h>
 #include <QtDesigner/qdesignerexportwidget.h>
 
-// This code generates a QGLViewer designer plugin for Qt 4.
+// This code generates a QGLViewer designer plugin for Qt version 4 or more.
 
 // Creating such a plugin is required to make designer aware of your
 // widget specific signals and slots and to create user interfaces that use it.
@@ -204,12 +204,14 @@ QIcon QGLViewerPlugin::icon() const
   return QIcon(QPixmap(qglviewer_icon));
 }
 
+#if QT_VERSION < 0x050000
 // ------------------------------------------------- //
 // Change this if desired:                           //
 // First parameter must match the TARGET in .pro     //
 // Second parameter is the class name defined in .h  //
 // ------------------------------------------------- //
 Q_EXPORT_PLUGIN2(QGLViewerPlugin, QGLViewerPlugin)
+#endif
 
 // ------------- //
 // You're done ! //

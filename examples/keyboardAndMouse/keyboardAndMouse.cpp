@@ -69,7 +69,7 @@ void Viewer::init()
   /////////////////////////////////////////////////////
 
   // Left and right buttons together make a camera zoom : emulates a mouse third button if needed.
-  setMouseBinding(Qt::LeftButton | Qt::RightButton, CAMERA, ZOOM);
+  setMouseBinding(Qt::LeftButton + Qt::RightButton, CAMERA, ZOOM);
 
   // Disable previous TRANSLATE mouse binding (and remove it from help mouse tab).
   setMouseBinding(Qt::RightButton, NO_CLICK_ACTION);
@@ -82,9 +82,9 @@ void Viewer::init()
   // Alt + mouse wheel MOVE_FORWARD the camera.
   setWheelBinding(Qt::AltButton, CAMERA, MOVE_FORWARD);
 #else
-  setMouseBinding(Qt::ControlModifier | Qt::ShiftModifier | Qt::RightButton, SELECT);
+  setMouseBinding(Qt::CTRL + Qt::SHIFT + Qt::RightButton, SELECT);
   setWheelBinding(Qt::AltModifier, CAMERA, MOVE_FORWARD);
-  setMouseBinding(Qt::AltModifier | Qt::LeftButton, CAMERA, TRANSLATE);
+  setMouseBinding(Qt::ALT + Qt::LeftButton, CAMERA, TRANSLATE);
 #endif
 
   // Add custom mouse bindings description (see mousePressEvent())

@@ -17,10 +17,10 @@ SOURCES += board.cpp game.cpp drawer.cpp dvonnviewer.cpp dvonnwindowimpl.cpp mai
 DISTFILES += images/*.png rules/*.png rules/rules.html
 
 QT_VERSION=$$[QT_VERSION]
-contains( QT_VERSION, "^4.*" ) {
-  FORMS += dvonnwindow.Qt4.ui
-} else {
+contains( QT_VERSION, "^3.*" ) {
   FORMS += dvonnwindow.Qt3.ui
+} else {
+  FORMS += dvonnwindow.ui
 }
 
 include( ../../examples.pri )

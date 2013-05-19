@@ -5,11 +5,11 @@ bool Jeu::needDrawing(int i)
 
 void Jeu::placePiece(int select, Piece *p)
 {
-  // on verifie que la piece n'ai pas été déja placée autre part
+  // on verifie que la piece n'ai pas Ã©tÃ© dÃ©ja placÃ©e autre part
   for(int i=0; i<16; i++)
     if(tab[i].piece==p) {
-      if(i==select) return; // la piece a déja été placée au bon endroit
-      // si oui, on l'enlève
+      if(i==select) return; // la piece a dÃ©ja Ã©tÃ© placÃ©e au bon endroit
+      // si oui, on l'enlÃ¨ve
       tab[i].empty=true;
       tab[i].piece=NULL;
     }
@@ -18,7 +18,7 @@ void Jeu::placePiece(int select, Piece *p)
   tab[select].piece=p;
 }
 
-// Vrai ssi les 4 pieces ont unbe caractéristique commune
+// Vrai ssi les 4 pieces ont unbe caractÃ©ristique commune
 bool Jeu::caracCommune(Piece* pieces[4])
 {
   for (int i=0; i<4; ++i)
@@ -46,7 +46,7 @@ bool Jeu::caracCommune(Piece* pieces[4])
   return false;
 }
 
-// Analyse si un alignement a été effectué
+// Analyse si un alignement a Ã©tÃ© effectuÃ©
 bool Jeu::analyze()
 {
   Piece* pieces[4];

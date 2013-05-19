@@ -504,7 +504,7 @@ void TERRAIN::GenerateTextureMap( unsigned int size )
 //..idee de la methode: si entre un point et la source de lumiere, dans la direction
 //..de la lumiere, il y a un autre element du terrain, ce point se trouve dans l'ombre
 //.. pour cela, on soustrait l'hauteur du vertex voisin de l'hauteur du vertex actuel
-//.. CEPENDANT, on est limite a des changements de position de lumiere par pas de 45°
+//.. CEPENDANT, on est limite a des changements de position de lumiere par pas de 45Â°
 //.. et on ne tient pas compte de l'hauteur de la source de lumiere! (seulement le vertex directement a cote compte)
 void TERRAIN::CalculateLighting( void )
 {
@@ -544,7 +544,7 @@ void TERRAIN::CalculateLighting( void )
     }
 }
 
-//tourner la lumiere par un pas de 45°
+//tourner la lumiere par un pas de 45Â°
 void TERRAIN::StepLightingDirection(void)
 {
   if ((directionX==-1)&&(directionZ==-1)) {directionX++;}

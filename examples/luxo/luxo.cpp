@@ -8,10 +8,10 @@ using namespace std;
 
 QString Viewer::helpString() const
 {
-  QString text("<h2>L u x o  ©</h2>");
+  QString text("<h2>L u x o  Â©</h2>");
   text += "This example illustrates several functionnalities of QGLViewer, ";
   text += "showing how easy it is to create a moderately complex application.<br><br>";
-  text += "The famous luxo lamp (©Pixar) can interactively be manipulated ";
+  text += "The famous luxo lamp (Â©Pixar) can interactively be manipulated ";
   text += "with the mouse. <b>Shift</b> left click on an a part of the lamp to select it, ";
   text += "and then move it with the mouse. Press the <b>Control</b> key or select the background ";
   text += "to move the camera instead.<br><br>";

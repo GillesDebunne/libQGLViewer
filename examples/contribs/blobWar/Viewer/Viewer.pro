@@ -16,10 +16,10 @@ HEADERS += blobWarViewer.h board.h move.h computerPlayer.h undo.h
 SOURCES += main.cpp blobWarViewer.cpp board.cpp boardDraw.cpp move.cpp computerPlayer.cpp undo.cpp
 
 QT_VERSION=$$[QT_VERSION]
-contains( QT_VERSION, "^4.*" ) {
-  FORMS += blobWarWindow.Qt4.ui computerPlayerInterface.Qt4.ui
-} else {
+contains( QT_VERSION, "^3.*" ) {
   FORMS += blobWarWindow.Qt3.ui computerPlayerInterface.Qt3.ui
+} else {
+  FORMS += blobWarWindow.ui computerPlayerInterface.ui
 }
 
 DISTFILES *= ../BlobWarBoards/*.bwb

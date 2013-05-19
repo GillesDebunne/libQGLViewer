@@ -10,7 +10,7 @@
 
 TEMPLATE = lib
 TARGET = QGLViewer
-VERSION = 2.3.17
+VERSION = 2.4.0
 CONFIG *= qt opengl warn_on shared thread create_prl rtti no_keywords
 
 QGL_HEADERS = qglviewer.h \
@@ -45,8 +45,12 @@ TRANSLATIONS = qglviewer_fr.ts
                        
 QT_VERSION=$$[QT_VERSION]
 
-contains( QT_VERSION, "^4.*" ) {
-  QT *= xml opengl
+!contains( QT_VERSION, "^3.*" ) {
+    QT *= xml opengl
+}
+
+contains ( QT_VERSION, "^5.*" ) {
+    QT *= widgets
 }
 
 !isEmpty( QGLVIEWER_STATIC ) {
@@ -56,10 +60,10 @@ contains( QT_VERSION, "^4.*" ) {
 # -----------------------------------
 # --  I m a g e I n t e r f a c e  --
 # -----------------------------------
-contains( QT_VERSION, "^4.*" ) {
-  FORMS *= ImageInterface.Qt4.ui
-} else {
+contains( QT_VERSION, "^3.*" ) {
   FORMS *= ImageInterface.Qt3.ui
+} else {
+  FORMS *= ImageInterface.ui
 }
 
 # ---------------------------------------------
@@ -71,10 +75,10 @@ contains( QT_VERSION, "^4.*" ) {
 contains( DEFINES, NO_VECTORIAL_RENDER ) {
   message( Vectorial rendering disabled )
 } else {
-  contains( QT_VERSION, "^4.*" ) {
-    FORMS *= VRenderInterface.Qt4.ui
-  } else {
+  contains( QT_VERSION, "^3.*" ) {
     FORMS *= VRenderInterface.Qt3.ui
+  } else {
+    FORMS *= VRenderInterface.ui
   }
 
   SOURCES *= \
@@ -205,18 +209,6 @@ unix {
   INSTALLS *= target include documentation docImages docRefManual
 }
 
-# -----------------
-# --  L i n u x  --
-# -----------------
-linux-g++ {
-  # Patch for gcc 3.2.0 and 3.3.1-2
-  system( g++ --version | grep " 3\.2\.0 " > /dev/null )|system( g++ --version | grep " 3\.3\.1\-2" > /dev/null ) {
-      message( Patching gcc bug - using debug configuration )
-      CONFIG -= release
-      CONFIG *= debug
-  }
-}
-
 
 # -----------------------
 # --  S G I   I r i x  --
@@ -322,6 +314,7 @@ win32 {
   # Any feedback on these flags is welcome.
   !win32-g++ {
     QMAKE_CXXFLAGS = -TP -GR -Zi
+    DEFINES += NOMINMAX
     win32-msvc {
       QMAKE_CXXFLAGS *= -GX
     } else {
@@ -331,7 +324,7 @@ win32 {
 }
 
 
-contains( QT_VERSION, "^4.*" ) {
+!contains( QT_VERSION, "^3.*" ) {
    build_pass:CONFIG(debug, debug|release) {
      unix: TARGET = $$join(TARGET,,,_debug)
      else: TARGET = $$join(TARGET,,,d)

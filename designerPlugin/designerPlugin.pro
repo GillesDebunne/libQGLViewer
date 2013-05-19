@@ -4,7 +4,8 @@ CONFIG *= dll plugin no_keywords
 TARGET  = qglviewerplugin
 
 QT_VERSION=$$[QT_VERSION]
-contains( QT_VERSION, "^4.*" ) {
+
+!contains( QT_VERSION, "^3.*" ) {
   isEmpty( PREFIX ) {
     PREFIX=$$[QT_INSTALL_PLUGINS]
   } else {
@@ -22,13 +23,20 @@ contains( QT_VERSION, "^4.*" ) {
 target.path = $${PREFIX}/designer
 INSTALLS += target
 
-contains( QT_VERSION, "^4.*" ) {
-  CONFIG *= designer release
-  HEADERS = qglviewerPlugin.Qt4.h
-  SOURCES = qglviewerPlugin.Qt4.cpp
+HEADERS = qglviewerPlugin.h
+SOURCES = qglviewerPlugin.cpp
+
+contains( QT_VERSION, "^5.*" ) {
+  QT *= designer
+  CONFIG *= release
+  OTHER_FILES += designerplugindescription.json
 } else {
-  HEADERS = qglviewerPlugin.Qt3.h
-  SOURCES = qglviewerPlugin.Qt3.cpp
+  contains( QT_VERSION, "^4.*" ) {
+    CONFIG *= designer release
+  } else {
+    HEADERS = qglviewerPlugin.Qt3.h
+    SOURCES = qglviewerPlugin.Qt3.cpp
+  }
 }
 
 include( ../examples/examples.pri )

@@ -1,6 +1,6 @@
+#include "config.h"
 
-#if QT_VERSION > 0x040000
-# include <QGlobal>
+#if QT_VERSION >= 0x040000
 # include <QDomElement>
 # include <QString>
 # include <QStringList>

@@ -13,8 +13,8 @@ SOURCES	+= glview.cpp jeu.cpp piece.cpp quarto.cpp main.cpp
 DISTFILES += bois.jpg rules.txt
 
 QT_VERSION=$$[QT_VERSION]
-contains( QT_VERSION, "^4.*" ) {
-  warning(This example has not yet been ported to Qt4)
+!contains( QT_VERSION, "^3.*" ) {
+  warning(This example has not been validated after Qt3)
 }
 
 include( ../../examples.pri )

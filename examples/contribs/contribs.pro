@@ -9,8 +9,7 @@ SUBDIRS       = agora \
 		textureViewer \
 		thumbnail
 
-QT_VERSION = $$[QT_VERSION]
-!contains( QT_VERSION, "^4.*" ) {
-  SUBDIRS *= quarto 3dsViewer eventRecorder
-}
-
+# These examples are no longer maintained
+# 3dsViewer
+# eventRecorder
+# quarto

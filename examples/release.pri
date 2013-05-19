@@ -114,7 +114,7 @@ unix {
 
   !exists( $${INCLUDE_DIR}/QGLViewer/qglviewer.h ) {
     message( Unable to find QGLViewer/qglviewer.h in $${INCLUDE_DIR} )
-    error( Use qmake INCLUDE_DIR=/path/to/QGLViewerDir )
+    message( Use qmake INCLUDE_DIR=/path/to/QGLViewerDir )
   }
 
 
@@ -152,7 +152,7 @@ unix {
   }
 
   macx|darwin-g++ {
-    !contains( QT_VERSION, "^4.*" ) {
+    contains( QT_VERSION, "^3.*" ) {
       # Qt3 only
       LIBS *= -lobjc
       CONFIG -= thread
@@ -289,7 +289,7 @@ win32 {
 
   !win32-g++ {
     # Use the Qt DLL version. Only needed with Qt3
-    !contains( QT_VERSION, "^4.*" ) {
+    contains( QT_VERSION, "^3.*" ) {
       DEFINES *= QT_DLL QT_THREAD_SUPPORT
     }
 

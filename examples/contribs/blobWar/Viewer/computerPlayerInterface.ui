@@ -50,7 +50,7 @@
      <item>
       <widget class="QSpinBox" name="allowedTimeSpinBox">
        <property name="toolTip">
-        <string>Maximum computer program relexion time</string>
+        <string>Maximum computer program reflexion time</string>
        </property>
        <property name="specialValueText">
         <string>1 second</string>

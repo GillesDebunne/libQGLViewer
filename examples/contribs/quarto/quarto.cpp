@@ -9,7 +9,6 @@
 #include <qmessagebox.h>
 #include <qpushbutton.h>
 #include <qwidget.h>
-#include <qmime.h>
 #include <qlayout.h>
 #include <qtooltip.h>
 #include <qdialog.h>
@@ -48,7 +47,7 @@ Quarto::Quarto(QWidget* parent)
   MainHLayout = new QHBoxLayout( NULL );
 
   GLFrameJeu = new QFrame( centralWidget() );
-  GLFrameJeu->setMouseTracking( TRUE );
+  GLFrameJeu->setMouseTracking( true );
   GLFrameJeu->setFrameShape( QFrame::StyledPanel );
   GLFrameJeu->setFrameShadow( QFrame::Raised );
   GLFrameJeu->setFrameStyle( QFrame::Sunken | QFrame::Panel );
@@ -99,7 +98,7 @@ Quarto::Quarto(QWidget* parent)
   // Fenetre de vue des pieces //
   //##########################//
   GLFramePieces = new QFrame( centralWidget() );
-  GLFramePieces->setMouseTracking( TRUE );
+  GLFramePieces->setMouseTracking( true );
   GLFramePieces->setFrameShape( QFrame::StyledPanel );
   GLFramePieces->setFrameShadow( QFrame::Raised );
   GLFramePieces->setFrameStyle( QFrame::Sunken | QFrame::Panel );

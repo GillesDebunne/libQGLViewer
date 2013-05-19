@@ -1,9 +1,15 @@
 #include "piece.h"
 
+#ifdef Q_OS_MAC
+# include <OpenGL/glu.h>
+#else
+# include <GL/glu.h>
+#endif
+
 SetOfPiece::SetOfPiece()
 {
   selected=-1;
-  // on crée et place chaque piece
+  // on crÃ©e et place chaque piece
   for(int i=0; i<16; i++)
     tab[i]=new Piece(i, i/8, (i/4)%2, (i/2)%2, i%2, (i%4)*4.5, (i/4)*4.5 );
 }
@@ -34,7 +40,7 @@ void SetOfPiece::setTexture(GLuint texture)
 
 void SetOfPiece::placeSelectedPiece(int select)
 {
-  // Si aucun objet n'est selectionné, on ne fait rien
+  // Si aucun objet n'est selectionnÃ©, on ne fait rien
   if(selected==-1) return;
   tab[selected]->setFenetre(true);
   tab[selected]->setPos((select%4)*3.5+3.7, (select/4)*3.5+3.7);
@@ -52,7 +58,7 @@ Piece::Piece(int i, bool c, bool s, bool f, bool t, double x, double y) : id(i),
 {
   // La fenetre est au debut, celle de selection
   fenetre=false;
-  // La piece n'est pas selectionnée
+  // La piece n'est pas selectionnÃ©e
   selected=false;
   // On initialise les parametres de couleur
     for (int i=0; i<3; ++i)
@@ -65,7 +71,7 @@ Piece::Piece(int i, bool c, bool s, bool f, bool t, double x, double y) : id(i),
 
 void Piece::paint(bool fen)
 {
-  // Si l'objet ne doit pas etre affiché dans la fenetre, on sort
+  // Si l'objet ne doit pas etre affichÃ© dans la fenetre, on sort
   if(fenetre!=fen) return;
   // On place l'objet au bon endroit
   glPushMatrix();

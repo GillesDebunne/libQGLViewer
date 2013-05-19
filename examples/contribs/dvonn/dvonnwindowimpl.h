@@ -4,7 +4,7 @@
 #include <qglobal.h>
 
 #if QT_VERSION >= 0x040000
-# include "ui_dvonnwindow.Qt4.h"
+# include "ui_dvonnwindow.h"
   class DvonnWindow : public QMainWindow, public Ui::DvonnWindow
   {
   public:

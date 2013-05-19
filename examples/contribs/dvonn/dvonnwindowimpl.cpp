@@ -97,7 +97,7 @@ DvonnWindowImpl::help()
 void
 DvonnWindowImpl::about()
 {
-  QMessageBox::about(this, " D v o n n",tr("D v o n n\nCreated by Xavier Décoret\nVersion 1.0 - August 2004"));
+  QMessageBox::about(this, " D v o n n",tr("D v o n n\nCreated by Xavier DÃ©coret\nVersion 1.0 - August 2004"));
 }
 void
 DvonnWindowImpl::load()

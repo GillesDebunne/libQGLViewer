@@ -475,7 +475,7 @@ void QUADTREE::RefineNode( float x, float z, int edgeLength )
 			   fabs(pZ-( z *scaleSize /sizeHeightMap ) ) );
 
 
-  //f: valeur qui decide si on subdivise un noeud ou non (selon l'article de Stefan Röttger sur le quadtree algo)
+  //f: valeur qui decide si on subdivise un noeud ou non (selon l'article de Stefan RÃ¶ttger sur le quadtree algo)
   f= viewDistance/( ( float )edgeLength*minResolution*	/*/sizeHeightMap* */
 		    MAX( ( float )GetQuadMatrixData( ( int )x-1, ( int )z )/3*detailLevel, 1.0f ) );
   if (debugger) printf("f: %f\n",f);
@@ -783,7 +783,7 @@ void QUADTREE::RenderNode( float x, float z, int edgeLength, bool multiTextures,
 	    }
 
 	  //il reste les suites partielles a afficher; on utilise les codes pour faciliter le choix de triang.
-	  //cette partie est quasiment directement copie de l'article de Stefan Röttger;
+	  //cette partie est quasiment directement copie de l'article de Stefan RÃ¶ttger;
 	  //.. les codes des suites partielles sont pas evidents.. (code binaire pour representer un quadtree)
 	  //suite partielle = repartition non-symmetrique entre enfants recursifs et feuilles
 	  start= suiteStart[code];

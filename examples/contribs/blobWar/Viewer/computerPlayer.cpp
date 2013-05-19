@@ -7,8 +7,8 @@
 #include "qprocess.h"
 
 #if QT_VERSION >= 0x040000
+# include "ui_computerPlayerInterface.h"
 # include <QTime>
-# include "ui_computerPlayerInterface.Qt4.h"
   class ComputerPlayerInterface : public QDialog, public Ui::ComputerPlayerInterface
   {
   public:

@@ -1,7 +1,7 @@
 #include <qapplication.h>
 
 #if QT_VERSION >= 0x040000
-# include "ui_viewerInterface.Qt4.h"
+# include "ui_viewerInterface.h"
   class ViewerInterface : public QDialog, public Ui::Dialog
   {
   public:

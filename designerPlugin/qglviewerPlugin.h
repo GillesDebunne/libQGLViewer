@@ -6,6 +6,9 @@
 class QGLViewerPlugin : public QObject, public QDesignerCustomWidgetInterface
 {
   Q_OBJECT
+#if QT_VERSION >= 0x050000
+    Q_PLUGIN_METADATA(IID "QGLViewerPlugin" FILE "designerplugindescription.json")
+#endif
   Q_INTERFACES(QDesignerCustomWidgetInterface)
  public:
   QGLViewerPlugin(QObject *parent = NULL);

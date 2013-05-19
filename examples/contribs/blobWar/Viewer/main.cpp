@@ -1,7 +1,7 @@
 #include <qapplication.h>
 
 #if QT_VERSION >= 0x040000
-# include "ui_blobWarWindow.Qt4.h"
+# include "ui_blobWarWindow.h"
   class BlobWarWindow : public QMainWindow, public Ui::BlobWarWindow
   {
   public:

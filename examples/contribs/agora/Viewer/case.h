@@ -37,6 +37,4 @@ private:
 	int altitude_;
 	bool topIsBlack_;
 	int nbTop_, nbBottom_;
-
-	int value;
 };

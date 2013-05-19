@@ -304,39 +304,37 @@ DvonnViewer::initViewer()
   // Limit camera rotation motion
   camera()->frame()->setConstraint(new BoardConstraint());
 
-#if QT_VERSION >= 0x040000
-# define CONTROL Qt::ControlModifier
-# define SHIFT Qt::ShiftModifier
-#else
-# define CONTROL Qt::ControlButton
-# define SHIFT Qt::ShiftButton
-#endif
-
   // Defines new bindings
   setMouseBindingDescription(Qt::LeftButton, "Moves stack");
-  setMouseBinding(CONTROL | Qt::LeftButton,CAMERA,ROTATE);
-  setMouseBinding(Qt::MidButton,  ZOOM_TO_FIT,true);
-  setMouseBinding(Qt::RightButton,ZOOM_TO_FIT,true);
-  setMouseBinding(CONTROL | Qt::LeftButton,RAP_FROM_PIXEL,true);
-  setMouseBinding(CONTROL | Qt::RightButton, RAP_IS_CENTER, true);
+  setMouseBinding(Qt::CTRL + Qt::LeftButton, CAMERA, ROTATE);
+  setMouseBinding(Qt::MidButton,  ZOOM_TO_FIT, true);
+  setMouseBinding(Qt::RightButton,ZOOM_TO_FIT, true);
+  setMouseBinding(Qt::CTRL + Qt::LeftButton,  RAP_FROM_PIXEL, true);
+  setMouseBinding(Qt::CTRL + Qt::RightButton, RAP_IS_CENTER,  true);
 
   // Disable most of the default bindings
-  setMouseBinding(CONTROL | Qt::MidButton  ,CAMERA,NO_MOUSE_ACTION);
-  setMouseBinding(CONTROL | Qt::RightButton,CAMERA,NO_MOUSE_ACTION);
+  setMouseBinding(Qt::CTRL + Qt::MidButton  ,CAMERA,NO_MOUSE_ACTION);
+  setMouseBinding(Qt::CTRL + Qt::RightButton,CAMERA,NO_MOUSE_ACTION);
   setMouseBinding(Qt::LeftButton,NO_CLICK_ACTION);
   setMouseBinding(Qt::LeftButton,NO_CLICK_ACTION,true);
-  setMouseBinding(CONTROL | Qt::LeftButton  | Qt::MidButton,NO_CLICK_ACTION);
-  setMouseBinding(CONTROL | Qt::RightButton | Qt::MidButton,NO_CLICK_ACTION);
+  setMouseBinding(Qt::CTRL + Qt::LeftButton  | Qt::MidButton,NO_CLICK_ACTION);
+  setMouseBinding(Qt::CTRL + Qt::RightButton | Qt::MidButton,NO_CLICK_ACTION);
   setMouseBinding(Qt::LeftButton  | Qt::MidButton, NO_CLICK_ACTION);
   setMouseBinding(Qt::RightButton | Qt::MidButton, NO_CLICK_ACTION);
-  setMouseBinding(SHIFT | Qt::LeftButton,NO_CLICK_ACTION);
+  setMouseBinding(Qt::SHIFT + Qt::LeftButton,NO_CLICK_ACTION);
 
-  setMouseBinding(Qt::RightButton,NO_CLICK_ACTION, true, Qt::MidButton);
-  setMouseBinding(Qt::LeftButton, NO_CLICK_ACTION, true, Qt::MidButton);
-  setMouseBinding(Qt::RightButton,NO_CLICK_ACTION, true, Qt::LeftButton);
-  setMouseBinding(Qt::LeftButton, NO_CLICK_ACTION, true, Qt::RightButton);
+  setMouseBinding(Qt::RightButton, NO_CLICK_ACTION, true, Qt::MidButton);
+  setMouseBinding(Qt::LeftButton,  NO_CLICK_ACTION, true, Qt::MidButton);
+  setMouseBinding(Qt::RightButton, NO_CLICK_ACTION, true, Qt::LeftButton);
+  setMouseBinding(Qt::LeftButton,  NO_CLICK_ACTION, true, Qt::RightButton);
 
-  setWheelBinding(CONTROL, FRAME,NO_MOUSE_ACTION);
+#if QT_VERSION >= 0x040000
+  setWheelBinding(Qt::ControlModifier, FRAME,NO_MOUSE_ACTION);
+#else
+  setWheelBinding(Qt::ControlButton, FRAME,NO_MOUSE_ACTION);
+#endif
+
+
 }
 void
 DvonnViewer::draw()

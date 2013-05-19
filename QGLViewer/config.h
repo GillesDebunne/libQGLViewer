@@ -6,7 +6,7 @@
 #ifndef QGLVIEWER_CONFIG_H
 #define QGLVIEWER_CONFIG_H
 
-#define QGLVIEWER_VERSION 0x020311
+#define QGLVIEWER_VERSION 0x020400
 
 // Needed for Qt < 4 (?)
 #ifndef QT_CLEAN_NAMESPACE
@@ -14,7 +14,6 @@
 #endif
 
 // Get QT_VERSION and other Qt flags
-// Cannot use <QtCore/qglobal.h> for backward compatibility
 #include <qglobal.h>
 
 #if QT_VERSION < 0x030000

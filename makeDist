@@ -1,7 +1,7 @@
 #!/bin/bash
 
 libName="libQGLViewer"
-version="2.3.17"
+version="2.4.0"
 
 WebURL="http://www.libqglviewer.com"
 
@@ -21,8 +21,6 @@ cd $QGLViewerRootDir
 DOS2UNIX="" #"dos2unix -o -q"
 UNIX2DOS="" #"unix2dos -o -q"
 DOXYGEN=$(which doxygen)
-QT_PATH="/Users/debunne/QtSDK/desktop/Qt/4.8.1/gcc/bin"
-PATH=$QT_PATH:$PATH
 
 # echo "$0 disabled for security"
 # exit
@@ -252,7 +250,7 @@ test -d $tmpDir || mkdir -p $tmpDir
 # ----------------------------------------------
 
 
-SOURCES="CHANGELOG INSTALL README LICENCE GPL_EXCEPTION gpl-warning libQGLViewer.pro"
+SOURCES="CHANGELOG INSTALL README LICENCE GPL_EXCEPTION gpl-header libQGLViewer.pro"
 if [[ $DOS2UNIX ]]
 then
 	$DOS2UNIX $SOURCES &> /tmp/error
@@ -331,7 +329,7 @@ makeDist
 
 cd - > /dev/null
 
-EXAMPLES_SKIPPED_DIRS="examples/contribs examples/rangeAxisConstraint examples/debug"
+EXAMPLES_SKIPPED_DIRS="examples/contribs examples/rangeAxisConstraint"
 for dir in $(ls -d examples/* examples/contribs/*)
 do
   test -d $dir || continue
@@ -382,7 +380,7 @@ cd $tmpDir
 ########### Filter root files
 export LC_TIME="en"
 date=`date "+%B %-d, %Y"`
-for f in "gpl-warning" "CHANGELOG" "INSTALL" "LICENCE" "README" "GPL_EXCEPTION" "libQGLViewer.pro"
+for f in "gpl-header" "CHANGELOG" "INSTALL" "LICENCE" "README" "GPL_EXCEPTION" "libQGLViewer.pro"
 do
   sed s:"#VERSION#":"$version":g $f | sed s%"#WEBURL#"%"$WebURL"%g | sed s:"#DATE#":"$date":g > $f.filtered
   mv $f.filtered $f
@@ -451,11 +449,11 @@ rm examples/release.pri
 echo -n " copyright"
 for f in `find . -name '*.h' -o -name '*.cpp'`
 do
-  cat gpl-warning $f > $f.bak
+  cat gpl-header $f > $f.bak
   mv $f.bak $f
 done
 
-rm gpl-warning
+rm gpl-header
 
 vRenderCopyright="$QGLViewerRootDir/QGLViewer/VRender/copyright"
 test -f $vRenderCopyright || error "No copyright in VRender"
@@ -559,14 +557,6 @@ do
   mv $f.tmp $f
 done
 
-# Patching QtKeyboardModifiers and QtMouseButtons
-for f in `ls *.html`
-do
-  sed s%"QtKeyboardModifiers"%"Qt::KeyboardModifiers"%g $f > $f.tmp
-  sed s%"QtMouseButtons"%"Qt::MouseButtons"%g $f.tmp > $f
-  rm $f.tmp
-done
-
 # Adding icon and libQGLViewer version
 for f in $(ls *.html)
 do
@@ -576,11 +566,11 @@ do
   mv $f.tmp $f
 done
 
-
 # Creating assistant qch file
 awk '/<section title="Files"/ { skip=1 } /<\/toc>/ { print"      </section>"; skip=0 } { if (skip==0) print }' index.qhp > index.filtered.qhp
-qhelpgenerator index.filtered.qhp -o ../libQGLViewer-$version.qch > /dev/null
-rm index.qhp index.filtered.qhp
+awk '/<section title="libQGLViewer Version 2.4.0" ref="/ { print"      <section title=\"libQGLViewer Version 2.4.0\">"; next; } {print;}' index.filtered.qhp > index.qhp
+qhelpgenerator index.qhp -o ../libQGLViewer-$version.qch > /dev/null
+#rm index.qhp index.filtered.qhp
 
 cd - > /dev/null
 
@@ -748,15 +738,7 @@ echo -n " installer"
 
 echo
 
-#windowsDir="/host/Users/debunne/Documents/Code/libQGLViewer/QGLViewer/trunk/"
-#tar czf $windowsDir/$allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
-
-tar czf $allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip $libName*$version*.rpm libqglviewer*$version*.deb
-echo
-echo "Copy to dzsrv-linux"
-scp $allTarGZ root@192.168.0.10:/var/www/html/libqglviewer/home/debunne/.tmp
-
-cd - > /dev/null
+#tar czf $allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip $libName*$version*.rpm libqglviewer*$version*.deb
 
 echo
 exit
