@@ -360,7 +360,7 @@ cd - > /dev/null
 
 cd designerPlugin
 
-SOURCES="*.h *.cpp *.pro"
+SOURCES="*.h *.cpp *.pro *.json"
 TARGET="designerPlugin"
 makeDist
 
@@ -672,8 +672,9 @@ echo "scp /tmp/$allTarGZ debunne@www.libqglviewer.com:"
 echo ""
 echo "ssh debunne@www.libqglviewer.com"
 echo "tar xzf $allTarGZ"
-echo "cp $libNameVersion.tar.gz $libNameVersion.zip ~/www/src/"
-echo "rm -rf doc && tar xzf $wwwTarGZ && \cp -rf doc/* ~/www"
+echo "mv $libNameVersion.tar.gz $libNameVersion.zip ~/www/src/"
+echo "tar xzf $wwwTarGZ && \cp -rf doc/* ~/www && rm -rf doc"
+echo "rm www.tar.gz $allTarGZ"
 exit
 
 echo -n " rpm"

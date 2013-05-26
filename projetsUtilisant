@@ -2,10 +2,7 @@ http://vrlab.epfl.ch/~amaciel/come/newdoc/main.html
 http://diablo.ict.pwr.wroc.pl/~pjakwert/html/download.html
 https://sed.inrialpes.fr/twiki/bin/view/Bipede/BipSimulation3D
 http://www-evasion.imag.fr/Membres/Laure.Heigeas/AnimAL/doc/
-
-mac : prebinding adress overlap
-
-test #include <stdlib.h> // RAND_MAX on screenCoordSystem and animation
+http://libdgtal.org DGtal library https://github.com/DGtal-team/DGtal
 
 http://www.freshports.org/graphics/libqglviewer/
 http://www4.rcf.bnl.gov/~fine/EventDisplay/

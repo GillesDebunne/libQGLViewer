@@ -155,8 +155,8 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
-* Wed May 29 2013 Gilles Debunne <contact@libQGLViewer.com> 2.4.0
-- Supports Qt5 (as well as Qt3 and Qt4). 
+* Sat May 25 2013 Gilles Debunne <contact@libQGLViewer.com> 2.4.0
+- Supports Qt5 (as well as Qt3 and Qt4), source available on github.
 
 * Thu May 24 2012 Gilles Debunne <contact@libQGLViewer.com> 2.3.17
 - Compilation of the examples using a framework fixed on Mac. 
