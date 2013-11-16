@@ -13,9 +13,9 @@ QPtrList<MouseGrabber> MouseGrabber::MouseGrabberPool_;
 
 Adds the created MouseGrabber in the MouseGrabberPool(). grabsMouse() is set to \c false. */
 MouseGrabber::MouseGrabber()
-  : grabsMouse_(false)
+	: grabsMouse_(false)
 {
-  addInMouseGrabberPool();
+	addInMouseGrabberPool();
 }
 
 /*! Adds the MouseGrabber in the MouseGrabberPool().
@@ -28,8 +28,8 @@ tested with checkIfGrabsMouse() by the QGLViewer, and hence can no longer grab m
 isInMouseGrabberPool() to know the current state of the MouseGrabber. */
 void MouseGrabber::addInMouseGrabberPool()
 {
-  if (!isInMouseGrabberPool())
-    MouseGrabber::MouseGrabberPool_.append(this);
+	if (!isInMouseGrabberPool())
+		MouseGrabber::MouseGrabberPool_.append(this);
 }
 
 /*! Removes the MouseGrabber from the MouseGrabberPool().
@@ -38,11 +38,11 @@ See addInMouseGrabberPool() for details. Removing a MouseGrabber that is not in 
 has no effect. */
 void MouseGrabber::removeFromMouseGrabberPool()
 {
-  if (isInMouseGrabberPool())
+	if (isInMouseGrabberPool())
 #if QT_VERSION >= 0x040000
-    MouseGrabber::MouseGrabberPool_.removeAll(const_cast<MouseGrabber*>(this));
+		MouseGrabber::MouseGrabberPool_.removeAll(const_cast<MouseGrabber*>(this));
 #else
-    MouseGrabber::MouseGrabberPool_.removeRef(this);
+		MouseGrabber::MouseGrabberPool_.removeRef(this);
 #endif
 }
 
@@ -57,10 +57,10 @@ void MouseGrabber::removeFromMouseGrabberPool()
 void MouseGrabber::clearMouseGrabberPool(bool autoDelete)
 {
 #if QT_VERSION >= 0x040000
-  if (autoDelete)
-    qDeleteAll(MouseGrabber::MouseGrabberPool_);
+	if (autoDelete)
+		qDeleteAll(MouseGrabber::MouseGrabberPool_);
 #else
-  MouseGrabber::MouseGrabberPool_.setAutoDelete(autoDelete);
+	MouseGrabber::MouseGrabberPool_.setAutoDelete(autoDelete);
 #endif
-  MouseGrabber::MouseGrabberPool_.clear();
+	MouseGrabber::MouseGrabberPool_.clear();
 }

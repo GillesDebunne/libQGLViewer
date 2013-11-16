@@ -14,7 +14,7 @@
 class QTabWidget;
 
 namespace qglviewer {
-	class MouseGrabber;
+class MouseGrabber;
 }
 
 #if QT_VERSION < 0x040000
@@ -53,30 +53,30 @@ public:
 	// Complete implementation is provided so that the constructor is defined with QT3_SUPPORT when .h is included.
 	// (Would not be available otherwise since lib is compiled without QT3_SUPPORT).
 #if QT_VERSION < 0x040000 || defined QT3_SUPPORT
-    explicit QGLViewer(QWidget* parent=NULL, const char* name=0, const QGLWidget* shareWidget=0, Qt::WindowFlags flags=0)
+	explicit QGLViewer(QWidget* parent=NULL, const char* name=0, const QGLWidget* shareWidget=0, Qt::WindowFlags flags=0)
 		: QGLWidget(parent, name, shareWidget, flags)
 	{ defaultConstructor(); }
 
-    explicit QGLViewer(const QGLFormat& format, QWidget* parent=0, const char* name=0, const QGLWidget* shareWidget=0,Qt::WindowFlags flags=0)
+	explicit QGLViewer(const QGLFormat& format, QWidget* parent=0, const char* name=0, const QGLWidget* shareWidget=0,Qt::WindowFlags flags=0)
 		: QGLWidget(format, parent, name, shareWidget, flags)
 	{ defaultConstructor(); }
 
-    QGLViewer(QGLContext* context, QWidget* parent, const char* name=0, const QGLWidget* shareWidget=0, Qt::WindowFlags flags=0)
+	QGLViewer(QGLContext* context, QWidget* parent, const char* name=0, const QGLWidget* shareWidget=0, Qt::WindowFlags flags=0)
 # if QT_VERSION >= 0x030200
 		: QGLWidget(context, parent, name, shareWidget, flags) {
 # else
-		// MOC_SKIP_BEGIN
+	// MOC_SKIP_BEGIN
 		: QGLWidget(parent, name, shareWidget, flags) {
-			Q_UNUSED(context);
-			// MOC_SKIP_END
+		Q_UNUSED(context);
+		// MOC_SKIP_END
 # endif
-			defaultConstructor(); }
+		defaultConstructor(); }
 
 #else
 
-    explicit QGLViewer(QWidget* parent=0, const QGLWidget* shareWidget=0, Qt::WindowFlags flags=0);
-    explicit QGLViewer(QGLContext *context, QWidget* parent=0, const QGLWidget* shareWidget=0, Qt::WindowFlags flags=0);
-    explicit QGLViewer(const QGLFormat& format, QWidget* parent=0, const QGLWidget* shareWidget=0, Qt::WindowFlags flags=0);
+	explicit QGLViewer(QWidget* parent=0, const QGLWidget* shareWidget=0, Qt::WindowFlags flags=0);
+	explicit QGLViewer(QGLContext *context, QWidget* parent=0, const QGLWidget* shareWidget=0, Qt::WindowFlags flags=0);
+	explicit QGLViewer(const QGLFormat& format, QWidget* parent=0, const QGLWidget* shareWidget=0, Qt::WindowFlags flags=0);
 #endif
 
 	virtual ~QGLViewer();
@@ -87,23 +87,23 @@ public:
 	/*! Returns \c true if the world axis is drawn by the viewer.
 
 	Set by setAxisIsDrawn() or toggleAxisIsDrawn(). Default value is \c false. */
-	bool axisIsDrawn() const { return axisIsDrawn_; };
+	bool axisIsDrawn() const { return axisIsDrawn_; }
 	/*! Returns \c true if a XY grid is drawn by the viewer.
 
 	Set by setGridIsDrawn() or toggleGridIsDrawn(). Default value is \c false. */
-	bool gridIsDrawn() const { return gridIsDrawn_; };
+	bool gridIsDrawn() const { return gridIsDrawn_; }
 	/*! Returns \c true if the viewer displays the current frame rate (Frames Per Second).
 
 	Use QApplication::setFont() to define the display font (see drawText()).
 
 	Set by setFPSIsDisplayed() or toggleFPSIsDisplayed(). Use currentFPS() to get the current FPS.
 	Default value is \c false. */
-	bool FPSIsDisplayed() const { return FPSIsDisplayed_; };
+	bool FPSIsDisplayed() const { return FPSIsDisplayed_; }
 	/*! Returns \c true if text display (see drawText()) is enabled.
 
 	Set by setTextIsEnabled() or toggleTextIsEnabled(). This feature conveniently removes all the
 	possibly displayed text, cleaning display. Default value is \c true. */
-	bool textIsEnabled() const { return textIsEnabled_; };
+	bool textIsEnabled() const { return textIsEnabled_; }
 
 	/*! Returns \c true if the camera() is being edited in the viewer.
 
@@ -116,32 +116,32 @@ public:
 	bool cameraIsEdited() const { return cameraIsEdited_; }
 
 
-	public Q_SLOTS:
-		/*! Sets the state of axisIsDrawn(). Emits the axisIsDrawnChanged() signal. See also toggleAxisIsDrawn(). */
-		void setAxisIsDrawn(bool draw=true) { axisIsDrawn_ = draw; Q_EMIT axisIsDrawnChanged(draw); if (updateGLOK_) updateGL(); };
-		/*! Sets the state of gridIsDrawn(). Emits the gridIsDrawnChanged() signal. See also toggleGridIsDrawn(). */
-		void setGridIsDrawn(bool draw=true) { gridIsDrawn_ = draw; Q_EMIT gridIsDrawnChanged(draw); if (updateGLOK_) updateGL(); };
-		/*! Sets the state of FPSIsDisplayed(). Emits the FPSIsDisplayedChanged() signal. See also toggleFPSIsDisplayed(). */
-		void setFPSIsDisplayed(bool display=true) { FPSIsDisplayed_ = display; Q_EMIT FPSIsDisplayedChanged(display); if (updateGLOK_) updateGL(); };
-		/*! Sets the state of textIsEnabled(). Emits the textIsEnabledChanged() signal. See also toggleTextIsEnabled(). */
-		void setTextIsEnabled(bool enable=true) { textIsEnabled_ = enable; Q_EMIT textIsEnabledChanged(enable); if (updateGLOK_) updateGL(); };
-		void setCameraIsEdited(bool edit=true);
+public Q_SLOTS:
+	/*! Sets the state of axisIsDrawn(). Emits the axisIsDrawnChanged() signal. See also toggleAxisIsDrawn(). */
+	void setAxisIsDrawn(bool draw=true) { axisIsDrawn_ = draw; Q_EMIT axisIsDrawnChanged(draw); update(); }
+	/*! Sets the state of gridIsDrawn(). Emits the gridIsDrawnChanged() signal. See also toggleGridIsDrawn(). */
+	void setGridIsDrawn(bool draw=true) { gridIsDrawn_ = draw; Q_EMIT gridIsDrawnChanged(draw); update(); }
+	/*! Sets the state of FPSIsDisplayed(). Emits the FPSIsDisplayedChanged() signal. See also toggleFPSIsDisplayed(). */
+	void setFPSIsDisplayed(bool display=true) { FPSIsDisplayed_ = display; Q_EMIT FPSIsDisplayedChanged(display); update(); }
+	/*! Sets the state of textIsEnabled(). Emits the textIsEnabledChanged() signal. See also toggleTextIsEnabled(). */
+	void setTextIsEnabled(bool enable=true) { textIsEnabled_ = enable; Q_EMIT textIsEnabledChanged(enable); update(); }
+	void setCameraIsEdited(bool edit=true);
 
-		/*! Toggles the state of axisIsDrawn(). See also setAxisIsDrawn(). */
-		void toggleAxisIsDrawn() { setAxisIsDrawn(!axisIsDrawn()); };
-		/*! Toggles the state of gridIsDrawn(). See also setGridIsDrawn(). */
-		void toggleGridIsDrawn() { setGridIsDrawn(!gridIsDrawn()); };
-		/*! Toggles the state of FPSIsDisplayed(). See also setFPSIsDisplayed(). */
-		void toggleFPSIsDisplayed() { setFPSIsDisplayed(!FPSIsDisplayed()); };
-		/*! Toggles the state of textIsEnabled(). See also setTextIsEnabled(). */
-		void toggleTextIsEnabled() { setTextIsEnabled(!textIsEnabled()); };
-		/*! Toggles the state of cameraIsEdited(). See also setCameraIsEdited(). */
-		void toggleCameraIsEdited() { setCameraIsEdited(!cameraIsEdited()); };
-		//@}
+	/*! Toggles the state of axisIsDrawn(). See also setAxisIsDrawn(). */
+	void toggleAxisIsDrawn() { setAxisIsDrawn(!axisIsDrawn()); }
+	/*! Toggles the state of gridIsDrawn(). See also setGridIsDrawn(). */
+	void toggleGridIsDrawn() { setGridIsDrawn(!gridIsDrawn()); }
+	/*! Toggles the state of FPSIsDisplayed(). See also setFPSIsDisplayed(). */
+	void toggleFPSIsDisplayed() { setFPSIsDisplayed(!FPSIsDisplayed()); }
+	/*! Toggles the state of textIsEnabled(). See also setTextIsEnabled(). */
+	void toggleTextIsEnabled() { setTextIsEnabled(!textIsEnabled()); }
+	/*! Toggles the state of cameraIsEdited(). See also setCameraIsEdited(). */
+	void toggleCameraIsEdited() { setCameraIsEdited(!cameraIsEdited()); }
+	//@}
 
 
-		/*! @name Viewer's colors */
-		//@{
+	/*! @name Viewer's colors */
+	//@{
 public:
 	/*! Returns the background color of the viewer.
 
@@ -158,7 +158,7 @@ public:
 	\attention This method does not return the current OpenGL clear color as \c glGet() does. Instead,
 	it returns the QGLViewer internal variable. If you directly use \c glClearColor() or \c
 	qglClearColor() instead of setBackgroundColor(), the two results will differ. */
-	QColor backgroundColor() const { return backgroundColor_; };
+	QColor backgroundColor() const { return backgroundColor_; }
 
 	/*! Returns the foreground color used by the viewer.
 
@@ -172,18 +172,18 @@ public:
 	Use \c qglColor(foregroundColor()) to set the current OpenGL color to the foregroundColor().
 
 	See also backgroundColor(). */
-	QColor foregroundColor() const { return foregroundColor_; };
-	public Q_SLOTS:
-		/*! Sets the backgroundColor() of the viewer and calls \c qglClearColor(). See also
+	QColor foregroundColor() const { return foregroundColor_; }
+public Q_SLOTS:
+	/*! Sets the backgroundColor() of the viewer and calls \c qglClearColor(). See also
 		setForegroundColor(). */
-		void setBackgroundColor(const QColor& color) { backgroundColor_=color; qglClearColor(color); };
-		/*! Sets the foregroundColor() of the viewer, used to draw visual hints. See also setBackgroundColor(). */
-		void setForegroundColor(const QColor& color) { foregroundColor_ = color; };
-		//@}
+	void setBackgroundColor(const QColor& color) { backgroundColor_=color; qglClearColor(color); }
+	/*! Sets the foregroundColor() of the viewer, used to draw visual hints. See also setBackgroundColor(). */
+	void setForegroundColor(const QColor& color) { foregroundColor_ = color; }
+	//@}
 
 
-		/*! @name Scene dimensions */
-		//@{
+	/*! @name Scene dimensions */
+	//@{
 public:
 	/*! Returns the scene radius.
 
@@ -207,40 +207,40 @@ public:
 	Do not mismatch this value (that only depends on the scene) with the qglviewer::Camera::revolveAroundPoint(). */
 	qglviewer::Vec sceneCenter() const { return camera()->sceneCenter(); }
 
-	public Q_SLOTS:
-		/*! Sets the sceneRadius().
+public Q_SLOTS:
+	/*! Sets the sceneRadius().
 
 		The camera() qglviewer::Camera::flySpeed() is set to 1% of this value by this method. Simple
 		wrapper around camera()->setSceneRadius(). */
-		virtual void setSceneRadius(float radius) { camera()->setSceneRadius(radius); }
+	virtual void setSceneRadius(float radius) { camera()->setSceneRadius(radius); }
 
-		/*! Sets the sceneCenter(), defined in world coordinates.
+	/*! Sets the sceneCenter(), defined in world coordinates.
 
 		\attention The qglviewer::Camera::revolveAroundPoint() is set to the sceneCenter() value by this
 		method. */
-		virtual void setSceneCenter(const qglviewer::Vec& center) { camera()->setSceneCenter(center); }
+	virtual void setSceneCenter(const qglviewer::Vec& center) { camera()->setSceneCenter(center); }
 
-		/*! Convenient way to call setSceneCenter() and setSceneRadius() from a (world axis aligned) bounding box of the scene.
+	/*! Convenient way to call setSceneCenter() and setSceneRadius() from a (world axis aligned) bounding box of the scene.
 
 		This is equivalent to:
 		\code
 		setSceneCenter((min+max) / 2.0);
 		setSceneRadius((max-min).norm() / 2.0);
 		\endcode */
-		void setSceneBoundingBox(const qglviewer::Vec& min, const qglviewer::Vec& max) { camera()->setSceneBoundingBox(min,max); }
+	void setSceneBoundingBox(const qglviewer::Vec& min, const qglviewer::Vec& max) { camera()->setSceneBoundingBox(min,max); }
 
-		/*! Moves the camera so that the entire scene is visible.
+	/*! Moves the camera so that the entire scene is visible.
 
 		Simple wrapper around qglviewer::Camera::showEntireScene(). */
-		void showEntireScene() { camera()->showEntireScene(); if (updateGLOK_) updateGL(); }
-		//@}
+	void showEntireScene() { camera()->showEntireScene(); update(); }
+	//@}
 
 
-		/*! @name Associated objects */
-		//@{
+	/*! @name Associated objects */
+	//@{
 public:
 	/*! Returns the associated qglviewer::Camera, never \c NULL. */
-	qglviewer::Camera* camera() const { return camera_; };
+	qglviewer::Camera* camera() const { return camera_; }
 
 	/*! Returns the viewer's qglviewer::ManipulatedFrame.
 
@@ -252,16 +252,16 @@ public:
 	implementation.
 
 	Default value is \c NULL, meaning that no qglviewer::ManipulatedFrame is set. */
-	qglviewer::ManipulatedFrame* manipulatedFrame() const { return manipulatedFrame_; };
+	qglviewer::ManipulatedFrame* manipulatedFrame() const { return manipulatedFrame_; }
 
-	public Q_SLOTS:
-		void setCamera(qglviewer::Camera* const camera);
-		void setManipulatedFrame(qglviewer::ManipulatedFrame* frame);
-		//@}
+public Q_SLOTS:
+	void setCamera(qglviewer::Camera* const camera);
+	void setManipulatedFrame(qglviewer::ManipulatedFrame* frame);
+	//@}
 
 
-		/*! @name Mouse grabbers */
-		//@{
+	/*! @name Mouse grabbers */
+	//@{
 public:
 	/*! Returns the current qglviewer::MouseGrabber, or \c NULL if no qglviewer::MouseGrabber
 	currently grabs mouse events.
@@ -279,7 +279,7 @@ public:
 	\endcode
 	Note that mouse tracking is disabled by default. Use QWidget::hasMouseTracking() to
 	retrieve current state. */
-	qglviewer::MouseGrabber* mouseGrabber() const { return mouseGrabber_; };
+	qglviewer::MouseGrabber* mouseGrabber() const { return mouseGrabber_; }
 
 	void setMouseGrabberIsEnabled(const qglviewer::MouseGrabber* const mouseGrabber, bool enabled=true);
 	/*! Returns \c true if \p mouseGrabber is enabled.
@@ -291,17 +291,17 @@ public:
 
 	You can also use qglviewer::MouseGrabber::removeFromMouseGrabberPool() to completely disable a
 	MouseGrabber in all the QGLViewers. */
-	bool mouseGrabberIsEnabled(const qglviewer::MouseGrabber* const mouseGrabber) { return !disabledMouseGrabbers_.contains(reinterpret_cast<size_t>(mouseGrabber)); };
-	public Q_SLOTS:
-		void setMouseGrabber(qglviewer::MouseGrabber* mouseGrabber);
-		//@}
+	bool mouseGrabberIsEnabled(const qglviewer::MouseGrabber* const mouseGrabber) { return !disabledMouseGrabbers_.contains(reinterpret_cast<size_t>(mouseGrabber)); }
+public Q_SLOTS:
+	void setMouseGrabber(qglviewer::MouseGrabber* mouseGrabber);
+	//@}
 
 
-		/*! @name State of the viewer */
-		//@{
+	/*! @name State of the viewer */
+	//@{
 public:
 	/*! Returns the aspect ratio of the viewer's widget (width() / height()). */
-	float aspectRatio() const { return static_cast<float>(width())/static_cast<float>(height()); };
+	float aspectRatio() const { return static_cast<float>(width())/static_cast<float>(height()); }
 	/*! Returns the current averaged viewer frame rate.
 
 	This value is computed and averaged over 20 successive frames. It only changes every 20 draw()
@@ -312,14 +312,14 @@ public:
 
 	This value is meaningful only when draw() is regularly called, either using a \c QTimer, when
 	animationIsStarted() or when the camera is manipulated with the mouse.  */
-	float currentFPS() { return f_p_s_; };
+	float currentFPS() { return f_p_s_; }
 	/*! Returns \c true if the viewer is in fullScreen mode.
 
 	Default value is \c false. Set by setFullScreen() or toggleFullScreen().
 
 	Note that if the QGLViewer is embedded in an other QWidget, it returns \c true when the top level
 	widget is in full screen mode. */
-	bool isFullScreen() const { return fullScreen_; };
+	bool isFullScreen() const { return fullScreen_; }
 	/*! Returns \c true if the viewer displays in stereo.
 
 	The QGLViewer object must be created with a stereo format to handle stereovision:
@@ -343,14 +343,14 @@ public:
 	/*! Returns the recommended size for the QGLViewer. Default value is 600x400 pixels. */
 	virtual QSize sizeHint() const { return QSize(600, 400); }
 
-	public Q_SLOTS:
-		void setFullScreen(bool fullScreen=true);
-		void setStereoDisplay(bool stereo=true);
-		/*! Toggles the state of isFullScreen(). See also setFullScreen(). */
-		void toggleFullScreen() { setFullScreen(!isFullScreen()); };
-		/*! Toggles the state of displaysInStereo(). See setStereoDisplay(). */
-		void toggleStereoDisplay() { setStereoDisplay(!stereo_); };
-		void toggleCameraMode();
+public Q_SLOTS:
+	void setFullScreen(bool fullScreen=true);
+	void setStereoDisplay(bool stereo=true);
+	/*! Toggles the state of isFullScreen(). See also setFullScreen(). */
+	void toggleFullScreen() { setFullScreen(!isFullScreen()); }
+	/*! Toggles the state of displaysInStereo(). See setStereoDisplay(). */
+	void toggleStereoDisplay() { setStereoDisplay(!stereo_); }
+	void toggleCameraMode();
 
 private:
 	bool cameraIsInRevolveMode() const;
@@ -378,7 +378,7 @@ protected:
 private:
 	void displayFPS();
 	/*! Vectorial rendering callback method. */
-	void drawVectorial() { paintGL(); };
+	void drawVectorial() { paintGL(); }
 
 #ifndef DOXYGEN
 	friend void drawVectorial(void* param);
@@ -417,24 +417,24 @@ public:
 	You need to setMouseTracking() to \c true in order to use MouseGrabber (see mouseGrabber()). See
 	details in the QWidget documentation. */
 	bool hasMouseTracking () const;
-	public Q_SLOTS:
-		/*! Resizes the widget to size \p width by \p height pixels. See also width() and height(). */
-		virtual void resize(int width, int height);
-		/*! Sets the hasMouseTracking() value. */
-		virtual void setMouseTracking(bool enable);
+public Q_SLOTS:
+	/*! Resizes the widget to size \p width by \p height pixels. See also width() and height(). */
+	virtual void resize(int width, int height);
+	/*! Sets the hasMouseTracking() value. */
+	virtual void setMouseTracking(bool enable);
 protected:
 	/*! Returns \c true when buffers are automatically swapped (default). See details in the QGLWidget
 	documentation. */
 	bool autoBufferSwap() const;
-	protected Q_SLOTS:
-		/*! Sets the autoBufferSwap() value. */
-		void setAutoBufferSwap(bool on);
-		//@}
+protected Q_SLOTS:
+	/*! Sets the autoBufferSwap() value. */
+	void setAutoBufferSwap(bool on);
+	//@}
 #endif
 
 
-		/*! @name Snapshots */
-		//@{
+	/*! @name Snapshots */
+	//@{
 public:
 #if QT_VERSION < 0x030000
 	virtual QImage grabFrameBuffer(bool withAlpha=false);
@@ -448,7 +448,7 @@ public:
 
 	If the file name is relative, the current working directory at the moment of the method call is
 	used. Set using setSnapshotFileName(). */
-	const QString& snapshotFileName() const { return snapshotFileName_; };
+	const QString& snapshotFileName() const { return snapshotFileName_; }
 #ifndef DOXYGEN
 	const QString& snapshotFilename() const;
 #endif
@@ -480,13 +480,13 @@ public:
 
 	\attention No verification is performed on the provided format validity. The next call to
 	saveSnapshot() may fail if the format string is not supported. */
-	const QString& snapshotFormat() const { return snapshotFormat_; };
+	const QString& snapshotFormat() const { return snapshotFormat_; }
 	/*! Returns the value of the counter used to name snapshots in saveSnapshot() when \p automatic is
 	\c true.
 
 	Set using setSnapshotCounter(). Default value is 0, and it is incremented after each \p automatic
 	snapshot. See saveSnapshot() for details. */
-	int snapshotCounter() const { return snapshotCounter_; };
+	int snapshotCounter() const { return snapshotCounter_; }
 	/*! Defines the image quality of the snapshots produced with saveSnapshot().
 
 	Values must be in the range -1..100. Use 0 for lowest quality and 100 for highest quality (and
@@ -495,23 +495,23 @@ public:
 	Set using setSnapshotQuality(). See also the QImage::save() documentation.
 
 	\note This value has no impact on the images produced in vectorial format. */
-	int snapshotQuality() { return snapshotQuality_; };
+	int snapshotQuality() { return snapshotQuality_; }
 
 	// Qt 2.3 does not support double default value parameters in slots.
 	// Remove "Q_SLOTS" from the following line to compile with Qt 2.3
-	public Q_SLOTS:
+public Q_SLOTS:
 	void saveSnapshot(bool automatic=true, bool overwrite=false);
 
-	public Q_SLOTS:
+public Q_SLOTS:
 	void saveSnapshot(const QString& fileName, bool overwrite=false);
 	void setSnapshotFileName(const QString& name);
 
 	/*! Sets the snapshotFormat(). */
-	void setSnapshotFormat(const QString& format) { snapshotFormat_ = format; };
+	void setSnapshotFormat(const QString& format) { snapshotFormat_ = format; }
 	/*! Sets the snapshotCounter(). */
-	void setSnapshotCounter(int counter) { snapshotCounter_ = counter; };
+	void setSnapshotCounter(int counter) { snapshotCounter_ = counter; }
 	/*! Sets the snapshotQuality(). */
-	void setSnapshotQuality(int quality) { snapshotQuality_ = quality; };
+	void setSnapshotQuality(int quality) { snapshotQuality_ = quality; }
 	bool openSnapshotFormatDialog();
 	void snapshotToClipboard();
 
@@ -532,34 +532,34 @@ public:
 
 	From a user's point of view, this method simply returns \p font and can be used transparently.
 
-	However when internally rendering a screen snapshot using saveSnapshot(), it returns a scaled version 
-	of the font, so that the size of the rendered text on the snapshot is identical to what is displayed on screen, 
+	However when internally rendering a screen snapshot using saveSnapshot(), it returns a scaled version
+	of the font, so that the size of the rendered text on the snapshot is identical to what is displayed on screen,
 	even if the snapshot uses image tiling to create an image of dimensions different from those of the
 	current window. This scaled version will only be used when saveSnapshot() calls your draw() method
 	to generate the snapshot.
 
-	All your calls to QGLWidget::renderText() function hence should use this method. 
+	All your calls to QGLWidget::renderText() function hence should use this method.
 	\code
 	renderText(x, y, z, "My Text", scaledFont(QFont()));
 	\endcode
-	will guarantee that this text will be properly displayed on arbitrary sized snapshots.	
+	will guarantee that this text will be properly displayed on arbitrary sized snapshots.
 
 	Note that this method is not needed if you use drawText() which already calls it internally. */
 	QFont scaledFont(const QFont& font) const {
-	  if (tileRegion_ == NULL)
-	    return font;
-	  else {
-	    QFont f(font);
-	    if (f.pixelSize() == -1)
+		if (tileRegion_ == NULL)
+			return font;
+		else {
+			QFont f(font);
+			if (f.pixelSize() == -1)
 #if QT_VERSION >= 0x040000
-	      f.setPointSizeF(f.pointSizeF() * tileRegion_->textScale);
+				f.setPointSizeF(f.pointSizeF() * tileRegion_->textScale);
 #else
-	      f.setPointSizeFloat(f.pointSizeFloat() * tileRegion_->textScale);
+				f.setPointSizeFloat(f.pointSizeFloat() * tileRegion_->textScale);
 #endif
-	    else
-	      f.setPixelSize(f.pixelSize() * tileRegion_->textScale);
-	    return f;
-	  }
+			else
+				f.setPixelSize(f.pixelSize() * tileRegion_->textScale);
+			return f;
+		}
 	}
 	//@}
 
@@ -576,15 +576,15 @@ public:
 
 	Use (0,0) to (bufferTextureMaxU(), bufferTextureMaxV()) texture coordinates to map the entire
 	texture on a quad. */
-	float bufferTextureMaxU() const { return bufferTextureMaxU_; };
+	float bufferTextureMaxU() const { return bufferTextureMaxU_; }
 	/*! Same as bufferTextureMaxU(), but for the v texture coordinate. */
-	float bufferTextureMaxV() const { return bufferTextureMaxV_; };
-	public Q_SLOTS:
-		void copyBufferToTexture(GLint internalFormat, GLenum format=GL_NONE);
-		//@}
+	float bufferTextureMaxV() const { return bufferTextureMaxV_; }
+public Q_SLOTS:
+	void copyBufferToTexture(GLint internalFormat, GLenum format=GL_NONE);
+	//@}
 
-		/*! @name Animation */
-		//@{
+	/*! @name Animation */
+	//@{
 public:
 	/*! Return \c true when the animation loop is started.
 
@@ -594,7 +594,7 @@ public:
 	Use startAnimation(), stopAnimation() or toggleAnimation() to change this value.
 
 	See the <a href="../examples/animation.html">animation example</a> for illustration. */
-	bool animationIsStarted() const { return animationStarted_; };
+	bool animationIsStarted() const { return animationStarted_; }
 	/*! The animation loop period, in milliseconds.
 
 	When animationIsStarted(), this is delay waited after draw() to call animate() and draw() again.
@@ -609,28 +609,28 @@ public:
 
 	\note This value is taken into account only the next time you call startAnimation(). If
 	animationIsStarted(), you should stopAnimation() first. */
-	int animationPeriod() const { return animationPeriod_; };
+	int animationPeriod() const { return animationPeriod_; }
 
-	public Q_SLOTS:
-		/*! Sets the animationPeriod(), in milliseconds. */
-		void setAnimationPeriod(int period) { animationPeriod_ = period; };
-		virtual void startAnimation();
-		virtual void stopAnimation();
-		/*! Scene animation method.
+public Q_SLOTS:
+	/*! Sets the animationPeriod(), in milliseconds. */
+	void setAnimationPeriod(int period) { animationPeriod_ = period; }
+	virtual void startAnimation();
+	virtual void stopAnimation();
+	/*! Scene animation method.
 
 		When animationIsStarted(), this method is in charge of the scene update before each draw().
 		Overload it to define how your scene evolves over time. The time should either be regularly
 		incremented in this method (frame-rate independent animation) or computed from actual time (for
 		instance using QTime::elapsed()) for real-time animations.
 
-                Note that KeyFrameInterpolator (which regularly updates a Frame) does not use this method
-                to animate a Frame, but rather rely on a QTimer signal-slot mechanism.
+				Note that KeyFrameInterpolator (which regularly updates a Frame) does not use this method
+				to animate a Frame, but rather rely on a QTimer signal-slot mechanism.
 
 		See the <a href="../examples/animation.html">animation example</a> for an illustration. */
-		virtual void animate() { Q_EMIT animateNeeded(); };
-		/*! Calls startAnimation() or stopAnimation(), depending on animationIsStarted(). */
-		void toggleAnimation() { if (animationIsStarted()) stopAnimation(); else startAnimation(); };
-		//@}
+	virtual void animate() { Q_EMIT animateNeeded(); }
+	/*! Calls startAnimation() or stopAnimation(), depending on animationIsStarted(). */
+	void toggleAnimation() { if (animationIsStarted()) stopAnimation(); else startAnimation(); }
+	//@}
 
 public:
 Q_SIGNALS:
@@ -710,7 +710,7 @@ public:
 	\endcode
 
 	See also mouseString() and keyboardString(). */
-	virtual QString helpString() const { return tr("No help available."); };
+	virtual QString helpString() const { return tr("No help available."); }
 
 	virtual QString mouseString() const;
 	virtual QString keyboardString() const;
@@ -722,9 +722,9 @@ public:
 	virtual QString shortcutBindingsString () const { return keyboardString(); }
 #endif
 
-	public Q_SLOTS:
-		virtual void help();
-		virtual void aboutQGLViewer();
+public Q_SLOTS:
+	virtual void help();
+	virtual void aboutQGLViewer();
 
 protected:
 	/*! Returns a pointer to the help widget.
@@ -759,7 +759,7 @@ protected:
 
 	\note All the OpenGL specific initializations must be done in this method: the OpenGL context is
 	not yet available in your viewer constructor. */
-	virtual void init() { Q_EMIT viewerInitialized(); };
+	virtual void init() { Q_EMIT viewerInitialized(); }
 
 	virtual void paintGL();
 	virtual void preDraw();
@@ -780,7 +780,7 @@ protected:
 	camera()->loadProjectionMatrix() at the end of draw() if you need to change the projection matrix
 	(unlikely). On the other hand, the \c GL_MODELVIEW matrix can be modified and left in a arbitrary
 	state. */
-	virtual void draw() {};
+	virtual void draw() {}
 	virtual void fastDraw();
 	virtual void postDraw();
 	//@}
@@ -808,7 +808,7 @@ public:
 	was selected.
 
 	Return value is -1 before the first call to select(). This value is modified using setSelectedName(). */
-	int selectedName() const { return selectedObjectId_; };
+	int selectedName() const { return selectedObjectId_; }
 	/*! Returns the selectBuffer() size.
 
 	See the select() documentation for details. Use setSelectBufferSize() to change this value.
@@ -816,7 +816,7 @@ public:
 	Default value is 4000 (i.e. 1000 objects in selection region, since each object pushes 4 values).
 	This size should be over estimated to prevent a buffer overflow when many objects are drawn under
 	the mouse cursor. */
-	int selectBufferSize() const { return selectBufferSize_; };
+	int selectBufferSize() const { return selectBufferSize_; }
 
 	/*! Returns the width (in pixels) of a selection frustum, centered on the mouse cursor, that is
 	used to select objects.
@@ -831,31 +831,31 @@ public:
 	more precise selection but the user has to be careful for small feature selection.
 
 	See the <a href="../examples/multiSelect.html">multiSelect example</a> for an illustration. */
-	int selectRegionWidth() const { return selectRegionWidth_; };
+	int selectRegionWidth() const { return selectRegionWidth_; }
 	/*! See the selectRegionWidth() documentation. Default value is 3 pixels. */
-	int selectRegionHeight() const { return selectRegionHeight_; };
+	int selectRegionHeight() const { return selectRegionHeight_; }
 
 	/*! Returns a pointer to an array of \c GLuint.
 
 	This buffer is used by the \c GL_SELECT mode in select() to perform object selection. The buffer
 	size can be modified using setSelectBufferSize(). If you overload endSelection(), you will analyze
 	the content of this buffer. See the \c glSelectBuffer() man page for details. */
-	GLuint* selectBuffer() { return selectBuffer_; };
+	GLuint* selectBuffer() { return selectBuffer_; }
 
-	public Q_SLOTS:
-		virtual void select(const QMouseEvent* event);
-		virtual void select(const QPoint& point);
+public Q_SLOTS:
+	virtual void select(const QMouseEvent* event);
+	virtual void select(const QPoint& point);
 
-		void setSelectBufferSize(int size);
-		/*! Sets the selectRegionWidth(). */
-		void setSelectRegionWidth(int width) { selectRegionWidth_ = width; };
-		/*! Sets the selectRegionHeight(). */
-		void setSelectRegionHeight(int height) { selectRegionHeight_ = height; };
-		/*! Set the selectedName() value.
+	void setSelectBufferSize(int size);
+	/*! Sets the selectRegionWidth(). */
+	void setSelectRegionWidth(int width) { selectRegionWidth_ = width; }
+	/*! Sets the selectRegionHeight(). */
+	void setSelectRegionHeight(int height) { selectRegionHeight_ = height; }
+	/*! Set the selectedName() value.
 
 		Used in endSelection() during a selection. You should only call this method if you overload the
 		endSelection() method. */
-		void setSelectedName(int id) { selectedObjectId_=id; };
+	void setSelectedName(int id) { selectedObjectId_=id; }
 
 protected:
 	virtual void beginSelection(const QPoint& point);
@@ -868,9 +868,9 @@ protected:
 \code
 void Viewer::drawWithNames() {
    for (int i=0; i<nbObjects; ++i) {
-      glPushName(i);
-      object(i)->draw();
-      glPopName();
+	  glPushName(i);
+	  object(i)->draw();
+	  glPopName();
    }
 }
 \endcode
@@ -881,7 +881,7 @@ void Viewer::drawWithNames() {
 
 	\attention If your selected objects are points, do not use \c glBegin(GL_POINTS); and \c glVertex3fv()
 	in the above \c draw() method (not compatible with raster mode): use \c glRasterPos3fv() instead. */
-	virtual void drawWithNames() {};
+	virtual void drawWithNames() {}
 	virtual void endSelection(const QPoint& point);
 	/*! This method is called at the end of the select() procedure. It should finalize the selection
 	process and update the data structure/interface/computation/display... according to the newly
@@ -890,7 +890,7 @@ void Viewer::drawWithNames() {
 	The default implementation is empty. Overload this method if needed, and use selectedName() to
 	retrieve the selected entity name (returns -1 if no object was selected). See the <a
 	href="../examples/select.html">select example</a> for an illustration. */
-	virtual void postSelection(const QPoint& point) { Q_UNUSED(point); };
+	virtual void postSelection(const QPoint& point) { Q_UNUSED(point); }
 	//@}
 
 
@@ -902,48 +902,48 @@ protected:
 
 	See the <a href="../keyboard.html">keyboard page</a> for details. */
 	enum KeyboardAction { DRAW_AXIS, DRAW_GRID, DISPLAY_FPS, ENABLE_TEXT, EXIT_VIEWER,
-		SAVE_SCREENSHOT, CAMERA_MODE, FULL_SCREEN, STEREO, ANIMATION, HELP, EDIT_CAMERA,
-		MOVE_CAMERA_LEFT, MOVE_CAMERA_RIGHT, MOVE_CAMERA_UP, MOVE_CAMERA_DOWN,
-		INCREASE_FLYSPEED, DECREASE_FLYSPEED, SNAPSHOT_TO_CLIPBOARD };
+						  SAVE_SCREENSHOT, CAMERA_MODE, FULL_SCREEN, STEREO, ANIMATION, HELP, EDIT_CAMERA,
+						  MOVE_CAMERA_LEFT, MOVE_CAMERA_RIGHT, MOVE_CAMERA_UP, MOVE_CAMERA_DOWN,
+						  INCREASE_FLYSPEED, DECREASE_FLYSPEED, SNAPSHOT_TO_CLIPBOARD };
 public:
-    unsigned int shortcut(KeyboardAction action) const;
+	unsigned int shortcut(KeyboardAction action) const;
 #ifndef DOXYGEN
 	// QGLViewer 1.x
 	int keyboardAccelerator(KeyboardAction action) const;
 	Qt::Key keyFrameKey(int index) const;
-    Qt::KeyboardModifiers playKeyFramePathStateKey() const;
+	Qt::KeyboardModifiers playKeyFramePathStateKey() const;
 	// QGLViewer 2.0 without Qt4 support
-    Qt::KeyboardModifiers addKeyFrameStateKey() const;
-    Qt::KeyboardModifiers playPathStateKey() const;
+	Qt::KeyboardModifiers addKeyFrameStateKey() const;
+	Qt::KeyboardModifiers playPathStateKey() const;
 #endif
 	Qt::Key pathKey(int index) const;
-    Qt::KeyboardModifiers addKeyFrameKeyboardModifiers() const;
-    Qt::KeyboardModifiers playPathKeyboardModifiers() const;
+	Qt::KeyboardModifiers addKeyFrameKeyboardModifiers() const;
+	Qt::KeyboardModifiers playPathKeyboardModifiers() const;
 
-	public Q_SLOTS:
-        void setShortcut(KeyboardAction action, unsigned int key);
+public Q_SLOTS:
+	void setShortcut(KeyboardAction action, unsigned int key);
 #ifndef DOXYGEN
-		void setKeyboardAccelerator(KeyboardAction action, int key);
+	void setKeyboardAccelerator(KeyboardAction action, int key);
 #endif
-		void setKeyDescription(int key, QString description);
+	void setKeyDescription(int key, QString description);
 
-		// Key Frames shortcut keys
+	// Key Frames shortcut keys
 #ifndef DOXYGEN
-		// QGLViewer 1.x compatibility methods
-		virtual void setKeyFrameKey(int index, int key);
-		virtual void setPlayKeyFramePathStateKey(int buttonState);
-		// QGLViewer 2.0 without Qt4 support
-		virtual void setPlayPathStateKey(int buttonState);
-		virtual void setAddKeyFrameStateKey(int buttonState);
+	// QGLViewer 1.x compatibility methods
+	virtual void setKeyFrameKey(int index, int key);
+	virtual void setPlayKeyFramePathStateKey(int buttonState);
+	// QGLViewer 2.0 without Qt4 support
+	virtual void setPlayPathStateKey(int buttonState);
+	virtual void setAddKeyFrameStateKey(int buttonState);
 #endif
-		virtual void setPathKey(int key, int index = 0);
-        virtual void setPlayPathKeyboardModifiers(Qt::KeyboardModifiers modifiers);
-        virtual void setAddKeyFrameKeyboardModifiers(Qt::KeyboardModifiers modifiers);
-		//@}
+	virtual void setPathKey(int key, int index = 0);
+	virtual void setPlayPathKeyboardModifiers(Qt::KeyboardModifiers modifiers);
+	virtual void setAddKeyFrameKeyboardModifiers(Qt::KeyboardModifiers modifiers);
+	//@}
 
 
-		/*! @name Mouse customization */
-		//@{
+	/*! @name Mouse customization */
+	//@{
 protected:
 	/*! Defines the different mouse handlers: camera() or manipulatedFrame().
 
@@ -956,7 +956,7 @@ protected:
 
 	See the <a href="../mouse.html">mouse page</a> for details. */
 	enum ClickAction { NO_CLICK_ACTION, ZOOM_ON_PIXEL, ZOOM_TO_FIT, SELECT, RAP_FROM_PIXEL, RAP_IS_CENTER,
-		CENTER_FRAME, CENTER_SCENE, SHOW_ENTIRE_SCENE, ALIGN_FRAME, ALIGN_CAMERA };
+					   CENTER_FRAME, CENTER_SCENE, SHOW_ENTIRE_SCENE, ALIGN_FRAME, ALIGN_CAMERA };
 
 #ifndef DOXYGEN
 	// So that it can be used in ManipulatedFrame and ManipulatedCameraFrame.
@@ -969,10 +969,10 @@ public:
 	These actions may be binded to the camera() or to the manipulatedFrame() (see QGLViewer::MouseHandler) using
 	setMouseBinding(). */
 	enum MouseAction { NO_MOUSE_ACTION,
-		ROTATE, ZOOM, TRANSLATE,
-		MOVE_FORWARD, LOOK_AROUND, MOVE_BACKWARD,
-		SCREEN_ROTATE, ROLL, DRIVE,
-		SCREEN_TRANSLATE, ZOOM_ON_REGION };
+					   ROTATE, ZOOM, TRANSLATE,
+					   MOVE_FORWARD, LOOK_AROUND, MOVE_BACKWARD,
+					   SCREEN_ROTATE, ROLL, DRIVE,
+					   SCREEN_TRANSLATE, ZOOM_ON_REGION };
 
 #ifdef DOXYGEN
 public:
@@ -981,29 +981,29 @@ public:
 	MouseAction mouseAction(int state) const;
 	int mouseHandler(int state) const;
 	int mouseButtonState(MouseHandler handler, MouseAction action, bool withConstraint=true) const;
-    ClickAction clickAction(int state, bool doubleClick, Qt::MouseButtons buttonsBefore) const;
-    void getClickButtonState(ClickAction action, int& state, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const;
+	ClickAction clickAction(int state, bool doubleClick, Qt::MouseButtons buttonsBefore) const;
+	void getClickButtonState(ClickAction action, int& state, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const;
 
-    MouseAction wheelAction(Qt::KeyboardModifiers modifiers) const;
-    int wheelHandler(Qt::KeyboardModifiers modifiers) const;
+	MouseAction wheelAction(Qt::KeyboardModifiers modifiers) const;
+	int wheelHandler(Qt::KeyboardModifiers modifiers) const;
 	int wheelButtonState(MouseHandler handler, MouseAction action, bool withConstraint=true) const;
 
 public Q_SLOTS:
-    void setMouseBinding(int state, MouseHandler handler, MouseAction action, bool withConstraint=true);
+	void setMouseBinding(int state, MouseHandler handler, MouseAction action, bool withConstraint=true);
 #if QT_VERSION < 0x030000
-    // Two slots cannot have the same name or two default parameters with Qt 2.3.
+	// Two slots cannot have the same name or two default parameters with Qt 2.3.
 public:
 #endif
-    void setMouseBinding(int state, ClickAction action, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
+	void setMouseBinding(int state, ClickAction action, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
 #if QT_VERSION < 0x030000
 public Q_SLOTS:
 #endif
-    void setMouseBindingDescription(int state, QString description, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
-    void setWheelBinding(Qt::KeyboardModifiers modifiers, MouseHandler handler, MouseAction action, bool withConstraint=true);
-    void setHandlerKeyboardModifiers(MouseHandler handler, Qt::KeyboardModifiers modifiers);
+	void setMouseBindingDescription(int state, QString description, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
+	void setWheelBinding(Qt::KeyboardModifiers modifiers, MouseHandler handler, MouseAction action, bool withConstraint=true);
+	void setHandlerKeyboardModifiers(MouseHandler handler, Qt::KeyboardModifiers modifiers);
 #ifndef DOXYGEN
-    void setHandlerStateKey(MouseHandler handler, int buttonState);
-    void setMouseStateKey(MouseHandler handler, int buttonState);
+	void setHandlerStateKey(MouseHandler handler, int buttonState);
+	void setMouseStateKey(MouseHandler handler, int buttonState);
 #endif
 
 private:
@@ -1018,12 +1018,12 @@ public:
 	QString stateFileName() const;
 	virtual QDomElement domElement(const QString& name, QDomDocument& document) const;
 
-	public Q_SLOTS:
-		virtual void initFromDOMElement(const QDomElement& element);
-		virtual void saveStateToFile(); // cannot be const because of QMessageBox
-		virtual bool restoreStateFromFile();
+public Q_SLOTS:
+	virtual void initFromDOMElement(const QDomElement& element);
+	virtual void saveStateToFile(); // cannot be const because of QMessageBox
+	virtual bool restoreStateFromFile();
 
-		/*! Defines the stateFileName() used by saveStateToFile() and restoreStateFromFile().
+	/*! Defines the stateFileName() used by saveStateToFile() and restoreStateFromFile().
 
 		The file name can have an optional prefix directory (no prefix meaning current directory). If the
 		directory does not exist, it will be created by saveStateToFile().
@@ -1035,11 +1035,11 @@ public:
 		// Files are stored in a dedicated directory under user's home directory.
 		setStateFileName(QDir::homeDirPath + "/.config/myApp.xml");
 		\endcode */
-		void setStateFileName(const QString& name) { stateFileName_ = name; };
+	void setStateFileName(const QString& name) { stateFileName_ = name; }
 
 #ifndef DOXYGEN
-		void saveToFile(const QString& fileName=QString::null);
-		bool restoreFromFile(const QString& fileName=QString::null);
+	void saveToFile(const QString& fileName=QString::null);
+	bool restoreFromFile(const QString& fileName=QString::null);
 #endif
 
 private:
@@ -1051,20 +1051,20 @@ private:
 	//@{
 public:
 	/*! Returns a \c QList that contains pointers to all the created QGLViewers.
-        Note that this list may contain \c NULL pointers if the associated viewer has been deleted.
+		Note that this list may contain \c NULL pointers if the associated viewer has been deleted.
 
 	Can be useful to apply a method or to connect a signal to all the viewers:
-        \code
+		\code
 	foreach (QGLViewer* viewer, QGLViewer::QGLViewerPool())
- 	  connect(myObject, SIGNAL(IHaveChangedSignal()), viewer, SLOT(updateGL()));
+	  connect(myObject, SIGNAL(IHaveChangedSignal()), viewer, SLOT(update()));
 	\endcode
 
 	\attention With Qt version 3, this method returns a \c QPtrList instead. Use a \c QPtrListIterator
 	to iterate on the list instead.*/
 #if QT_VERSION >= 0x040000
-	static const QList<QGLViewer*>& QGLViewerPool() { return QGLViewer::QGLViewerPool_; };
+	static const QList<QGLViewer*>& QGLViewerPool() { return QGLViewer::QGLViewerPool_; }
 #else
-	static const QPtrList<QGLViewer>& QGLViewerPool() { return QGLViewer::QGLViewerPool_; };
+	static const QPtrList<QGLViewer>& QGLViewerPool() { return QGLViewer::QGLViewerPool_; }
 #endif
 
 
@@ -1073,12 +1073,12 @@ public:
 	example).
 
 	When a QGLViewer is deleted, the QGLViewers' indexes are preserved and NULL is set for that index.
-        When a QGLViewer is created, it is placed in the first available position in that list.
-        Returns -1 if the QGLViewer could not be found (which should not be possible). */
+		When a QGLViewer is created, it is placed in the first available position in that list.
+		Returns -1 if the QGLViewer could not be found (which should not be possible). */
 #if QT_VERSION >= 0x040000
-	static int QGLViewerIndex(const QGLViewer* const viewer) { return QGLViewer::QGLViewerPool_.indexOf(const_cast<QGLViewer*>(viewer)); };
+	static int QGLViewerIndex(const QGLViewer* const viewer) { return QGLViewer::QGLViewerPool_.indexOf(const_cast<QGLViewer*>(viewer)); }
 #else
-	static int QGLViewerIndex(const QGLViewer* const viewer) { return QGLViewer::QGLViewerPool_.findRef(viewer); };
+	static int QGLViewerIndex(const QGLViewer* const viewer) { return QGLViewer::QGLViewerPool_.findRef(viewer); }
 #endif
 	//@}
 
@@ -1089,15 +1089,15 @@ public:
 	virtual void setVisualHintsMask(int mask, int delay = 2000);
 	virtual void drawVisualHints();
 
-	public Q_SLOTS:
-		virtual void resetVisualHints();
-		//@}
+public Q_SLOTS:
+	virtual void resetVisualHints();
+	//@}
 #endif
 
-		private Q_SLOTS:
-			// Patch for a Qt bug with fullScreen on startup
-			void delayedFullScreen() { move(prevPos_); setFullScreen(); };
-			void hideMessage();
+private Q_SLOTS:
+	// Patch for a Qt bug with fullScreen on startup
+	void delayedFullScreen() { move(prevPos_); setFullScreen(); }
+	void hideMessage();
 
 private:
 	// Copy constructor and operator= are declared private and undefined
@@ -1168,12 +1168,12 @@ private:
 	void setDefaultShortcuts();
 	QString cameraPathKeysString() const;
 	QMap<KeyboardAction, QString> keyboardActionDescription_;
-    QMap<KeyboardAction, unsigned int> keyboardBinding_;
-    QMap<int, QString> keyDescription_;
+	QMap<KeyboardAction, unsigned int> keyboardBinding_;
+	QMap<int, QString> keyDescription_;
 
 	// K e y   F r a m e s   s h o r t c u t s
 	QMap<Qt::Key, int> pathIndex_;
-    Qt::KeyboardModifiers addKeyFrameKeyboardModifiers_, playPathKeyboardModifiers_;
+	Qt::KeyboardModifiers addKeyFrameKeyboardModifiers_, playPathKeyboardModifiers_;
 
 	// B u f f e r   T e x t u r e
 	GLuint bufferTextureId_;
@@ -1192,12 +1192,12 @@ private:
 
 	// C l i c k   a c t i o n s
 	struct ClickActionPrivate {
-        Qt::KeyboardModifiers modifiers;
-        Qt::MouseButtons button;
+		Qt::KeyboardModifiers modifiers;
+		Qt::MouseButtons button;
 		bool doubleClick;
-        Qt::MouseButtons buttonsBefore; // only defined when doubleClick is true
+		Qt::MouseButtons buttonsBefore; // only defined when doubleClick is true
 
-		// This sort order in used in mouseString() to displays sorted mouse bindings
+		// This sort order in used in mouseString() to display sorted mouse bindings
 		bool operator<(const ClickActionPrivate& cap) const
 		{
 			if (buttonsBefore != cap.buttonsBefore)
@@ -1213,14 +1213,14 @@ private:
 		}
 	};
 #endif
-    static QString formatClickActionPrivate(ClickActionPrivate cap);
+	static QString formatClickActionPrivate(ClickActionPrivate cap);
 
 	QMap<ClickActionPrivate, QString> mouseDescription_;
 
 	void setDefaultMouseBindings();
 	void performClickAction(ClickAction ca, const QMouseEvent* const e);
 	QMap<int, MouseActionPrivate> mouseBinding_;
-    QMap<Qt::KeyboardModifiers, MouseActionPrivate> wheelBinding_;
+	QMap<Qt::KeyboardModifiers, MouseActionPrivate> wheelBinding_;
 	QMap<ClickActionPrivate, ClickAction> clickBinding_;
 
 	// S n a p s h o t s
@@ -1242,9 +1242,6 @@ private:
 
 	// H e l p   w i n d o w
 	QTabWidget* helpWidget_;
-
-	// I n t e r n a l   d e b u g
-	bool updateGLOK_;
 };
 
 #endif // QGLVIEWER_QGLVIEWER_H

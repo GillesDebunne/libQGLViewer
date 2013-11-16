@@ -13,7 +13,7 @@ Name libQGLViewer
 
 # Defines
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION 2.4.0
+!define VERSION 2.4.1
 !define COMPANY "Gilles Debunne"
 !define URL http://www.libqglviewer.com/
 
@@ -66,7 +66,7 @@ InstallDir $PROGRAMFILES\libQGLViewer
 CRCCheck on
 XPStyle on
 ShowInstDetails show
-VIProductVersion 2.4.0
+VIProductVersion 2.4.1
 VIAddVersionKey /LANG=${LANG_ENGLISH} ProductName "${NAME}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} ProductVersion "${VERSION}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} CompanyName "${COMPANY}"
@@ -357,41 +357,3 @@ FunctionEnd
 
 # Installer Language Strings
 LangString ^UninstallLink ${LANG_ENGLISH} "Uninstall $(^Name)"
-LangString ^UninstallLink ${LANG_FRENCH} "Désinstaller $(^Name)"
-
-LangString SEC0000_DESC ${LANG_ENGLISH} "libQGLViewer library."
-LangString SEC0001_DESC ${LANG_ENGLISH} "Demonstration examples of the different features of the library."
-LangString SEC0002_DESC ${LANG_ENGLISH} "libQGLViewer web pages, including API documentation."
-LangString SEC0003_DESC ${LANG_ENGLISH} "Header files needed to develop using libQGLViewer."
-
-LangString SEC0000_DESC ${LANG_FRENCH} "Librairie libQGLViewer."
-LangString SEC0001_DESC ${LANG_FRENCH} "Exemples de démonstration des différentes fonctionnalités de la bibliothèque."
-LangString SEC0002_DESC ${LANG_FRENCH} "Pages web de libQGLViewer, incluant la documentation de l'API."
-LangString SEC0003_DESC ${LANG_FRENCH} "Fichiers d'entête nécessaires au développement avec libQGLViewer."
-
-LangString ExamplesSection ${LANG_ENGLISH} "Examples"
-LangString ExamplesSection ${LANG_FRENCH} "Exemples"
-
-LangString Documentation ${LANG_ENGLISH} "Documentation"
-LangString Documentation ${LANG_FRENCH} "Documentation"
-
-LangString Development ${LANG_ENGLISH} "Development"
-LangString Development ${LANG_FRENCH} "Développement"
-
-LangString examples ${LANG_ENGLISH} "examples"
-LangString examples ${LANG_FRENCH} "exemples"
-
-LangString doc ${LANG_ENGLISH} "doc"
-LangString doc ${LANG_FRENCH} "doc"
-
-LangString reference ${LANG_ENGLISH} "API"
-LangString reference ${LANG_FRENCH} "API"
-
-LangString basic ${LANG_ENGLISH} "basic"
-LangString basic ${LANG_FRENCH} "basiques"
-
-LangString pedagogical ${LANG_ENGLISH} "pedagogical"
-LangString pedagogical ${LANG_FRENCH} "pédagogiques"
-
-LangString advanced ${LANG_ENGLISH} "advanced"
-LangString advanced ${LANG_FRENCH} "avancés"

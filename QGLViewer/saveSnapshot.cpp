@@ -52,17 +52,17 @@ static QMap<QString, QString> extension;
 void QGLViewer::setSnapshotFileName(const QString& name)
 {
 #if QT_VERSION >= 0x040000
-  snapshotFileName_ = QFileInfo(name).absoluteFilePath();
+	snapshotFileName_ = QFileInfo(name).absoluteFilePath();
 #else
-  snapshotFileName_ = QFileInfo(name).absFilePath();
+	snapshotFileName_ = QFileInfo(name).absFilePath();
 #endif
 }
 
 #ifndef DOXYGEN
 const QString& QGLViewer::snapshotFilename() const
 {
-  qWarning("snapshotFilename is deprecated. Use snapshotFileName() (uppercase N) instead.");
-  return snapshotFileName();
+	qWarning("snapshotFilename is deprecated. Use snapshotFileName() (uppercase N) instead.");
+	return snapshotFileName();
 }
 #endif
 
@@ -74,19 +74,19 @@ Then calls setSnapshotFormat() with the selected one (unless the user cancels).
 Returns \c false if the user presses the Cancel button and \c true otherwise. */
 bool QGLViewer::openSnapshotFormatDialog()
 {
-  bool ok = false;
+	bool ok = false;
 #if QT_VERSION >= 0x040000
-  QStringList list = formats.split(";;", QString::SkipEmptyParts);
-  int current = list.indexOf(FDFormatString[snapshotFormat()]);
-  QString format = QInputDialog::getItem(this, "Snapshot format", "Select a snapshot format", list, current, false, &ok);
+	QStringList list = formats.split(";;", QString::SkipEmptyParts);
+	int current = list.indexOf(FDFormatString[snapshotFormat()]);
+	QString format = QInputDialog::getItem(this, "Snapshot format", "Select a snapshot format", list, current, false, &ok);
 #else
-  QStringList list = QStringList::split(";;", formats);
-  int current = list.findIndex(FDFormatString[snapshotFormat()]);
-  QString format = QInputDialog::getItem("Snapshot format", "Select a snapshot format", list, current, false, &ok, this);
+	QStringList list = QStringList::split(";;", formats);
+	int current = list.findIndex(FDFormatString[snapshotFormat()]);
+	QString format = QInputDialog::getItem("Snapshot format", "Select a snapshot format", list, current, false, &ok, this);
 #endif
-  if (ok)
-    setSnapshotFormat(Qtformat[format]);
-  return ok;
+	if (ok)
+		setSnapshotFormat(Qtformat[format]);
+	return ok;
 }
 
 
@@ -95,183 +95,183 @@ bool QGLViewer::openSnapshotFormatDialog()
 void QGLViewer::initializeSnapshotFormats()
 {
 #if QT_VERSION >= 0x040000
-  QList<QByteArray> list = QImageWriter::supportedImageFormats();
-  QStringList formatList;
-  for (int i=0; i < list.size(); ++i)
-    formatList << QString(list.at(i).toUpper());
+	QList<QByteArray> list = QImageWriter::supportedImageFormats();
+	QStringList formatList;
+	for (int i=0; i < list.size(); ++i)
+		formatList << QString(list.at(i).toUpper());
 #else
-  QStringList formatList = QImage::outputFormatList();
+	QStringList formatList = QImage::outputFormatList();
 #endif
-  //        qWarning("Available image formats: ");
-  //        QStringList::Iterator it = formatList.begin();
-  //        while( it != formatList.end() )
-  //  	      qWarning((*it++).);  QT4 change this. qWarning no longer accepts QString
+	//        qWarning("Available image formats: ");
+	//        QStringList::Iterator it = formatList.begin();
+	//        while( it != formatList.end() )
+	//  	      qWarning((*it++).);  QT4 change this. qWarning no longer accepts QString
 
 #ifndef NO_VECTORIAL_RENDER
-  // We add the 3 vectorial formats to the list
-  formatList += "EPS";
-  formatList += "PS";
-  formatList += "XFIG";
+	// We add the 3 vectorial formats to the list
+	formatList += "EPS";
+	formatList += "PS";
+	formatList += "XFIG";
 #endif
 
-  // Check that the interesting formats are available and add them in "formats"
-  // Unused formats: XPM XBM PBM PGM
-  QStringList QtText, MenuText, Ext;
-  QtText += "JPEG";	MenuText += "JPEG (*.jpg)";		Ext += "jpg";
-  QtText += "PNG";	MenuText += "PNG (*.png)";		Ext += "png";
-  QtText += "EPS";	MenuText += "Encapsulated Postscript (*.eps)";	Ext += "eps";
-  QtText += "PS";	MenuText += "Postscript (*.ps)";	Ext += "ps";
-  QtText += "PPM";	MenuText += "24bit RGB Bitmap (*.ppm)";	Ext += "ppm";
-  QtText += "BMP";	MenuText += "Windows Bitmap (*.bmp)";	Ext += "bmp";
-  QtText += "XFIG";	MenuText += "XFig (*.fig)";		Ext += "fig";
+	// Check that the interesting formats are available and add them in "formats"
+	// Unused formats: XPM XBM PBM PGM
+	QStringList QtText, MenuText, Ext;
+	QtText += "JPEG";	MenuText += "JPEG (*.jpg)";		Ext += "jpg";
+	QtText += "PNG";	MenuText += "PNG (*.png)";		Ext += "png";
+	QtText += "EPS";	MenuText += "Encapsulated Postscript (*.eps)";	Ext += "eps";
+	QtText += "PS";	MenuText += "Postscript (*.ps)";	Ext += "ps";
+	QtText += "PPM";	MenuText += "24bit RGB Bitmap (*.ppm)";	Ext += "ppm";
+	QtText += "BMP";	MenuText += "Windows Bitmap (*.bmp)";	Ext += "bmp";
+	QtText += "XFIG";	MenuText += "XFig (*.fig)";		Ext += "fig";
 
 #if QT_VERSION < 0x030000
-  QStringList::Iterator itText = QtText.begin();
-  QStringList::Iterator itMenu = MenuText.begin();
-  QStringList::Iterator itExt  = Ext.begin();
+	QStringList::Iterator itText = QtText.begin();
+	QStringList::Iterator itMenu = MenuText.begin();
+	QStringList::Iterator itExt  = Ext.begin();
 #else
-  QStringList::iterator itText = QtText.begin();
-  QStringList::iterator itMenu = MenuText.begin();
-  QStringList::iterator itExt  = Ext.begin();
+	QStringList::iterator itText = QtText.begin();
+	QStringList::iterator itMenu = MenuText.begin();
+	QStringList::iterator itExt  = Ext.begin();
 #endif
-  while (itText != QtText.end())
-    {
-      //QMessageBox::information(this, "Snapshot ", "Trying format\n"+(*itText));
-      if (formatList.contains((*itText)))
+	while (itText != QtText.end())
 	{
-	  //QMessageBox::information(this, "Snapshot ", "Recognized format\n"+(*itText));
-	  if (formats.isEmpty())
-	    setSnapshotFormat(*itText);
-	  else
-	    formats += ";;";
-	  formats += (*itMenu);
-	  Qtformat[(*itMenu)]  = (*itText);
-	  FDFormatString[(*itText)]  = (*itMenu);
-	  extension[(*itText)] = (*itExt);
+		//QMessageBox::information(this, "Snapshot ", "Trying format\n"+(*itText));
+		if (formatList.contains((*itText)))
+		{
+			//QMessageBox::information(this, "Snapshot ", "Recognized format\n"+(*itText));
+			if (formats.isEmpty())
+				setSnapshotFormat(*itText);
+			else
+				formats += ";;";
+			formats += (*itMenu);
+			Qtformat[(*itMenu)]  = (*itText);
+			FDFormatString[(*itText)]  = (*itMenu);
+			extension[(*itText)] = (*itExt);
+		}
+		// Synchronize parsing
+		itText++;
+		itMenu++;
+		itExt++;
 	}
-      // Synchronize parsing
-      itText++;
-      itMenu++;
-      itExt++;
-    }
 }
 
 // Returns false if the user refused to use the fileName
 static bool checkFileName(QString& fileName, QWidget* widget, const QString& snapshotFormat)
 {
-  if (fileName.isEmpty())
-    return false;
+	if (fileName.isEmpty())
+		return false;
 
-  // Check that extension has been provided
-  QFileInfo info(fileName);
+	// Check that extension has been provided
+	QFileInfo info(fileName);
 
 #if QT_VERSION >= 0x040000
-  if (info.suffix().isEmpty())
+	if (info.suffix().isEmpty())
 #else
-  if (info.extension(false).isEmpty())
+	if (info.extension(false).isEmpty())
 #endif
-    {
-      // No extension given. Silently add one
-      if (fileName.right(1) != ".")
-	fileName += ".";
-      fileName += extension[snapshotFormat];
-      info.setFile(fileName);
-    }
+	{
+		// No extension given. Silently add one
+		if (fileName.right(1) != ".")
+			fileName += ".";
+		fileName += extension[snapshotFormat];
+		info.setFile(fileName);
+	}
 #if QT_VERSION >= 0x040000
-  else if (info.suffix() != extension[snapshotFormat])
+	else if (info.suffix() != extension[snapshotFormat])
 #else
-  else if (info.extension(false) != extension[snapshotFormat])
+	else if (info.extension(false) != extension[snapshotFormat])
 #endif
-    {
-      // Extension is not appropriate. Propose a modification
+	{
+		// Extension is not appropriate. Propose a modification
 #if QT_VERSION >= 0x040000
-      QString modifiedName = info.absolutePath() + '/' + info.baseName() + "." + extension[snapshotFormat];
+		QString modifiedName = info.absolutePath() + '/' + info.baseName() + "." + extension[snapshotFormat];
 #else
 # if QT_VERSION >= 0x030000
-      QString modifiedName = info.dirPath() + '/' + info.baseName(true) + '.' + extension[snapshotFormat];
+		QString modifiedName = info.dirPath() + '/' + info.baseName(true) + '.' + extension[snapshotFormat];
 # else
-      QString modifiedName = info.dirPath() + '/' + info.baseName() + '.' + extension[snapshotFormat];
+		QString modifiedName = info.dirPath() + '/' + info.baseName() + '.' + extension[snapshotFormat];
 # endif
 #endif
-      QFileInfo modifInfo(modifiedName);
-      int i=(QMessageBox::warning(widget,"Wrong extension",
-				  info.fileName()+" has a wrong extension.\nSave as "+modifInfo.fileName()+" instead ?",
-				  QMessageBox::Yes,
-				  QMessageBox::No,
-				  QMessageBox::Cancel));
-      if (i==QMessageBox::Cancel)
-	return false;
+		QFileInfo modifInfo(modifiedName);
+		int i=(QMessageBox::warning(widget,"Wrong extension",
+									info.fileName()+" has a wrong extension.\nSave as "+modifInfo.fileName()+" instead ?",
+									QMessageBox::Yes,
+									QMessageBox::No,
+									QMessageBox::Cancel));
+		if (i==QMessageBox::Cancel)
+			return false;
 
-      if (i==QMessageBox::Yes)
-	{
-	  fileName = modifiedName;
-	  info.setFile(fileName);
+		if (i==QMessageBox::Yes)
+		{
+			fileName = modifiedName;
+			info.setFile(fileName);
+		}
 	}
-    }
 
-  return true;
+	return true;
 }
 
 #ifndef NO_VECTORIAL_RENDER
 // static void drawVectorial(void* param)
 void drawVectorial(void* param)
 {
-  ( (QGLViewer*) param )->drawVectorial();
+	( (QGLViewer*) param )->drawVectorial();
 }
 
 #ifndef DOXYGEN
 class ProgressDialog
 {
 public:
-  static void showProgressDialog(QGLWidget* parent);
-  static void updateProgress(float progress, const QString& stepString);
-  static void hideProgressDialog();
+	static void showProgressDialog(QGLWidget* parent);
+	static void updateProgress(float progress, const QString& stepString);
+	static void hideProgressDialog();
 
 private:
-  static QProgressDialog* progressDialog;
+	static QProgressDialog* progressDialog;
 };
 
 QProgressDialog* ProgressDialog::progressDialog = NULL;
 
 void ProgressDialog::showProgressDialog(QGLWidget* parent)
 {
-  progressDialog = new QProgressDialog(parent);
+	progressDialog = new QProgressDialog(parent);
 #if QT_VERSION >= 0x040000
-  progressDialog->setWindowTitle("Image rendering progress");
+	progressDialog->setWindowTitle("Image rendering progress");
 #else
-  progressDialog->setCaption("Image rendering progress");
+	progressDialog->setCaption("Image rendering progress");
 #endif
-  progressDialog->setMinimumSize(300, 40);
-  progressDialog->setCancelButton(NULL);
-  progressDialog->show();
+	progressDialog->setMinimumSize(300, 40);
+	progressDialog->setCancelButton(NULL);
+	progressDialog->show();
 }
 
 void ProgressDialog::updateProgress(float progress, const QString& stepString)
 {
 #if QT_VERSION >= 0x040000
-  progressDialog->setValue(int(progress*100));
+	progressDialog->setValue(int(progress*100));
 #else
-  progressDialog->setProgress(int(progress*100));
+	progressDialog->setProgress(int(progress*100));
 #endif
-  QString message(stepString);
-  if (message.length() > 33)
-    message = message.left(17) + "..." + message.right(12);
-  progressDialog->setLabelText(message);
-  progressDialog->update();
-  qApp->processEvents();
+	QString message(stepString);
+	if (message.length() > 33)
+		message = message.left(17) + "..." + message.right(12);
+	progressDialog->setLabelText(message);
+	progressDialog->update();
+	qApp->processEvents();
 }
 
 void ProgressDialog::hideProgressDialog()
 {
-  progressDialog->close();
-  delete progressDialog;
-  progressDialog = NULL;
+	progressDialog->close();
+	delete progressDialog;
+	progressDialog = NULL;
 }
 
 #if QT_VERSION >= 0x040000
 class VRenderInterface: public QDialog, public Ui::VRenderInterface
 {
- public: VRenderInterface(QWidget *parent) : QDialog(parent) { setupUi(this); }
+public: VRenderInterface(QWidget *parent) : QDialog(parent) { setupUi(this); }
 };
 #endif
 
@@ -281,72 +281,72 @@ class VRenderInterface: public QDialog, public Ui::VRenderInterface
 // Returns -1 in case of Cancel, 0 for success and (todo) error code in case of problem.
 static int saveVectorialSnapshot(const QString& fileName, QGLWidget* widget, const QString& snapshotFormat)
 {
-  static VRenderInterface* VRinterface = NULL;
+	static VRenderInterface* VRinterface = NULL;
 
-  if (!VRinterface)
+	if (!VRinterface)
 #if QT_VERSION >= 0x030000
-    VRinterface = new VRenderInterface(widget);
+		VRinterface = new VRenderInterface(widget);
 #else
-    VRinterface = new VRenderInterface(widget, "", true); // Make the dialog modal
+		VRinterface = new VRenderInterface(widget, "", true); // Make the dialog modal
 #endif
 
-  
-  // Configure interface according to selected snapshotFormat
-  if (snapshotFormat == "XFIG")
-    {
-      VRinterface->tightenBBox->setEnabled(false);
-      VRinterface->colorBackground->setEnabled(false);
-    }
-  else
-    {
-      VRinterface->tightenBBox->setEnabled(true);
-      VRinterface->colorBackground->setEnabled(true);
-    }
 
-  if (VRinterface->exec() == QDialog::Rejected)
-    return -1;
+	// Configure interface according to selected snapshotFormat
+	if (snapshotFormat == "XFIG")
+	{
+		VRinterface->tightenBBox->setEnabled(false);
+		VRinterface->colorBackground->setEnabled(false);
+	}
+	else
+	{
+		VRinterface->tightenBBox->setEnabled(true);
+		VRinterface->colorBackground->setEnabled(true);
+	}
 
-  vrender::VRenderParams vparams;
-  vparams.setFilename(fileName);
+	if (VRinterface->exec() == QDialog::Rejected)
+		return -1;
 
-  if (snapshotFormat == "EPS")	vparams.setFormat(vrender::VRenderParams::EPS);
-  if (snapshotFormat == "PS")	vparams.setFormat(vrender::VRenderParams::PS);
-  if (snapshotFormat == "XFIG")	vparams.setFormat(vrender::VRenderParams::XFIG);
+	vrender::VRenderParams vparams;
+	vparams.setFilename(fileName);
 
-  vparams.setOption(vrender::VRenderParams::CullHiddenFaces, !(VRinterface->includeHidden->isChecked()));
-  vparams.setOption(vrender::VRenderParams::OptimizeBackFaceCulling, VRinterface->cullBackFaces->isChecked());
-  vparams.setOption(vrender::VRenderParams::RenderBlackAndWhite, VRinterface->blackAndWhite->isChecked());
-  vparams.setOption(vrender::VRenderParams::AddBackground, VRinterface->colorBackground->isChecked());
-  vparams.setOption(vrender::VRenderParams::TightenBoundingBox, VRinterface->tightenBBox->isChecked());
+	if (snapshotFormat == "EPS")	vparams.setFormat(vrender::VRenderParams::EPS);
+	if (snapshotFormat == "PS")	vparams.setFormat(vrender::VRenderParams::PS);
+	if (snapshotFormat == "XFIG")	vparams.setFormat(vrender::VRenderParams::XFIG);
+
+	vparams.setOption(vrender::VRenderParams::CullHiddenFaces, !(VRinterface->includeHidden->isChecked()));
+	vparams.setOption(vrender::VRenderParams::OptimizeBackFaceCulling, VRinterface->cullBackFaces->isChecked());
+	vparams.setOption(vrender::VRenderParams::RenderBlackAndWhite, VRinterface->blackAndWhite->isChecked());
+	vparams.setOption(vrender::VRenderParams::AddBackground, VRinterface->colorBackground->isChecked());
+	vparams.setOption(vrender::VRenderParams::TightenBoundingBox, VRinterface->tightenBBox->isChecked());
 
 #if QT_VERSION >= 0x040000
-  switch (VRinterface->sortMethod->currentIndex())
+	switch (VRinterface->sortMethod->currentIndex())
 #else
-  switch (VRinterface->sortMethod->currentItem())
+	switch (VRinterface->sortMethod->currentItem())
 #endif
-    {
-    case 0: vparams.setSortMethod(vrender::VRenderParams::NoSorting); 		break;
-    case 1: vparams.setSortMethod(vrender::VRenderParams::BSPSort); 		break;
-    case 2: vparams.setSortMethod(vrender::VRenderParams::TopologicalSort); 	break;
-    case 3: vparams.setSortMethod(vrender::VRenderParams::AdvancedTopologicalSort);	break;
-    default:
-      qWarning("VRenderInterface::saveVectorialSnapshot: Unknown SortMethod");
-    }
+	{
+	case 0: vparams.setSortMethod(vrender::VRenderParams::NoSorting); 		break;
+	case 1: vparams.setSortMethod(vrender::VRenderParams::BSPSort); 		break;
+	case 2: vparams.setSortMethod(vrender::VRenderParams::TopologicalSort); 	break;
+	case 3: vparams.setSortMethod(vrender::VRenderParams::AdvancedTopologicalSort);	break;
+	default:
+		qWarning("VRenderInterface::saveVectorialSnapshot: Unknown SortMethod");
+	}
 
-  vparams.setProgressFunction(&ProgressDialog::updateProgress);
-  ProgressDialog::showProgressDialog(widget);
-  widget->makeCurrent();
-  widget->raise();
-  vrender::VectorialRender(drawVectorial, (void*) widget, vparams);
-  ProgressDialog::hideProgressDialog();
+	vparams.setProgressFunction(&ProgressDialog::updateProgress);
+	ProgressDialog::showProgressDialog(widget);
+	widget->makeCurrent();
+	widget->raise();
+	vrender::VectorialRender(drawVectorial, (void*) widget, vparams);
+	ProgressDialog::hideProgressDialog();
 #if QT_VERSION < 0x030000
-  widget->setCursor(Qt::arrowCursor);
+	widget->setCursor(Qt::arrowCursor);
 #else
-  widget->setCursor(QCursor(Qt::ArrowCursor));
+	widget->setCursor(QCursor(Qt::ArrowCursor));
 #endif
 
-  // Should return vparams.error(), but this is currently not set.
-  return 0;
+	// Should return vparams.error(), but this is currently not set.
+	return 0;
 }
 #endif // NO_VECTORIAL_RENDER
 
@@ -354,7 +354,7 @@ static int saveVectorialSnapshot(const QString& fileName, QGLWidget* widget, con
 #if QT_VERSION >= 0x040000
 class ImageInterface: public QDialog, public Ui::ImageInterface
 {
- public: ImageInterface(QWidget *parent) : QDialog(parent) { setupUi(this); }
+public: ImageInterface(QWidget *parent) : QDialog(parent) { setupUi(this); }
 };
 #endif
 
@@ -363,207 +363,207 @@ class ImageInterface: public QDialog, public Ui::ImageInterface
 // Returns false in case of problem.
 bool QGLViewer::saveImageSnapshot(const QString& fileName)
 {
-  static ImageInterface* imageInterface = NULL;
+	static ImageInterface* imageInterface = NULL;
 
-  if (!imageInterface)
+	if (!imageInterface)
 #if QT_VERSION >= 0x030000
-    imageInterface = new ImageInterface(this);
+		imageInterface = new ImageInterface(this);
 #else
-    imageInterface = new ImageInterface(this, "", true);  // Make the dialog modal
+		imageInterface = new ImageInterface(this, "", true);  // Make the dialog modal
 #endif
 
-  // 1 means never set : use current window size as default
-  if ((imageInterface->imgWidth->value() == 1) && (imageInterface->imgHeight->value() == 1))
-    {
-      imageInterface->imgWidth->setValue(width());
-      imageInterface->imgHeight->setValue(height());
-    }
+	// 1 means never set : use current window size as default
+	if ((imageInterface->imgWidth->value() == 1) && (imageInterface->imgHeight->value() == 1))
+	{
+		imageInterface->imgWidth->setValue(width());
+		imageInterface->imgHeight->setValue(height());
+	}
 
-  imageInterface->imgQuality->setValue(snapshotQuality());
+	imageInterface->imgQuality->setValue(snapshotQuality());
 
-  if (imageInterface->exec() == QDialog::Rejected)
-    return true;
+	if (imageInterface->exec() == QDialog::Rejected)
+		return true;
 
-  // Hide closed dialog
-  qApp->processEvents();
-  
-  setSnapshotQuality(imageInterface->imgQuality->value());
-  
-  QColor previousBGColor = backgroundColor();
-  if (imageInterface->whiteBackground->isChecked())
-    setBackgroundColor(Qt::white);
+	// Hide closed dialog
+	qApp->processEvents();
 
-  QSize finalSize(imageInterface->imgWidth->value(), imageInterface->imgHeight->value());
+	setSnapshotQuality(imageInterface->imgQuality->value());
 
-  double oversampling = imageInterface->oversampling->value();
-  QSize subSize(int(this->width()/oversampling), int(this->height()/oversampling));
+	QColor previousBGColor = backgroundColor();
+	if (imageInterface->whiteBackground->isChecked())
+		setBackgroundColor(Qt::white);
 
-  double aspectRatio = width() / static_cast<double>(height());
-  double newAspectRatio = finalSize.width() / static_cast<double>(finalSize.height());
+	QSize finalSize(imageInterface->imgWidth->value(), imageInterface->imgHeight->value());
 
-  double zNear = camera()->zNear();
-  double zFar = camera()->zFar();
+	double oversampling = imageInterface->oversampling->value();
+	QSize subSize(int(this->width()/oversampling), int(this->height()/oversampling));
 
-  double xMin, yMin;
-  bool expand = imageInterface->expandFrustum->isChecked();
-  if (camera()->type() == qglviewer::Camera::PERSPECTIVE)
-    if ((expand && (newAspectRatio>aspectRatio)) || (!expand && (newAspectRatio<aspectRatio)))
-      {
-	yMin = zNear * tan(camera()->fieldOfView() / 2.0);
-	xMin = newAspectRatio * yMin;
-      }
-    else
-      {
-	xMin = zNear * tan(camera()->fieldOfView() / 2.0) * aspectRatio;
-	yMin = xMin / newAspectRatio;
-      }
-  else
-    {
-      camera()->getOrthoWidthHeight(xMin, yMin);
-      if ((expand && (newAspectRatio>aspectRatio)) || (!expand && (newAspectRatio<aspectRatio)))
-	xMin = newAspectRatio * yMin;
-      else
-	yMin = xMin / newAspectRatio;
-    }
-  
-#if QT_VERSION >= 0x040000
-  QImage image(finalSize.width(), finalSize.height(), QImage::Format_ARGB32);
-#else
-  QImage image(finalSize.width(), finalSize.height(), 32);
-#endif
+	double aspectRatio = width() / static_cast<double>(height());
+	double newAspectRatio = finalSize.width() / static_cast<double>(finalSize.height());
 
-  if (image.isNull())
-    {
-      QMessageBox::warning(this, "Image saving error",
-			   "Unable to create resulting image",
-			   QMessageBox::Ok, QMessageBox::NoButton);
-      return false;
-    }
+	double zNear = camera()->zNear();
+	double zFar = camera()->zFar();
 
-  // ProgressDialog disabled since it interfers with the screen grabing mecanism on some platforms. Too bad.
-  // ProgressDialog::showProgressDialog(this);
-
-  double scaleX = subSize.width() / static_cast<double>(finalSize.width());
-  double scaleY = subSize.height() / static_cast<double>(finalSize.height());
-
-  double deltaX = 2.0 * xMin * scaleX;
-  double deltaY = 2.0 * yMin * scaleY;
-
-  int nbX = finalSize.width() / subSize.width();
-  int nbY = finalSize.height() / subSize.height();
-
-  // Extra subimage on the right/bottom border(s) if needed
-  if (nbX * subSize.width() < finalSize.width())
-    nbX++;
-  if (nbY * subSize.height() < finalSize.height())
-    nbY++;
-
-  makeCurrent();
-
-  // tileRegion_ is used by startScreenCoordinatesSystem to appropriately set the local
-  // coordinate system when tiling
-  tileRegion_ = new TileRegion();
-  double tileXMin, tileWidth, tileYMin, tileHeight;
-  if ((expand && (newAspectRatio>aspectRatio)) || (!expand && (newAspectRatio<aspectRatio)))
-    {
-      double tileTotalWidth = newAspectRatio * height();
-      tileXMin = (width() - tileTotalWidth) / 2.0;
-      tileWidth = tileTotalWidth * scaleX;
-      tileYMin = 0.0;
-      tileHeight = height() * scaleY;
-      tileRegion_->textScale = 1.0 / scaleY;
-    }
-  else
-    {
-      double tileTotalHeight = width() / newAspectRatio;
-      tileYMin = (height() - tileTotalHeight) / 2.0;
-      tileHeight = tileTotalHeight * scaleY;
-      tileXMin = 0.0;
-      tileWidth = width() * scaleX;
-      tileRegion_->textScale = 1.0 / scaleX;
-    }
-
-  int count=0;
-  for (int i=0; i<nbX; i++)
-    for (int j=0; j<nbY; j++)
-      {
-	preDraw();
-
-	// Change projection matrix
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
+	double xMin, yMin;
+	bool expand = imageInterface->expandFrustum->isChecked();
 	if (camera()->type() == qglviewer::Camera::PERSPECTIVE)
-	  glFrustum(-xMin + i*deltaX, -xMin + (i+1)*deltaX, yMin - (j+1)*deltaY, yMin - j*deltaY, zNear, zFar);
+		if ((expand && (newAspectRatio>aspectRatio)) || (!expand && (newAspectRatio<aspectRatio)))
+		{
+			yMin = zNear * tan(camera()->fieldOfView() / 2.0);
+			xMin = newAspectRatio * yMin;
+		}
+		else
+		{
+			xMin = zNear * tan(camera()->fieldOfView() / 2.0) * aspectRatio;
+			yMin = xMin / newAspectRatio;
+		}
 	else
-	  glOrtho(-xMin + i*deltaX, -xMin + (i+1)*deltaX, yMin - (j+1)*deltaY, yMin - j*deltaY, zNear, zFar);
-	glMatrixMode(GL_MODELVIEW);
-
-	tileRegion_->xMin = tileXMin + i * tileWidth;
-	tileRegion_->xMax = tileXMin + (i+1) * tileWidth;
-	tileRegion_->yMin = tileYMin + j * tileHeight;
-	tileRegion_->yMax = tileYMin + (j+1) * tileHeight;
-
-	draw();
-	postDraw();
-
-	// ProgressDialog::hideProgressDialog();
-	// qApp->processEvents();
-
-	QImage snapshot = grabFrameBuffer(true);
-
-	// ProgressDialog::showProgressDialog(this);
-	// ProgressDialog::updateProgress(count / (float)(nbX*nbY),
-	// "Generating image ["+QString::number(count)+"/"+QString::number(nbX*nbY)+"]");
-	// qApp->processEvents();
+	{
+		camera()->getOrthoWidthHeight(xMin, yMin);
+		if ((expand && (newAspectRatio>aspectRatio)) || (!expand && (newAspectRatio<aspectRatio)))
+			xMin = newAspectRatio * yMin;
+		else
+			yMin = xMin / newAspectRatio;
+	}
 
 #if QT_VERSION >= 0x040000
-	QImage subImage = snapshot.scaled(subSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+	QImage image(finalSize.width(), finalSize.height(), QImage::Format_ARGB32);
+#else
+	QImage image(finalSize.width(), finalSize.height(), 32);
+#endif
+
+	if (image.isNull())
+	{
+		QMessageBox::warning(this, "Image saving error",
+							 "Unable to create resulting image",
+							 QMessageBox::Ok, QMessageBox::NoButton);
+		return false;
+	}
+
+	// ProgressDialog disabled since it interfers with the screen grabing mecanism on some platforms. Too bad.
+	// ProgressDialog::showProgressDialog(this);
+
+	double scaleX = subSize.width() / static_cast<double>(finalSize.width());
+	double scaleY = subSize.height() / static_cast<double>(finalSize.height());
+
+	double deltaX = 2.0 * xMin * scaleX;
+	double deltaY = 2.0 * yMin * scaleY;
+
+	int nbX = finalSize.width() / subSize.width();
+	int nbY = finalSize.height() / subSize.height();
+
+	// Extra subimage on the right/bottom border(s) if needed
+	if (nbX * subSize.width() < finalSize.width())
+		nbX++;
+	if (nbY * subSize.height() < finalSize.height())
+		nbY++;
+
+	makeCurrent();
+
+	// tileRegion_ is used by startScreenCoordinatesSystem to appropriately set the local
+	// coordinate system when tiling
+	tileRegion_ = new TileRegion();
+	double tileXMin, tileWidth, tileYMin, tileHeight;
+	if ((expand && (newAspectRatio>aspectRatio)) || (!expand && (newAspectRatio<aspectRatio)))
+	{
+		double tileTotalWidth = newAspectRatio * height();
+		tileXMin = (width() - tileTotalWidth) / 2.0;
+		tileWidth = tileTotalWidth * scaleX;
+		tileYMin = 0.0;
+		tileHeight = height() * scaleY;
+		tileRegion_->textScale = 1.0 / scaleY;
+	}
+	else
+	{
+		double tileTotalHeight = width() / newAspectRatio;
+		tileYMin = (height() - tileTotalHeight) / 2.0;
+		tileHeight = tileTotalHeight * scaleY;
+		tileXMin = 0.0;
+		tileWidth = width() * scaleX;
+		tileRegion_->textScale = 1.0 / scaleX;
+	}
+
+	int count=0;
+	for (int i=0; i<nbX; i++)
+		for (int j=0; j<nbY; j++)
+		{
+			preDraw();
+
+			// Change projection matrix
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			if (camera()->type() == qglviewer::Camera::PERSPECTIVE)
+				glFrustum(-xMin + i*deltaX, -xMin + (i+1)*deltaX, yMin - (j+1)*deltaY, yMin - j*deltaY, zNear, zFar);
+			else
+				glOrtho(-xMin + i*deltaX, -xMin + (i+1)*deltaX, yMin - (j+1)*deltaY, yMin - j*deltaY, zNear, zFar);
+			glMatrixMode(GL_MODELVIEW);
+
+			tileRegion_->xMin = tileXMin + i * tileWidth;
+			tileRegion_->xMax = tileXMin + (i+1) * tileWidth;
+			tileRegion_->yMin = tileYMin + j * tileHeight;
+			tileRegion_->yMax = tileYMin + (j+1) * tileHeight;
+
+			draw();
+			postDraw();
+
+			// ProgressDialog::hideProgressDialog();
+			// qApp->processEvents();
+
+			QImage snapshot = grabFrameBuffer(true);
+
+			// ProgressDialog::showProgressDialog(this);
+			// ProgressDialog::updateProgress(count / (float)(nbX*nbY),
+			// "Generating image ["+QString::number(count)+"/"+QString::number(nbX*nbY)+"]");
+			// qApp->processEvents();
+
+#if QT_VERSION >= 0x040000
+			QImage subImage = snapshot.scaled(subSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 #else
 # if QT_VERSION >= 0x030000
-	QImage subImage = snapshot.scale(subSize, QImage::ScaleFree);
+			QImage subImage = snapshot.scale(subSize, QImage::ScaleFree);
 # else
-	QImage subImage = snapshot.smoothScale(subSize.width(), subSize.height());
+			QImage subImage = snapshot.smoothScale(subSize.width(), subSize.height());
 # endif
 #endif
 
-	// Copy subImage in image
-	for (int ii=0; ii<subSize.width(); ii++)
-	  {
-	    int fi = i*subSize.width() + ii;
-	    if (fi == image.width())
-	      break;
-	    for (int jj=0; jj<subSize.height(); jj++)
-	      {
-		int fj = j*subSize.height() + jj;
-		if (fj == image.height())
-		  break;
-		image.setPixel(fi, fj, subImage.pixel(ii,jj));
-	      }
-	  }
-	count++;
-      }
-  
+			// Copy subImage in image
+			for (int ii=0; ii<subSize.width(); ii++)
+			{
+				int fi = i*subSize.width() + ii;
+				if (fi == image.width())
+					break;
+				for (int jj=0; jj<subSize.height(); jj++)
+				{
+					int fj = j*subSize.height() + jj;
+					if (fj == image.height())
+						break;
+					image.setPixel(fi, fj, subImage.pixel(ii,jj));
+				}
+			}
+			count++;
+		}
+
 #if QT_VERSION >= 0x040000
-  bool saveOK = image.save(fileName, snapshotFormat().toLatin1().constData(), snapshotQuality());
+	bool saveOK = image.save(fileName, snapshotFormat().toLatin1().constData(), snapshotQuality());
 #else
-  bool saveOK = image.save(fileName, snapshotFormat(), snapshotQuality());
+	bool saveOK = image.save(fileName, snapshotFormat(), snapshotQuality());
 #endif
 
-  // ProgressDialog::hideProgressDialog();
+	// ProgressDialog::hideProgressDialog();
 
-  // #if QT_VERSION < 0x030000
-  // setCursor(Qt::arrowCursor);
-  // #else
-  // setCursor(QCursor(Qt::ArrowCursor));
-  // #endif
+	// #if QT_VERSION < 0x030000
+	// setCursor(Qt::arrowCursor);
+	// #else
+	// setCursor(QCursor(Qt::ArrowCursor));
+	// #endif
 
-  delete tileRegion_;
-  tileRegion_ = NULL;
+	delete tileRegion_;
+	tileRegion_ = NULL;
 
-  if (imageInterface->whiteBackground->isChecked())
-    setBackgroundColor(previousBGColor);
+	if (imageInterface->whiteBackground->isChecked())
+		setBackgroundColor(previousBGColor);
 
-  return saveOK;
+	return saveOK;
 }
 
 
@@ -595,11 +595,11 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
  {
    const int nbImages = 36;
    for (int i=0; i<nbImages; ++i)
-     {
-       camera()->setOrientation(2.0*M_PI/nbImages, 0.0); // Theta-Phi orientation
-       showEntireScene();
-       updateGL(); // calls draw(), which emits drawFinished(), which calls saveSnapshot()
-     }
+	 {
+	   camera()->setOrientation(2.0*M_PI/nbImages, 0.0); // Theta-Phi orientation
+	   showEntireScene();
+	   update(); // calls draw(), which emits drawFinished(), which calls saveSnapshot()
+	 }
  }
  \endcode
 
@@ -618,108 +618,108 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
  other windows by this method. */
 void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
 {
-  // Ask for file name
-  if (snapshotFileName().isEmpty() || !automatic)
-    {
-      QString fileName;
+	// Ask for file name
+	if (snapshotFileName().isEmpty() || !automatic)
+	{
+		QString fileName;
 #if QT_VERSION < 0x030000
-      if (openSnapshotFormatDialog())
-        fileName = QFileDialog::getSaveFileName(snapshotFileName(), FDFormatString[snapshotFormat()]+";;All files (*.*)", this, "Save dialog");
-      else
-        return;
+		if (openSnapshotFormatDialog())
+			fileName = QFileDialog::getSaveFileName(snapshotFileName(), FDFormatString[snapshotFormat()]+";;All files (*.*)", this, "Save dialog");
+		else
+			return;
 #else
-      QString selectedFormat = FDFormatString[snapshotFormat()];
+		QString selectedFormat = FDFormatString[snapshotFormat()];
 # if QT_VERSION >= 0x040000
-      fileName = QFileDialog::getSaveFileName(this, "Choose a file name to save under", snapshotFileName(), formats, &selectedFormat,
-					      overwrite?QFileDialog::DontConfirmOverwrite:QFlag(0));
+		fileName = QFileDialog::getSaveFileName(this, "Choose a file name to save under", snapshotFileName(), formats, &selectedFormat,
+												overwrite?QFileDialog::DontConfirmOverwrite:QFlag(0));
 # else
-      fileName = QFileDialog::getSaveFileName(snapshotFileName(), formats, this,
-					      "Save Snapshot dialog", "Choose a file name to save under", &selectedFormat);
+		fileName = QFileDialog::getSaveFileName(snapshotFileName(), formats, this,
+												"Save Snapshot dialog", "Choose a file name to save under", &selectedFormat);
 # endif
-      setSnapshotFormat(Qtformat[selectedFormat]);
+		setSnapshotFormat(Qtformat[selectedFormat]);
 #endif
 
-      if (checkFileName(fileName, this, snapshotFormat()))
-	setSnapshotFileName(fileName);
-      else
-	return;
-    }
+		if (checkFileName(fileName, this, snapshotFormat()))
+			setSnapshotFileName(fileName);
+		else
+			return;
+	}
 
-  QFileInfo fileInfo(snapshotFileName());
+	QFileInfo fileInfo(snapshotFileName());
 
-  if ((automatic) && (snapshotCounter() >= 0))
-    {
-      // In automatic mode, names have a number appended
-      const QString baseName = fileInfo.baseName();
-      QString count;
-      count.sprintf("%.04d", snapshotCounter_++);
-      QString suffix;
+	if ((automatic) && (snapshotCounter() >= 0))
+	{
+		// In automatic mode, names have a number appended
+		const QString baseName = fileInfo.baseName();
+		QString count;
+		count.sprintf("%.04d", snapshotCounter_++);
+		QString suffix;
 #if QT_VERSION >= 0x040000
-      suffix = fileInfo.suffix();
-      if (suffix.isEmpty())
-	suffix = extension[snapshotFormat()];
-      fileInfo.setFile(fileInfo.absolutePath()+ '/' + baseName + '-' + count + '.' + suffix);
+		suffix = fileInfo.suffix();
+		if (suffix.isEmpty())
+			suffix = extension[snapshotFormat()];
+		fileInfo.setFile(fileInfo.absolutePath()+ '/' + baseName + '-' + count + '.' + suffix);
 #else      
-      suffix = fileInfo.extension();
-      if (suffix.isEmpty())
-	suffix = extension[snapshotFormat()];
-      fileInfo.setFile(fileInfo.dirPath()+ '/' + baseName + '-' + count + '.' + suffix);
+		suffix = fileInfo.extension();
+		if (suffix.isEmpty())
+			suffix = extension[snapshotFormat()];
+		fileInfo.setFile(fileInfo.dirPath()+ '/' + baseName + '-' + count + '.' + suffix);
 #endif
 
-      if (!overwrite)
-	while (fileInfo.exists())
-	  {
-	    count.sprintf("%.04d", snapshotCounter_++);
+		if (!overwrite)
+			while (fileInfo.exists())
+			{
+				count.sprintf("%.04d", snapshotCounter_++);
 #if QT_VERSION >= 0x040000
-	    fileInfo.setFile(fileInfo.absolutePath() + '/' +baseName + '-' + count + '.' + fileInfo.suffix());
+				fileInfo.setFile(fileInfo.absolutePath() + '/' +baseName + '-' + count + '.' + fileInfo.suffix());
 #else
-	    fileInfo.setFile(fileInfo.dirPath() + '/' + baseName + '-' + count + '.' + fileInfo.extension());
+				fileInfo.setFile(fileInfo.dirPath() + '/' + baseName + '-' + count + '.' + fileInfo.extension());
 #endif
-	  }
-    }
+			}
+	}
 
 #if QT_VERSION < 0x040000
-  if ((fileInfo.exists()) && (!overwrite) &&
-      (QMessageBox::warning(this,"Overwrite file ?",
-			    "File "+fileInfo.fileName()+" already exists.\nOverwrite ?",
-			    QMessageBox::Yes,
-			    QMessageBox::Cancel) == QMessageBox::Cancel))
-      return;
+	if ((fileInfo.exists()) && (!overwrite) &&
+			(QMessageBox::warning(this,"Overwrite file ?",
+								  "File "+fileInfo.fileName()+" already exists.\nOverwrite ?",
+								  QMessageBox::Yes,
+								  QMessageBox::Cancel) == QMessageBox::Cancel))
+		return;
 #endif
-  
-  bool saveOK;
-#ifndef NO_VECTORIAL_RENDER
-  if ( (snapshotFormat() == "EPS") || (snapshotFormat() == "PS") || (snapshotFormat() == "XFIG") )
-      // Vectorial snapshot. -1 means cancel, 0 is ok, >0 (should be) an error
-      saveOK = (saveVectorialSnapshot(fileInfo.filePath(), this, snapshotFormat()) <= 0);
-  else
-#endif
-    if (automatic)
-	{
-      QImage snapshot = frameBufferSnapshot();
-#if QT_VERSION >= 0x040000
-    saveOK = snapshot.save(fileInfo.filePath(), snapshotFormat().toLatin1().constData(), snapshotQuality());
-#else
-    saveOK = snapshot.save(fileInfo.filePath(), snapshotFormat(), snapshotQuality());
-#endif
-	}
-	else
-	  saveOK = saveImageSnapshot(fileInfo.filePath());
 
-  if (!saveOK)
-    QMessageBox::warning(this, "Snapshot problem", "Unable to save snapshot in\n"+fileInfo.filePath());
+	bool saveOK;
+#ifndef NO_VECTORIAL_RENDER
+	if ( (snapshotFormat() == "EPS") || (snapshotFormat() == "PS") || (snapshotFormat() == "XFIG") )
+		// Vectorial snapshot. -1 means cancel, 0 is ok, >0 (should be) an error
+		saveOK = (saveVectorialSnapshot(fileInfo.filePath(), this, snapshotFormat()) <= 0);
+	else
+#endif
+		if (automatic)
+		{
+			QImage snapshot = frameBufferSnapshot();
+#if QT_VERSION >= 0x040000
+			saveOK = snapshot.save(fileInfo.filePath(), snapshotFormat().toLatin1().constData(), snapshotQuality());
+#else
+			saveOK = snapshot.save(fileInfo.filePath(), snapshotFormat(), snapshotQuality());
+#endif
+		}
+		else
+			saveOK = saveImageSnapshot(fileInfo.filePath());
+
+	if (!saveOK)
+		QMessageBox::warning(this, "Snapshot problem", "Unable to save snapshot in\n"+fileInfo.filePath());
 }
 
 QImage QGLViewer::frameBufferSnapshot()
 {
-      // Viewer must be on top of other windows.
-      makeCurrent();
-      raise();
-      // Hack: Qt has problems if the frame buffer is grabbed after QFileDialog is displayed.
-      // We grab the frame buffer before, even if it might be not necessary (vectorial rendering).
-      // The problem could not be reproduced on a simple example to submit a Qt bug.
-      // However, only grabs the backgroundImage in the eponym example. May come from the driver.
-      return grabFrameBuffer(true);
+	// Viewer must be on top of other windows.
+	makeCurrent();
+	raise();
+	// Hack: Qt has problems if the frame buffer is grabbed after QFileDialog is displayed.
+	// We grab the frame buffer before, even if it might be not necessary (vectorial rendering).
+	// The problem could not be reproduced on a simple example to submit a Qt bug.
+	// However, only grabs the backgroundImage in the eponym example. May come from the driver.
+	return grabFrameBuffer(true);
 }
 
 /*! Same as saveSnapshot(), except that it uses \p fileName instead of snapshotFileName().
@@ -735,13 +735,13 @@ QImage QGLViewer::frameBufferSnapshot()
  prevent this. */
 void QGLViewer::saveSnapshot(const QString& fileName, bool overwrite)
 {
-  const QString previousName = snapshotFileName();
-  const int previousCounter = snapshotCounter();
-  setSnapshotFileName(fileName);
-  setSnapshotCounter(-1);
-  saveSnapshot(true, overwrite);
-  setSnapshotFileName(previousName);
-  setSnapshotCounter(previousCounter);
+	const QString previousName = snapshotFileName();
+	const int previousCounter = snapshotCounter();
+	setSnapshotFileName(fileName);
+	setSnapshotCounter(-1);
+	saveSnapshot(true, overwrite);
+	setSnapshotFileName(previousName);
+	setSnapshotCounter(previousCounter);
 }
 
 /*! Takes a snapshot of the current display and pastes it to the clipboard.
@@ -751,7 +751,7 @@ This action is activated by the KeyboardAction::SNAPSHOT_TO_CLIPBOARD enum, bind
 void QGLViewer::snapshotToClipboard()
 {
 	QClipboard *cb = QApplication::clipboard();
-	cb->setImage(frameBufferSnapshot()); 
+	cb->setImage(frameBufferSnapshot());
 }
 
 #if QT_VERSION < 0x030000
@@ -759,58 +759,58 @@ void QGLViewer::snapshotToClipboard()
 // Copyright Trolltech AS
 QImage QGLViewer::grabFrameBuffer(bool withAlpha)
 {
-  makeCurrent();
-  QImage res;
-  int w = width();
-  int h = height();
-  if (format().rgba())
-  {
-	res = QImage(w, h, 32);
-	glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, res.bits());
-	if (QImage::systemByteOrder() == QImage::BigEndian)
+	makeCurrent();
+	QImage res;
+	int w = width();
+	int h = height();
+	if (format().rgba())
 	{
-	  // OpenGL gives RGBA; Qt wants ARGB
-	  uint *p = (uint*)res.bits();
-	  uint *end = p + w*h;
-	  if (withAlpha && format().alpha())
-	  {
-		while (p < end)
+		res = QImage(w, h, 32);
+		glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, res.bits());
+		if (QImage::systemByteOrder() == QImage::BigEndian)
 		{
-		  uint a = *p << 24;
-		  *p = (*p >> 8) | a;
-		  p++;
+			// OpenGL gives RGBA; Qt wants ARGB
+			uint *p = (uint*)res.bits();
+			uint *end = p + w*h;
+			if (withAlpha && format().alpha())
+			{
+				while (p < end)
+				{
+					uint a = *p << 24;
+					*p = (*p >> 8) | a;
+					p++;
+				}
+			}
+			else
+			{
+				while (p < end)
+					*p++ >>= 8;
+			}
 		}
-	  }
-	  else
-	  {
-		while (p < end)
-		  *p++ >>= 8;
-	  }
+		else
+		{
+			// OpenGL gives ABGR (i.e. RGBA backwards); Qt wants ARGB
+			res = res.swapRGB();
+		}
+		res.setAlphaBuffer(withAlpha && format().alpha());
 	}
 	else
 	{
-	  // OpenGL gives ABGR (i.e. RGBA backwards); Qt wants ARGB
-	  res = res.swapRGB();
-	}
-	res.setAlphaBuffer(withAlpha && format().alpha());
-  }
-  else
-  {
 #if defined (Q_OS_WIN) || defined (Q_WS_WIN)
-	res = QImage(w, h, 8);
-	glReadPixels(0, 0, w, h, GL_COLOR_INDEX, GL_UNSIGNED_BYTE, res.bits());
-	//int palSize = 0;
-	//const QRgb* pal = QColor::palette(&palSize);
-	//if (pal && palSize)
-	//{
-	//  res.setNumColors(palSize);
-	//  for (int i = 0; i < palSize; i++)
-	//	res.setColor(i, pal[i]);
-	//}
+		res = QImage(w, h, 8);
+		glReadPixels(0, 0, w, h, GL_COLOR_INDEX, GL_UNSIGNED_BYTE, res.bits());
+		//int palSize = 0;
+		//const QRgb* pal = QColor::palette(&palSize);
+		//if (pal && palSize)
+		//{
+		//  res.setNumColors(palSize);
+		//  for (int i = 0; i < palSize; i++)
+		//	res.setColor(i, pal[i]);
+		//}
 #endif
-  }
+	}
 
-  return res.mirror();
+	return res.mirror();
 }
 
 #endif // QT_VERSION < 0x030000
