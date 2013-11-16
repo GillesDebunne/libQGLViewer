@@ -609,6 +609,7 @@ void QGLViewer::setDefaultMouseBindings()
 	// Z o o m   o n   r e g i o n
 	setMouseBinding(Qt::SHIFT + Qt::MidButton, CAMERA, ZOOM_ON_REGION);
 	// S e l e c t
+    qWarning("init select  SHIFT %d + left %d", Qt::SHIFT, Qt::LeftButton);
     setMouseBinding(Qt::SHIFT + Qt::LeftButton, SELECT);
 #else
 	setMouseBinding(Qt::SHIFT + Qt::MidButton, CAMERA, ZOOM_ON_REGION);
@@ -1310,6 +1311,51 @@ void QGLViewer::setSelectBufferSize(int size)
 	selectBuffer_ = new GLuint[selectBufferSize()];
 }
 
+static QString keyboardModifiersString(Qt::KeyboardModifiers m, bool noButton=false)
+{
+#if QT_VERSION >= 0x040000
+	if (noButton && (m==Qt::NoModifier)) 
+#else
+	if (noButton && (m==Qt::NoButton))
+#endif
+		return QGLViewer::tr("(no button)");
+	
+	QString keySequence = "";
+
+#if QT_VERSION >= 0x040000
+	if (m & Qt::ControlModifier) keySequence += "Ctrl+";
+	if (m & Qt::AltModifier) keySequence += "Alt+";
+	if (m & Qt::ShiftModifier) keySequence += "Shift+";
+	if (m & Qt::MetaModifier) keySequence += "Meta+";
+#else
+	if (m & Qt::ControlButton) keySequence += "Ctrl+";
+	if (m & Qt::AltButton) keySequence += "Alt+";
+	if (m & Qt::ShiftButton) keySequence += "Shift+";
+# if QT_VERSION >= 0x030000
+	if (m & Qt::MetaButton) keySequence += "Meta+";
+# endif
+#endif
+
+	if (keySequence.length() > 0)
+#if QT_VERSION >= 0x040000
+		return QKeySequence(keySequence+"X").toString(QKeySequence::NativeText).replace("X", "");
+#else
+		return QString(QKeySequence(keySequence+"X")).replace("X", "");
+#endif
+	else
+		return QString();
+}
+
+static QString mouseButtonsString(Qt::MouseButtons b)
+{
+	QString result("");
+	bool addAmpersand = false;
+	if (b & Qt::LeftButton)    { result += QGLViewer::tr("Left", "left mouse button"); addAmpersand=true; }
+	if (b & Qt::MidButton)     { if (addAmpersand) result += " & "; result += QGLViewer::tr("Middle", "middle mouse button"); addAmpersand=true; }
+	if (b & Qt::RightButton)   { if (addAmpersand) result += " & "; result += QGLViewer::tr("Right", "right mouse button"); }
+	return result;
+}
+
 void QGLViewer::performClickAction(ClickAction ca, const QMouseEvent* const e)
 {
 	// Note: action that need it should call update().
@@ -1393,9 +1439,16 @@ void QGLViewer::mousePressEvent(QMouseEvent* e)
 	cap.buttonsBefore = (Qt::MouseButtons)(e->state() & Qt::MouseButtonMask);
 #endif
 
-	if (clickBinding_.contains(cap))
+    qWarning("On click, modifiers=%s %d", keyboardModifiersString(cap.modifiers).toLatin1().constData(), (int)(cap.modifiers));
+    qWarning("On click, button=%s %d", mouseButtonsString(cap.button).toLatin1().constData(), (int)(cap.button));
+
+	for (QMap<ClickActionPrivate, ClickAction>::ConstIterator itcb=clickBinding_.begin(), endcb=clickBinding_.end(); itcb!=endcb; ++itcb) {
+    	qWarning("CAP %d / %d -> %s", (int)(itcb.key().modifiers), (int)(itcb.key().button), clickActionString(itcb.value()).toLatin1().constData());
+	}
+
+	if (clickBinding_.contains(cap)) {
 		performClickAction(clickBinding_[cap], e);
-	else
+	} else
 		if (mouseGrabber())
 		{
 			if (mouseGrabberIsAManipulatedFrame_)
@@ -1796,51 +1849,6 @@ void QGLViewer::setMouseGrabberIsEnabled(const qglviewer::MouseGrabber* const mo
 		disabledMouseGrabbers_.remove(reinterpret_cast<size_t>(mouseGrabber));
 	else
 		disabledMouseGrabbers_[reinterpret_cast<size_t>(mouseGrabber)];
-}
-
-static QString keyboardModifiersString(Qt::KeyboardModifiers m, bool noButton=false)
-{
-#if QT_VERSION >= 0x040000
-	if (noButton && (m==Qt::NoModifier)) 
-#else
-	if (noButton && (m==Qt::NoButton))
-#endif
-		return QGLViewer::tr("(no button)");
-	
-	QString keySequence = "";
-
-#if QT_VERSION >= 0x040000
-	if (m & Qt::ControlModifier) keySequence += "Ctrl+";
-	if (m & Qt::AltModifier) keySequence += "Alt+";
-	if (m & Qt::ShiftModifier) keySequence += "Shift+";
-	if (m & Qt::MetaModifier) keySequence += "Meta+";
-#else
-	if (m & Qt::ControlButton) keySequence += "Ctrl+";
-	if (m & Qt::AltButton) keySequence += "Alt+";
-	if (m & Qt::ShiftButton) keySequence += "Shift+";
-# if QT_VERSION >= 0x030000
-	if (m & Qt::MetaButton) keySequence += "Meta+";
-# endif
-#endif
-
-	if (keySequence.length() > 0)
-#if QT_VERSION >= 0x040000
-		return QKeySequence(keySequence+"X").toString(QKeySequence::NativeText).replace("X", "");
-#else
-		return QString(QKeySequence(keySequence+"X")).replace("X", "");
-#endif
-	else
-		return QString();
-}
-
-static QString mouseButtonsString(Qt::MouseButtons b)
-{
-	QString result("");
-	bool addAmpersand = false;
-	if (b & Qt::LeftButton)    { result += QGLViewer::tr("Left", "left mouse button"); addAmpersand=true; }
-	if (b & Qt::MidButton)     { if (addAmpersand) result += " & "; result += QGLViewer::tr("Middle", "middle mouse button"); addAmpersand=true; }
-	if (b & Qt::RightButton)   { if (addAmpersand) result += " & "; result += QGLViewer::tr("Right", "right mouse button"); }
-	return result;
 }
 
 QString QGLViewer::mouseActionString(QGLViewer::MouseAction ma)
@@ -2952,6 +2960,7 @@ void QGLViewer::setMouseBinding(int state, ClickAction action, bool doubleClick,
 			ClickActionPrivate cap;
 			state = convertToKeyboardModifiers(state);
             cap.modifiers = Qt::KeyboardModifiers(state & Qt::KeyboardModifierMask);
+            qWarning("setMouseBinding state=%d button=%d mask=%d", state, state & Qt::MouseButtonMask, Qt::MouseButtonMask);
             cap.button = Qt::MouseButtons(state & Qt::MouseButtonMask);
 			cap.doubleClick = doubleClick;
 			cap.buttonsBefore = buttonsBefore;
