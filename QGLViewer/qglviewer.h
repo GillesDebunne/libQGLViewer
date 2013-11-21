@@ -926,6 +926,7 @@ public Q_SLOTS:
 	void setKeyboardAccelerator(KeyboardAction action, int key);
 #endif
 	void setKeyDescription(int key, QString description);
+	void clearShortcuts();
 
 	// Key Frames shortcut keys
 #ifndef DOXYGEN
@@ -1001,6 +1002,7 @@ public Q_SLOTS:
 	void setMouseBindingDescription(int state, QString description, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
 	void setWheelBinding(Qt::KeyboardModifiers modifiers, MouseHandler handler, MouseAction action, bool withConstraint=true);
 	void setHandlerKeyboardModifiers(MouseHandler handler, Qt::KeyboardModifiers modifiers);
+	void clearMouseBindings();
 #ifndef DOXYGEN
 	void setHandlerStateKey(MouseHandler handler, int buttonState);
 	void setMouseStateKey(MouseHandler handler, int buttonState);

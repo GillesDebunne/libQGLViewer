@@ -101,7 +101,8 @@ void QGLViewer::defaultConstructor()
 	fpsString_      = tr("%1Hz", "Frames per seconds, in Hertz").arg("?");
 	visualHint_     = 0;
 	previousPathId_	= 0;
-	// prevPos_ is not initialized since pos() is not meaningful here. It will be set by setFullScreen().
+	// prevPos_ is not initialized since pos() is not meaningful here.
+	// It will be set when setFullScreen(false) is called after setFullScreen(true)
 
 	// #CONNECTION# default values in initFromDOMElement()
 	manipulatedFrame_ = NULL;
@@ -127,6 +128,8 @@ void QGLViewer::defaultConstructor()
 	setCameraIsEdited(false);
 	setTextIsEnabled(true);
 	setStereoDisplay(false);
+	// Make sure move() is not called, which would call initializeGL()
+	fullScreen_ = false;
 	setFullScreen(false);
 
 	animationTimerId_ = 0;
@@ -596,7 +599,7 @@ void QGLViewer::setDefaultMouseBindings()
 		setMouseBinding(modifiers | Qt::MidButton,   mh, ZOOM);
 		setMouseBinding(modifiers | Qt::RightButton, mh, TRANSLATE);
 
-		setMouseBinding(modifiers | Qt::LeftButton  | Qt::MidButton,  mh, SCREEN_ROTATE);
+		setMouseBinding(modifiers | Qt::LeftButton | Qt::MidButton,  mh, SCREEN_ROTATE);
 		// 2.2.4 setMouseBinding(modifiers | Qt::RightButton | Qt::MidButton,  mh, SCREEN_TRANSLATE);
 
 		setWheelBinding(modifiers, mh, ZOOM);
@@ -643,10 +646,10 @@ void QGLViewer::setDefaultMouseBindings()
 	
 	// S p e c i f i c   d o u b l e   c l i c k s
 	// A single tap is actually seen as a left followed by a right button click.
-	setMouseBinding(Qt::META + Qt::RightButton,  RAP_FROM_PIXEL, true, Qt::LeftButton);
+	setMouseBinding(Qt::META + Qt::RightButton, RAP_FROM_PIXEL, true, Qt::LeftButton);
 	setMouseBinding(Qt::SHIFT + Qt::META + Qt::RightButton, RAP_IS_CENTER,  true, Qt::LeftButton);
 	// A tap with two fingers is actually considered a rightButton.
-	setMouseBinding(Qt::META + Qt::RightButton,  ZOOM_ON_PIXEL, false);
+	setMouseBinding(Qt::META + Qt::RightButton, ZOOM_ON_PIXEL, false);
 	setMouseBinding(Qt::SHIFT + Qt::MetaModifier | Qt::RightButton, ZOOM_TO_FIT, false);
 #endif
 }
@@ -1748,6 +1751,8 @@ If the QGLViewer is embedded in an other QWidget (see QWidget::topLevelWidget())
 displayed in full screen instead. */
 void QGLViewer::setFullScreen(bool fullScreen)
 {
+	if (fullScreen_ == fullScreen) return;
+
 	fullScreen_ = fullScreen;
 
 	QWidget* tlw = topLevelWidget();
@@ -2855,7 +2860,7 @@ qglviewer::Frame::constraint() associated with the Frame will be enforced during
 
 Use the '|' bitwise operator or '+' to combine keys and buttons:
 \code
-// Left and right buttons together make a camera zoom: emulates a mouse third button if needed.
+// Left and right buttons together make a camera zoom (emulates a mouse third button if needed).
 setMouseBinding(Qt::LeftButton + Qt::RightButton, CAMERA, ZOOM);
 
 // Alt + Shift + Left button rotates the manipulatedFrame().
@@ -2876,7 +2881,7 @@ To remove a specific mouse binding, use code like:
 setMouseBinding(myButtonAndModifiersCombo, myHandler, NO_MOUSE_ACTION);
 \endcode
 
-See also setMouseBinding(int, ClickAction, bool, int) and setWheelBinding(). */
+See also setMouseBinding(int, ClickAction, bool, int), setWheelBinding() and clearMouseBindings(). */
 void QGLViewer::setMouseBinding(int state, MouseHandler handler, MouseAction action, bool withConstraint)
 {
 	if ((handler == FRAME) && ((action == MOVE_FORWARD) || (action == MOVE_BACKWARD) ||
@@ -2917,12 +2922,6 @@ void QGLViewer::setMouseBinding(int state, MouseHandler handler, MouseAction act
 
 /*! Associates a ClickAction to any mouse buttons and keyboard modifiers combination.
 
-  This method has been deprecated in version 3.
-  Use setMouseBinding(Qt::KeyboardModifiers, Qt::MouseButtons, ClickAction, bool, Qt::MouseButtons) instead.
-  Replace the int \p state by a combination of Qt::KeyboardModifiers and Qt::MouseButtons.
-
-  For instance
-
 The parameters should read: when the \p state mouse button(s) is (are) pressed (possibly with Alt,
 Control or Shift modifiers or any combination of these), and possibly with a \p doubleClick,
 perform \p action.
@@ -2937,6 +2936,8 @@ See the <a href="../examples/keyboardAndMouse.html">keyboardAndMouse example</a>
 illustration.
 
 The binding is ignored if no mouse button is specified in \p state.
+
+See also setMouseBinding(int, MouseHandler, MouseAction, bool), setWheelBinding() and clearMouseBindings().
 
 \note If you use Qt version 2 or 3, the \p buttonsBefore parameter is actually a Qt::ButtonState. */
 void QGLViewer::setMouseBinding(int state, ClickAction action, bool doubleClick, Qt::MouseButtons buttonsBefore)
@@ -3003,6 +3004,25 @@ void QGLViewer::setWheelBinding(Qt::KeyboardModifiers modifiers, MouseHandler ha
 			if (action != NO_MOUSE_ACTION)
 				wheelBinding_.insert(modifiers, map);
 		}
+}
+
+/*! Clears all the default mouse bindings.
+
+After this call, you will have to use setMouseBinding() and setWheelBinding() to restore the mouse bindings you are interested in.
+*/
+void QGLViewer::clearMouseBindings() {
+	mouseBinding_.clear();
+	clickBinding_.clear();
+	wheelBinding_.clear();
+}
+
+/*! Clears all the default keyboard shortcuts.
+
+After this call, you will have to use setShortcut() to define your own keyboard shortcuts.
+*/
+void QGLViewer::clearShortcuts() {
+	keyboardBinding_.clear();
+	pathIndex_.clear();
 }
 
 /*! Returns the MouseAction associated with the \p state mouse button(s) and keyboard modifiers.

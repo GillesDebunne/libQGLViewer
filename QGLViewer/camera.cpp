@@ -596,7 +596,6 @@ void Camera::loadModelViewMatrixStereo(bool leftBuffer) const
  See also getModelViewMatrix() and setFromProjectionMatrix(). */
 void Camera::getProjectionMatrix(GLdouble m[16]) const
 {
-	// May not be needed, but easier and more robust like this.
 	computeProjectionMatrix();
 	for (unsigned short i=0; i<16; ++i)
 		m[i] = projectionMatrix_[i];
@@ -606,11 +605,11 @@ void Camera::getProjectionMatrix(GLdouble m[16]) const
 
  First calls computeModelViewMatrix() to define the Camera modelView matrix.
 
- Note that this matrix is usually \e not the one you would get from a \c
+ Note that this matrix may \e not be the one you would get from a \c
  glGetDoublev(GL_MODELVIEW_MATRIX, m). It actually represents the state of the \c
- GL_MODELVIEW after QGLViewer::preDraw(), at the beginning of QGLViewer::draw(). It converts from
+ GL_MODELVIEW after QGLViewer::preDraw(), at the \e beginning of QGLViewer::draw(). It converts from
  the world to the Camera coordinate system. As soon as you modify the \c GL_MODELVIEW in your
- QGLViewer::draw() method, the two matrices differ.
+ QGLViewer::draw() method (using glTranslate, glRotate... or similar methods), the two matrices differ.
 
  The result is an OpenGL 4x4 matrix, which is given in \e column-major order (see \c glMultMatrix
  man page for details).
@@ -1471,8 +1470,13 @@ Vec Camera::projectedCoordinatesOf(const Vec& src, const Frame* frame) const
  system.
 
  The \p src.x and \p src.y input values are expressed in pixels, (0,0) being the \e upper left corner
- of the window. \p src.z is a depth value ranging in [0..1[ (near and far plane respectively). See
- the \c gluUnProject man page for details.
+ of the window. \p src.z is a depth value ranging in [0..1[ (respectively corresponding to the near
+ and far planes). Note that src.z is \e not a linear interpolation between zNear and zFar.
+ /code
+ src.z = zFar() / (zFar() - zNear()) * (1.0f - zNear() / z);
+ /endcode
+ Where z is the distance from the point you project to the camera, along the viewDirection().
+ See the \c gluUnProject man page for details.
 
  The result is expressed in the \p frame coordinate system. When \p frame is \c NULL (default), the
  result is expressed in the world coordinates system. The possible \p frame Frame::referenceFrame()
