@@ -979,27 +979,35 @@ public:
 public:
 #endif
 
+#ifndef DOXYGEN
 	MouseAction mouseAction(int state) const;
 	int mouseHandler(int state) const;
 	int mouseButtonState(MouseHandler handler, MouseAction action, bool withConstraint=true) const;
 	ClickAction clickAction(int state, bool doubleClick, Qt::MouseButtons buttonsBefore) const;
 	void getClickButtonState(ClickAction action, int& state, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const;
+#endif
+	MouseAction mouseAction(Qt::KeyboardModifiers modifiers, Qt::MouseButtons buttons) const;
+	int mouseHandler(Qt::KeyboardModifiers modifiers, Qt::MouseButtons buttons) const;
+	ClickAction clickAction(Qt::KeyboardModifiers modifiers, Qt::MouseButtons buttons, bool doubleClick, Qt::MouseButtons buttonsBefore) const;
+
+	Qt::MouseButtons mouseButtons(MouseHandler handler, MouseAction action, bool withConstraint=true) const;
+	Qt::KeyboardModifiers keyboardModifiers(MouseHandler handler, MouseAction action, bool withConstraint=true) const;
+	void getClickActionState(ClickAction action, Qt::KeyboardModifiers& modifiers, Qt::MouseButtons& buttons, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const;
 
 	MouseAction wheelAction(Qt::KeyboardModifiers modifiers) const;
 	int wheelHandler(Qt::KeyboardModifiers modifiers) const;
 	int wheelButtonState(MouseHandler handler, MouseAction action, bool withConstraint=true) const;
 
 public Q_SLOTS:
+#ifndef DOXYGEN
 	void setMouseBinding(int state, MouseHandler handler, MouseAction action, bool withConstraint=true);
-#if QT_VERSION < 0x030000
-	// Two slots cannot have the same name or two default parameters with Qt 2.3.
-public:
-#endif
 	void setMouseBinding(int state, ClickAction action, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
-#if QT_VERSION < 0x030000
-public Q_SLOTS:
-#endif
 	void setMouseBindingDescription(int state, QString description, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
+#endif
+	void setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButtons buttons, MouseHandler handler, MouseAction action, bool withConstraint=true);
+	void setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButtons buttons, ClickAction action, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
+	void setMouseBindingDescription(Qt::KeyboardModifiers modifiers, Qt::MouseButtons buttons, QString description, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
+
 	void setWheelBinding(Qt::KeyboardModifiers modifiers, MouseHandler handler, MouseAction action, bool withConstraint=true);
 	void setHandlerKeyboardModifiers(MouseHandler handler, Qt::KeyboardModifiers modifiers);
 	void clearMouseBindings();
@@ -1192,38 +1200,59 @@ private:
 		bool withConstraint;
 	};
 
-	// C l i c k   a c t i o n s
-	struct ClickActionPrivate {
-		Qt::KeyboardModifiers modifiers;
-		Qt::MouseButtons button;
-		bool doubleClick;
-		Qt::MouseButtons buttonsBefore; // only defined when doubleClick is true
+	// M o u s e   b i n d i n g s
+	struct MouseBindingPrivate {
+		const Qt::KeyboardModifiers modifiers;
+		const Qt::MouseButtons buttons;
 
-		// This sort order in used in mouseString() to display sorted mouse bindings
-		bool operator<(const ClickActionPrivate& cap) const
+		MouseBindingPrivate(Qt::KeyboardModifiers m, Qt::MouseButtons b)
+			: modifiers(m), buttons(b) {}
+
+		// This sort order is used in mouseString() to display sorted mouse bindings
+		bool operator<(const MouseBindingPrivate& mbp) const
 		{
-			if (buttonsBefore != cap.buttonsBefore)
-				return buttonsBefore < cap.buttonsBefore;
+			if (modifiers != mbp.modifiers)
+				return modifiers < mbp.modifiers;
 			else
-				if (modifiers != cap.modifiers)
-					return modifiers < cap.modifiers;
+				return buttons < mbp.buttons;
+		}
+	};
+
+	// C l i c k   b i n d i n g s
+	struct ClickBindingPrivate {
+		const Qt::KeyboardModifiers modifiers;
+		const Qt::MouseButtons buttons;
+		const bool doubleClick;
+		const Qt::MouseButtons buttonsBefore; // only defined when doubleClick is true
+
+		ClickBindingPrivate(Qt::KeyboardModifiers m, Qt::MouseButtons b, bool dc, Qt::MouseButtons bb)
+			: modifiers(m), buttons(b), doubleClick(dc), buttonsBefore(bb) {}
+
+		// This sort order is used in mouseString() to display sorted mouse bindings
+		bool operator<(const ClickBindingPrivate& cbp) const
+		{
+			if (buttonsBefore != cbp.buttonsBefore)
+				return buttonsBefore < cbp.buttonsBefore;
+			else
+				if (modifiers != cbp.modifiers)
+					return modifiers < cbp.modifiers;
 				else
-					if (button != cap.button)
-						return button < cap.button;
+					if (buttons != cbp.buttons)
+						return buttons < cbp.buttons;
 					else
-						return !doubleClick && cap.doubleClick;
+						return !doubleClick && cbp.doubleClick;
 		}
 	};
 #endif
-	static QString formatClickActionPrivate(ClickActionPrivate cap);
+	static QString formatClickActionPrivate(ClickBindingPrivate cbp);
 
-	QMap<ClickActionPrivate, QString> mouseDescription_;
+	QMap<ClickBindingPrivate, QString> mouseDescription_;
 
 	void setDefaultMouseBindings();
 	void performClickAction(ClickAction ca, const QMouseEvent* const e);
-	QMap<int, MouseActionPrivate> mouseBinding_;
+	QMap<MouseBindingPrivate, MouseActionPrivate> mouseBinding_;
 	QMap<Qt::KeyboardModifiers, MouseActionPrivate> wheelBinding_;
-	QMap<ClickActionPrivate, ClickAction> clickBinding_;
+	QMap<ClickBindingPrivate, ClickAction> clickBinding_;
 
 	// S n a p s h o t s
 	void initializeSnapshotFormats();

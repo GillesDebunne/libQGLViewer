@@ -58,25 +58,25 @@ documentation</a> for details.
 The following functions are illustrated in the <a href="examples/keyboardAndMouse.html">keyboardAndMouse</a> example.
 <ul>
 <li>
-To bind a <code>ClickAction</code>, use <code>setMouseBinding(uint, ClickAction,
+To bind a <code>ClickAction</code>, use <code>setMouseBinding(Qt::KeyboardModifiers, Qt::MouseButtons, ClickAction,
 doubleClick=false, buttonsBefore=Qt::NoButton)</code>:
 <pre>
 // Click on the right button to make a selection
-setMouseBinding(Qt::RightButton, SELECT);
+setMouseBinding(Qt::NoModifier, Qt::RightButton, SELECT);
 
 // Pressing the middle button, then double clicking the right button, while pressing Alt shows the entire scene. Cool huh ?
-setMouseBinding(Qt::ALT + Qt::RightButton, SHOW_ENTIRE_SCENE, true, Qt::MidButton);
+setMouseBinding(Qt::AltModifier, Qt::RightButton, SHOW_ENTIRE_SCENE, true, Qt::MidButton);
 </pre>
 </li>
 <li>
-To bind a <code>MouseAction</code>, use <code>setMouseBinding(int, MouseHandler,
+To bind a <code>MouseAction</code>, use <code>setMouseBinding(Qt::KeyboardModifiers, Qt::MouseButtons, MouseHandler,
 MouseAction, withConstraint=true)</code> (same function name as above, but different parameters):
 <pre>
 // Left and right buttons together make a camera zoom : emulates a mouse third button if needed.
-setMouseBinding(Qt::LeftButton + Qt::RightButton, CAMERA, ZOOM);
+setMouseBinding(Qt::NoModifier, Qt::LeftButton | Qt::RightButton, CAMERA, ZOOM);
 
 // Alt + Shift + Left button rotates the manipulatedFrame().
-setMouseBinding(Qt::ALT + Qt::SHIFT + Qt::LeftButton, FRAME, ROTATE);
+setMouseBinding(Qt::AltModifier | Qt::ShiftModifier, Qt::LeftButton, FRAME, ROTATE);
 </pre>
 </li>
 <li>

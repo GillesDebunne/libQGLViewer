@@ -69,26 +69,26 @@ void Viewer::init()
   /////////////////////////////////////////////////////
 
   // Left and right buttons together make a camera zoom : emulates a mouse third button if needed.
-  setMouseBinding(Qt::LeftButton + Qt::RightButton, CAMERA, ZOOM);
+  setMouseBinding(Qt::NoModifier, Qt::LeftButton | Qt::RightButton, CAMERA, ZOOM);
 
   // Disable previous TRANSLATE mouse binding (and remove it from help mouse tab).
-  setMouseBinding(Qt::RightButton, NO_CLICK_ACTION);
+  setMouseBinding(Qt::NoModifier, Qt::RightButton, NO_CLICK_ACTION);
 
 #if QT_VERSION < 0x040000
   // Alt+left button translates the camera (since right button will popup a menu).
-  setMouseBinding(Qt::AltButton | Qt::LeftButton, CAMERA, TRANSLATE);
+  setMouseBinding(Qt::AltButton, Qt::LeftButton, CAMERA, TRANSLATE);
   // Define Control+Shift+Right button as selection shortcut
-  setMouseBinding(Qt::ControlButton | Qt::ShiftButton | Qt::RightButton, SELECT);
+  setMouseBinding(Qt::ControlButton | Qt::ShiftButton, Qt::RightButton, SELECT);
   // Alt + mouse wheel MOVE_FORWARD the camera.
   setWheelBinding(Qt::AltButton, CAMERA, MOVE_FORWARD);
 #else
-  setMouseBinding(Qt::CTRL + Qt::SHIFT + Qt::RightButton, SELECT);
+  setMouseBinding(Qt::ControlModifier | Qt::ShiftModifier, Qt::RightButton, SELECT);
   setWheelBinding(Qt::AltModifier, CAMERA, MOVE_FORWARD);
-  setMouseBinding(Qt::ALT + Qt::LeftButton, CAMERA, TRANSLATE);
+  setMouseBinding(Qt::AltModifier, Qt::LeftButton, CAMERA, TRANSLATE);
 #endif
 
   // Add custom mouse bindings description (see mousePressEvent())
-  setMouseBindingDescription(Qt::RightButton, "Opens a camera path context menu");
+  setMouseBindingDescription(Qt::NoModifier, Qt::RightButton, "Opens a camera path context menu");
 
   // Display the help window. The help window tabs are automatically updated when you define new
   // standard key or mouse bindings (as is done above). Custom bindings descriptions are added using

@@ -304,29 +304,17 @@ DvonnViewer::initViewer()
   // Limit camera rotation motion
   camera()->frame()->setConstraint(new BoardConstraint());
 
+  clearMouseBindings();
   // Defines new bindings
-  setMouseBindingDescription(Qt::LeftButton, "Moves stack");
-  setMouseBinding(Qt::CTRL + Qt::LeftButton, CAMERA, ROTATE);
-  setMouseBinding(Qt::MidButton,  ZOOM_TO_FIT, true);
-  setMouseBinding(Qt::RightButton,ZOOM_TO_FIT, true);
-  setMouseBinding(Qt::CTRL + Qt::LeftButton,  RAP_FROM_PIXEL, true);
-  setMouseBinding(Qt::CTRL + Qt::RightButton, RAP_IS_CENTER,  true);
+  setMouseBindingDescription(Qt::NoModifier, Qt::LeftButton, "Moves stack");
+  setMouseBinding(Qt::ControlModifier, Qt::LeftButton, CAMERA, ROTATE);
+  setMouseBinding(Qt::NoModifier, Qt::RightButton, CAMERA, TRANSLATE);
+  setMouseBinding(Qt::NoModifier, Qt::MidButton, ZOOM_TO_FIT, true);
+  setMouseBinding(Qt::NoModifier, Qt::RightButton, ZOOM_TO_FIT, true);
+  setMouseBinding(Qt::ControlModifier, Qt::LeftButton, RAP_FROM_PIXEL, true);
+  setMouseBinding(Qt::ControlModifier, Qt::RightButton, RAP_IS_CENTER,  true);
 
-  // Disable most of the default bindings
-  setMouseBinding(Qt::CTRL + Qt::MidButton  ,CAMERA,NO_MOUSE_ACTION);
-  setMouseBinding(Qt::CTRL + Qt::RightButton,CAMERA,NO_MOUSE_ACTION);
-  setMouseBinding(Qt::LeftButton,NO_CLICK_ACTION);
-  setMouseBinding(Qt::LeftButton,NO_CLICK_ACTION,true);
-  setMouseBinding(Qt::CTRL + Qt::LeftButton  | Qt::MidButton,NO_CLICK_ACTION);
-  setMouseBinding(Qt::CTRL + Qt::RightButton | Qt::MidButton,NO_CLICK_ACTION);
-  setMouseBinding(Qt::LeftButton  | Qt::MidButton, NO_CLICK_ACTION);
-  setMouseBinding(Qt::RightButton | Qt::MidButton, NO_CLICK_ACTION);
-  setMouseBinding(Qt::SHIFT + Qt::LeftButton,NO_CLICK_ACTION);
-
-  setMouseBinding(Qt::RightButton, NO_CLICK_ACTION, true, Qt::MidButton);
-  setMouseBinding(Qt::LeftButton,  NO_CLICK_ACTION, true, Qt::MidButton);
-  setMouseBinding(Qt::RightButton, NO_CLICK_ACTION, true, Qt::LeftButton);
-  setMouseBinding(Qt::LeftButton,  NO_CLICK_ACTION, true, Qt::RightButton);
+  setWheelBinding(Qt::NoModifier, CAMERA, ZOOM);
 
 #if QT_VERSION >= 0x040000
   setWheelBinding(Qt::ControlModifier, FRAME,NO_MOUSE_ACTION);

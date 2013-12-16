@@ -75,10 +75,10 @@ void Viewer::init()
   setHandlerKeyboardModifiers(QGLViewer::FRAME, Qt::NoModifier);
   setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::ControlModifier);
 
-  setMouseBinding(Qt::SHIFT + Qt::LeftButton,  QGLViewer::FRAME, QGLViewer::ROTATE,    false);
-  setMouseBinding(Qt::SHIFT + Qt::RightButton, QGLViewer::FRAME, QGLViewer::TRANSLATE, false);
-  setMouseBinding(Qt::SHIFT + Qt::MidButton,   QGLViewer::FRAME, QGLViewer::ZOOM,      false);
-  setWheelBinding(Qt::ShiftModifier,                   QGLViewer::FRAME, QGLViewer::ZOOM,      false);
+  setMouseBinding(Qt::ShiftModifier, Qt::LeftButton, QGLViewer::FRAME, QGLViewer::ROTATE, false);
+  setMouseBinding(Qt::ShiftModifier, Qt::RightButton, QGLViewer::FRAME, QGLViewer::TRANSLATE, false);
+  setMouseBinding(Qt::ShiftModifier, Qt::MidButton, QGLViewer::FRAME, QGLViewer::ZOOM, false);
+  setWheelBinding(Qt::ShiftModifier, QGLViewer::FRAME, QGLViewer::ZOOM, false);
 #endif
 
   setAxisIsDrawn();

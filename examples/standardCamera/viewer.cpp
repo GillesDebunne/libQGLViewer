@@ -50,7 +50,7 @@ void Viewer::init()
   setKeyDescription(Qt::Key_T, "Toggles camera type (perspective or orthographic)");
   setKeyDescription(Qt::Key_M, "Toggles camera mode (standard or QGLViewer)");
 
-  setMouseBindingDescription(Qt::SHIFT + Qt::MidButton, "Change frustum size (for standard camera in orthographic mode)");
+  setMouseBindingDescription(Qt::ShiftModifier, Qt::MidButton, "Change frustum size (for standard camera in orthographic mode)");
 
   // Display help window.
   help();

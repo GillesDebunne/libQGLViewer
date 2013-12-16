@@ -1,7 +1,7 @@
 #!/bin/bash
 
 libName="libQGLViewer"
-version="2.4.1"
+version="2.5.0"
 
 WebURL="http://www.libqglviewer.com"
 
@@ -568,7 +568,7 @@ done
 
 # Creating assistant qch file
 awk '/<section title="Files"/ { skip=1 } /<\/toc>/ { print"      </section>"; skip=0 } { if (skip==0) print }' index.qhp > index.filtered.qhp
-awk '/<section title="libQGLViewer Version 2.4.0" ref="/ { print"      <section title=\"libQGLViewer Version 2.4.0\">"; next; } {print;}' index.filtered.qhp > index.qhp
+awk '/<section title="libQGLViewer Version $version" ref="/ { print"      <section title=\"libQGLViewer Version $version\">"; next; } {print;}' index.filtered.qhp > index.qhp
 qhelpgenerator index.qhp -o ../libQGLViewer-$version.qch > /dev/null
 #rm index.qhp index.filtered.qhp
 

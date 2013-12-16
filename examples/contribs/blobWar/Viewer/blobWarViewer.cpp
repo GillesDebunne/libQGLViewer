@@ -91,8 +91,8 @@ void BlobWarViewer::init()
   initViewer();
   fitCameraToBoard();
 
-  setMouseBinding(Qt::RightButton, CAMERA, ROTATE);
-  setMouseBinding(Qt::LeftButton, SELECT);
+  setMouseBinding(Qt::NoModifier, Qt::RightButton, CAMERA, ROTATE);
+  setMouseBinding(Qt::NoModifier, Qt::LeftButton, SELECT);
 
 #if QT_VERSION >= 0x040000
   // Signals and slots connections

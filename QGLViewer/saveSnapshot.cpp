@@ -118,9 +118,9 @@ void QGLViewer::initializeSnapshotFormats()
 	// Unused formats: XPM XBM PBM PGM
 	QStringList QtText, MenuText, Ext;
 	QtText += "JPEG";	MenuText += "JPEG (*.jpg)";		Ext += "jpg";
-	QtText += "PNG";	MenuText += "PNG (*.png)";		Ext += "png";
+	QtText += "PNG";	MenuText += "PNG (*.png)";      Ext += "png";
 	QtText += "EPS";	MenuText += "Encapsulated Postscript (*.eps)";	Ext += "eps";
-	QtText += "PS";	MenuText += "Postscript (*.ps)";	Ext += "ps";
+	QtText += "PS";	    MenuText += "Postscript (*.ps)"; Ext += "ps";
 	QtText += "PPM";	MenuText += "24bit RGB Bitmap (*.ppm)";	Ext += "ppm";
 	QtText += "BMP";	MenuText += "Windows Bitmap (*.bmp)";	Ext += "bmp";
 	QtText += "XFIG";	MenuText += "XFig (*.fig)";		Ext += "fig";
@@ -372,12 +372,8 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
 		imageInterface = new ImageInterface(this, "", true);  // Make the dialog modal
 #endif
 
-	// 1 means never set : use current window size as default
-	if ((imageInterface->imgWidth->value() == 1) && (imageInterface->imgHeight->value() == 1))
-	{
-		imageInterface->imgWidth->setValue(width());
-		imageInterface->imgHeight->setValue(height());
-	}
+	imageInterface->imgWidth->setValue(width());
+	imageInterface->imgHeight->setValue(height());
 
 	imageInterface->imgQuality->setValue(snapshotQuality());
 
