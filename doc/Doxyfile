@@ -34,7 +34,7 @@ PROJECT_NAME           = libQGLViewer
 # This could be handy for archiving the generated documentation or
 # if some version control system is used.
 
-PROJECT_NUMBER         = "Version 2.4.1"
+PROJECT_NUMBER         = "Version 2.5.0"
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer
@@ -1082,7 +1082,7 @@ QCH_FILE               =
 # Qt Help Project output. For more information please see
 # http://doc.trolltech.com/qthelpproject.html#namespace
 
-QHP_NAMESPACE          = com.libqglviewer.2.4.1
+QHP_NAMESPACE          = com.libqglviewer.2.5.0
 
 # The QHP_VIRTUAL_FOLDER tag specifies the namespace to use when generating
 # Qt Help Project output. For more information please see

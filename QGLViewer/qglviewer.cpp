@@ -3034,10 +3034,11 @@ void QGLViewer::setWheelBinding(Qt::KeyboardModifiers modifiers, MouseHandler ha
 			map.action  = action;
 			map.withConstraint = withConstraint;
 			modifiers = convertKeyboardModifiers(modifiers);
-			wheelBinding_.remove(modifiers);
 
-			if (action != NO_MOUSE_ACTION)
-				wheelBinding_.insert(modifiers, map);
+			if (action == NO_MOUSE_ACTION)
+				wheelBinding_.remove(modifiers);
+			else
+				wheelBinding_[modifiers] = map;
 		}
 }
 

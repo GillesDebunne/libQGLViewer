@@ -32,6 +32,26 @@
 
 <h1>Change Log</h1>
 
+- Refactor of all mouse bindings methods. New clear bindings methods.
+
+<h2>Dec 19th 2013 - 2.5.0</h2>
+<b>Changes in the API</b>
+<ul>
+ <li>All mouse bindings methods now take two parameters (keyboard modifiers and mouse buttons) instead of a combination of these.</li>
+ <li>New <code>clearShortcuts</code> and <code>clearMouseBindings</code> methods reset all bindings.</li>
+</ul>
+<b>Bug fixes or improvements</b>
+<ul>
+  <li>ClickAction bindings (such as select, Shift+Left click) fixed for Qt5.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+  <li>Using QWidget's <code>update()</code> instead of <code>updateGL()</code> for smoother updates.</li>
+  <li>Projection and modelView matrix computation is cached for improved performance.</li>
+  <li>Full code re-indent using tabs.</li>
+</ul>
+
 <h2>Nov 17th 2013 - 2.4.1</h2>
 <b>Bug fixes or improvements</b>
 <ul>

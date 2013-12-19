@@ -1,7 +1,7 @@
 
 %define version_major 2
-%define version_minor 4
-%define version_revision 1
+%define version_minor 5
+%define version_revision 0
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -155,6 +155,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Thu Dec 19 2013 Gilles Debunne <contact@libQGLViewer.com> 2.5.0
+- Refactor of all mouse bindings methods. New clear bindings methods.
+
 * Sun Nov 17 2013 Gilles Debunne <contact@libQGLViewer.com> 2.4.1
 - Using update() instead of updateGL(). Matrix computation is cached. Full reindent.
 
