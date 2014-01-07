@@ -1394,11 +1394,11 @@ void QGLViewer::performClickAction(ClickAction ca, const QMouseEvent* const e)
 		update();
 		break;
 	case RAP_FROM_PIXEL :
-		if (camera()->setRevolveAroundPointFromPixel(e->pos()))
-		{
-			setVisualHintsMask(1);
-			update();
-		}
+		bool success = camera()->setRevolveAroundPointFromPixel(e->pos());
+		if (!success)
+			camera()->setRevolveAroundPoint(sceneCenter());
+		setVisualHintsMask(1);
+		update();
 		break;
 	case RAP_IS_CENTER :
 		camera()->setRevolveAroundPoint(sceneCenter());
@@ -2984,7 +2984,7 @@ void QGLViewer::setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButton
 	}
 
 	if (buttons == Qt::NoButton) {
-		qWarning("No mouse button specified in setMouseBinding()");
+		qWarning("No mouse button specified in setMouseBinding");
 		return;
 	}
 

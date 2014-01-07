@@ -1,7 +1,7 @@
 
 %define version_major 2
 %define version_minor 5
-%define version_revision 0
+%define version_revision 1
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -155,6 +155,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Wed Jan 22 2014 Gilles Debunne <contact@libQGLViewer.com> 2.5.1
+- Revolve around point reset to scene center.
+
 * Thu Dec 19 2013 Gilles Debunne <contact@libQGLViewer.com> 2.5.0
 - Refactor of all mouse bindings methods. New clear bindings methods.
 
