@@ -42,15 +42,15 @@ HEADERS *= $${QGL_HEADERS}
 DISTFILES *= qglviewer-icon.xpm
 
 TRANSLATIONS = qglviewer_fr.ts
-                       
+
 QT_VERSION=$$[QT_VERSION]
 
 !contains( QT_VERSION, "^3.*" ) {
-    QT *= xml opengl
+	QT *= xml opengl
 }
 
 contains ( QT_VERSION, "^5.*" ) {
-    QT *= widgets
+	QT *= gui widgets
 }
 
 !isEmpty( QGLVIEWER_STATIC ) {
@@ -76,9 +76,9 @@ contains( DEFINES, NO_VECTORIAL_RENDER ) {
   message( Vectorial rendering disabled )
 } else {
   contains( QT_VERSION, "^3.*" ) {
-    FORMS *= VRenderInterface.Qt3.ui
+	FORMS *= VRenderInterface.Qt3.ui
   } else {
-    FORMS *= VRenderInterface.ui
+	FORMS *= VRenderInterface.ui
   }
 
   SOURCES *= \
@@ -128,39 +128,39 @@ unix {
 
   # INCLUDE_DIR and LIB_DIR specify where to install the include files and the library.
   # Use qmake INCLUDE_DIR=... LIB_DIR=... , or qmake PREFIX=... to customize your installation.
-  
+
   HOME_DIR = $$system(cd;pwd)
 
   isEmpty( PREFIX ) {
-    PREFIX_=/usr
+	PREFIX_=/usr
   } else {
-    PREFIX_=$${PREFIX}
+	PREFIX_=$${PREFIX}
   }
   isEmpty( LIB_DIR ) {
-    LIB_DIR_ = $${PREFIX_}/lib
+	LIB_DIR_ = $${PREFIX_}/lib
   } else {
-    LIB_DIR_ = $${LIB_DIR}
+	LIB_DIR_ = $${LIB_DIR}
   }
   isEmpty( INCLUDE_DIR ) {
-    INCLUDE_DIR_ = $${PREFIX_}/include
+	INCLUDE_DIR_ = $${PREFIX_}/include
   } else {
-    INCLUDE_DIR_ = $${INCLUDE_DIR}
+	INCLUDE_DIR_ = $${INCLUDE_DIR}
   }
   isEmpty( DOC_DIR ) {
-    macx|darwin-g++ {
-      isEmpty( PREFIX ) {
-        DOC_DIR = $${HOME_DIR}/Library/Developer/Shared/Documentation/QGLViewer
-      } else {
-        DOC_DIR = $${PREFIX}/Shared/Documentation/QGLViewer
-      }
-    } else {
-      DOC_DIR = $${PREFIX_}/share/doc/QGLViewer
-    }
+	macx|darwin-g++ {
+	  isEmpty( PREFIX ) {
+		DOC_DIR = $${HOME_DIR}/Library/Developer/Shared/Documentation/QGLViewer
+	  } else {
+		DOC_DIR = $${PREFIX}/Shared/Documentation/QGLViewer
+	  }
+	} else {
+	  DOC_DIR = $${PREFIX_}/share/doc/QGLViewer
+	}
   }
 
   # GLUT for Unix architecture
   !isEmpty( USE_GLUT ) {
-    QMAKE_LIBS_OPENGL *= -lglut
+	QMAKE_LIBS_OPENGL *= -lglut
   }
 
   MOC_DIR = .moc
@@ -169,7 +169,7 @@ unix {
   # Adds a -P option so that "make install" as root creates files owned by root and links are preserved.
   # This is not a standard option, and it may have to be removed on old Unix flavors.
   !hpux {
-    QMAKE_COPY_FILE = $${QMAKE_COPY_FILE} -P
+	QMAKE_COPY_FILE = $${QMAKE_COPY_FILE} -P
   }
 
   # Make much smaller libraries (and packages) by removing debugging informations
@@ -228,8 +228,8 @@ irix-cc|irix-n32 {
   QMAKE_LIBS_OPENGL      -= -lXi
   # GLUT for SGI architecture
   !isEmpty( USE_GLUT ) {
-    QMAKE_LIBDIR_OPENGL    *= /usr/local/lib32
-    QMAKE_INCDIR_OPENGL    *= /usr/local/include
+	QMAKE_LIBDIR_OPENGL    *= /usr/local/lib32
+	QMAKE_INCDIR_OPENGL    *= /usr/local/include
   }
 }
 
@@ -244,43 +244,43 @@ macx|darwin-g++ {
   include.files *= qglviewer.icns
 
   lib_bundle {
-    FRAMEWORK_HEADERS.version = Versions
-    # Should be $$replace(TRANSLATIONS, .ts, .qm), but 'replace' is only available in Qt 4.3
-    FRAMEWORK_HEADERS.files = $${QGL_HEADERS} qglviewer.icns qglviewer_fr.qm
-    FRAMEWORK_HEADERS.path = Headers
-    QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
+	FRAMEWORK_HEADERS.version = Versions
+	# Should be $$replace(TRANSLATIONS, .ts, .qm), but 'replace' is only available in Qt 4.3
+	FRAMEWORK_HEADERS.files = $${QGL_HEADERS} qglviewer.icns qglviewer_fr.qm
+	FRAMEWORK_HEADERS.path = Headers
+	QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
 
-    DESTDIR = $${HOME_DIR}/Library/Frameworks/
+	DESTDIR = $${HOME_DIR}/Library/Frameworks/
 
-    # For a Framework, 'include' and 'lib' do no make sense.
-    # These and prefix will all define the DESTDIR, in that order in case several are defined
-    !isEmpty( INCLUDE_DIR ) {
-      DESTDIR = $${INCLUDE_DIR}
-    }
+	# For a Framework, 'include' and 'lib' do no make sense.
+	# These and prefix will all define the DESTDIR, in that order in case several are defined
+	!isEmpty( INCLUDE_DIR ) {
+	  DESTDIR = $${INCLUDE_DIR}
+	}
 
-    !isEmpty( LIB_DIR ) {
-      DESTDIR = $${LIB_DIR}
-    }
+	!isEmpty( LIB_DIR ) {
+	  DESTDIR = $${LIB_DIR}
+	}
 
-    !isEmpty( PREFIX ) {
-      DESTDIR = $${PREFIX}
-    }
-  
-    QMAKE_POST_LINK=cd $$DESTDIR/QGLViewer.framework/Headers && (test -L QGLViewer || ln -s . QGLViewer)
+	!isEmpty( PREFIX ) {
+	  DESTDIR = $${PREFIX}
+	}
 
-    #QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/
-    #QMAKE_LFLAGS_SONAME  = -Wl,-install_name,
+	QMAKE_POST_LINK=cd $$DESTDIR/QGLViewer.framework/Headers && (test -L QGLViewer || ln -s . QGLViewer)
 
-    # Framework already installed, with includes
-    INSTALLS -= include target
+	#QMAKE_LFLAGS_SONAME  = -Wl,-install_name,@executable_path/../Frameworks/
+	#QMAKE_LFLAGS_SONAME  = -Wl,-install_name,
+
+	# Framework already installed, with includes
+	INSTALLS -= include target
   } else {
-    #QMAKE_LFLAGS_SONAME  = -Wl,-install_name,libQGLViewer.dylib
+	#QMAKE_LFLAGS_SONAME  = -Wl,-install_name,libQGLViewer.dylib
   }
 
   # GLUT for Macintosh architecture
   !isEmpty( USE_GLUT ) {
-    QMAKE_LIBS_OPENGL -= -lglut
-    QMAKE_LIBS_OPENGL *= -framework GLUT -lobjc
+	QMAKE_LIBS_OPENGL -= -lglut
+	QMAKE_LIBS_OPENGL *= -framework GLUT -lobjc
   }
 
   # Qt3 only
@@ -299,9 +299,9 @@ win32 {
   DEFINES *= WIN32
 
   staticlib {
-    DEFINES *= QGLVIEWER_STATIC
+	DEFINES *= QGLVIEWER_STATIC
   } else {
-    DEFINES *= CREATE_QGLVIEWER_DLL
+	DEFINES *= CREATE_QGLVIEWER_DLL
   }
 
   # Use the DLL version of Qt (Qt3 only)
@@ -313,20 +313,20 @@ win32 {
   # support to RTTI and Exceptions, and generate debug info "program database".
   # Any feedback on these flags is welcome.
   !win32-g++ {
-    QMAKE_CXXFLAGS = -TP -GR -Zi
-    DEFINES += NOMINMAX
-    win32-msvc {
-      QMAKE_CXXFLAGS *= -GX
-    } else {
-      QMAKE_CXXFLAGS *= -EHs
-    }
+	QMAKE_CXXFLAGS = -TP -GR -Zi
+	DEFINES += NOMINMAX
+	win32-msvc {
+	  QMAKE_CXXFLAGS *= -GX
+	} else {
+	  QMAKE_CXXFLAGS *= -EHs
+	}
   }
 }
 
 
 !contains( QT_VERSION, "^3.*" ) {
    build_pass:CONFIG(debug, debug|release) {
-     unix: TARGET = $$join(TARGET,,,_debug)
-     else: TARGET = $$join(TARGET,,,d)
+	 unix: TARGET = $$join(TARGET,,,_debug)
+	 else: TARGET = $$join(TARGET,,,d)
    }
 }

@@ -19,21 +19,21 @@ void Viewer::draw()
 
   glBegin(GL_QUAD_STRIP);
   for (float i=0; i<nbSteps; ++i)
-    {
-      float ratio = i/nbSteps;
-      float angle = 21.0*ratio;
-      float c = cos(angle);
-      float s = sin(angle);
-      float r1 = 1.0 - 0.8*ratio;
-      float r2 = 0.8 - 0.8*ratio;
-      float alt = ratio - 0.5;
-      const float nor = .5;
-      const float up = sqrt(1.0-nor*nor);
-      glColor3f(fabs(c), 0.2f, fabs(s));
-      glNormal3f(nor*c, up, nor*s);
-      glVertex3f(r1*c, alt, r1*s);
-      glVertex3f(r2*c, alt+0.05, r2*s);
-    }
+	{
+	  float ratio = i/nbSteps;
+	  float angle = 21.0*ratio;
+	  float c = cos(angle);
+	  float s = sin(angle);
+	  float r1 = 1.0 - 0.8*ratio;
+	  float r2 = 0.8 - 0.8*ratio;
+	  float alt = ratio - 0.5;
+	  const float nor = .5;
+	  const float up = sqrt(1.0-nor*nor);
+	  glColor3f(fabs(c), 0.2f, fabs(s));
+	  glNormal3f(nor*c, up, nor*s);
+	  glVertex3f(r1*c, alt, r1*s);
+	  glVertex3f(r2*c, alt+0.05, r2*s);
+	}
   glEnd();
 }
 
@@ -69,7 +69,7 @@ void Viewer::init()
   /////////////////////////////////////////////////////
 
   // Left and right buttons together make a camera zoom : emulates a mouse third button if needed.
-  setMouseBinding(Qt::NoModifier, Qt::LeftButton | Qt::RightButton, CAMERA, ZOOM);
+  setMouseBinding(Qt::Key_Z, Qt::NoModifier, Qt::LeftButton, CAMERA, ZOOM);
 
   // Disable previous TRANSLATE mouse binding (and remove it from help mouse tab).
   setMouseBinding(Qt::NoModifier, Qt::RightButton, NO_CLICK_ACTION);
@@ -116,18 +116,18 @@ void Viewer::keyPressEvent(QKeyEvent *e)
   // That's why we use imbricated if...else and a "handled" boolean.
   bool handled = false;
   if ((e->key()==Qt::Key_W) && (modifiers==Qt::NoButton))
-    {
-      wireframe_ = !wireframe_;
-      if (wireframe_)
+	{
+	  wireframe_ = !wireframe_;
+	  if (wireframe_)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-      else
+	  else
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-      handled = true;
-      updateGL();
-    }
+	  handled = true;
+	  updateGL();
+	}
   else
-    if ((e->key()==Qt::Key_F) && (modifiers==Qt::NoButton))
-      {
+	if ((e->key()==Qt::Key_F) && (modifiers==Qt::NoButton))
+	  {
 	flatShading_ = !flatShading_;
 	if (flatShading_)
 	  glShadeModel(GL_FLAT);
@@ -135,11 +135,11 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 	  glShadeModel(GL_SMOOTH);
 	handled = true;
 	updateGL();
-      }
+	  }
   // ... and so on with other else/if blocks.
 
   if (!handled)
-    QGLViewer::keyPressEvent(e);
+	QGLViewer::keyPressEvent(e);
 }
 
 
@@ -155,39 +155,39 @@ void Viewer::mousePressEvent(QMouseEvent* e)
 #else
   if ((e->button() == Qt::RightButton) && (e->modifiers() == Qt::NoButton))
 #endif
-    {
+	{
 #if QT_VERSION < 0x040000
-      QPopupMenu menu( this );
-      menu.insertItem("Camera positions");
-      menu.insertSeparator();
-      QMap<int, int> menuMap;
+	  QPopupMenu menu( this );
+	  menu.insertItem("Camera positions");
+	  menu.insertSeparator();
+	  QMap<int, int> menuMap;
 #else
-      QMenu menu( this );
-      menu.addAction("Camera positions");
-      menu.addSeparator();
-      QMap<QAction*, int> menuMap;
+	  QMenu menu( this );
+	  menu.addAction("Camera positions");
+	  menu.addSeparator();
+	  QMap<QAction*, int> menuMap;
 #endif
 
-      bool atLeastOne = false;
-      // We only test the 20 first indexes. This is a limitation.
-      for (unsigned short i=0; i<20; ++i)
+	  bool atLeastOne = false;
+	  // We only test the 20 first indexes. This is a limitation.
+	  for (unsigned short i=0; i<20; ++i)
 	if (camera()->keyFrameInterpolator(i))
 	  {
-	    atLeastOne = true;
-	    QString text;
-	    if (camera()->keyFrameInterpolator(i)->numberOfKeyFrames() == 1)
-	      text = "Position "+QString::number(i);
-	    else
-	      text = "Path "+QString::number(i);
+		atLeastOne = true;
+		QString text;
+		if (camera()->keyFrameInterpolator(i)->numberOfKeyFrames() == 1)
+		  text = "Position "+QString::number(i);
+		else
+		  text = "Path "+QString::number(i);
 
 #if QT_VERSION < 0x040000
-	    menuMap[menu.insertItem(text)] = i;
+		menuMap[menu.insertItem(text)] = i;
 #else
-	    menuMap[menu.addAction(text)] = i;
+		menuMap[menu.addAction(text)] = i;
 #endif
 	  }
 
-      if (!atLeastOne)
+	  if (!atLeastOne)
 	{
 #if QT_VERSION < 0x040000
 	  menu.insertItem("No position defined");
@@ -199,20 +199,20 @@ void Viewer::mousePressEvent(QMouseEvent* e)
 	}
 
 #if QT_VERSION < 0x040000
-      menu.setMouseTracking(true);
-      int select = menu.exec(e->globalPos());
+	  menu.setMouseTracking(true);
+	  int select = menu.exec(e->globalPos());
 
-      if (atLeastOne && select != -1)
+	  if (atLeastOne && select != -1)
 	camera()->playPath(menuMap[select]);
 #else
-      QAction* action = menu.exec(e->globalPos());
+	  QAction* action = menu.exec(e->globalPos());
 
-      if (atLeastOne && action)
+	  if (atLeastOne && action)
 	camera()->playPath(menuMap[action]);
 #endif
-    }
+	}
   else
-    QGLViewer::mousePressEvent(e);
+	QGLViewer::mousePressEvent(e);
 }
 
 QString Viewer::helpString() const

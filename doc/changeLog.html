@@ -33,9 +33,15 @@
 <h1>Change Log</h1>
 
 <h2>Jan 22nd 2014 - 2.5.1</h2>
+<b>Changes in the API</b>
+<ul>
+  <li>New <code>setMouseBinding</code> methods take a Qt:Key argument, which has to be pressed to trigger the action. Getter functions changed accordingly.</li>
+</ul>
+
 <b>Bug fixes or improvements</b>
 <ul>
   <li>The <code>RAP_FROM_PIXEL</code> click action resets the revolve around point to <code>sceneCenter</code> when there is no point under the cursor.</li>
+  <li>Fly mode mouse bindings are no longer automatically restored in <code>restoreStateFromFile</code>.</li>
 </ul>
 
 <h2>Dec 19th 2013 - 2.5.0</h2>

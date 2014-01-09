@@ -58,7 +58,7 @@ documentation</a> for details.
 The following functions are illustrated in the <a href="examples/keyboardAndMouse.html">keyboardAndMouse</a> example.
 <ul>
 <li>
-To bind a <code>ClickAction</code>, use <code>setMouseBinding(Qt::KeyboardModifiers, Qt::MouseButtons, ClickAction,
+To bind a <code>ClickAction</code>, use <code>setMouseBinding(Qt::KeyboardModifiers, Qt::MouseButton, ClickAction,
 doubleClick=false, buttonsBefore=Qt::NoButton)</code>:
 <pre>
 // Click on the right button to make a selection
@@ -69,11 +69,11 @@ setMouseBinding(Qt::AltModifier, Qt::RightButton, SHOW_ENTIRE_SCENE, true, Qt::M
 </pre>
 </li>
 <li>
-To bind a <code>MouseAction</code>, use <code>setMouseBinding(Qt::KeyboardModifiers, Qt::MouseButtons, MouseHandler,
+To bind a <code>MouseAction</code>, use <code>setMouseBinding(Qt::KeyboardModifiers, Qt::MouseButton, MouseHandler,
 MouseAction, withConstraint=true)</code> (same function name as above, but different parameters):
 <pre>
-// Left and right buttons together make a camera zoom : emulates a mouse third button if needed.
-setMouseBinding(Qt::NoModifier, Qt::LeftButton | Qt::RightButton, CAMERA, ZOOM);
+// Control, Shift and Left buttons together make a camera zoom.
+setMouseBinding(Qt::ControlModifier | Qt::ShiftModifier, Qt::LeftButton, CAMERA, ZOOM);
 
 // Alt + Shift + Left button rotates the manipulatedFrame().
 setMouseBinding(Qt::AltModifier | Qt::ShiftModifier, Qt::LeftButton, FRAME, ROTATE);
@@ -94,9 +94,12 @@ well as their default associated bindings. Note that the current bindings are al
 the <code>Mouse</code> tab of the help window (press <code>H</code> for help).
 </p>
 
+On Mac OS X, following Qt's convention, the <code>Control</code> modifier corresponds to the command key, and <code>Meta</code> is the control key.
+
 <center>
-<table bgcolor="#E0C0F0" border="2" cellspacing="0" cellpadding="5">
-  <tr bgcolor="#9999CC">
+<h3>ClickAction bindings</h3>
+<table bgcolor="#FFF" border="2" cellspacing="0" cellpadding="5">
+  <tr bgcolor="#DDE">
     <td><code><b>ClickAction</b></code></td>
     <td><b>Description</b></td>
     <td><b>Default binding</b></td>
@@ -108,7 +111,7 @@ the <code>Mouse</code> tab of the help window (press <code>H</code> for help).
     <td>Double click left button</td>
   </tr>
 
-  <tr bgcolor="#C0C0F0">
+  <tr bgcolor="#EEF">
     <td><code><b>ALIGN_FRAME</b></code></td>
     <td>Align the <code>manipulatedFrame()</code> axis with the camera.</td>
     <td>Control + double click left button</td>
@@ -120,7 +123,7 @@ the <code>Mouse</code> tab of the help window (press <code>H</code> for help).
     <td>Control + double click right button</td>
   </tr>
   
-  <tr bgcolor="#C0C0F0">
+  <tr bgcolor="#EEF">
     <td><code><b>CENTER_SCENE</b></code></td>
     <td>Translates the camera so that the <code>sceneCenter</code> is in the center of the screen.</td>
     <td>Double click right button</td>
@@ -132,7 +135,7 @@ the <code>Mouse</code> tab of the help window (press <code>H</code> for help).
     <td>&nbsp;</td>
   </tr>
   
-  <tr bgcolor="#C0C0F0">
+  <tr bgcolor="#EEF">
     <td><code><b>SELECT</b></code></td>
     <td>Calls the <code>QGLViewer::select()</code> function.</td>
     <td>Shift + Left button</td>
@@ -140,14 +143,15 @@ the <code>Mouse</code> tab of the help window (press <code>H</code> for help).
   
   <tr>
     <td><code><b>RAP_FROM_PIXEL</b></code></td>
-    <td>Set the camera <code>revolveAroundPoint()</code> to the point under pixel. If no point is found, resets the <code>revolveAroundPoint()</code> to <code>sceneCenter()</code> .</td>
-    <td>Double click left button with right button pressed</td>
+    <td>Set the camera <code>revolveAroundPoint()</code> to the point under pixel.<br/>
+    If no point is found, resets the <code>revolveAroundPoint()</code> to <code>sceneCenter</code> .</td>
+    <td>Shift + right button</td>
   </tr>
   
-  <tr bgcolor="#C0C0F0">
+  <tr bgcolor="#EEF">
     <td><code><b>RAP_IS_CENTER</b></code></td>
     <td>Makes the <code>sceneCenter</code> the new camera <code>revolveAroundPoint()</code>.</td>
-    <td>Double click right button with left button pressed</td>
+    <td>&nbsp;</td>
   </tr>
   
   <tr>
@@ -156,26 +160,22 @@ the <code>Mouse</code> tab of the help window (press <code>H</code> for help).
     <td>Double click middle button</td>
   </tr>
 
-  <tr bgcolor="#C0C0F0">
+  <tr bgcolor="#EEF">
     <td><code><b>ZOOM_ON_PIXEL</b></code></td>
     <td>Makes the camera zoom on the pixel under the mouse (if any).</td>
-    <td>Double click left button with middle button pressed</td>
+    <td>Z + left button</td>
   </tr>
   
   <tr>
     <td><code><b>ZOOM_TO_FIT</b></code></td>
     <td>Makes the camera zoom to see the entire scene.</td>
-    <td>Double click right button with middle button pressed</td>
+    <td>Z + right button</td>
   </tr>
 </table>
-</center>
 
-<br />
-<br />
-
-<center>
-<table bgcolor="#E0C0F0" border="2" cellspacing="0" cellpadding="5">
-  <tr bgcolor="#9999CC">
+<h3>MouseAction bindings</h3>
+<table bgcolor="#FFF" border="2" cellspacing="0" cellpadding="5">
+  <tr bgcolor="#DDE">
     <td><code><b>MouseAction</b></code></td>
     <td><code><b>Handler</b></code></td>
     <td><b>Description</b></td>
@@ -189,14 +189,14 @@ the <code>Mouse</code> tab of the help window (press <code>H</code> for help).
     <td>&nbsp;</td>
   </tr>
   
-  <tr bgcolor="#C0C0F0">
+  <tr bgcolor="#EEF">
     <td rowspan="2"><code><b>ROTATE</b></code></td>
     <td><code><b>CAMERA</b></code></td>
     <td>Rotates the camera around its <code>revolveAroundPoint()</code>.</td>
     <td>Left button</td>
   </tr>
   
-  <tr bgcolor="#C0C0F0">
+  <tr bgcolor="#EEF">
     <td><code><b>FRAME</b></code></td>
     <td>Rotates the <code>manipulatedFrame()</code> around its origin.</td>
     <td>Control + Left button</td>
@@ -211,18 +211,18 @@ the <code>Mouse</code> tab of the help window (press <code>H</code> for help).
   
   <tr>
     <td><code><b>FRAME</b></code></td>
-    <td>Makes the manipulatedFrame() move closer or further from the camera.</td>
+    <td>Makes the <code>manipulatedFrame()</code> move closer or further from the camera.</td>
     <td>Control + Middle button</td>
   </tr>
   
-  <tr bgcolor="#C0C0F0">
+  <tr bgcolor="#EEF">
     <td rowspan="2"><code><b>TRANSLATE</b></code></td>
     <td><code><b>CAMERA</b></code></td>
     <td rowspan="2">Translates in the camera XY plane.</td>
     <td>Right button</td>
   </tr>
   
-  <tr bgcolor="#C0C0F0">
+  <tr bgcolor="#EEF">
     <td><code><b>FRAME</b></code></td>
     <td>Control + Right button</td>
   </tr>
@@ -234,7 +234,7 @@ the <code>Mouse</code> tab of the help window (press <code>H</code> for help).
     <td>&nbsp;</td>
   </tr>
   
-  <tr bgcolor="#C0C0F0">
+  <tr bgcolor="#EEF">
     <td><code><b>MOVE_BACKWARD</b></code></td>
     <td><code><b>CAMERA</b></code></td>
     <td>Same as <code>MOVE_FORWARD</code> but backward.</td>
@@ -248,7 +248,7 @@ the <code>Mouse</code> tab of the help window (press <code>H</code> for help).
     <td>&nbsp;</td>
   </tr>
   
-  <tr bgcolor="#C0C0F0">
+  <tr bgcolor="#EEF">
     <td><code><b>LOOK_AROUND</b></code></td>
     <td><code><b>CAMERA</b></code></td>
     <td>Change the viewing direction. The camera position is not modified.</td>
@@ -259,45 +259,45 @@ the <code>Mouse</code> tab of the help window (press <code>H</code> for help).
     <td><code><b>ROLL</b></code></td>
     <td><code><b>CAMERA</b></code></td>
     <td>Rolls camera according to horizontal mouse displacement.</td>
-    <td>Left and middle buttons (fly mode only)</td>
+    <td>&nbsp;</td>
   </tr>
 
-  <tr bgcolor="#C0C0F0">
+  <tr bgcolor="#EEF">
     <td rowspan="2"><code><b>SCREEN_ROTATE</b></code></td>
     <td><code><b>CAMERA</b></code></td>
     <td rowspan="2">Rotates around an axis orthogonal to the screen.</td>
-    <td>Left and middle buttons</td>
+    <td>R + left button</td>
   </tr>
   
-  <tr bgcolor="#C0C0F0">
+  <tr bgcolor="#EEF">
     <td><code><b>FRAME</b></code></td>
-    <td>Control + Left and middle buttons</td>
+    <td>Control + R + left button</td>
   </tr>
     
   <tr>
     <td rowspan="2"><code><b>SCREEN_TRANSLATE</b></code></td>
     <td><code><b>CAMERA</b></code></td>
     <td rowspan="2">Translates purely horizontally or vertically wrt screen.</td>
-    <td>Middle and right buttons</td>
+    <td>&nbsp;</td>
   </tr>
   
   <tr>
     <td><code><b>FRAME</b></code></td>
-    <td>Control + Middle and right buttons</td>
+    <td>&nbsp;</td>
   </tr>
 
-  <tr bgcolor="#C0C0F0">
+  <tr bgcolor="#EEF">
     <td><code><b>ZOOM_ON_REGION</b></code></td>
     <td><code><b>CAMERA</b></code></td>
     <td>Draws a rectangular region on screen and zooms on it.</td>
-    <td>Shift + Middle button</td>
+    <td>Shift + middle button</td>
   </tr>
   
 </table>
 </center>
 
 <p>
-The <code><b>CAMERA</b></code> and <code><b>FRAME</b></code> default bindings are essentially
+As you can see, the <code><b>CAMERA</b></code> and <code><b>FRAME</b></code> default bindings are essentially
 identical: You simply have to press the <code>Control</code> keyboard modifier to move the
 <code><b>FRAME</b></code> instead of the <code><b>CAMERA</b></code>. This modifier key can be
 modified using <code>setHandlerKeyboardModifiers()</code>.

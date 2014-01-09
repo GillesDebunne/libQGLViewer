@@ -66,10 +66,10 @@ void Viewer::init()
   // The camera can always be moved with the Control key.
   setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::ControlButton);
 
-  setMouseBinding(Qt::ShiftButton | Qt::LeftButton,  QGLViewer::FRAME, QGLViewer::ROTATE,    false);
-  setMouseBinding(Qt::ShiftButton | Qt::RightButton, QGLViewer::FRAME, QGLViewer::TRANSLATE, false);
-  setMouseBinding(Qt::ShiftButton | Qt::MidButton,   QGLViewer::FRAME, QGLViewer::ZOOM,      false);
-  setWheelBinding(Qt::ShiftButton,                   QGLViewer::FRAME, QGLViewer::ZOOM,      false);
+  setMouseBinding(Qt::ShiftButton, Qt::LeftButton,  QGLViewer::FRAME, QGLViewer::ROTATE,    false);
+  setMouseBinding(Qt::ShiftButton, Qt::RightButton, QGLViewer::FRAME, QGLViewer::TRANSLATE, false);
+  setMouseBinding(Qt::ShiftButton, Qt::MidButton,   QGLViewer::FRAME, QGLViewer::ZOOM,      false);
+  setWheelBinding(Qt::ShiftButton,                  QGLViewer::FRAME, QGLViewer::ZOOM,      false);
 #else
   setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::AltModifier);
   setHandlerKeyboardModifiers(QGLViewer::FRAME, Qt::NoModifier);

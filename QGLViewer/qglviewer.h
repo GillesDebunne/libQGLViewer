@@ -517,7 +517,7 @@ public Q_SLOTS:
 
 private:
 	bool saveImageSnapshot(const QString& fileName);
-	
+
 #ifndef DOXYGEN
 	/* This class is used internally for screenshot that require tiling (image size size different
 	from window size). Only in that case, is the private tileRegion_ pointer non null.
@@ -794,6 +794,7 @@ protected:
 	virtual void mouseDoubleClickEvent(QMouseEvent *);
 	virtual void wheelEvent(QWheelEvent *);
 	virtual void keyPressEvent(QKeyEvent *);
+	virtual void keyReleaseEvent(QKeyEvent *);
 	virtual void timerEvent(QTimerEvent *);
 	virtual void closeEvent(QCloseEvent *);
 	//@}
@@ -943,28 +944,24 @@ public Q_SLOTS:
 	//@}
 
 
+public:
 	/*! @name Mouse customization */
 	//@{
-protected:
 	/*! Defines the different mouse handlers: camera() or manipulatedFrame().
 
-	Used by setMouseBinding(), setMouseBinding(int, ClickAction, bool, int) and setWheelBinding() to
-	define which handler receives the mouse events. */
+	Used by setMouseBinding(), setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButtons, ClickAction, bool, int)
+	and setWheelBinding() to define which handler receives the mouse events. */
 	enum MouseHandler { CAMERA, FRAME };
 
 	/*! Defines the possible actions that can be binded to a mouse click using
-	setMouseBinding(int,ClickAction,bool,int).
+	setMouseBinding(Qt::KeyboardModifiers, Qt::MouseButtons, ClickAction, bool, int).
 
 	See the <a href="../mouse.html">mouse page</a> for details. */
 	enum ClickAction { NO_CLICK_ACTION, ZOOM_ON_PIXEL, ZOOM_TO_FIT, SELECT, RAP_FROM_PIXEL, RAP_IS_CENTER,
 					   CENTER_FRAME, CENTER_SCENE, SHOW_ENTIRE_SCENE, ALIGN_FRAME, ALIGN_CAMERA };
 
-#ifndef DOXYGEN
-	// So that it can be used in ManipulatedFrame and ManipulatedCameraFrame.
-public:
-#endif
 
-	/*! Defines the possible actions that can be binded to a mouse motion (a click, followed by a
+	/*! Defines the possible actions that can be binded to a mouse action (a click, followed by a
 	mouse displacement).
 
 	These actions may be binded to the camera() or to the manipulatedFrame() (see QGLViewer::MouseHandler) using
@@ -975,10 +972,6 @@ public:
 					   SCREEN_ROTATE, ROLL, DRIVE,
 					   SCREEN_TRANSLATE, ZOOM_ON_REGION };
 
-#ifdef DOXYGEN
-public:
-#endif
-
 #ifndef DOXYGEN
 	MouseAction mouseAction(int state) const;
 	int mouseHandler(int state) const;
@@ -986,13 +979,14 @@ public:
 	ClickAction clickAction(int state, bool doubleClick, Qt::MouseButtons buttonsBefore) const;
 	void getClickButtonState(ClickAction action, int& state, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const;
 #endif
-	MouseAction mouseAction(Qt::KeyboardModifiers modifiers, Qt::MouseButtons buttons) const;
-	int mouseHandler(Qt::KeyboardModifiers modifiers, Qt::MouseButtons buttons) const;
-	ClickAction clickAction(Qt::KeyboardModifiers modifiers, Qt::MouseButtons buttons, bool doubleClick, Qt::MouseButtons buttonsBefore) const;
+	MouseAction mouseAction(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button) const;
+	int mouseHandler(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button) const;
+	ClickAction clickAction(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button, bool doubleClick, Qt::MouseButtons buttonsBefore) const;
 
-	Qt::MouseButtons mouseButtons(MouseHandler handler, MouseAction action, bool withConstraint=true) const;
+	Qt::Key pressedKey(MouseHandler handler, MouseAction action, bool withConstraint=true) const;
+	Qt::MouseButton mouseButton(MouseHandler handler, MouseAction action, bool withConstraint=true) const;
 	Qt::KeyboardModifiers keyboardModifiers(MouseHandler handler, MouseAction action, bool withConstraint=true) const;
-	void getClickActionState(ClickAction action, Qt::KeyboardModifiers& modifiers, Qt::MouseButtons& buttons, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const;
+	void getClickActionState(ClickAction action, Qt::Key& key, Qt::KeyboardModifiers& modifiers, Qt::MouseButton& button, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const;
 
 	MouseAction wheelAction(Qt::KeyboardModifiers modifiers) const;
 	int wheelHandler(Qt::KeyboardModifiers modifiers) const;
@@ -1004,9 +998,13 @@ public Q_SLOTS:
 	void setMouseBinding(int state, ClickAction action, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
 	void setMouseBindingDescription(int state, QString description, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
 #endif
-	void setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButtons buttons, MouseHandler handler, MouseAction action, bool withConstraint=true);
-	void setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButtons buttons, ClickAction action, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
-	void setMouseBindingDescription(Qt::KeyboardModifiers modifiers, Qt::MouseButtons buttons, QString description, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
+	void setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButton buttons, MouseHandler handler, MouseAction action, bool withConstraint=true);
+	void setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButton button, ClickAction action, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
+	void setMouseBindingDescription(Qt::KeyboardModifiers modifiers, Qt::MouseButton button, QString description, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
+
+	void setMouseBinding(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton buttons, MouseHandler handler, MouseAction action, bool withConstraint=true);
+	void setMouseBinding(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button, ClickAction action, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
+	void setMouseBindingDescription(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button, QString description, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
 
 	void setWheelBinding(Qt::KeyboardModifiers modifiers, MouseHandler handler, MouseAction action, bool withConstraint=true);
 	void setHandlerKeyboardModifiers(MouseHandler handler, Qt::KeyboardModifiers modifiers);
@@ -1203,48 +1201,56 @@ private:
 	// M o u s e   b i n d i n g s
 	struct MouseBindingPrivate {
 		const Qt::KeyboardModifiers modifiers;
-		const Qt::MouseButtons buttons;
+		const Qt::MouseButton button;
+		const Qt::Key key;
 
-		MouseBindingPrivate(Qt::KeyboardModifiers m, Qt::MouseButtons b)
-			: modifiers(m), buttons(b) {}
+		MouseBindingPrivate(Qt::KeyboardModifiers m, Qt::MouseButton b, Qt::Key k)
+			: modifiers(m), button(b), key(k) {}
 
 		// This sort order is used in mouseString() to display sorted mouse bindings
 		bool operator<(const MouseBindingPrivate& mbp) const
 		{
-			if (modifiers != mbp.modifiers)
+			if (key != mbp.key)
+				return key < mbp.key;
+			else if (modifiers != mbp.modifiers)
 				return modifiers < mbp.modifiers;
 			else
-				return buttons < mbp.buttons;
+				return button < mbp.button;
 		}
 	};
 
 	// C l i c k   b i n d i n g s
 	struct ClickBindingPrivate {
 		const Qt::KeyboardModifiers modifiers;
-		const Qt::MouseButtons buttons;
+		const Qt::MouseButton button;
 		const bool doubleClick;
 		const Qt::MouseButtons buttonsBefore; // only defined when doubleClick is true
+		const Qt::Key key;
 
-		ClickBindingPrivate(Qt::KeyboardModifiers m, Qt::MouseButtons b, bool dc, Qt::MouseButtons bb)
-			: modifiers(m), buttons(b), doubleClick(dc), buttonsBefore(bb) {}
+		ClickBindingPrivate(Qt::KeyboardModifiers m, Qt::MouseButton b, bool dc, Qt::MouseButtons bb, Qt::Key k)
+			: modifiers(m), button(b), doubleClick(dc), buttonsBefore(bb), key(k) {}
 
 		// This sort order is used in mouseString() to display sorted mouse bindings
 		bool operator<(const ClickBindingPrivate& cbp) const
 		{
-			if (buttonsBefore != cbp.buttonsBefore)
-				return buttonsBefore < cbp.buttonsBefore;
+			if (key != cbp.key)
+				return key < cbp.key;
 			else
-				if (modifiers != cbp.modifiers)
-					return modifiers < cbp.modifiers;
+				if (buttonsBefore != cbp.buttonsBefore)
+					return buttonsBefore < cbp.buttonsBefore;
 				else
-					if (buttons != cbp.buttons)
-						return buttons < cbp.buttons;
+					if (modifiers != cbp.modifiers)
+						return modifiers < cbp.modifiers;
 					else
-						return !doubleClick && cbp.doubleClick;
+						if (button != cbp.button)
+							return button < cbp.button;
+						else
+							return !doubleClick && cbp.doubleClick;
 		}
 	};
 #endif
 	static QString formatClickActionPrivate(ClickBindingPrivate cbp);
+	static bool isValidShortcutKey(int key);
 
 	QMap<ClickBindingPrivate, QString> mouseDescription_;
 
@@ -1253,6 +1259,7 @@ private:
 	QMap<MouseBindingPrivate, MouseActionPrivate> mouseBinding_;
 	QMap<Qt::KeyboardModifiers, MouseActionPrivate> wheelBinding_;
 	QMap<ClickBindingPrivate, ClickAction> clickBinding_;
+	Qt::Key currentlyPressedKey_;
 
 	// S n a p s h o t s
 	void initializeSnapshotFormats();

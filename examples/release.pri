@@ -1,4 +1,4 @@
-QT *= xml opengl
+QT *= xml opengl widgets gui
 
 CONFIG += qt opengl warn_on thread rtti console embed_manifest_exe no_keywords
 

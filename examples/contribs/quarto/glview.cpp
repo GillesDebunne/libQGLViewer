@@ -15,8 +15,8 @@ using namespace qglviewer;
 
 void GLView::init()
 {
-  setMouseBinding(Qt::LeftButton, SELECT);
-  setMouseBinding(Qt::RightButton, CAMERA, ROTATE);
+  setMouseBinding(Qt::NoModifiers, Qt::LeftButton, SELECT);
+  setMouseBinding(Qt::NoModifiers, Qt::RightButton, CAMERA, ROTATE);
 
   glEnable(GL_CULL_FACE);
   /* lissage des couleurs sur les facettes */

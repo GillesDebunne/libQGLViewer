@@ -3,7 +3,6 @@
 #include "camera.h"
 #include "keyFrameInterpolator.h"
 
-#if QT_VERSION >= 0x040000
 # include <QtAlgorithms>
 # include <QTextEdit>
 # include <QApplication>
@@ -18,34 +17,12 @@
 # include <QImage>
 # include <QDir>
 # include <QUrl>
-#else
-# include <qapplication.h>
-# include <qfileinfo.h>
-# include <qdatetime.h>
-# include <qmessagebox.h>
-# include <qpushbutton.h>
-# include <qtabwidget.h>
-# include <qtextstream.h>
-# include <qtimer.h>
-# include <qimage.h>
-# include <qtextedit.h>
-# include <qkeysequence.h>
-# include <qdir.h>
-// Patch for enums names change
-# define KeyboardModifierMask KeyButtonMask
-// Patch for QMap API change
-# define value data
-#endif
 
 using namespace std;
 using namespace qglviewer;
 
 // Static private variable
-#if QT_VERSION >= 0x040000
 QList<QGLViewer*> QGLViewer::QGLViewerPool_;
-#else
-QPtrList<QGLViewer> QGLViewer::QGLViewerPool_;
-#endif
 
 
 /*! \mainpage
@@ -71,13 +48,8 @@ void QGLViewer::defaultConstructor()
 	// if (glGetString(GL_VERSION) == 0)
 	// qWarning("Unable to get OpenGL version, context may not be available - Check your configuration");
 
-#if QT_VERSION >= 0x040000
 	int poolIndex = QGLViewer::QGLViewerPool_.indexOf(NULL);
 	setFocusPolicy(Qt::StrongFocus);
-#else
-	int poolIndex = QGLViewer::QGLViewerPool_.findRef(NULL);
-	setFocusPolicy(QWidget::StrongFocus);
-#endif
 
 	if (poolIndex >= 0)
 		QGLViewer::QGLViewerPool_.replace(poolIndex, this);
@@ -111,9 +83,7 @@ void QGLViewer::defaultConstructor()
 	mouseGrabberIsAManipulatedCameraFrame_ = false;
 	displayMessage_ = false;
 	connect(&messageTimer_, SIGNAL(timeout()), SLOT(hideMessage()));
-#if QT_VERSION >= 0x040000
 	messageTimer_.setSingleShot(true);
-#endif
 	helpWidget_ = NULL;
 	setMouseGrabber(NULL);
 
@@ -149,15 +119,14 @@ void QGLViewer::defaultConstructor()
 	bufferTextureHeight_ = 0;
 	previousBufferTextureFormat_ = 0;
 	previousBufferTextureInternalFormat_ = 0;
+	currentlyPressedKey_ = Qt::Key(0);
 
-#if QT_VERSION >= 0x040000
 	setAttribute(Qt::WA_NoSystemBackground);
-#endif
 
 	tileRegion_ = NULL;
 }
 
-#if QT_VERSION >= 0x040000 && !defined QT3_SUPPORT
+#if !defined QT3_SUPPORT
 /*! Constructor. See \c QGLWidget documentation for details.
 
 All viewer parameters (display flags, scene parameters, associated objects...) are set to their default values. See
@@ -185,11 +154,11 @@ the <a href="../examples/stereoViewer.html">stereoViewer example</a>). */
 QGLViewer::QGLViewer(const QGLFormat& format, QWidget* parent, const QGLWidget* shareWidget, Qt::WindowFlags flags)
 	: QGLWidget(format, parent, shareWidget, flags)
 { defaultConstructor(); }
-#endif
+#endif // QT3_SUPPORT
 
 /*! Virtual destructor.
 
-The viewer is replaced by \c NULL in the QGLViewerPool() (in order to preserve other viewer's indexes) and allocated 
+The viewer is replaced by \c NULL in the QGLViewerPool() (in order to preserve other viewer's indexes) and allocated
 memory is released. The camera() is deleted and should be copied before if it is shared by an other viewer. */
 QGLViewer::~QGLViewer()
 {
@@ -198,11 +167,7 @@ QGLViewer::~QGLViewer()
 	// if (parent())
 	// saveStateToFileForAllViewers();
 
-#if QT_VERSION >= 0x040000
 	QGLViewer::QGLViewerPool_.replace(QGLViewer::QGLViewerPool_.indexOf(this), NULL);
-#else
-	QGLViewer::QGLViewerPool_.replace(QGLViewer::QGLViewerPool_.findRef(this), NULL);
-#endif
 
 	delete camera();
 	delete[] selectBuffer_;
@@ -222,68 +187,15 @@ static QString QGLViewerVersionString()
 			QString::number(QGLVIEWER_VERSION & 0x0000ff);
 }
 
-static int convertToKeyboardModifiers(int state)
-{
-#if QT_VERSION < 0x040000
-	// Qt 2 & 3 have different values for ButtonState and Modifiers.
-	// Converts CTRL,SHIFT... to ControlButton, ShiftButton...
-	if (state & Qt::MODIFIER_MASK)
-	{
-		if (state & Qt::CTRL)  { state &= ~Qt::CTRL;	state |= Qt::ControlButton; }
-		if (state & Qt::SHIFT) { state &= ~Qt::SHIFT;	state |= Qt::ShiftButton; }
-		if (state & Qt::ALT)   { state &= ~Qt::ALT; 	state |= Qt::AltButton; }
-# if QT_VERSION >= 0x030100
-		if (state & Qt::META)  { state &= ~Qt::META; 	state |= Qt::MetaButton; }
-# endif
-	}
-#endif
-	return state;
-}
-
 static Qt::KeyboardModifiers keyboardModifiersFromState(int state) {
-#if QT_VERSION >= 0x040000
 	// Convertion of keyboard modifiers and mouse buttons as an int is no longer supported : emulate
 	return Qt::KeyboardModifiers(state & 0xFF000000);
-#else
-	return Qt::KeyboardModifiers(state & Qt::KeyboardModifierMask);
-#endif
 }
 
 
-static Qt::MouseButtons mouseButtonsFromState(int state) {
-#if QT_VERSION >= 0x040000
+static Qt::MouseButton mouseButtonFromState(int state) {
 	// Convertion of keyboard modifiers and mouse buttons as an int is no longer supported : emulate
-	return Qt::MouseButtons(state & 0xFFFF);
-#else
-	return Qt::MouseButtons(state & Qt::MouseButtonMask);
-#endif
-}
-
-static Qt::KeyboardModifiers convertKeyboardModifiers(Qt::KeyboardModifiers modifiers)
-{
-#if QT_VERSION < 0x040000
-	return Qt::KeyboardModifiers(convertToKeyboardModifiers(modifiers));
-#else
-	return modifiers;
-#endif
-}
-
-static int convertToShortModifier(int state)
-{
-	// Converts ControlButton, ShiftButton... to CTRL,SHIFT...
-	// convertToKeyboardModifiers does the opposite
-#if QT_VERSION < 0x040000
-	if (state & Qt::KeyButtonMask)
-	{
-		if (state & Qt::ControlButton) { state &= ~Qt::ControlButton;	state |= Qt::CTRL; }
-		if (state & Qt::ShiftButton)   { state &= ~Qt::ShiftButton;	state |= Qt::SHIFT; }
-		if (state & Qt::AltButton)     { state &= ~Qt::AltButton;		state |= Qt::ALT; }
-# if QT_VERSION >= 0x030100
-		if (state & Qt::MetaButton)    { state &= ~Qt::MetaButton; 	state |= Qt::META; }
-# endif
-	}
-#endif
-	return state;
+	return Qt::MouseButton(state & 0xFFFF);
 }
 
 /*! Initializes the QGLViewer OpenGL context and then calls user-defined init().
@@ -535,25 +447,25 @@ void QGLViewer::setCameraIsEdited(bool edit)
 void QGLViewer::setDefaultShortcuts()
 {
 	// D e f a u l t   a c c e l e r a t o r s
-	setShortcut(DRAW_AXIS,	Qt::Key_A);
-	setShortcut(DRAW_GRID,	Qt::Key_G);
-	setShortcut(DISPLAY_FPS,	Qt::Key_F);
-	setShortcut(ENABLE_TEXT,	Qt::SHIFT+Qt::Key_Question);
-	setShortcut(EXIT_VIEWER,	Qt::Key_Escape);
-	setShortcut(SAVE_SCREENSHOT,	Qt::CTRL+Qt::Key_S);
-	setShortcut(CAMERA_MODE,	Qt::Key_Space);
-	setShortcut(FULL_SCREEN,	Qt::ALT+Qt::Key_Return);
-	setShortcut(STEREO,		Qt::Key_S);
-	setShortcut(ANIMATION,	Qt::Key_Return);
-	setShortcut(HELP,		Qt::Key_H);
-	setShortcut(EDIT_CAMERA,	Qt::Key_C);
-	setShortcut(MOVE_CAMERA_LEFT,	Qt::Key_Left);
+	setShortcut(DRAW_AXIS, Qt::Key_A);
+	setShortcut(DRAW_GRID, Qt::Key_G);
+	setShortcut(DISPLAY_FPS, Qt::Key_F);
+	setShortcut(ENABLE_TEXT, Qt::SHIFT+Qt::Key_Question);
+	setShortcut(EXIT_VIEWER, Qt::Key_Escape);
+	setShortcut(SAVE_SCREENSHOT, Qt::CTRL+Qt::Key_S);
+	setShortcut(CAMERA_MODE, Qt::Key_Space);
+	setShortcut(FULL_SCREEN, Qt::ALT+Qt::Key_Return);
+	setShortcut(STEREO, Qt::Key_S);
+	setShortcut(ANIMATION, Qt::Key_Return);
+	setShortcut(HELP, Qt::Key_H);
+	setShortcut(EDIT_CAMERA, Qt::Key_C);
+	setShortcut(MOVE_CAMERA_LEFT, Qt::Key_Left);
 	setShortcut(MOVE_CAMERA_RIGHT,Qt::Key_Right);
-	setShortcut(MOVE_CAMERA_UP,	Qt::Key_Up);
-	setShortcut(MOVE_CAMERA_DOWN,	Qt::Key_Down);
-	setShortcut(INCREASE_FLYSPEED,Qt::Key_Plus);
-	setShortcut(DECREASE_FLYSPEED,Qt::Key_Minus);
-	setShortcut(SNAPSHOT_TO_CLIPBOARD,Qt::CTRL+Qt::Key_C);
+	setShortcut(MOVE_CAMERA_UP, Qt::Key_Up);
+	setShortcut(MOVE_CAMERA_DOWN, Qt::Key_Down);
+	setShortcut(INCREASE_FLYSPEED, Qt::Key_Plus);
+	setShortcut(DECREASE_FLYSPEED, Qt::Key_Minus);
+	setShortcut(SNAPSHOT_TO_CLIPBOARD, Qt::CTRL+Qt::Key_C);
 
 	keyboardActionDescription_[DISPLAY_FPS] = tr("Toggles the display of the FPS", "DISPLAY_FPS action description");
 	keyboardActionDescription_[SAVE_SCREENSHOT] = tr("Saves a screenshot", "SAVE_SCREENSHOT action description");
@@ -589,87 +501,63 @@ void QGLViewer::setDefaultShortcuts()
 	setPathKey(Qt::Key_F11, 11);
 	setPathKey(Qt::Key_F12, 12);
 
-#if QT_VERSION >= 0x040000
 	setAddKeyFrameKeyboardModifiers(Qt::AltModifier);
 	setPlayPathKeyboardModifiers(Qt::NoModifier);
-#else
-	setAddKeyFrameKeyboardModifiers(Qt::AltButton);
-	setPlayPathKeyboardModifiers(Qt::NoButton);
-#endif
 }
 
 // M o u s e   b e h a v i o r
 void QGLViewer::setDefaultMouseBindings()
 {
-#if QT_VERSION >= 0x040000
 	const Qt::KeyboardModifiers cameraKeyboardModifiers = Qt::NoModifier;
 	const Qt::KeyboardModifiers frameKeyboardModifiers = Qt::ControlModifier;
-#else
-	const Qt::KeyboardModifiers cameraKeyboardModifiers = Qt::NoButton;
-	const Qt::KeyboardModifiers frameKeyboardModifiers = Qt::ControlButton;
-#endif
+
 	//#CONNECTION# toggleCameraMode()
 	for (int handler=0; handler<2; ++handler)
 	{
 		MouseHandler mh = (MouseHandler)(handler);
 		Qt::KeyboardModifiers modifiers = (mh == FRAME) ? frameKeyboardModifiers : cameraKeyboardModifiers;
-		
+
 		setMouseBinding(modifiers, Qt::LeftButton,  mh, ROTATE);
 		setMouseBinding(modifiers, Qt::MidButton,   mh, ZOOM);
 		setMouseBinding(modifiers, Qt::RightButton, mh, TRANSLATE);
 
-		setMouseBinding(modifiers, Qt::LeftButton | Qt::MidButton,  mh, SCREEN_ROTATE);
-		// 2.2.4 setMouseBinding(modifiers | Qt::RightButton | Qt::MidButton,  mh, SCREEN_TRANSLATE);
+		setMouseBinding(Qt::Key_R, modifiers, Qt::LeftButton, mh, SCREEN_ROTATE);
 
 		setWheelBinding(modifiers, mh, ZOOM);
 	}
 
-#if QT_VERSION >= 0x040000
 	// Z o o m   o n   r e g i o n
 	setMouseBinding(Qt::ShiftModifier, Qt::MidButton, CAMERA, ZOOM_ON_REGION);
+
 	// S e l e c t
 	setMouseBinding(Qt::ShiftModifier, Qt::LeftButton, SELECT);
-#else
-	setMouseBinding(Qt::ShiftModifier, Qt::MidButton, CAMERA, ZOOM_ON_REGION);
-	setMouseBinding(Qt::ShiftModifier, Qt::LeftButton, SELECT);
-#endif
 
+	setMouseBinding(Qt::ShiftModifier, Qt::RightButton, RAP_FROM_PIXEL);
 	// D o u b l e   c l i c k
-	setMouseBinding(Qt::NoModifier, Qt::LeftButton,  ALIGN_CAMERA,      true);
-	setMouseBinding(Qt::NoModifier, Qt::MidButton,   SHOW_ENTIRE_SCENE, true);
-	setMouseBinding(Qt::NoModifier, Qt::RightButton, CENTER_SCENE,      true);
+	setMouseBinding(Qt::NoModifier, Qt::LeftButton, ALIGN_CAMERA,      true);
+	setMouseBinding(Qt::NoModifier, Qt::MidButton,  SHOW_ENTIRE_SCENE, true);
+	setMouseBinding(Qt::NoModifier, Qt::RightButton, CENTER_SCENE,     true);
 
-	setMouseBinding(frameKeyboardModifiers, Qt::LeftButton,  ALIGN_FRAME,  true);
+	setMouseBinding(frameKeyboardModifiers, Qt::LeftButton, ALIGN_FRAME, true);
+	// middle double click makes no sense for manipulated frame
 	setMouseBinding(frameKeyboardModifiers, Qt::RightButton, CENTER_FRAME, true);
 
-	// S p e c i f i c   d o u b l e   c l i c k s
-	setMouseBinding(Qt::NoModifier, Qt::LeftButton,  RAP_FROM_PIXEL, true, Qt::RightButton);
-	setMouseBinding(Qt::NoModifier, Qt::RightButton, RAP_IS_CENTER,  true, Qt::LeftButton);
-	setMouseBinding(Qt::NoModifier, Qt::LeftButton,  ZOOM_ON_PIXEL,  true, Qt::MidButton);
-	setMouseBinding(Qt::NoModifier, Qt::RightButton, ZOOM_TO_FIT,    true, Qt::MidButton);
+	// A c t i o n s   w i t h   k e y   m o d i f i e r s
+	setMouseBinding(Qt::Key_Z, Qt::NoModifier, Qt::LeftButton, ZOOM_ON_PIXEL);
+	setMouseBinding(Qt::Key_Z, Qt::NoModifier, Qt::RightButton, ZOOM_TO_FIT);
 
 #ifdef Q_OS_MAC
-	// Specific Mac bindings. Double finger emulates a wheelEvent which zooms.
-	// Make Option + left emulate the right button. Other bindings should be changed accordingly.
+	// Specific Mac bindings for touchpads. Double finger emulates a wheelEvent which zooms.
+	// There is no right button available : make Option key + left emulate the right button.
+	// A Control+Left indeed emulates a right click (OS X system configuration), but it does
+	// no seem to support dragging.
 	// Done at the end to override previous settings.
-# if QT_VERSION >= 0x040000
 	const Qt::KeyboardModifiers macKeyboardModifiers = Qt::AltModifier;
-# else
-	const Qt::KeyboardModifiers macKeyboardModifiers = Qt::AltButton;
-# endif
 
 	setMouseBinding(macKeyboardModifiers, Qt::LeftButton, CAMERA, TRANSLATE);
 	setMouseBinding(macKeyboardModifiers, Qt::LeftButton, CENTER_SCENE, true);
 	setMouseBinding(frameKeyboardModifiers | macKeyboardModifiers, Qt::LeftButton, CENTER_FRAME, true);
 	setMouseBinding(frameKeyboardModifiers | macKeyboardModifiers, Qt::LeftButton, FRAME, TRANSLATE);
-	
-	// S p e c i f i c   d o u b l e   c l i c k s
-	// A single tap is actually seen as a left followed by a right button click.
-	setMouseBinding(Qt::MetaModifier, Qt::RightButton, RAP_FROM_PIXEL, true, Qt::LeftButton);
-	setMouseBinding(Qt::ShiftModifier | Qt::MetaModifier, Qt::RightButton, RAP_IS_CENTER,  true, Qt::LeftButton);
-	// A tap with two fingers is actually considered a rightButton.
-	setMouseBinding(Qt::MetaModifier, Qt::RightButton, ZOOM_ON_PIXEL, false);
-	setMouseBinding(Qt::ShiftModifier | Qt::MetaModifier, Qt::RightButton, ZOOM_TO_FIT, false);
 #endif
 }
 
@@ -821,7 +709,7 @@ conveniently remove all the displayed text with a single keyboard shortcut.
 
 See also displayMessage() to drawText() for only a short amount of time.
 
-Use QGLWidget::renderText(x,y,z, text) instead (Qt version >= 3.1) if you want to draw a text located 
+Use QGLWidget::renderText(x,y,z, text) instead (Qt version >= 3.1) if you want to draw a text located
  at a specific 3D position instead of 2D screen coordinates (fixed size text, facing the camera).
 
 The \c GL_MODELVIEW and \c GL_PROJECTION matrices are not modified by this method.
@@ -978,15 +866,8 @@ void QGLViewer::displayMessage(const QString& message, int delay)
 {
 	message_ = message;
 	displayMessage_ = true;
-#if QT_VERSION >= 0x040000
 	// Was set to single shot in defaultConstructor.
 	messageTimer_.start(delay);
-#else
-	if (messageTimer_.isActive())
-		messageTimer_.changeInterval(delay);
-	else
-		messageTimer_.start(delay, true);
-#endif
 	if (textIsEnabled())
 		update();
 }
@@ -1329,41 +1210,6 @@ void QGLViewer::setSelectBufferSize(int size)
 	selectBuffer_ = new GLuint[selectBufferSize()];
 }
 
-static QString keyboardModifiersString(Qt::KeyboardModifiers m, bool noButton=false)
-{
-#if QT_VERSION >= 0x040000
-	if (noButton && (m==Qt::NoModifier)) 
-#else
-	if (noButton && (m==Qt::NoButton))
-#endif
-		return QGLViewer::tr("(no button)");
-	
-	QString keySequence = "";
-
-#if QT_VERSION >= 0x040000
-	if (m & Qt::ControlModifier) keySequence += "Ctrl+";
-	if (m & Qt::AltModifier) keySequence += "Alt+";
-	if (m & Qt::ShiftModifier) keySequence += "Shift+";
-	if (m & Qt::MetaModifier) keySequence += "Meta+";
-#else
-	if (m & Qt::ControlButton) keySequence += "Ctrl+";
-	if (m & Qt::AltButton) keySequence += "Alt+";
-	if (m & Qt::ShiftButton) keySequence += "Shift+";
-# if QT_VERSION >= 0x030000
-	if (m & Qt::MetaButton) keySequence += "Meta+";
-# endif
-#endif
-
-	if (keySequence.length() > 0)
-#if QT_VERSION >= 0x040000
-		return QKeySequence(keySequence+"X").toString(QKeySequence::NativeText).replace("X", "");
-#else
-		return QString(QKeySequence(keySequence+"X")).replace("X", "");
-#endif
-	else
-		return QString();
-}
-
 static QString mouseButtonsString(Qt::MouseButtons b)
 {
 	QString result("");
@@ -1394,8 +1240,7 @@ void QGLViewer::performClickAction(ClickAction ca, const QMouseEvent* const e)
 		update();
 		break;
 	case RAP_FROM_PIXEL :
-		bool success = camera()->setRevolveAroundPointFromPixel(e->pos());
-		if (!success)
+		if (! camera()->setRevolveAroundPointFromPixel(e->pos()))
 			camera()->setRevolveAroundPoint(sceneCenter());
 		setVisualHintsMask(1);
 		update();
@@ -1445,15 +1290,7 @@ void QGLViewer::mousePressEvent(QMouseEvent* e)
 {
 	//#CONNECTION# mouseDoubleClickEvent has the same structure
 	//#CONNECTION# mouseString() concatenates bindings description in inverse order.
-#if QT_VERSION >= 0x040000
-	ClickBindingPrivate cbp(e->modifiers(), e->button(), false, (Qt::MouseButtons)(e->buttons() & ~(e->button())));
-#else
-	ClickBindingPrivate cbp(
-				(Qt::KeyboardModifiers)(e->state() & Qt::KeyboardModifierMask),
-				(Qt::MouseButtons)((e->stateAfter() & Qt::MouseButtonMask) & (~(e->state() & Qt::MouseButtonMask))),
-				false,
-				(Qt::MouseButtons)(e->state() & Qt::MouseButtonMask));
-#endif
+	ClickBindingPrivate cbp(e->modifiers(), e->button(), false, (Qt::MouseButtons)(e->buttons() & ~(e->button())), currentlyPressedKey_);
 
 	if (clickBinding_.contains(cbp)) {
 		performClickAction(clickBinding_[cbp], e);
@@ -1463,11 +1300,7 @@ void QGLViewer::mousePressEvent(QMouseEvent* e)
 			if (mouseGrabberIsAManipulatedFrame_)
 			{
 				for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator it=mouseBinding_.begin(), end=mouseBinding_.end(); it!=end; ++it)
-#if QT_VERSION >= 0x040000
-					if ((it.value().handler == FRAME) && (it.key().buttons == e->buttons()))
-#else
-					if ((it.data().handler == FRAME) && (it.key().buttons == (e->stateAfter() & Qt::MouseButtonMask)))
-#endif
+					if ((it.value().handler == FRAME) && (it.key().button == e->button()))
 					{
 						ManipulatedFrame* mf = dynamic_cast<ManipulatedFrame*>(mouseGrabber());
 						if (mouseGrabberIsAManipulatedCameraFrame_)
@@ -1490,11 +1323,7 @@ void QGLViewer::mousePressEvent(QMouseEvent* e)
 		else
 		{
 			//#CONNECTION# wheelEvent has the same structure
-#if QT_VERSION >= 0x040000
-			const MouseBindingPrivate mbp(e->modifiers(), e->buttons());
-#else
-			const int state = e->stateAfter();
-#endif
+			const MouseBindingPrivate mbp(e->modifiers(), e->button(), currentlyPressedKey_);
 
 			if (mouseBinding_.contains(mbp))
 			{
@@ -1605,14 +1434,8 @@ void QGLViewer::mouseMoveEvent(QMouseEvent* e)
 			else
 				if (hasMouseTracking())
 				{
-#if QT_VERSION >= 0x040000
 					Q_FOREACH (MouseGrabber* mg, MouseGrabber::MouseGrabberPool())
 					{
-#else
-					QPtrListIterator<MouseGrabber> it(MouseGrabber::MouseGrabberPool());
-					for (MouseGrabber* mg; (mg = it.current()); ++it)
-					{
-#endif
 						mg->checkIfGrabsMouse(e->x(), e->y(), camera());
 						if (mg->grabsMouse())
 						{
@@ -1651,23 +1474,15 @@ void QGLViewer::mouseReleaseEvent(QMouseEvent* e)
 		//#CONNECTION# mouseMoveEvent has the same structure
 		if (camera()->frame()->isManipulated())
 		{
-			// bool updateGLNeeded = ((camera()->frame()->action_ == ZOOM_ON_REGION) ||
-			// (camera()->frame()->action_ == SCREEN_ROTATE));
 			camera()->frame()->mouseReleaseEvent(e, camera());
-			// if (updateGLNeeded)
-			// Needed in all cases because of fastDraw().
-			// update();
 		}
 		else
 			if ((manipulatedFrame()) && (manipulatedFrame()->isManipulated()))
 			{
-				// bool updateGLNeeded = (manipulatedFrame()->action_ == SCREEN_ROTATE);
 				if (manipulatedFrameIsACamera_)
 					manipulatedFrame()->ManipulatedFrame::mouseReleaseEvent(e, camera());
 				else
 					manipulatedFrame()->mouseReleaseEvent(e, camera());
-				// if (updateGLNeeded)
-				// update();
 			}
 #if QT_VERSION >= 0x030000
 			else
@@ -1713,11 +1528,7 @@ void QGLViewer::wheelEvent(QWheelEvent* e)
 	else
 	{
 		//#CONNECTION# mousePressEvent has the same structure
-#if QT_VERSION >= 0x040000
 		const Qt::KeyboardModifiers modifiers = e->modifiers();
-#else
-		const Qt::KeyboardModifiers modifiers = e->state();
-#endif
 		if (wheelBinding_.contains(modifiers))
 		{
 			MouseActionPrivate map = wheelBinding_[modifiers];
@@ -1757,24 +1568,14 @@ The behavior of the mouse double click depends on the mouse binding. See setMous
 void QGLViewer::mouseDoubleClickEvent(QMouseEvent* e)
 {
 	//#CONNECTION# mousePressEvent has the same structure
-#if QT_VERSION >= 0x040000
-	ClickBindingPrivate cbp(e->modifiers(), e->button(), true, (Qt::MouseButtons)(e->buttons() & ~(e->button())));
-#else
-	ClickBindingPrivate cbp(
-				(Qt::KeyboardModifiers)(e->state() & Qt::KeyboardModifierMask),
-				(Qt::MouseButtons)((e->stateAfter() & Qt::MouseButtonMask) & (~(e->state() & Qt::MouseButtonMask))),
-				true,
-				(Qt::MouseButtons)(e->state() & Qt::MouseButtonMask));
-#endif
+	ClickBindingPrivate cbp(e->modifiers(), e->button(), true, (Qt::MouseButtons)(e->buttons() & ~(e->button())), currentlyPressedKey_);
 	if (clickBinding_.contains(cbp))
 		performClickAction(clickBinding_[cbp], e);
 	else
 		if (mouseGrabber())
 			mouseGrabber()->mouseDoubleClickEvent(e, camera());
-#if QT_VERSION >= 0x030000
 		else
 			e->ignore();
-#endif
 }
 
 /*! Sets the state of displaysInStereo(). See also toggleStereoDisplay().
@@ -1888,25 +1689,50 @@ QString QGLViewer::clickActionString(QGLViewer::ClickAction ca)
 	case QGLViewer::SELECT : return QGLViewer::tr("Selects", "SELECT click action");
 	case QGLViewer::RAP_FROM_PIXEL : return QGLViewer::tr("Sets revolve around point", "RAP_FROM_PIXEL click action");
 	case QGLViewer::RAP_IS_CENTER : return QGLViewer::tr("Resets revolve around point", "RAP_IS_CENTER click action");
-	case QGLViewer::CENTER_FRAME : return QGLViewer::tr("Centers frame", "CENTER_FRAME click action");
+	case QGLViewer::CENTER_FRAME : return QGLViewer::tr("Centers manipulated frame", "CENTER_FRAME click action");
 	case QGLViewer::CENTER_SCENE : return QGLViewer::tr("Centers scene", "CENTER_SCENE click action");
 	case QGLViewer::SHOW_ENTIRE_SCENE : return QGLViewer::tr("Shows entire scene", "SHOW_ENTIRE_SCENE click action");
-	case QGLViewer::ALIGN_FRAME : return QGLViewer::tr("Aligns frame", "ALIGN_FRAME click action");
+	case QGLViewer::ALIGN_FRAME : return QGLViewer::tr("Aligns manipulated frame", "ALIGN_FRAME click action");
 	case QGLViewer::ALIGN_CAMERA : return QGLViewer::tr("Aligns camera", "ALIGN_CAMERA click action");
 	}
 	return QString::null;
 }
 
+static QString keyString(int key)
+{
+# if QT_VERSION >= 0x040100
+	return QKeySequence(key).toString(QKeySequence::NativeText);
+# else
+	return QString(QKeySequence(key));
+# endif
+}
+
 QString QGLViewer::formatClickActionPrivate(ClickBindingPrivate cbp)
 {
 	bool buttonsBefore = cbp.buttonsBefore != Qt::NoButton;
+	QString keyModifierString = keyString(cbp.modifiers + cbp.key);
+	if (!keyModifierString.isEmpty()) {
+#ifdef Q_OS_MAC
+		// modifiers never has a '+' sign. Add one space to clearly separate modifiers (and possible key) from button
+		keyModifierString += " ";
+#else
+		// modifiers might be of the form : 'S' or 'Ctrl+S' or 'Ctrl+'. For consistency, add an other '+' if needed, no spaces
+		if (!keyModifierString.endsWith('+'))
+			keyModifierString += "+";
+#endif
+	}
+
 	return tr("%1%2%3%4%5%6", "Modifier / button or wheel / double click / with / button / pressed")
-			.arg(keyboardModifiersString(cbp.modifiers))
-			.arg(mouseButtonsString(cbp.buttons)+(cbp.buttons == Qt::NoButton ? tr("Wheel", "Mouse wheel") : ""))
+			.arg(keyModifierString)
+			.arg(mouseButtonsString(cbp.button)+(cbp.button == Qt::NoButton ? tr("Wheel", "Mouse wheel") : ""))
 			.arg(cbp.doubleClick ? tr(" double click", "Suffix after mouse button") : "")
 			.arg(buttonsBefore ? tr(" with ", "As in : Left button with Ctrl pressed") : "")
 			.arg(buttonsBefore ? mouseButtonsString(cbp.buttonsBefore) : "")
 			.arg(buttonsBefore ? tr(" pressed", "As in : Left button with Ctrl pressed") : "");
+}
+
+bool QGLViewer::isValidShortcutKey(int key) {
+	return key >= Qt::Key_Any && key < Qt::Key_Escape;
 }
 
 #ifndef DOXYGEN
@@ -1917,22 +1743,29 @@ QString QGLViewer::formatClickActionPrivate(ClickBindingPrivate cbp)
 void QGLViewer::setMouseBindingDescription(int state, QString description, bool doubleClick, Qt::MouseButtons buttonsBefore) {
 	qWarning("setMouseBindingDescription(int state,...) is deprecated. Use the modifier/button equivalent");
 	setMouseBindingDescription(keyboardModifiersFromState(state),
-							   mouseButtonsFromState(state),
+							   mouseButtonFromState(state),
 							   description,
 							   doubleClick,
 							   buttonsBefore);
 }
 #endif
 
-/*! Provides a custom mouse binding description, displayed in the help() window's Mouse tab.
+/*! Defines a custom mouse binding description, displayed in the help() window's Mouse tab.
+
+ Same as calling setMouseBindingDescription(Qt::Key, Qt::KeyboardModifiers, Qt::MouseButton, QString, bool, Qt::MouseButtons),
+ with a key value of 0 (i.e. binding description when no regular key needs to be pressed). */
+void QGLViewer::setMouseBindingDescription(Qt::KeyboardModifiers modifiers, Qt::MouseButton button, QString description, bool doubleClick, Qt::MouseButtons buttonsBefore)
+{
+	setMouseBindingDescription(Qt::Key(0), modifiers, button, description, doubleClick, buttonsBefore);
+}
+
+/*! Defines a custom mouse binding description, displayed in the help() window's Mouse tab.
 
 \p modifiers is a combination of Qt::KeyboardModifiers (\c Qt::ControlModifier, \c Qt::AltModifier, \c
-Qt::ShiftModifier, \c Qt::MetaModifier).
+Qt::ShiftModifier, \c Qt::MetaModifier). Possibly combined using the \c "|" operator.
 
-\p buttons is a combination of Qt::MouseButtons (\c Qt::LeftButton, \c Qt::MidButton,
+\p button is one of the Qt::MouseButtons (\c Qt::LeftButton, \c Qt::MidButton,
 \c Qt::RightButton...).
-
-These are combined using the \c "|" operator.
 
 \p doubleClick indicates whether or not the user has to double click this button to perform the
 described action. \p buttonsBefore lists the buttons that need to be pressed before the double click.
@@ -1940,8 +1773,8 @@ described action. \p buttonsBefore lists the buttons that need to be pressed bef
 Set an empty \p description to \e remove a mouse binding description.
 
 \code
-// Left and Right button together simulate a middle button
-setMouseBindingDescription(Qt::NoModifier, Qt::LeftButton | Qt::RightButton, "Emulates a middle button");
+// The R key combined with the Left mouse button rotates the camera in the screen plane.
+setMouseBindingDescription(Qt::Key_R, Qt::NoModifier, Qt::LeftButton, "Rotates camera in screen plane");
 
 // A left button double click toggles full screen
 setMouseBindingDescription(Qt::NoModifier, Qt::LeftButton, "Toggles full screen mode", true);
@@ -1961,9 +1794,9 @@ examples above (\c Qt::ControlButton, \c Qt::AltButton, ...).
 
 \note If you use Qt version 2 or 3, the \p buttonsBefore parameter type is actually a
 Qt::ButtonState. */
-void QGLViewer::setMouseBindingDescription(Qt::KeyboardModifiers modifiers, Qt::MouseButtons buttons, QString description, bool doubleClick, Qt::MouseButtons buttonsBefore)
+void QGLViewer::setMouseBindingDescription(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button, QString description, bool doubleClick, Qt::MouseButtons buttonsBefore)
 {
-	ClickBindingPrivate cbp(modifiers, buttons, doubleClick, buttonsBefore);
+	ClickBindingPrivate cbp(modifiers, button, doubleClick, buttonsBefore, key);
 
 	if (description.isEmpty())
 		mouseDescription_.remove(cbp);
@@ -2023,7 +1856,7 @@ QString QGLViewer::mouseString() const
 		text += tableLine(formatClickActionPrivate(it.key()), it.value());
 	}
 
-	// Optionnal separator line
+	// Optional separator line
 	if (!mouseBinding.isEmpty())
 	{
 		mouseBinding.clear();
@@ -2033,9 +1866,29 @@ QString QGLViewer::mouseString() const
 	// Then concatenates the descriptions of wheelBinding_, mouseBinding_ and clickBinding_.
 	// The order is significant and corresponds to the priorities set in mousePressEvent() (reverse priority order, last one overwrites previous)
 	// #CONNECTION# mousePressEvent() order
+	for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator itmb=mouseBinding_.begin(), endmb=mouseBinding_.end();
+		 itmb != endmb; ++itmb)
+	{
+		ClickBindingPrivate cbp(itmb.key().modifiers, itmb.key().button, false, Qt::NoButton, itmb.key().key);
+
+		QString text = mouseActionString(itmb.value().action);
+
+		if (!text.isNull())
+		{
+			switch (itmb.value().handler)
+			{
+			case CAMERA: text += " " + tr("camera", "Suffix after action"); break;
+			case FRAME:  text += " " + tr("manipulated frame", "Suffix after action"); break;
+			}
+			if (!(itmb.value().withConstraint))
+				text += "*";
+		}
+		mouseBinding[cbp] = text;
+	}
+
 	for (QMap<Qt::KeyboardModifiers, MouseActionPrivate>::ConstIterator itw=wheelBinding_.begin(), endw=wheelBinding_.end(); itw != endw; ++itw)
 	{
-		ClickBindingPrivate cbp(itw.key(), Qt::NoButton, false, Qt::NoButton);
+		ClickBindingPrivate cbp(itw.key(), Qt::NoButton, false, Qt::NoButton, Qt::Key(0));
 
 		QString text = mouseActionString(itw.value().action);
 
@@ -2050,26 +1903,6 @@ QString QGLViewer::mouseString() const
 				text += "*";
 		}
 
-		mouseBinding[cbp] = text;
-	}
-
-	for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator itmb=mouseBinding_.begin(), endmb=mouseBinding_.end();
-		 itmb != endmb; ++itmb)
-	{
-		ClickBindingPrivate cbp(itmb.key().modifiers, itmb.key().buttons, false, Qt::NoButton);
-
-		QString text = mouseActionString(itmb.value().action);
-
-		if (!text.isNull())
-		{
-			switch (itmb.value().handler)
-			{
-			case CAMERA: text += " " + tr("camera", "Suffix after action"); break;
-			case FRAME:  text += " " + tr("manipulated frame", "Suffix after action"); break;
-			}
-			if (!(itmb.value().withConstraint))
-				text += "*";
-		}
 		mouseBinding[cbp] = text;
 	}
 
@@ -2105,28 +1938,10 @@ See the <a href="../examples/keyboardAndMouse.html">keyboardAndMouse example</a>
 and the <a href="../keyboard.html">keyboard page</a> for details. */
 void QGLViewer::setKeyDescription(int key, QString description)
 {
-#if QT_VERSION >= 0x030000
-	// #CONNECTION# keyString. In Qt 2.3, longs modifier overlap with key codes.
-	key = convertToKeyboardModifiers(key);
-#endif
 	if (description.isEmpty())
 		keyDescription_.remove(key);
 	else
 		keyDescription_[key] = description;
-}
-
-static QString keyString(int key)
-{
-#if QT_VERSION >= 0x030000
-# if QT_VERSION >= 0x040100
-	return QKeySequence(convertToShortModifier(key)).toString();
-# else
-	return QString(QKeySequence(convertToShortModifier(key)));
-# endif
-#else
-	// #CONNECTION# setKeyDescription. In Qt 2.3, long modifiers overlap with key codes.
-	return QString(QKeySequence(key));
-#endif
 }
 
 QString QGLViewer::cameraPathKeysString() const
@@ -2134,29 +1949,13 @@ QString QGLViewer::cameraPathKeysString() const
 	if (pathIndex_.isEmpty())
 		return QString::null;
 
-#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
 	QVector<int> keys;
-#else
-	QValueVector<int> keys;
-#endif
 	keys.reserve(pathIndex_.count());
 	for (QMap<Qt::Key, int>::ConstIterator i = pathIndex_.begin(), endi=pathIndex_.end(); i != endi; ++i)
 		keys.push_back(i.key());
-#if QT_VERSION >= 0x040000
 	qSort(keys);
-#else
-# if QT_VERSION >= 0x030000
-	qHeapSort(keys);
-# else
-	sort(keys.begin(), keys.end());
-# endif
-#endif
 
-#if QT_VERSION >= 0x040000 || QT_VERSION < 0x030000
 	QVector<int>::const_iterator it = keys.begin(), end = keys.end();
-#else
-	QValueVector<int>::const_iterator it = keys.begin(), end = keys.end();
-#endif
 	QString res = keyString(*it);
 
 	const int maxDisplayedKeys = 6;
@@ -2260,12 +2059,12 @@ QString QGLViewer::keyboardString() const
 	if (!cpks.isNull())
 	{
 		text += "<tr bgcolor=\"#ccccff\"><td colspan=2>\n";
-		text += QGLViewer::tr("Camera paths are controlled using %1 (noted <i>Fx</i> below):", "Help window key tab camera keys").arg(cpks) + "</td></tr>\n";
-		text += tableLine(keyboardModifiersString(playPathKeyboardModifiers()) + "<i>" + QGLViewer::tr("Fx", "Generic function key (F1..F12)") + "</i>",
+		text += QGLViewer::tr("Camera paths are controlled using the %1 keys (noted <i>Fx</i> below):", "Help window key tab camera keys").arg(cpks) + "</td></tr>\n";
+		text += tableLine(keyString(playPathKeyboardModifiers()) + "<i>" + QGLViewer::tr("Fx", "Generic function key (F1..F12)") + "</i>",
 						  QGLViewer::tr("Plays path (or resets saved position)"));
-		text += tableLine(keyboardModifiersString(addKeyFrameKeyboardModifiers()) + "<i>" + QGLViewer::tr("Fx", "Generic function key (F1..F12)") + "</i>",
+		text += tableLine(keyString(addKeyFrameKeyboardModifiers()) + "<i>" + QGLViewer::tr("Fx", "Generic function key (F1..F12)") + "</i>",
 						  QGLViewer::tr("Adds a key frame to path (or defines a position)"));
-		text += tableLine(keyboardModifiersString(addKeyFrameKeyboardModifiers()) + "<i>" + QGLViewer::tr("Fx", "Generic function key (F1..F12)") + "</i>+<i>" + QGLViewer::tr("Fx", "Generic function key (F1..F12)") + "</i>",
+		text += tableLine(keyString(addKeyFrameKeyboardModifiers()) + "<i>" + QGLViewer::tr("Fx", "Generic function key (F1..F12)") + "</i>+<i>" + QGLViewer::tr("Fx", "Generic function key (F1..F12)") + "</i>",
 						  QGLViewer::tr("Deletes path (or saved position)"));
 	}
 	text += "</table></center>";
@@ -2276,11 +2075,7 @@ QString QGLViewer::keyboardString() const
 /*! Displays the help window "About" tab. See help() for details. */
 void QGLViewer::aboutQGLViewer() {
 	help();
-#if QT_VERSION >= 0x040000
 	helpWidget()->setCurrentIndex(3);
-#else
-	helpWidget()->setCurrentPage(3);
-#endif
 }
 
 
@@ -2307,21 +2102,14 @@ void QGLViewer::help()
 	{
 		// Qt4 requires a NULL parent...
 		helpWidget_ = new QTabWidget(NULL);
-#if QT_VERSION >= 0x040000
 		helpWidget()->setWindowTitle(tr("Help", "Help window title"));
-#else
-		helpWidget()->setCaption(tr("Help", "Help window title"));
-#endif
 
 		resize = true;
 		for (int i=0; i<4; ++i)
 		{
 			QTextEdit* tab = new QTextEdit(NULL);
-#if QT_VERSION >= 0x030000
 			tab->setReadOnly(true);
-#endif
 
-#if QT_VERSION >= 0x040000
 			helpWidget()->insertTab(i, tab, label[i]);
 			if (i==3) {
 #               include "qglviewer-icon.xpm"
@@ -2329,14 +2117,10 @@ void QGLViewer::help()
 				tab->document()->addResource(QTextDocument::ImageResource,
 											 QUrl("mydata://qglviewer-icon.xpm"), QVariant(pixmap));
 			}
-#else
-			tab->setTextFormat(Qt::RichText);
-			helpWidget()->insertTab(tab, label[i]);
-#endif
 		}
 	}
-	
-	
+
+
 #if QT_VERSION < 0x030000
 	const int currentPageIndex = helpWidget()->currentPageIndex();
 #endif
@@ -2360,31 +2144,13 @@ void QGLViewer::help()
 		default : break;
 		}
 
-#if QT_VERSION >= 0x040000
 		QTextEdit* textEdit = (QTextEdit*)(helpWidget()->widget(i));
 		textEdit->setHtml(text);
-#else
-# if QT_VERSION < 0x030000
-		helpWidget()->setCurrentPage(i);
-		QTextEdit* textEdit = (QTextEdit*)(helpWidget()->currentPage());
-# else
-		QTextEdit* textEdit = (QTextEdit*)(helpWidget()->page(i));
-# endif
 		textEdit->setText(text);
-#endif
 
-#if QT_VERSION < 0x040000
-		if (resize && (textEdit->heightForWidth(width) > height))
-			height = textEdit->heightForWidth(width);
-#else
 		if (resize && (textEdit->height() > height))
 			height = textEdit->height();
-#endif
 	}
-
-#if QT_VERSION < 0x030000
-	helpWidget()->setCurrentPage(currentPageIndex);
-#endif
 
 	if (resize)
 		helpWidget()->resize(width, height+40); // 40 pixels is ~ tabs' height
@@ -2427,11 +2193,8 @@ void QGLViewer::keyPressEvent(QKeyEvent *e)
 	}
 
 	const Qt::Key key = Qt::Key(e->key());
-#if QT_VERSION >= 0x040000
+
 	const Qt::KeyboardModifiers modifiers = e->modifiers();
-#else
-	const Qt::KeyboardModifiers modifiers = (Qt::KeyboardModifiers)(e->state() & Qt::KeyboardModifierMask);
-#endif
 
 	QMap<KeyboardAction, unsigned int>::ConstIterator it=keyboardBinding_.begin(), end=keyboardBinding_.end();
 	const unsigned int target = key | modifiers;
@@ -2446,7 +2209,8 @@ void QGLViewer::keyPressEvent(QKeyEvent *e)
 			// Camera paths
 			int index = pathIndex_[Qt::Key(key)];
 
-			static QTime doublePress; // try to double press on two viewers at the same time !
+			// not safe, but try to double press on two viewers at the same time !
+			static QTime doublePress;
 
 			if (modifiers == playPathKeyboardModifiers())
 			{
@@ -2496,9 +2260,14 @@ void QGLViewer::keyPressEvent(QKeyEvent *e)
 				previousPathId_ = index;
 			}
 			update();
-		}
-		else
+		} else {
+			if (isValidShortcutKey(key)) currentlyPressedKey_ = key;
 			e->ignore();
+		}
+}
+
+void QGLViewer::keyReleaseEvent(QKeyEvent * e) {
+	if (isValidShortcutKey(e->key())) currentlyPressedKey_ = Qt::Key(0);
 }
 
 void QGLViewer::handleKeyboardAction(KeyboardAction id)
@@ -2531,7 +2300,7 @@ void QGLViewer::handleKeyboardAction(KeyboardAction id)
 		update();
 		break;
 	case MOVE_CAMERA_UP :
-		camera()->frame()->translate(camera()->frame()->inverseTransformOf(Vec(0.0,  10.0*camera()->flySpeed(), 0.0)));
+		camera()->frame()->translate(camera()->frame()->inverseTransformOf(Vec(0.0, 10.0*camera()->flySpeed(), 0.0)));
 		update();
 		break;
 	case MOVE_CAMERA_DOWN :
@@ -2578,7 +2347,7 @@ previous ones). If several KeyboardAction are binded to the same shortcut, only 
 active. */
 void QGLViewer::setShortcut(KeyboardAction action, unsigned int key)
 {
-	keyboardBinding_[action] = convertToKeyboardModifiers(key);
+	keyboardBinding_[action] = key;
 }
 
 /*! Returns the keyboard shortcut associated to a given QGLViewer::KeyboardAction.
@@ -2599,7 +2368,7 @@ illustration. */
 unsigned int QGLViewer::shortcut(KeyboardAction action) const
 {
 	if (keyboardBinding_.contains(action))
-		return convertToShortModifier(keyboardBinding_[action]);
+		return keyboardBinding_[action];
 	else
 		return 0;
 }
@@ -2665,13 +2434,13 @@ void QGLViewer::setPathKey(int key, int index)
 /*! Sets the playPathKeyboardModifiers() value. */
 void QGLViewer::setPlayPathKeyboardModifiers(Qt::KeyboardModifiers modifiers)
 {
-	playPathKeyboardModifiers_ = convertKeyboardModifiers(modifiers);
+	playPathKeyboardModifiers_ = modifiers;
 }
 
 /*! Sets the addKeyFrameKeyboardModifiers() value. */
 void QGLViewer::setAddKeyFrameKeyboardModifiers(Qt::KeyboardModifiers modifiers)
 {
-	addKeyFrameKeyboardModifiers_ = convertKeyboardModifiers(modifiers);
+	addKeyFrameKeyboardModifiers_ = modifiers;
 }
 
 /*! Returns the keyboard modifiers that must be pressed with a pathKey() to add the current camera
@@ -2765,8 +2534,7 @@ void QGLViewer::setPlayKeyFramePathStateKey(int buttonState)
 /*! Associates keyboard modifiers to MouseHandler \p handler.
 
 The \p modifiers parameter is \c Qt::AltModifier, \c Qt::ShiftModifier, \c Qt::ControlModifier, \c
-Qt::MetaModifier or a combination of these using the '|' bitwise operator. Some shorter names are
-also available: \c Qt::ALT, \c Qt::CTRL, \c Qt::SHIFT or \c QT::META.
+Qt::MetaModifier or a combination of these using the '|' bitwise operator.
 
 \e All the \p handler's associated bindings will then need the specified \p modifiers key(s) to be
 activated.
@@ -2774,7 +2542,7 @@ activated.
 With this code,
 \code
 setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::AltModifier);
-setHandlerKeyboardModifiers(QGLViewer::FRAME,  Qt::NoModifier);
+setHandlerKeyboardModifiers(QGLViewer::FRAME, Qt::NoModifier);
 \endcode
 you will have to press the \c Alt key while pressing mouse buttons in order to move the camera(),
 while no key will be needed to move the manipulatedFrame().
@@ -2822,11 +2590,10 @@ void QGLViewer::setHandlerKeyboardModifiers(MouseHandler handler, Qt::KeyboardMo
 			newWheelBinding[wit.key()] = wit.value();
 
 	// Then, add modified bindings, that can overwrite the previous ones.
-	modifiers = convertKeyboardModifiers(modifiers);
 	for (mit = mouseBinding_.begin(); mit != mouseBinding_.end(); ++mit)
 		if ((mit.value().handler == handler) && (mit.value().action != ZOOM_ON_REGION))
 		{
-			MouseBindingPrivate mbp(modifiers, mit.key().buttons);
+			MouseBindingPrivate mbp(modifiers, mit.key().button, mit.key().key);
 			newMouseBinding[mbp] = mit.value();
 		}
 
@@ -2841,7 +2608,7 @@ void QGLViewer::setHandlerKeyboardModifiers(MouseHandler handler, Qt::KeyboardMo
 		if (((handler==CAMERA) && ((cb.value() == CENTER_SCENE) || (cb.value() == ALIGN_CAMERA))) ||
 				((handler==FRAME)  && ((cb.value() == CENTER_FRAME) || (cb.value() == ALIGN_FRAME))))
 		{
-			ClickBindingPrivate cbp(modifiers, cb.key().buttons, cb.key().doubleClick, cb.key().buttonsBefore);
+			ClickBindingPrivate cbp(modifiers, cb.key().button, cb.key().doubleClick, cb.key().buttonsBefore, cb.key().key);
 			newClickBinding_[cbp] = cb.value();
 		}
 		else
@@ -2874,28 +2641,40 @@ void QGLViewer::setMouseBinding(int state, MouseHandler handler, MouseAction act
 {
 	qWarning("setMouseBinding(int state, MouseHandler...) is deprecated. Use the modifier/button equivalent");
 	setMouseBinding(keyboardModifiersFromState(state),
-					mouseButtonsFromState(state),
+					mouseButtonFromState(state),
 					handler,
 					action,
 					withConstraint);
 }
 #endif
 
-/*! Associates a MouseAction to any mouse \p buttons and keyboard \p modifiers. The
-receiver of the mouse events is a MouseHandler (QGLViewer::CAMERA or QGLViewer::FRAME).
+/*! Defines a MouseAction binding.
 
-The parameters should read: when the mouse \p buttons and keyboard \p modifiers are pressed,
-activate \p action on \p handler. If \p withConstraint is \c true (default), the
-qglviewer::Frame::constraint() associated with the Frame will be enforced during motion.
+  Same as calling setMouseBinding(Qt::Key, Qt::KeyboardModifiers, Qt::MouseButton, MouseHandler, MouseAction, bool),
+  with a key value of 0 (i.e. no regular extra key needs to be pressed to perform this action). */
+void QGLViewer::setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButton button, MouseHandler handler, MouseAction action, bool withConstraint) {
+	setMouseBinding(Qt::Key(0), modifiers, button, handler, action, withConstraint);
+}
 
-Use the '|' operator to combine keys and buttons:
+/*! Associates a MouseAction to any mouse \p button, while keyboard \p modifiers and \p key are pressed.
+The receiver of the mouse events is a MouseHandler (QGLViewer::CAMERA or QGLViewer::FRAME).
+
+The parameters should read: when the mouse \p button is pressed, while the keyboard \p modifiers and \p key are down,
+activate \p action on \p handler. Use Qt::NoModifier to indicate that no modifier
+key is needed, and a \p key value of 0 if no regular key has to be pressed
+(or simply use setMouseBinding(Qt::KeyboardModifiers, Qt::MouseButton, MouseHandler, MouseAction, bool)).
+
+Use the '|' operator to combine modifiers:
 \code
-// Left and right buttons together make a camera zoom (emulates a mouse third button if needed).
-setMouseBinding(Qt::NoModifier, Qt::LeftButton | Qt::RightButton, CAMERA, ZOOM);
+// The R key combined with the Left mouse button rotates the camera in the screen plane.
+setMouseBinding(Qt::Key_R, Qt::NoModifier, Qt::LeftButton, CAMERA, SCREEN_ROTATE);
 
 // Alt + Shift and Left button rotates the manipulatedFrame().
 setMouseBinding(Qt::AltModifier | Qt::ShiftModifier, Qt::LeftButton, FRAME, ROTATE);
 \endcode
+
+If \p withConstraint is \c true (default), the possible
+qglviewer::Frame::constraint() of the associated Frame will be enforced during motion.
 
 The list of all possible MouseAction, some binding examples and default bindings are provided in
 the <a href="../mouse.html">mouse page</a>.
@@ -2909,20 +2688,16 @@ before to check).
 To remove a specific mouse binding, use \p NO_MOUSE_ACTION as the \p action.
 
 See also setMouseBinding(Qt::KeyboardModifiers, Qt::MouseButtons, ClickAction, bool, int), setWheelBinding() and clearMouseBindings(). */
-void QGLViewer::setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButtons buttons, MouseHandler handler, MouseAction action, bool withConstraint)
+void QGLViewer::setMouseBinding(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button, MouseHandler handler, MouseAction action, bool withConstraint)
 {
 	if ((handler == FRAME) && ((action == MOVE_FORWARD) || (action == MOVE_BACKWARD) ||
 							   (action == ROLL) || (action == LOOK_AROUND) ||
 							   (action == ZOOM_ON_REGION)))	{
-#if QT_VERSION >= 0x040000
 		qWarning("Cannot bind %s to FRAME", mouseActionString(action).toLatin1().constData());
-#else
-		qWarning("Cannot bind %s to FRAME", mouseActionString(action).latin1());
-#endif
 		return;
 	}
 
-	if (buttons == Qt::NoButton) {
+	if (button == Qt::NoButton) {
 		qWarning("No mouse button specified in setMouseBinding");
 		return;
 	}
@@ -2932,13 +2707,13 @@ void QGLViewer::setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButton
 	map.action = action;
 	map.withConstraint = withConstraint;
 
-	MouseBindingPrivate mbp(modifiers, buttons);
+	MouseBindingPrivate mbp(modifiers, button, key);
 	if (action == NO_MOUSE_ACTION)
 		mouseBinding_.remove(mbp);
 	else
 		mouseBinding_.insert(mbp, map);
 
-	ClickBindingPrivate cbp(modifiers, buttons, false, Qt::NoButton);
+	ClickBindingPrivate cbp(modifiers, button, false, Qt::NoButton, key);
 	clickBinding_.remove(cbp);
 }
 
@@ -2950,17 +2725,28 @@ void QGLViewer::setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButton
 void QGLViewer::setMouseBinding(int state, ClickAction action, bool doubleClick, Qt::MouseButtons buttonsBefore) {
 	qWarning("setMouseBinding(int state, ClickAction...) is deprecated. Use the modifier/button equivalent");
 	setMouseBinding(keyboardModifiersFromState(state),
-					mouseButtonsFromState(state),
+					mouseButtonFromState(state),
 					action,
 					doubleClick,
 					buttonsBefore);
 }
 #endif
 
-/*! Associates a ClickAction to any mouse button(s) and keyboard modifier(s) combination.
+/*! Defines a ClickAction binding.
 
-The parameters should read: when the \p buttons is (are) pressed with the \p modifiers
-keyboard modifiers pressed (possibly Qt::NoModifier), and possibly as a \p doubleClick, then perform \p action.
+ Same as calling setMouseBinding(Qt::Key, Qt::KeyboardModifiers, Qt::MouseButton, ClickAction, bool, Qt::MouseButtons),
+ with a key value of 0 (i.e. no regular key needs to be pressed to activate this action) */
+void QGLViewer::setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButton button, ClickAction action, bool doubleClick, Qt::MouseButtons buttonsBefore)
+{
+	setMouseBinding(Qt::Key(0), modifiers, button, action, doubleClick, buttonsBefore);
+}
+
+/*! Associates a ClickAction to a button and keyboard key and modifier(s) combination.
+
+The parameters should read: when \p button is pressed, while the \p modifiers and \p key keys are down,
+and possibly as a \p doubleClick, then perform \p action. Use Qt::NoModifier to indicate that no modifier
+key is needed, and a \p key value of 0 if no regular key has to be pressed (or simply use
+setMouseBinding(Qt::KeyboardModifiers, Qt::MouseButton, ClickAction, bool, Qt::MouseButtons)).
 
 If \p buttonsBefore is specified (valid only when \p doubleClick is \c true), then this (or these) other mouse
 button(s) has (have) to be pressed \e before the double click occurs in order to execute \p action.
@@ -2976,27 +2762,28 @@ The binding is ignored if Qt::NoButton is specified as \p buttons.
 See also setMouseBinding(Qt::KeyboardModifiers, Qt::MouseButtons, MouseHandler, MouseAction, bool), setWheelBinding() and clearMouseBindings().
 
 \note If you use Qt version 2 or 3, the \p buttonsBefore parameter is actually a Qt::ButtonState. */
-void QGLViewer::setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButtons buttons, ClickAction action, bool doubleClick, Qt::MouseButtons buttonsBefore)
+void QGLViewer::setMouseBinding(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button, ClickAction action, bool doubleClick, Qt::MouseButtons buttonsBefore)
 {
 	if ((buttonsBefore != Qt::NoButton) && !doubleClick) {
 		qWarning("Buttons before is only meaningful when doubleClick is true in setMouseBinding().");
 		return;
 	}
 
-	if (buttons == Qt::NoButton) {
+	if (button == Qt::NoButton) {
 		qWarning("No mouse button specified in setMouseBinding");
 		return;
 	}
 
-	ClickBindingPrivate cbp(modifiers, buttons, doubleClick, buttonsBefore);
-	clickBinding_.remove(cbp);
+	ClickBindingPrivate cbp(modifiers, button, doubleClick, buttonsBefore, key);
 
 	// #CONNECTION performClickAction comment on NO_CLICK_ACTION
-	if (action != NO_CLICK_ACTION)
+	if (action == NO_CLICK_ACTION)
+		clickBinding_.remove(cbp);
+	else
 		clickBinding_.insert(cbp, action);
 
 	if ((!doubleClick) && (buttonsBefore == Qt::NoButton)) {
-		MouseBindingPrivate mbp(modifiers, buttons);
+		MouseBindingPrivate mbp(modifiers, button, key);
 		mouseBinding_.remove(mbp);
 	}
 }
@@ -3015,25 +2802,16 @@ void QGLViewer::setWheelBinding(Qt::KeyboardModifiers modifiers, MouseHandler ha
 {
 	//#CONNECTION# ManipulatedFrame::wheelEvent and ManipulatedCameraFrame::wheelEvent switches
 	if ((action != ZOOM) && (action != MOVE_FORWARD) && (action != MOVE_BACKWARD) && (action != NO_MOUSE_ACTION))
-#if QT_VERSION >= 0x040000
 		qWarning("Cannot bind %s to wheel", mouseActionString(action).toLatin1().constData());
-#else
-		qWarning("Cannot bind %s to wheel",  + mouseActionString(action).latin1());
-#endif
 	else
 		if ((handler == FRAME) && (action != ZOOM) && (action != NO_MOUSE_ACTION))
-#if QT_VERSION >= 0x040000
 			qWarning("Cannot bind %s to FRAME wheel", mouseActionString(action).toLatin1().constData());
-#else
-			qWarning("Cannot bind %s to FRAME wheel", mouseActionString(action).latin1());
-#endif
 		else
 		{
 			MouseActionPrivate map;
 			map.handler = handler;
 			map.action  = action;
 			map.withConstraint = withConstraint;
-			modifiers = convertKeyboardModifiers(modifiers);
 
 			if (action == NO_MOUSE_ACTION)
 				wheelBinding_.remove(modifiers);
@@ -3063,28 +2841,30 @@ void QGLViewer::clearShortcuts() {
 
 /*! This method is deprecated since version 2.5.0
 
- Use mouseAction(Qt::KeyboardModifiers, Qt::MouseButtons) instead.
+ Use mouseAction(Qt::Key, Qt::KeyboardModifiers, Qt::MouseButtons) instead.
 */
 QGLViewer::MouseAction QGLViewer::mouseAction(int state) const {
 	qWarning("mouseAction(int state,...) is deprecated. Use the modifier/button equivalent");
-	return mouseAction(keyboardModifiersFromState(state), mouseButtonsFromState(state));
+	return mouseAction(Qt::Key(0), keyboardModifiersFromState(state), mouseButtonFromState(state));
 }
 
-/*! Returns the MouseAction associated with the mouse \p buttons and keyboard \p modifiers.
+/*! Returns the MouseAction the will be triggered when the mouse \p button is pressed,
+while the keyboard \p modifiers and \p key are pressed.
 
-Returns QGLViewer::NO_MOUSE_ACTION if no action is associated with this combination.
+Returns QGLViewer::NO_MOUSE_ACTION if no action is associated with this combination. Use 0 for \p key
+to indicate that no regular key needs to be pressed.
 
 For instance, to know which motion corresponds to Alt+LeftButton, do:
 \code
-QGLViewer::MouseAction ma = mouseAction(Qt::ALT, Qt::LeftButton);
+QGLViewer::MouseAction ma = mouseAction(0, Qt::AltModifier, Qt::LeftButton);
 if (ma != QGLViewer::NO_MOUSE_ACTION) ...
 \endcode
 
 Use mouseHandler() to know which object (QGLViewer::CAMERA or QGLViewer::FRAME) will execute this
 action. */
-QGLViewer::MouseAction QGLViewer::mouseAction(Qt::KeyboardModifiers modifiers, Qt::MouseButtons buttons) const
+QGLViewer::MouseAction QGLViewer::mouseAction(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button) const
 {
-	MouseBindingPrivate mbp(modifiers, buttons);
+	MouseBindingPrivate mbp(modifiers, button, key);
 	if (mouseBinding_.contains(mbp))
 		return mouseBinding_[mbp].action;
 	else
@@ -3093,26 +2873,28 @@ QGLViewer::MouseAction QGLViewer::mouseAction(Qt::KeyboardModifiers modifiers, Q
 
 /*! This method is deprecated since version 2.5.0
 
- Use mouseHanler(Qt::KeyboardModifiers, Qt::MouseButtons) instead.
+ Use mouseHanler(Qt::Key, Qt::KeyboardModifiers, Qt::MouseButtons) instead.
 */
 int QGLViewer::mouseHandler(int state) const {
 	qWarning("mouseHandler(int state,...) is deprecated. Use the modifier/button equivalent");
-	return mouseHandler(keyboardModifiersFromState(state), mouseButtonsFromState(state));
+	return mouseHandler(Qt::Key(0), keyboardModifiersFromState(state), mouseButtonFromState(state));
 }
 
-/*! Returns the MouseHandler associated with the \p modifiers and \p buttons combination.
- If no action is associated, returns \c -1.
+/*! Returns the MouseHandler which will be activated when the mouse \p button is pressed, while the \p modifiers and \p key are pressed.
+
+If no action is associated with this combination, returns \c -1. Use 0 for \p key and Qt::NoModifier for \p modifiers
+to represent the lack of a key press.
 
 For instance, to know which handler receives the Alt+LeftButton, do:
 \code
-int mh = mouseHandler(Qt::ALT, Qt::LeftButton);
+int mh = mouseHandler(0, Qt::AltModifier, Qt::LeftButton);
 if (mh == QGLViewer::CAMERA) ...
 \endcode
 
 Use mouseAction() to know which action (see the MouseAction enum) will be performed on this handler. */
-int QGLViewer::mouseHandler(Qt::KeyboardModifiers modifiers, Qt::MouseButtons buttons) const
+int QGLViewer::mouseHandler(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button) const
 {
-	MouseBindingPrivate mbp(modifiers, buttons);
+	MouseBindingPrivate mbp(modifiers, button, key);
 	if (mouseBinding_.contains(mbp))
 		return mouseBinding_[mbp].handler;
 	else
@@ -3129,31 +2911,55 @@ int QGLViewer::mouseButtonState(MouseHandler handler, MouseAction action, bool w
 	qWarning("mouseButtonState() is deprecated. Use mouseButtons() and keyboardModifiers() instead");
 	for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator it=mouseBinding_.begin(), end=mouseBinding_.end(); it != end; ++it)
 		if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) )
-			return (int) it.key().modifiers | (int) it.key().buttons;
+			return (int) it.key().modifiers | (int) it.key().button;
 
 	return Qt::NoButton;
 }
 #endif
 
-/*! Returns the mouse buttons (if any) that have to be used to activate \p
+
+/*! Returns the keyboard key (if any) that has to be used to activate \p
 action on \p handler (\p withConstraint or not).
 
-If no state triggers the action, returns Qt::NoButton.
+If no state triggers this action, or if no key needs to be pressed, returns 0.
 
-To know which keys and mouse buttons have to be pressed to translate the camera, use tests like:
+To know which keys and mouse button have to be pressed to translate the camera, use tests like:
 \code
-Qt::MouseButton button = mouseButtons(QGLViewer::CAMERA, QGLViewer::TRANSLATE);
-if (button & Qt::RightButton) ... // Right button needed to translate the camera
+Qt::Key key = pressedKey(QGLViewer::CAMERA, QGLViewer::TRANSLATE);
+if (key == Qt::Key_R) ... // The R key needs to be pressed to translate the camera
 \endcode
 
 Note that mouse bindings are displayed in the 'Mouse' help window tab.
 
 See also keyboardModifiers(), mouseAction() and mouseHandler(). */
-Qt::MouseButtons QGLViewer::mouseButtons(MouseHandler handler, MouseAction action, bool withConstraint) const
+Qt::Key QGLViewer::pressedKey(MouseHandler handler, MouseAction action, bool withConstraint) const
 {
 	for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator it=mouseBinding_.begin(), end=mouseBinding_.end(); it != end; ++it)
 		if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) )
-			return it.key().buttons;
+			return it.key().key;
+
+	return Qt::Key(0);
+}
+
+/*! Returns the mouse button (if any) that has to be used to activate \p
+action on \p handler (\p withConstraint or not).
+
+If no state triggers the action, returns Qt::NoButton.
+
+To know which keys and mouse button have to be pressed to translate the camera, use tests like:
+\code
+Qt::MouseButton button = mouseButton(QGLViewer::CAMERA, QGLViewer::TRANSLATE);
+if (button == Qt::RightButton) ... // Right button needed to translate the camera
+\endcode
+
+Note that mouse bindings are displayed in the 'Mouse' help window tab.
+
+See also keyboardModifiers(), mouseAction() and mouseHandler(). */
+Qt::MouseButton QGLViewer::mouseButton(MouseHandler handler, MouseAction action, bool withConstraint) const
+{
+	for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator it=mouseBinding_.begin(), end=mouseBinding_.end(); it != end; ++it)
+		if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) )
+			return it.key().button;
 
 	return Qt::NoButton;
 }
@@ -3192,7 +2998,6 @@ postfix is replaced by \c Button in the enums' names (\c Qt::ControlButton, \c Q
 Qt::ShiftButton, Qt::MetaButton). */
 QGLViewer::MouseAction QGLViewer::wheelAction(Qt::KeyboardModifiers modifiers) const
 {
-	modifiers = convertKeyboardModifiers(modifiers);
 	if (wheelBinding_.contains(modifiers))
 		return wheelBinding_[modifiers].action;
 	else
@@ -3202,7 +3007,6 @@ QGLViewer::MouseAction QGLViewer::wheelAction(Qt::KeyboardModifiers modifiers) c
 /*! Same as mouseHandler() but for the wheel action. See also wheelAction(). */
 int QGLViewer::wheelHandler(Qt::KeyboardModifiers modifiers) const
 {
-	modifiers = convertKeyboardModifiers(modifiers);
 	if (wheelBinding_.contains(modifiers))
 		return wheelBinding_[modifiers].handler;
 	else
@@ -3228,8 +3032,9 @@ int QGLViewer::wheelButtonState(MouseHandler handler, MouseAction action, bool w
 */
 QGLViewer::ClickAction QGLViewer::clickAction(int state, bool doubleClick, Qt::MouseButtons buttonsBefore) const {
 	qWarning("clickAction(int state,...) is deprecated. Use the modifier/button equivalent");
-	return clickAction(keyboardModifiersFromState(state),
-					   mouseButtonsFromState(state),
+	return clickAction(Qt::Key(0),
+					   keyboardModifiersFromState(state),
+					   mouseButtonFromState(state),
 					   doubleClick,
 					   buttonsBefore);
 }
@@ -3237,8 +3042,8 @@ QGLViewer::ClickAction QGLViewer::clickAction(int state, bool doubleClick, Qt::M
 /*! Same as mouseAction(), but for the ClickAction set using setMouseBinding().
 
 Returns NO_CLICK_ACTION if no click action is associated with this keyboard and mouse buttons combination. */
-QGLViewer::ClickAction QGLViewer::clickAction(Qt::KeyboardModifiers modifiers, Qt::MouseButtons buttons, bool doubleClick, Qt::MouseButtons buttonsBefore) const {
-	ClickBindingPrivate cbp(modifiers, buttons, doubleClick, buttonsBefore);
+QGLViewer::ClickAction QGLViewer::clickAction(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button, bool doubleClick, Qt::MouseButtons buttonsBefore) const {
+	ClickBindingPrivate cbp(modifiers, button, doubleClick, buttonsBefore, key);
 	if (clickBinding_.contains(cbp))
 		return clickBinding_[cbp];
 	else
@@ -3248,38 +3053,41 @@ QGLViewer::ClickAction QGLViewer::clickAction(Qt::KeyboardModifiers modifiers, Q
 #ifndef DOXYGEN
 /*! This method is deprecated since version 2.5.0
 
- Use getClickActionState(Qt::KeyboardModifiers, Qt::MouseButtons, ...) instead.
+ Use getClickActionState(ClickAction, Qt::Key, Qt::KeyboardModifiers, Qt::MouseButton, bool, Qt::MouseButtons) instead.
 */
 void QGLViewer::getClickButtonState(ClickAction action, int& state, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const {
 	qWarning("getClickButtonState(int state,...) is deprecated. Use the modifier/button equivalent");
 	Qt::KeyboardModifiers modifiers;
-	Qt::MouseButtons buttons;
-	getClickActionState(action, modifiers, buttons, doubleClick, buttonsBefore);
-	state = (int) modifiers | (int) buttons;
+	Qt::MouseButton button;
+	Qt::Key key;
+	getClickActionState(action, key, modifiers, button, doubleClick, buttonsBefore);
+	state = (int) modifiers | (int) button | (int) key;
 }
 #endif
 
 /*! Returns the mouse and keyboard modifiers that trigger \p action.
 
-If such a binding exists, results are stored in the \p modifiers, \p buttons, \p doubleClick and \p buttonsBefore
-parameters. If the ClickAction \p action is not bound, \p buttons is set to \c Qt::NoButton.
+If such a binding exists, results are stored in the \p key, \p modifiers, \p buttons, \p doubleClick and \p buttonsBefore
+parameters. If the ClickAction \p action is not bound, \p buttons is set to \c Qt::NoButton and \p key is set to 0.
 If several mouse buttons trigger in the ClickAction, one of them is returned.
 
-See also mouseButtons() and keyboardModifiers().
+See also pressedKey(), mouseButtons() and keyboardModifiers().
 */
-void QGLViewer::getClickActionState(ClickAction action, Qt::KeyboardModifiers& modifiers, Qt::MouseButtons& buttons, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const
+void QGLViewer::getClickActionState(ClickAction action, Qt::Key& key, Qt::KeyboardModifiers& modifiers, Qt::MouseButton &button, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const
 {
 	for (QMap<ClickBindingPrivate, ClickAction>::ConstIterator it=clickBinding_.begin(), end=clickBinding_.end(); it != end; ++it)
 		if (it.value() == action)
 		{
 			modifiers = it.key().modifiers;
-			buttons = it.key().buttons;
+			button = it.key().button;
 			doubleClick = it.key().doubleClick;
 			buttonsBefore = it.key().buttonsBefore;
+			key = it.key().key;
 			return;
 		}
 
-	buttons = Qt::NoButton;
+	button = Qt::NoButton;
+	key = Qt::Key(0);
 }
 
 /*! This function should be used in conjunction with toggleCameraMode(). It returns \c true when at
@@ -3288,7 +3096,7 @@ which "mode" the camera is in. */
 bool QGLViewer::cameraIsInRevolveMode() const
 {
 	//#CONNECTION# used in toggleCameraMode() and keyboardString()
-	return mouseButtons(CAMERA, ROTATE) != Qt::NoButton;
+	return mouseButton(CAMERA, ROTATE) != Qt::NoButton;
 }
 
 /*! Swaps between two predefined camera mouse bindings.
@@ -3323,8 +3131,7 @@ void QGLViewer::toggleCameraMode()
 		setMouseBinding(modifiers, Qt::MidButton,   CAMERA, LOOK_AROUND);
 		setMouseBinding(modifiers, Qt::RightButton, CAMERA, MOVE_BACKWARD);
 
-		setMouseBinding(modifiers, Qt::LeftButton  | Qt::MidButton,  CAMERA, ROLL);
-		// 2.2.4 setMouseBinding(modifiers | Qt::RightButton | Qt::MidButton,  CAMERA, SCREEN_TRANSLATE);
+		setMouseBinding(Qt::Key_R, modifiers, Qt::LeftButton, CAMERA, ROLL);
 
 		setMouseBinding(Qt::NoModifier, Qt::LeftButton,  NO_CLICK_ACTION, true);
 		setMouseBinding(Qt::NoModifier, Qt::MidButton,   NO_CLICK_ACTION, true);
@@ -3339,8 +3146,7 @@ void QGLViewer::toggleCameraMode()
 		setMouseBinding(modifiers, Qt::MidButton,   CAMERA, ZOOM);
 		setMouseBinding(modifiers, Qt::RightButton, CAMERA, TRANSLATE);
 
-		setMouseBinding(modifiers, Qt::LeftButton  | Qt::MidButton,  CAMERA, SCREEN_ROTATE);
-		// 2.2.4 setMouseBinding(modifiers | Qt::RightButton | Qt::MidButton,  CAMERA, SCREEN_TRANSLATE);
+		setMouseBinding(Qt::Key_R, modifiers, Qt::LeftButton, CAMERA, SCREEN_ROTATE);
 
 		setMouseBinding(Qt::NoModifier, Qt::LeftButton,  ALIGN_CAMERA,      true);
 		setMouseBinding(Qt::NoModifier, Qt::MidButton,   SHOW_ENTIRE_SCENE, true);
@@ -3660,14 +3466,8 @@ void QGLViewer::drawGrid(float size, int nbSubdivisions)
 /*! saveStateToFile() is called on all the QGLViewers using the QGLViewerPool(). */
 void QGLViewer::saveStateToFileForAllViewers()
 {
-#if QT_VERSION >= 0x040000
 	Q_FOREACH (QGLViewer* viewer, QGLViewer::QGLViewerPool())
 	{
-#else
-	QPtrListIterator<QGLViewer> it(QGLViewer::QGLViewerPool());
-	for (QGLViewer* viewer; (viewer = it.current()) != 0; ++it)
-	{
-#endif
 		if (viewer)
 			viewer->saveStateToFile();
 	}
@@ -3697,22 +3497,10 @@ QString QGLViewer::stateFileName() const
 	if (!name.isEmpty() && QGLViewer::QGLViewerIndex(this) > 0)
 	{
 		QFileInfo fi(name);
-#if QT_VERSION >= 0x040000
 		if (fi.suffix().isEmpty())
-#else
-		if (fi.extension(false).isEmpty())
-#endif
 			name += QString::number(QGLViewer::QGLViewerIndex(this));
 		else
-#if QT_VERSION >= 0x040000
 			name = fi.absolutePath() + '/' + fi.completeBaseName() + QString::number(QGLViewer::QGLViewerIndex(this)) + "." + fi.suffix();
-#else
-# if QT_VERSION >= 0x030000
-			name = fi.dirPath() + '/' + fi.baseName(true) + QString::number(QGLViewer::QGLViewerIndex(this)) + "." + fi.extension(false);
-# else
-			name = fi.dirPath() + '/' + fi.baseName() + QString::number(QGLViewer::QGLViewerIndex(this)) + "." + fi.extension();
-# endif
-#endif
 	}
 
 	return name;
@@ -3740,19 +3528,11 @@ void QGLViewer::saveStateToFile()
 		return;
 	}
 
-#if QT_VERSION >= 0x040000
 	const QString dirName = fileInfo.absolutePath();
-#else
-	const QString dirName = fileInfo.dirPath();
-#endif
 	if (!QFileInfo(dirName).exists())
 	{
 		QDir dir;
-#if QT_VERSION >= 0x040000
 		if (!(dir.mkdir(dirName)))
-#else
-		if (!(dir.mkdir(dirName, true)))
-#endif
 		{
 			QMessageBox::warning(this, tr("Save to file error", "Message box window title"), tr("Unable to create directory %1").arg(dirName));
 			return;
@@ -3761,11 +3541,7 @@ void QGLViewer::saveStateToFile()
 
 	// Write the DOM tree to file
 	QFile f(name);
-#if QT_VERSION >= 0x040000
 	if (f.open(QIODevice::WriteOnly))
-#else
-	if (f.open(IO_WriteOnly))
-#endif
 	{
 		QTextStream out(&f);
 		QDomDocument doc("QGLVIEWER");
@@ -3775,11 +3551,7 @@ void QGLViewer::saveStateToFile()
 		f.close();
 	}
 	else
-#if QT_VERSION < 0x030200
-		QMessageBox::warning(this, tr("Save to file error", "Message box window title"), tr("Unable to save to file %1").arg(name));
-#else
 		QMessageBox::warning(this, tr("Save to file error", "Message box window title"), tr("Unable to save to file %1").arg(name) + ":\n" + f.errorString());
-#endif
 }
 
 /*! Restores the QGLViewer state from the stateFileName() file using initFromDOMElement().
@@ -3823,11 +3595,7 @@ bool QGLViewer::restoreStateFromFile()
 
 	// Read the DOM tree form file
 	QFile f(name);
-#if QT_VERSION >= 0x040000
 	if (f.open(QIODevice::ReadOnly) == true)
-#else
-	if (f.open(IO_ReadOnly) == true)
-#endif
 	{
 		QDomDocument doc;
 		doc.setContent(&f);
@@ -3972,11 +3740,7 @@ void QGLViewer::initFromDOMElement(const QDomElement& element)
 	// if (version != QGLViewerVersionString())
 	if (version[0] != '2')
 		// Patches for previous versions should go here when the state file syntax is modified.
-#if QT_VERSION >= 0x040000
 		qWarning("State file created using QGLViewer version %s may not be correctly read.", version.toLatin1().constData());
-#else
-		qWarning("State file created using QGLViewer version %s may not be correctly read.", version.latin1());
-#endif
 
 	QDomElement child=element.firstChild().toElement();
 	bool tmpCameraIsEdited = cameraIsEdited();
@@ -3987,8 +3751,8 @@ void QGLViewer::initFromDOMElement(const QDomElement& element)
 			// #CONNECTION# default values from defaultConstructor()
 			// setMouseTracking(DomUtils::boolFromDom(child, "mouseTracking", false));
 			setStereoDisplay(DomUtils::boolFromDom(child, "stereo", false));
-			if ((child.attribute("cameraMode", "revolve") == "fly") && (cameraIsInRevolveMode()))
-				toggleCameraMode();
+			//if ((child.attribute("cameraMode", "revolve") == "fly") && (cameraIsInRevolveMode()))
+			//	toggleCameraMode();
 
 			QDomElement ch=child.firstChild().toElement();
 			while (!ch.isNull())
