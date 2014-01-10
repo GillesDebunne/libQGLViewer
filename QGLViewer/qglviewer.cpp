@@ -1371,13 +1371,6 @@ If you want to define your own mouse behavior, do something like this:
 void Viewer::mousePressEvent(QMouseEvent* e)
 {
 
-// Qt version 2 or 3 : use Qt::KeyButtonMask and Qt::MouseButtonMask to separate the modifiers
-// (Qt::ControlButton/Qt::AltButton/Qt::ShiftButton/Qt::MetaButton) from the mouse buttons
-// (Qt::LeftButton/Qt::MidButton/Qt::RightButton) in state().
-if ( ((e->state() & Qt::KeyButtonMask) == myModifiers) &&
-((e->state() & Qt::MouseButtonMask) == myButton) )
-
-// With a recent Qt version, use instead :
 if ((e->button() == myButton) && (e->modifiers() == myModifiers))
   myMouseBehavior = true;
 else
@@ -1504,7 +1497,7 @@ void QGLViewer::wheelEvent(QWheelEvent* e)
 	{
 		if (mouseGrabberIsAManipulatedFrame_)
 		{
-			for (QMap<Qt::KeyboardModifiers, MouseActionPrivate>::ConstIterator it=wheelBinding_.begin(), end=wheelBinding_.end(); it!=end; ++it)
+			for (QMap<WheelBindingPrivate, MouseActionPrivate>::ConstIterator it=wheelBinding_.begin(), end=wheelBinding_.end(); it!=end; ++it)
 				if (it.value().handler == FRAME)
 				{
 					ManipulatedFrame* mf = dynamic_cast<ManipulatedFrame*>(mouseGrabber());
@@ -1528,10 +1521,11 @@ void QGLViewer::wheelEvent(QWheelEvent* e)
 	else
 	{
 		//#CONNECTION# mousePressEvent has the same structure
-		const Qt::KeyboardModifiers modifiers = e->modifiers();
-		if (wheelBinding_.contains(modifiers))
+		WheelBindingPrivate wbp(e->modifiers(), currentlyPressedKey_);
+
+		if (wheelBinding_.contains(wbp))
 		{
-			MouseActionPrivate map = wheelBinding_[modifiers];
+			MouseActionPrivate map = wheelBinding_[wbp];
 			switch (map.handler)
 			{
 			case CAMERA :
@@ -1753,7 +1747,7 @@ void QGLViewer::setMouseBindingDescription(int state, QString description, bool 
 /*! Defines a custom mouse binding description, displayed in the help() window's Mouse tab.
 
  Same as calling setMouseBindingDescription(Qt::Key, Qt::KeyboardModifiers, Qt::MouseButton, QString, bool, Qt::MouseButtons),
- with a key value of 0 (i.e. binding description when no regular key needs to be pressed). */
+ with a key value of Qt::Key(0) (i.e. binding description when no regular key needs to be pressed). */
 void QGLViewer::setMouseBindingDescription(Qt::KeyboardModifiers modifiers, Qt::MouseButton button, QString description, bool doubleClick, Qt::MouseButtons buttonsBefore)
 {
 	setMouseBindingDescription(Qt::Key(0), modifiers, button, description, doubleClick, buttonsBefore);
@@ -1787,13 +1781,7 @@ Overload mouseMoveEvent() and friends to implement your custom mouse behavior (s
 mouseMoveEvent() documentation for an example). See the <a
 href="../examples/keyboardAndMouse.html">keyboardAndMouse example</a> for an illustration.
 
-Use setMouseBinding() and setWheelBinding() to change the standard mouse action bindings.
-
-\note If you use Qt version 2 or 3, the \c Modifier postfix should be replaced by \c Button in the
-examples above (\c Qt::ControlButton, \c Qt::AltButton, ...).
-
-\note If you use Qt version 2 or 3, the \p buttonsBefore parameter type is actually a
-Qt::ButtonState. */
+Use setMouseBinding() and setWheelBinding() to change the standard mouse action bindings. */
 void QGLViewer::setMouseBindingDescription(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button, QString description, bool doubleClick, Qt::MouseButtons buttonsBefore)
 {
 	ClickBindingPrivate cbp(modifiers, button, doubleClick, buttonsBefore, key);
@@ -1886,9 +1874,9 @@ QString QGLViewer::mouseString() const
 		mouseBinding[cbp] = text;
 	}
 
-	for (QMap<Qt::KeyboardModifiers, MouseActionPrivate>::ConstIterator itw=wheelBinding_.begin(), endw=wheelBinding_.end(); itw != endw; ++itw)
+	for (QMap<WheelBindingPrivate, MouseActionPrivate>::ConstIterator itw=wheelBinding_.begin(), endw=wheelBinding_.end(); itw != endw; ++itw)
 	{
-		ClickBindingPrivate cbp(itw.key(), Qt::NoButton, false, Qt::NoButton, Qt::Key(0));
+		ClickBindingPrivate cbp(itw.key().modifiers, Qt::NoButton, false, Qt::NoButton, itw.key().key);
 
 		QString text = mouseActionString(itw.value().action);
 
@@ -2451,11 +2439,7 @@ Qt::MetaModifier or a combination of these (using the bitwise '|' operator).
 
 Default value is Qt::AltModifier. Defined using setAddKeyFrameKeyboardModifiers().
 
-See also playPathKeyboardModifiers().
-
-\note If you use Qt version 2 or 3, the \c Qt::KeyboardModifiers is actually a \c Qt::ButtonState.
-The \c Modifier postfix is replaced by \c Button in the enums' names (\c Qt::ControlButton, \c
-Qt::AltButton, ...). */
+See also playPathKeyboardModifiers(). */
 Qt::KeyboardModifiers QGLViewer::addKeyFrameKeyboardModifiers() const
 {
 	return addKeyFrameKeyboardModifiers_;
@@ -2468,11 +2452,7 @@ Qt::MetaModifier or a combination of these (using the bitwise '|' operator).
 
 Default value is Qt::NoModifier. Defined using setPlayPathKeyboardModifiers().
 
-See also addKeyFrameKeyboardModifiers().
-
-\note If you use Qt version 2 or 3, the \c Qt::KeyboardModifiers is actually a \c Qt::ButtonState.
-The \c Modifier postfix is replaced by \c Button in the enums' names (\c Qt::ControlButton, \c
-Qt::AltButton, ...). */
+See also addKeyFrameKeyboardModifiers(). */
 Qt::KeyboardModifiers QGLViewer::playPathKeyboardModifiers() const
 {
 	return playPathKeyboardModifiers_;
@@ -2531,7 +2511,9 @@ void QGLViewer::setPlayKeyFramePathStateKey(int buttonState)
 ////////////////////////////////////////////////////////////////////////////////
 //              M o u s e   b e h a v i o r   s t a t e   k e y s             //
 ////////////////////////////////////////////////////////////////////////////////
-/*! Associates keyboard modifiers to MouseHandler \p handler.
+/*! This method has been deprecated in version 2.5.0
+
+Associates keyboard modifiers to MouseHandler \p handler.
 
 The \p modifiers parameter is \c Qt::AltModifier, \c Qt::ShiftModifier, \c Qt::ControlModifier, \c
 Qt::MetaModifier or a combination of these using the '|' bitwise operator.
@@ -2566,19 +2548,17 @@ setHandlerKeyboardModifiers(QGLViewer::FRAME, Qt::AltModifier);
 setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::ControlModifier);
 // And finally, FRAME can be associated with NoModifier
 setHandlerKeyboardModifiers(QGLViewer::FRAME, Qt::NoModifier);
-\endcode
-
-\note If you use Qt version 2 or 3, \p modifiers is actually a \c Qt::ButtonState. The \c Modifier
-sufix is replaced by \c Button in the enums' names (\c Qt::ControlButton, \c Qt::AltButton,
-\c Qt::ShiftButton and \c Qt::MetaButton). */
+\endcode */
 void QGLViewer::setHandlerKeyboardModifiers(MouseHandler handler, Qt::KeyboardModifiers modifiers)
 {
+	qWarning("setHandlerKeyboardModifiers is deprecated, call setMouseBinding() instead");
+
 	QMap<MouseBindingPrivate, MouseActionPrivate> newMouseBinding;
-	QMap<Qt::KeyboardModifiers, MouseActionPrivate> newWheelBinding;
+	QMap<WheelBindingPrivate, MouseActionPrivate> newWheelBinding;
 	QMap<ClickBindingPrivate, ClickAction> newClickBinding_;
 
 	QMap<MouseBindingPrivate, MouseActionPrivate>::Iterator mit;
-	QMap<Qt::KeyboardModifiers, MouseActionPrivate>::Iterator wit;
+	QMap<WheelBindingPrivate, MouseActionPrivate>::Iterator wit;
 
 	// First copy unchanged bindings.
 	for (mit = mouseBinding_.begin(); mit != mouseBinding_.end(); ++mit)
@@ -2600,7 +2580,8 @@ void QGLViewer::setHandlerKeyboardModifiers(MouseHandler handler, Qt::KeyboardMo
 	for (wit = wheelBinding_.begin(); wit != wheelBinding_.end(); ++wit)
 		if (wit.value().handler == handler)
 		{
-			newWheelBinding[modifiers] = wit.value();
+			WheelBindingPrivate wbp(modifiers, wit.key().key);
+			newWheelBinding[wbp] = wit.value();
 		}
 
 	// Same for button bindings
@@ -2651,7 +2632,7 @@ void QGLViewer::setMouseBinding(int state, MouseHandler handler, MouseAction act
 /*! Defines a MouseAction binding.
 
   Same as calling setMouseBinding(Qt::Key, Qt::KeyboardModifiers, Qt::MouseButton, MouseHandler, MouseAction, bool),
-  with a key value of 0 (i.e. no regular extra key needs to be pressed to perform this action). */
+  with a key value of Qt::Key(0) (i.e. no regular extra key needs to be pressed to perform this action). */
 void QGLViewer::setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButton button, MouseHandler handler, MouseAction action, bool withConstraint) {
 	setMouseBinding(Qt::Key(0), modifiers, button, handler, action, withConstraint);
 }
@@ -2735,7 +2716,7 @@ void QGLViewer::setMouseBinding(int state, ClickAction action, bool doubleClick,
 /*! Defines a ClickAction binding.
 
  Same as calling setMouseBinding(Qt::Key, Qt::KeyboardModifiers, Qt::MouseButton, ClickAction, bool, Qt::MouseButtons),
- with a key value of 0 (i.e. no regular key needs to be pressed to activate this action) */
+ with a key value of Qt::Key(0) (i.e. no regular key needs to be pressed to activate this action). */
 void QGLViewer::setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButton button, ClickAction action, bool doubleClick, Qt::MouseButtons buttonsBefore)
 {
 	setMouseBinding(Qt::Key(0), modifiers, button, action, doubleClick, buttonsBefore);
@@ -2788,6 +2769,14 @@ void QGLViewer::setMouseBinding(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt
 	}
 }
 
+/*! Defines a mouse wheel binding.
+
+ Same as calling setWheelBinding(Qt::Key, Qt::KeyboardModifiers, MouseHandler, MouseAction, bool),
+ with a key value of Qt::Key(0) (i.e. no regular key needs to be pressed to activate this action). */
+void QGLViewer::setWheelBinding(Qt::KeyboardModifiers modifiers, MouseHandler handler, MouseAction action, bool withConstraint) {
+	setWheelBinding(Qt::Key(0), modifiers, handler, action, withConstraint);
+}
+
 /*! Associates a MouseAction and a MouseHandler to a mouse wheel event.
 
 This method is very similar to setMouseBinding(), but specific to the wheel.
@@ -2798,26 +2787,29 @@ QGLViewer::CAMERA can receive QGLViewer::ZOOM and QGLViewer::MOVE_FORWARD.
 The difference between QGLViewer::ZOOM and QGLViewer::MOVE_FORWARD is that QGLViewer::ZOOM speed
 depends on the distance to the object, while QGLViewer::MOVE_FORWARD moves at a constant speed
 defined by qglviewer::Camera::flySpeed(). */
-void QGLViewer::setWheelBinding(Qt::KeyboardModifiers modifiers, MouseHandler handler, MouseAction action, bool withConstraint)
+void QGLViewer::setWheelBinding(Qt::Key key, Qt::KeyboardModifiers modifiers, MouseHandler handler, MouseAction action, bool withConstraint)
 {
 	//#CONNECTION# ManipulatedFrame::wheelEvent and ManipulatedCameraFrame::wheelEvent switches
-	if ((action != ZOOM) && (action != MOVE_FORWARD) && (action != MOVE_BACKWARD) && (action != NO_MOUSE_ACTION))
+	if ((action != ZOOM) && (action != MOVE_FORWARD) && (action != MOVE_BACKWARD) && (action != NO_MOUSE_ACTION)) {
 		qWarning("Cannot bind %s to wheel", mouseActionString(action).toLatin1().constData());
-	else
-		if ((handler == FRAME) && (action != ZOOM) && (action != NO_MOUSE_ACTION))
-			qWarning("Cannot bind %s to FRAME wheel", mouseActionString(action).toLatin1().constData());
-		else
-		{
-			MouseActionPrivate map;
-			map.handler = handler;
-			map.action  = action;
-			map.withConstraint = withConstraint;
+		return;
+	}
 
-			if (action == NO_MOUSE_ACTION)
-				wheelBinding_.remove(modifiers);
-			else
-				wheelBinding_[modifiers] = map;
-		}
+	if ((handler == FRAME) && (action != ZOOM) && (action != NO_MOUSE_ACTION)) {
+		qWarning("Cannot bind %s to FRAME wheel", mouseActionString(action).toLatin1().constData());
+		return;
+	}
+
+	MouseActionPrivate map;
+	map.handler = handler;
+	map.action  = action;
+	map.withConstraint = withConstraint;
+
+	WheelBindingPrivate wbp(modifiers, key);
+	if (action == NO_MOUSE_ACTION)
+		wheelBinding_.remove(wbp);
+	else
+		wheelBinding_[wbp] = map;
 }
 
 /*! Clears all the default mouse bindings.
@@ -2917,111 +2909,86 @@ int QGLViewer::mouseButtonState(MouseHandler handler, MouseAction action, bool w
 }
 #endif
 
+/*! Returns the keyboard state that triggers \p action on \p handler \p withConstraint using the mouse wheel.
 
-/*! Returns the keyboard key (if any) that has to be used to activate \p
-action on \p handler (\p withConstraint or not).
+If such a binding exists, results are stored in the \p key and \p modifiers
+parameters. If the MouseAction \p action is not bound, \p key is set to the illegal -1 value.
+If several keyboard states trigger the MouseAction, one of them is returned.
 
-If no state triggers this action, or if no key needs to be pressed, returns 0.
+See also setMouseBinding(), getClickActionBinding() and getMouseActionBinding(). */
+void QGLViewer::getWheelActionBinding(MouseHandler handler, MouseAction action, bool withConstraint,
+						   Qt::Key& key, Qt::KeyboardModifiers& modifiers) const
+{
+	for (QMap<WheelBindingPrivate, MouseActionPrivate>::ConstIterator it=wheelBinding_.begin(), end=wheelBinding_.end(); it != end; ++it)
+		if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) ) {
+			key = it.key().key;
+			modifiers = it.key().modifiers;
+			return;
+		}
 
-To know which keys and mouse button have to be pressed to translate the camera, use tests like:
-\code
-Qt::Key key = pressedKey(QGLViewer::CAMERA, QGLViewer::TRANSLATE);
-if (key == Qt::Key_R) ... // The R key needs to be pressed to translate the camera
-\endcode
+	key = Qt::Key(-1);
+	modifiers = Qt::NoModifier;
+}
 
-Note that mouse bindings are displayed in the 'Mouse' help window tab.
+/*! Returns the mouse and keyboard state that triggers \p action on \p handler \p withConstraint.
 
-See also keyboardModifiers(), mouseAction() and mouseHandler(). */
-Qt::Key QGLViewer::pressedKey(MouseHandler handler, MouseAction action, bool withConstraint) const
+If such a binding exists, results are stored in the \p key, \p modifiers and \p button
+parameters. If the MouseAction \p action is not bound, \p button is set to \c Qt::NoButton.
+If several mouse and keyboard states trigger the MouseAction, one of them is returned.
+
+See also setMouseBinding(), getClickActionBinding() and getWheelActionBinding(). */
+void QGLViewer::getMouseActionBinding(MouseHandler handler, MouseAction action, bool withConstraint,
+						   Qt::Key& key, Qt::KeyboardModifiers& modifiers, Qt::MouseButton& button) const
 {
 	for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator it=mouseBinding_.begin(), end=mouseBinding_.end(); it != end; ++it)
-		if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) )
-			return it.key().key;
+		if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) ) {
+			key = it.key().key;
+			modifiers = it.key().modifiers;
+			button = it.key().button;
+			return;
+		}
 
-	return Qt::Key(0);
+	key = Qt::Key(0);
+	modifiers = Qt::NoModifier;
+	button = Qt::NoButton;
 }
 
-/*! Returns the mouse button (if any) that has to be used to activate \p
-action on \p handler (\p withConstraint or not).
+/*! Returns the MouseAction (if any) that is performed when using the wheel, when the \p modifiers and \p key keyboard keys are pressed.
 
-If no state triggers the action, returns Qt::NoButton.
+Returns NO_MOUSE_ACTION if no such binding has been defined using setWheelBinding().
 
-To know which keys and mouse button have to be pressed to translate the camera, use tests like:
-\code
-Qt::MouseButton button = mouseButton(QGLViewer::CAMERA, QGLViewer::TRANSLATE);
-if (button == Qt::RightButton) ... // Right button needed to translate the camera
-\endcode
-
-Note that mouse bindings are displayed in the 'Mouse' help window tab.
-
-See also keyboardModifiers(), mouseAction() and mouseHandler(). */
-Qt::MouseButton QGLViewer::mouseButton(MouseHandler handler, MouseAction action, bool withConstraint) const
+Same as mouseAction(), but for the wheel action. See also wheelHandler().
+*/
+QGLViewer::MouseAction QGLViewer::wheelAction(Qt::Key key, Qt::KeyboardModifiers modifiers) const
 {
-	for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator it=mouseBinding_.begin(), end=mouseBinding_.end(); it != end; ++it)
-		if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) )
-			return it.key().button;
-
-	return Qt::NoButton;
-}
-
-/*! Returns the keyboard modifiers (if any) that have to be used to activate \p
-action on \p handler (\p withConstraint or not).
-
-If no state triggers the action, OR if no modifier needs to be pressed, returns Qt::NoModifier.
-Test the value of mouseButtons() to desambiguate between these cases.
-
-To know which keys have to be pressed to translate the camera, use tests like:
-\code
-Qt::MouseButton button = mouseButtons(QGLViewer::CAMERA, QGLViewer::TRANSLATE);
-if (button != Qt::NoButton) { // binding exists
-	Qt::KeyboardModifiers modifiers = mouseButtons(QGLViewer::CAMERA, QGLViewer::TRANSLATE);
-	if (modifiers & Qt::AltModifier)   ... // Alt key needed
-}
-\endcode
-
-Note that mouse bindings are displayed in the 'Mouse' help window tab.
-
-See also mouseButtons(), mouseAction() and mouseHandler(). */
-Qt::KeyboardModifiers QGLViewer::keyboardModifiers(MouseHandler handler, MouseAction action, bool withConstraint) const
-{
-	for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator it=mouseBinding_.begin(), end=mouseBinding_.end(); it != end; ++it)
-		if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) )
-			return it.key().modifiers;
-
-	return Qt::NoModifier;
-}
-
-/*! Same as mouseAction(), but for the wheel action.
-
-\note If you use Qt version 2 or 3, \p modifiers is actually a \c Qt::ButtonState. The \c Modifier
-postfix is replaced by \c Button in the enums' names (\c Qt::ControlButton, \c Qt::AltButton,
-Qt::ShiftButton, Qt::MetaButton). */
-QGLViewer::MouseAction QGLViewer::wheelAction(Qt::KeyboardModifiers modifiers) const
-{
-	if (wheelBinding_.contains(modifiers))
-		return wheelBinding_[modifiers].action;
+	WheelBindingPrivate wbp(modifiers, key);
+	if (wheelBinding_.contains(wbp))
+		return wheelBinding_[wbp].action;
 	else
 		return NO_MOUSE_ACTION;
 }
 
-/*! Same as mouseHandler() but for the wheel action. See also wheelAction(). */
-int QGLViewer::wheelHandler(Qt::KeyboardModifiers modifiers) const
+/*! Returns the MouseHandler (if any) that receives wheel events when the \p modifiers and \p key keyboard keys are pressed.
+
+  Returns -1 if no no such binding has been defined using setWheelBinding(). See also wheelAction().
+*/
+int QGLViewer::wheelHandler(Qt::Key key, Qt::KeyboardModifiers modifiers) const
 {
-	if (wheelBinding_.contains(modifiers))
-		return wheelBinding_[modifiers].handler;
+	WheelBindingPrivate wbp(modifiers, key);
+	if (wheelBinding_.contains(wbp))
+		return wheelBinding_[wbp].handler;
 	else
 		return -1;
 }
 
-/*! Same as mouseButtonState(), but for the wheel.
+/*! This method is deprecated in version 2.5.0
 
-\attention Returns -1 when no Qt::ButtonState was associated with this \p handler/ \p action/ \p
-withConstraint combination (mouseButtonState() would return Qt::NoButton instead). */
+  Use wheelAction() and wheelHandler() instead. */
 int QGLViewer::wheelButtonState(MouseHandler handler, MouseAction action, bool withConstraint) const
 {
-	for (QMap<Qt::KeyboardModifiers, MouseActionPrivate>::ConstIterator it=wheelBinding_.begin(), end=wheelBinding_.end(); it!=end; ++it)
+	for (QMap<WheelBindingPrivate, MouseActionPrivate>::ConstIterator it=wheelBinding_.begin(), end=wheelBinding_.end(); it!=end; ++it)
 		if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) )
-			return it.key();
+			return it.key().key + it.key().modifiers;
 
 	return -1;
 }
@@ -3042,7 +3009,8 @@ QGLViewer::ClickAction QGLViewer::clickAction(int state, bool doubleClick, Qt::M
 /*! Same as mouseAction(), but for the ClickAction set using setMouseBinding().
 
 Returns NO_CLICK_ACTION if no click action is associated with this keyboard and mouse buttons combination. */
-QGLViewer::ClickAction QGLViewer::clickAction(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button, bool doubleClick, Qt::MouseButtons buttonsBefore) const {
+QGLViewer::ClickAction QGLViewer::clickAction(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button,
+											  bool doubleClick, Qt::MouseButtons buttonsBefore) const {
 	ClickBindingPrivate cbp(modifiers, button, doubleClick, buttonsBefore, key);
 	if (clickBinding_.contains(cbp))
 		return clickBinding_[cbp];
@@ -3060,24 +3028,22 @@ void QGLViewer::getClickButtonState(ClickAction action, int& state, bool& double
 	Qt::KeyboardModifiers modifiers;
 	Qt::MouseButton button;
 	Qt::Key key;
-	getClickActionState(action, key, modifiers, button, doubleClick, buttonsBefore);
+	getClickActionBinding(action, key, modifiers, button, doubleClick, buttonsBefore);
 	state = (int) modifiers | (int) button | (int) key;
 }
 #endif
 
-/*! Returns the mouse and keyboard modifiers that trigger \p action.
+/*! Returns the mouse and keyboard state that triggers \p action.
 
-If such a binding exists, results are stored in the \p key, \p modifiers, \p buttons, \p doubleClick and \p buttonsBefore
-parameters. If the ClickAction \p action is not bound, \p buttons is set to \c Qt::NoButton and \p key is set to 0.
+If such a binding exists, results are stored in the \p key, \p modifiers, \p button, \p doubleClick and \p buttonsBefore
+parameters. If the ClickAction \p action is not bound, \p button is set to \c Qt::NoButton.
 If several mouse buttons trigger in the ClickAction, one of them is returned.
 
-See also pressedKey(), mouseButtons() and keyboardModifiers().
-*/
-void QGLViewer::getClickActionState(ClickAction action, Qt::Key& key, Qt::KeyboardModifiers& modifiers, Qt::MouseButton &button, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const
+See also setMouseBinding(), getMouseActionBinding() and getWheelActionBinding(). */
+void QGLViewer::getClickActionBinding(ClickAction action, Qt::Key& key, Qt::KeyboardModifiers& modifiers, Qt::MouseButton &button, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const
 {
 	for (QMap<ClickBindingPrivate, ClickAction>::ConstIterator it=clickBinding_.begin(), end=clickBinding_.end(); it != end; ++it)
-		if (it.value() == action)
-		{
+		if (it.value() == action) {
 			modifiers = it.key().modifiers;
 			button = it.key().button;
 			doubleClick = it.key().doubleClick;
@@ -3086,7 +3052,10 @@ void QGLViewer::getClickActionState(ClickAction action, Qt::Key& key, Qt::Keyboa
 			return;
 		}
 
+	modifiers = Qt::NoModifier;
 	button = Qt::NoButton;
+	doubleClick = false;
+	buttonsBefore = Qt::NoButton;
 	key = Qt::Key(0);
 }
 
@@ -3096,7 +3065,11 @@ which "mode" the camera is in. */
 bool QGLViewer::cameraIsInRevolveMode() const
 {
 	//#CONNECTION# used in toggleCameraMode() and keyboardString()
-	return mouseButton(CAMERA, ROTATE) != Qt::NoButton;
+	Qt::Key key;
+	Qt::KeyboardModifiers modifiers;
+	Qt::MouseButton button;
+	getMouseActionBinding(CAMERA, ROTATE, false /*constraint*/, key, modifiers, button);
+	return button != Qt::NoButton;
 }
 
 /*! Swaps between two predefined camera mouse bindings.
@@ -3110,16 +3083,18 @@ Practically, the three mouse buttons are respectively binded to:
 \arg In fly mode: QGLViewer::MOVE_FORWARD, QGLViewer::LOOK_AROUND, QGLViewer::MOVE_BACKWARD.
 
 The current mode is determined by checking if a mouse button is binded to QGLViewer::ROTATE for
-the QGLViewer::CAMERA (using mouseButtonState()). The state key that was previously used to move
-the camera is preserved. */
+the QGLViewer::CAMERA. The state key that was previously used to move the camera is preserved. */
 void QGLViewer::toggleCameraMode()
 {
-	bool revolveMode = cameraIsInRevolveMode();
+	Qt::Key key;
 	Qt::KeyboardModifiers modifiers;
-	if (revolveMode)
-		modifiers = keyboardModifiers(CAMERA, ROTATE);
-	else
-		modifiers = keyboardModifiers(CAMERA, MOVE_FORWARD);
+	Qt::MouseButton button;
+	getMouseActionBinding(CAMERA, ROTATE, false /*constraint*/, key, modifiers, button);
+	bool revolveMode = button != Qt::NoButton;
+
+	if (!revolveMode) {
+		getMouseActionBinding(CAMERA, MOVE_FORWARD, false /*constraint*/, key, modifiers, button);
+	}
 
 	//#CONNECTION# setDefaultMouseBindings()
 	if (revolveMode)

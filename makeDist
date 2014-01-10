@@ -395,11 +395,24 @@ cd QGLViewer
 
 lupdate QGLViewer.pro 2> /dev/null > /dev/null
 lrelease QGLViewer.pro 2> /dev/null > /tmp/lrelease
-
 if [ `grep "0 unfinished" /tmp/lrelease | wc -l` != 1 ]
 then
   echo
   echo "Untranslated QString exist - Aborting"
+  exit
+fi
+
+if [ `grep "untranslated" /tmp/lrelease | wc -l` -gt 0 ]
+then
+  echo
+  echo "Untranslated QString exist - Aborting"
+  exit
+fi
+
+if [ `grep "type=\"obsolete\"" qglviewer_fr.ts | wc -l` -gt 0 ]
+then
+  echo
+  echo "Obsolete translations in qglviewer_fr.ts - Aborting"
   exit
 fi
 
