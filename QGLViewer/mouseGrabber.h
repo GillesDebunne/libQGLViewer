@@ -3,11 +3,7 @@
 
 #include "config.h"
 
-#if QT_VERSION >= 0x040000
-# include <QEvent>
-#else
-# include <qevent.h>
-#endif
+#include <QEvent>
 
 class QGLViewer;
 
@@ -118,11 +114,7 @@ class QGLVIEWER_EXPORT MouseGrabber
 public:
 	MouseGrabber();
 	/*! Virtual destructor. Removes the MouseGrabber from the MouseGrabberPool(). */
-#if QT_VERSION >= 0x040000
 	virtual ~MouseGrabber() { MouseGrabber::MouseGrabberPool_.removeAll(this); }
-#else
-	virtual ~MouseGrabber() { MouseGrabber::MouseGrabberPool_.removeRef(this); }
-#endif
 
 	/*! @name Mouse grabbing detection */
 	//@{
@@ -182,26 +174,14 @@ public:
 	addInMouseGrabberPool() to modify this list.
 
 	\attention This method returns a \c QPtrList<MouseGrabber> with Qt 3 and a \c QList<MouseGrabber> with Qt 2. */
-#if QT_VERSION >= 0x040000
 	static const QList<MouseGrabber*>& MouseGrabberPool() { return MouseGrabber::MouseGrabberPool_; }
-#else
-# if QT_VERSION >= 0x030000
-	static const QPtrList<MouseGrabber>& MouseGrabberPool() { return MouseGrabber::MouseGrabberPool_; }
-# else
-	static const QList<MouseGrabber>& MouseGrabberPool() { return MouseGrabber::MouseGrabberPool_; }
-# endif
-#endif
 
 	/*! Returns \c true if the MouseGrabber is currently in the MouseGrabberPool() list.
 
 	Default value is \c true. When set to \c false using removeFromMouseGrabberPool(), the
 	QGLViewers no longer checkIfGrabsMouse() on this MouseGrabber. Use addInMouseGrabberPool() to
 	insert it back. */
-#if QT_VERSION >= 0x040000
 	bool isInMouseGrabberPool() const { return MouseGrabber::MouseGrabberPool_.contains(const_cast<MouseGrabber*>(this)); }
-#else
-	bool isInMouseGrabberPool() const { return MouseGrabber::MouseGrabberPool_.findRef(this) != -1; }
-#endif
 	void addInMouseGrabberPool();
 	void removeFromMouseGrabberPool();
 	void clearMouseGrabberPool(bool autoDelete=false);
@@ -226,23 +206,23 @@ protected:
 	href="../examples/mouseGrabber.html">mouseGrabber example</a> for examples.
 
 	See the \c QGLWidget::mousePressEvent() and the \c QMouseEvent documentations for details. */
-	virtual void mousePressEvent(QMouseEvent* const event, Camera* const camera) { Q_UNUSED(event) Q_UNUSED(camera) }
+	virtual void mousePressEvent(QMouseEvent* const event, Camera* const camera) { Q_UNUSED(event); Q_UNUSED(camera); }
 	/*! Callback method called when the MouseGrabber grabsMouse() and a mouse button is double clicked.
 
 	See the \c QGLWidget::mouseDoubleClickEvent() and the \c QMouseEvent documentations for details. */
-	virtual void mouseDoubleClickEvent(QMouseEvent* const event, Camera* const camera) { Q_UNUSED(event) Q_UNUSED(camera) }
+	virtual void mouseDoubleClickEvent(QMouseEvent* const event, Camera* const camera) { Q_UNUSED(event); Q_UNUSED(camera); }
 	/*! Mouse release event callback method. See mousePressEvent(). */
-	virtual void mouseReleaseEvent(QMouseEvent* const event, Camera* const camera) { Q_UNUSED(event) Q_UNUSED(camera) }
+	virtual void mouseReleaseEvent(QMouseEvent* const event, Camera* const camera) { Q_UNUSED(event); Q_UNUSED(camera); }
 	/*! Callback method called when the MouseGrabber grabsMouse() and the mouse is moved while a
 	  button is pressed.
 
 	This method will typically update the state of the MouseGrabber from the mouse displacement. See
 	the mousePressEvent() documentation for details. */
-	virtual void mouseMoveEvent(QMouseEvent* const event, Camera* const camera) { Q_UNUSED(event) Q_UNUSED(camera) }
+	virtual void mouseMoveEvent(QMouseEvent* const event, Camera* const camera) { Q_UNUSED(event); Q_UNUSED(camera); }
 	/*! Callback method called when the MouseGrabber grabsMouse() and the mouse wheel is used.
 
 	See the \c QGLWidget::wheelEvent() and the \c QWheelEvent documentations for details. */
-	virtual void wheelEvent(QWheelEvent* const event, Camera* const camera) { Q_UNUSED(event) Q_UNUSED(camera) }
+	virtual void wheelEvent(QWheelEvent* const event, Camera* const camera) { Q_UNUSED(event); Q_UNUSED(camera); }
 	//@}
 
 private:
@@ -254,11 +234,7 @@ private:
 	bool grabsMouse_;
 
 	// Q G L V i e w e r   p o o l
-#if QT_VERSION >= 0x040000
 	static QList<MouseGrabber*> MouseGrabberPool_;
-#else
-	static QPtrList<MouseGrabber> MouseGrabberPool_;
-#endif
 };
 
 } // namespace qglviewer

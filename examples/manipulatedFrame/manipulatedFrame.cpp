@@ -9,37 +9,35 @@ static void drawSpiral()
   const float nbSteps = 200.0;
   glBegin(GL_QUAD_STRIP);
   for (float i=0; i<nbSteps; ++i)
-    {
-      float ratio = i/nbSteps;
-      float angle = 21.0*ratio;
-      float c = cos(angle);
-      float s = sin(angle);
-      float r1 = 1.0 - 0.8*ratio;
-      float r2 = 0.8 - 0.8*ratio;
-      float alt = ratio - 0.5;
-      const float nor = .5;
-      const float up = sqrt(1.0-nor*nor);
-      glColor3f(1.0-ratio, 0.2f , ratio);
-      glNormal3f(nor*c, up, nor*s);
-      glVertex3f(r1*c, alt, r1*s);
-      glVertex3f(r2*c, alt+0.05, r2*s);
-    }
+	{
+	  float ratio = i/nbSteps;
+	  float angle = 21.0*ratio;
+	  float c = cos(angle);
+	  float s = sin(angle);
+	  float r1 = 1.0 - 0.8*ratio;
+	  float r2 = 0.8 - 0.8*ratio;
+	  float alt = ratio - 0.5;
+	  const float nor = .5;
+	  const float up = sqrt(1.0-nor*nor);
+	  glColor3f(1.0-ratio, 0.2f , ratio);
+	  glNormal3f(nor*c, up, nor*s);
+	  glVertex3f(r1*c, alt, r1*s);
+	  glVertex3f(r2*c, alt+0.05, r2*s);
+	}
   glEnd();
 }
 
 void Viewer::init()
 {
-  // Swap the CAMERA and FRAME state keys (NoButton and Control)
-  // Save CAMERA binding first. See setHandlerKeyboardModifiers() documentation.
-#if QT_VERSION < 0x040000
-  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::AltButton);
-  setHandlerKeyboardModifiers(QGLViewer::FRAME,  Qt::NoButton);
-  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::ControlButton);
-#else
-  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::AltModifier);
-  setHandlerKeyboardModifiers(QGLViewer::FRAME,  Qt::NoModifier);
-  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::ControlModifier);
-#endif
+	setMouseBinding(Qt::AltModifier, Qt::LeftButton, QGLViewer::CAMERA, QGLViewer::ROTATE);
+	setMouseBinding(Qt::AltModifier, Qt::RightButton, QGLViewer::CAMERA, QGLViewer::TRANSLATE);
+	setMouseBinding(Qt::AltModifier, Qt::MidButton, QGLViewer::CAMERA, QGLViewer::ZOOM);
+	setWheelBinding(Qt::AltModifier, QGLViewer::CAMERA, QGLViewer::ZOOM);
+
+	setMouseBinding(Qt::NoModifier, Qt::LeftButton, QGLViewer::FRAME, QGLViewer::ROTATE);
+	setMouseBinding(Qt::NoModifier, Qt::RightButton, QGLViewer::FRAME, QGLViewer::TRANSLATE);
+	setMouseBinding(Qt::NoModifier, Qt::MidButton, QGLViewer::FRAME, QGLViewer::ZOOM);
+	setWheelBinding(Qt::NoModifier, QGLViewer::FRAME, QGLViewer::ZOOM);
 
 #ifdef GL_RESCALE_NORMAL  // OpenGL 1.2 Only...
   glEnable(GL_RESCALE_NORMAL);
@@ -89,7 +87,7 @@ QString Viewer::helpString() const
   text += "Adding two lines of code will then allow you to move the objects of ";
   text += "your scene using the mouse. The button bindings of the <i>ManipulatedFrame</i> ";
   text += "are the same than for the camera. Spinning is possible.<br><br>";
-  text += "Default key bindings have been changed in this example : press <b>Control</b> ";
+  text += "Default key bindings have been changed in this example : press <b>Alt</b> ";
   text += "while moving the mouse to move the camera instead of the ManipulatedFrame.";
   return text;
 }

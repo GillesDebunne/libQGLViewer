@@ -2,9 +2,7 @@
 #include "manipulatedCameraFrame.h"
 #include "qglviewer.h"
 
-#if QT_VERSION >= 0x040000
-# include <QMouseEvent>
-#endif
+#include <QMouseEvent>
 
 using namespace qglviewer;
 using namespace std;
@@ -164,9 +162,7 @@ void ManipulatedCameraFrame::startAction(int ma, bool withConstraint)
 	case QGLViewer::MOVE_FORWARD:
 	case QGLViewer::MOVE_BACKWARD:
 	case QGLViewer::DRIVE:
-#if QT_VERSION >= 0x040000
 		flyTimer_.setSingleShot(false);
-#endif
 		flyTimer_.start(10);
 		break;
 	default:
@@ -388,12 +384,8 @@ void ManipulatedCameraFrame::wheelEvent(QWheelEvent* const event, Camera* const 
 	const int finalDrawAfterWheelEventDelay = 400;
 
 	// Starts (or prolungates) the timer.
-#if QT_VERSION >= 0x040000
 	flyTimer_.setSingleShot(true);
 	flyTimer_.start(finalDrawAfterWheelEventDelay);
-#else
-	flyTimer_.start(finalDrawAfterWheelEventDelay, true);
-#endif
 
 	// This could also be done *before* manipulated is emitted, so that isManipulated() returns false.
 	// But then fastDraw would not be used with wheel.

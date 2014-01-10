@@ -1,30 +1,14 @@
 #include "qglviewer.h"
 
 #ifndef NO_VECTORIAL_RENDER
-# if QT_VERSION >= 0x040000
 #  include "ui_VRenderInterface.h"
-# else
-#  include <qcheckbox.h>
-#  include <qcombobox.h>
-#  include "VRenderInterface.Qt3.h"
-# endif
-# include "VRender/VRender.h"
+#  include "VRender/VRender.h"
 #endif
 
-#if QT_VERSION >= 0x040000
-# include "ui_ImageInterface.h"
-#else
-# include <qspinbox.h>
-# include <qcheckbox.h>
-# include "ImageInterface.Qt3.h"
-#endif
+#include "ui_ImageInterface.h"
 
 // Output format list
-#if QT_VERSION < 0x040000
-# include <qimage.h>
-#else
 # include <QImageWriter>
-#endif
 
 #include <qfileinfo.h>
 #include <qfiledialog.h>
@@ -51,11 +35,7 @@ static QMap<QString, QString> extension;
 /*! Sets snapshotFileName(). */
 void QGLViewer::setSnapshotFileName(const QString& name)
 {
-#if QT_VERSION >= 0x040000
 	snapshotFileName_ = QFileInfo(name).absoluteFilePath();
-#else
-	snapshotFileName_ = QFileInfo(name).absFilePath();
-#endif
 }
 
 #ifndef DOXYGEN
@@ -75,15 +55,9 @@ Returns \c false if the user presses the Cancel button and \c true otherwise. */
 bool QGLViewer::openSnapshotFormatDialog()
 {
 	bool ok = false;
-#if QT_VERSION >= 0x040000
 	QStringList list = formats.split(";;", QString::SkipEmptyParts);
 	int current = list.indexOf(FDFormatString[snapshotFormat()]);
 	QString format = QInputDialog::getItem(this, "Snapshot format", "Select a snapshot format", list, current, false, &ok);
-#else
-	QStringList list = QStringList::split(";;", formats);
-	int current = list.findIndex(FDFormatString[snapshotFormat()]);
-	QString format = QInputDialog::getItem("Snapshot format", "Select a snapshot format", list, current, false, &ok, this);
-#endif
 	if (ok)
 		setSnapshotFormat(Qtformat[format]);
 	return ok;
@@ -94,14 +68,10 @@ bool QGLViewer::openSnapshotFormatDialog()
 // saveSnapshot dialog. Initialize snapshotFormat() to the first one.
 void QGLViewer::initializeSnapshotFormats()
 {
-#if QT_VERSION >= 0x040000
 	QList<QByteArray> list = QImageWriter::supportedImageFormats();
 	QStringList formatList;
 	for (int i=0; i < list.size(); ++i)
 		formatList << QString(list.at(i).toUpper());
-#else
-	QStringList formatList = QImage::outputFormatList();
-#endif
 	//        qWarning("Available image formats: ");
 	//        QStringList::Iterator it = formatList.begin();
 	//        while( it != formatList.end() )
@@ -125,15 +95,10 @@ void QGLViewer::initializeSnapshotFormats()
 	QtText += "BMP";	MenuText += "Windows Bitmap (*.bmp)";	Ext += "bmp";
 	QtText += "XFIG";	MenuText += "XFig (*.fig)";		Ext += "fig";
 
-#if QT_VERSION < 0x030000
-	QStringList::Iterator itText = QtText.begin();
-	QStringList::Iterator itMenu = MenuText.begin();
-	QStringList::Iterator itExt  = Ext.begin();
-#else
 	QStringList::iterator itText = QtText.begin();
 	QStringList::iterator itMenu = MenuText.begin();
 	QStringList::iterator itExt  = Ext.begin();
-#endif
+
 	while (itText != QtText.end())
 	{
 		//QMessageBox::information(this, "Snapshot ", "Trying format\n"+(*itText));
@@ -165,11 +130,7 @@ static bool checkFileName(QString& fileName, QWidget* widget, const QString& sna
 	// Check that extension has been provided
 	QFileInfo info(fileName);
 
-#if QT_VERSION >= 0x040000
 	if (info.suffix().isEmpty())
-#else
-	if (info.extension(false).isEmpty())
-#endif
 	{
 		// No extension given. Silently add one
 		if (fileName.right(1) != ".")
@@ -177,22 +138,10 @@ static bool checkFileName(QString& fileName, QWidget* widget, const QString& sna
 		fileName += extension[snapshotFormat];
 		info.setFile(fileName);
 	}
-#if QT_VERSION >= 0x040000
 	else if (info.suffix() != extension[snapshotFormat])
-#else
-	else if (info.extension(false) != extension[snapshotFormat])
-#endif
 	{
 		// Extension is not appropriate. Propose a modification
-#if QT_VERSION >= 0x040000
 		QString modifiedName = info.absolutePath() + '/' + info.baseName() + "." + extension[snapshotFormat];
-#else
-# if QT_VERSION >= 0x030000
-		QString modifiedName = info.dirPath() + '/' + info.baseName(true) + '.' + extension[snapshotFormat];
-# else
-		QString modifiedName = info.dirPath() + '/' + info.baseName() + '.' + extension[snapshotFormat];
-# endif
-#endif
 		QFileInfo modifInfo(modifiedName);
 		int i=(QMessageBox::warning(widget,"Wrong extension",
 									info.fileName()+" has a wrong extension.\nSave as "+modifInfo.fileName()+" instead ?",
@@ -236,11 +185,7 @@ QProgressDialog* ProgressDialog::progressDialog = NULL;
 void ProgressDialog::showProgressDialog(QGLWidget* parent)
 {
 	progressDialog = new QProgressDialog(parent);
-#if QT_VERSION >= 0x040000
 	progressDialog->setWindowTitle("Image rendering progress");
-#else
-	progressDialog->setCaption("Image rendering progress");
-#endif
 	progressDialog->setMinimumSize(300, 40);
 	progressDialog->setCancelButton(NULL);
 	progressDialog->show();
@@ -248,11 +193,7 @@ void ProgressDialog::showProgressDialog(QGLWidget* parent)
 
 void ProgressDialog::updateProgress(float progress, const QString& stepString)
 {
-#if QT_VERSION >= 0x040000
 	progressDialog->setValue(int(progress*100));
-#else
-	progressDialog->setProgress(int(progress*100));
-#endif
 	QString message(stepString);
 	if (message.length() > 33)
 		message = message.left(17) + "..." + message.right(12);
@@ -268,14 +209,12 @@ void ProgressDialog::hideProgressDialog()
 	progressDialog = NULL;
 }
 
-#if QT_VERSION >= 0x040000
 class VRenderInterface: public QDialog, public Ui::VRenderInterface
 {
 public: VRenderInterface(QWidget *parent) : QDialog(parent) { setupUi(this); }
 };
-#endif
 
-#endif
+#endif //DOXYGEN
 
 // Pops-up a vectorial output option dialog box and save to fileName
 // Returns -1 in case of Cancel, 0 for success and (todo) error code in case of problem.
@@ -284,11 +223,7 @@ static int saveVectorialSnapshot(const QString& fileName, QGLWidget* widget, con
 	static VRenderInterface* VRinterface = NULL;
 
 	if (!VRinterface)
-#if QT_VERSION >= 0x030000
 		VRinterface = new VRenderInterface(widget);
-#else
-		VRinterface = new VRenderInterface(widget, "", true); // Make the dialog modal
-#endif
 
 
 	// Configure interface according to selected snapshotFormat
@@ -319,11 +254,7 @@ static int saveVectorialSnapshot(const QString& fileName, QGLWidget* widget, con
 	vparams.setOption(vrender::VRenderParams::AddBackground, VRinterface->colorBackground->isChecked());
 	vparams.setOption(vrender::VRenderParams::TightenBoundingBox, VRinterface->tightenBBox->isChecked());
 
-#if QT_VERSION >= 0x040000
 	switch (VRinterface->sortMethod->currentIndex())
-#else
-	switch (VRinterface->sortMethod->currentItem())
-#endif
 	{
 	case 0: vparams.setSortMethod(vrender::VRenderParams::NoSorting); 		break;
 	case 1: vparams.setSortMethod(vrender::VRenderParams::BSPSort); 		break;
@@ -339,11 +270,7 @@ static int saveVectorialSnapshot(const QString& fileName, QGLWidget* widget, con
 	widget->raise();
 	vrender::VectorialRender(drawVectorial, (void*) widget, vparams);
 	ProgressDialog::hideProgressDialog();
-#if QT_VERSION < 0x030000
-	widget->setCursor(Qt::arrowCursor);
-#else
 	widget->setCursor(QCursor(Qt::ArrowCursor));
-#endif
 
 	// Should return vparams.error(), but this is currently not set.
 	return 0;
@@ -351,12 +278,10 @@ static int saveVectorialSnapshot(const QString& fileName, QGLWidget* widget, con
 #endif // NO_VECTORIAL_RENDER
 
 
-#if QT_VERSION >= 0x040000
 class ImageInterface: public QDialog, public Ui::ImageInterface
 {
 public: ImageInterface(QWidget *parent) : QDialog(parent) { setupUi(this); }
 };
-#endif
 
 
 // Pops-up an image settings dialog box and save to fileName.
@@ -366,11 +291,7 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
 	static ImageInterface* imageInterface = NULL;
 
 	if (!imageInterface)
-#if QT_VERSION >= 0x030000
 		imageInterface = new ImageInterface(this);
-#else
-		imageInterface = new ImageInterface(this, "", true);  // Make the dialog modal
-#endif
 
 	imageInterface->imgWidth->setValue(width());
 	imageInterface->imgHeight->setValue(height());
@@ -422,11 +343,7 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
 			yMin = xMin / newAspectRatio;
 	}
 
-#if QT_VERSION >= 0x040000
 	QImage image(finalSize.width(), finalSize.height(), QImage::Format_ARGB32);
-#else
-	QImage image(finalSize.width(), finalSize.height(), 32);
-#endif
 
 	if (image.isNull())
 	{
@@ -512,15 +429,7 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
 			// "Generating image ["+QString::number(count)+"/"+QString::number(nbX*nbY)+"]");
 			// qApp->processEvents();
 
-#if QT_VERSION >= 0x040000
 			QImage subImage = snapshot.scaled(subSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-#else
-# if QT_VERSION >= 0x030000
-			QImage subImage = snapshot.scale(subSize, QImage::ScaleFree);
-# else
-			QImage subImage = snapshot.smoothScale(subSize.width(), subSize.height());
-# endif
-#endif
 
 			// Copy subImage in image
 			for (int ii=0; ii<subSize.width(); ii++)
@@ -539,19 +448,10 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
 			count++;
 		}
 
-#if QT_VERSION >= 0x040000
 	bool saveOK = image.save(fileName, snapshotFormat().toLatin1().constData(), snapshotQuality());
-#else
-	bool saveOK = image.save(fileName, snapshotFormat(), snapshotQuality());
-#endif
 
 	// ProgressDialog::hideProgressDialog();
-
-	// #if QT_VERSION < 0x030000
-	// setCursor(Qt::arrowCursor);
-	// #else
 	// setCursor(QCursor(Qt::ArrowCursor));
-	// #endif
 
 	delete tileRegion_;
 	tileRegion_ = NULL;
@@ -618,22 +518,10 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
 	if (snapshotFileName().isEmpty() || !automatic)
 	{
 		QString fileName;
-#if QT_VERSION < 0x030000
-		if (openSnapshotFormatDialog())
-			fileName = QFileDialog::getSaveFileName(snapshotFileName(), FDFormatString[snapshotFormat()]+";;All files (*.*)", this, "Save dialog");
-		else
-			return;
-#else
 		QString selectedFormat = FDFormatString[snapshotFormat()];
-# if QT_VERSION >= 0x040000
 		fileName = QFileDialog::getSaveFileName(this, "Choose a file name to save under", snapshotFileName(), formats, &selectedFormat,
 												overwrite?QFileDialog::DontConfirmOverwrite:QFlag(0));
-# else
-		fileName = QFileDialog::getSaveFileName(snapshotFileName(), formats, this,
-												"Save Snapshot dialog", "Choose a file name to save under", &selectedFormat);
-# endif
 		setSnapshotFormat(Qtformat[selectedFormat]);
-#endif
 
 		if (checkFileName(fileName, this, snapshotFormat()))
 			setSnapshotFileName(fileName);
@@ -650,38 +538,18 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
 		QString count;
 		count.sprintf("%.04d", snapshotCounter_++);
 		QString suffix;
-#if QT_VERSION >= 0x040000
 		suffix = fileInfo.suffix();
 		if (suffix.isEmpty())
 			suffix = extension[snapshotFormat()];
 		fileInfo.setFile(fileInfo.absolutePath()+ '/' + baseName + '-' + count + '.' + suffix);
-#else      
-		suffix = fileInfo.extension();
-		if (suffix.isEmpty())
-			suffix = extension[snapshotFormat()];
-		fileInfo.setFile(fileInfo.dirPath()+ '/' + baseName + '-' + count + '.' + suffix);
-#endif
 
 		if (!overwrite)
 			while (fileInfo.exists())
 			{
 				count.sprintf("%.04d", snapshotCounter_++);
-#if QT_VERSION >= 0x040000
 				fileInfo.setFile(fileInfo.absolutePath() + '/' +baseName + '-' + count + '.' + fileInfo.suffix());
-#else
-				fileInfo.setFile(fileInfo.dirPath() + '/' + baseName + '-' + count + '.' + fileInfo.extension());
-#endif
 			}
 	}
-
-#if QT_VERSION < 0x040000
-	if ((fileInfo.exists()) && (!overwrite) &&
-			(QMessageBox::warning(this,"Overwrite file ?",
-								  "File "+fileInfo.fileName()+" already exists.\nOverwrite ?",
-								  QMessageBox::Yes,
-								  QMessageBox::Cancel) == QMessageBox::Cancel))
-		return;
-#endif
 
 	bool saveOK;
 #ifndef NO_VECTORIAL_RENDER
@@ -693,11 +561,7 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
 		if (automatic)
 		{
 			QImage snapshot = frameBufferSnapshot();
-#if QT_VERSION >= 0x040000
 			saveOK = snapshot.save(fileInfo.filePath(), snapshotFormat().toLatin1().constData(), snapshotQuality());
-#else
-			saveOK = snapshot.save(fileInfo.filePath(), snapshotFormat(), snapshotQuality());
-#endif
 		}
 		else
 			saveOK = saveImageSnapshot(fileInfo.filePath());
@@ -750,63 +614,3 @@ void QGLViewer::snapshotToClipboard()
 	cb->setImage(frameBufferSnapshot());
 }
 
-#if QT_VERSION < 0x030000
-// This code is largely inspired from Qt's method available in version 3
-// Copyright Trolltech AS
-QImage QGLViewer::grabFrameBuffer(bool withAlpha)
-{
-	makeCurrent();
-	QImage res;
-	int w = width();
-	int h = height();
-	if (format().rgba())
-	{
-		res = QImage(w, h, 32);
-		glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, res.bits());
-		if (QImage::systemByteOrder() == QImage::BigEndian)
-		{
-			// OpenGL gives RGBA; Qt wants ARGB
-			uint *p = (uint*)res.bits();
-			uint *end = p + w*h;
-			if (withAlpha && format().alpha())
-			{
-				while (p < end)
-				{
-					uint a = *p << 24;
-					*p = (*p >> 8) | a;
-					p++;
-				}
-			}
-			else
-			{
-				while (p < end)
-					*p++ >>= 8;
-			}
-		}
-		else
-		{
-			// OpenGL gives ABGR (i.e. RGBA backwards); Qt wants ARGB
-			res = res.swapRGB();
-		}
-		res.setAlphaBuffer(withAlpha && format().alpha());
-	}
-	else
-	{
-#if defined (Q_OS_WIN) || defined (Q_WS_WIN)
-		res = QImage(w, h, 8);
-		glReadPixels(0, 0, w, h, GL_COLOR_INDEX, GL_UNSIGNED_BYTE, res.bits());
-		//int palSize = 0;
-		//const QRgb* pal = QColor::palette(&palSize);
-		//if (pal && palSize)
-		//{
-		//  res.setNumColors(palSize);
-		//  for (int i = 0; i < palSize; i++)
-		//	res.setColor(i, pal[i]);
-		//}
-#endif
-	}
-
-	return res.mirror();
-}
-
-#endif // QT_VERSION < 0x030000

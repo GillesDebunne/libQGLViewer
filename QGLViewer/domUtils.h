@@ -1,17 +1,9 @@
 #include "config.h"
 
-#if QT_VERSION >= 0x040000
-# include <QDomElement>
-# include <QString>
-# include <QStringList>
-# include <QColor>
-#else
-# include <qapplication.h>
-# include <qdom.h>
-# include <qstring.h>
-# include <qstringlist.h>
-# include <qcolor.h>
-#endif
+#include <QDomElement>
+#include <QString>
+#include <QStringList>
+#include <QColor>
 
 #include <math.h>
 
@@ -23,11 +15,7 @@ class DomUtils
 private:
 	static void warning(const QString& message)
 	{
-#if QT_VERSION >= 0x040000
 		qWarning("%s", message.toLatin1().constData());
-#else
-		qWarning("%s", message.latin1());
-#endif
 	}
 
 public:
@@ -103,17 +91,9 @@ public:
 		if (e.hasAttribute(attribute))
 		{
 			const QString s = e.attribute(attribute);
-#if QT_VERSION >= 0x040000
 			if (s.toLower() == QString("true"))
-#else
-			if (s.lower() == QString("true"))
-#endif
 				value = true;
-#if QT_VERSION >= 0x040000
 			else if (s.toLower() == QString("false"))
-#else
-			else if (s.lower() == QString("false"))
-#endif
 				value = false;
 			else
 			{
@@ -140,11 +120,7 @@ public:
 		int color[3];
 		QStringList attribute;
 		attribute << "red" << "green" << "blue";
-#if QT_VERSION >= 0x040000
 		for (int i=0; i<attribute.count(); ++i)
-#else
-		for (unsigned int i=0; i<attribute.count(); ++i)
-#endif
 			color[i] = DomUtils::intFromDom(e, attribute[i], 0);
 		return QColor(color[0], color[1], color[2]);
 	}

@@ -223,18 +223,6 @@ TARGET="^\!define URL $WebURL"
 FILE="libQGLViewer.nsi"
 checkGrep
 
-TARGET="version=\"3.0\""
-FILE="QGLViewer/VRenderInterface.Qt3.ui"
-checkGrep
-
-TARGET="version=\"3.0\""
-FILE="QGLViewer/ImageInterface.Qt3.ui"
-checkGrep
-
-TARGET="version=\"3.1\""
-FILE="examples/interface/viewerInterface.Qt3.ui"
-checkGrep
-
 echo
 
 

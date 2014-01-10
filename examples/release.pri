@@ -14,8 +14,6 @@ CONFIG += qt opengl warn_on thread rtti console embed_manifest_exe no_keywords
 
 # --------------------------------------------------------------------------------------
 
-QT_VERSION=$$[QT_VERSION]
-
 ### Unix configuration ###
 unix {
   CONFIG -= debug debug_and_release
@@ -151,14 +149,6 @@ unix {
     LIBS *= $${LIB_DIR}/$${LIB_NAME}
   }
 
-  macx|darwin-g++ {
-    contains( QT_VERSION, "^3.*" ) {
-      # Qt3 only
-      LIBS *= -lobjc
-      CONFIG -= thread
-    }
-  }
-
   # Remove debugging options in release mode makes files much smaller
   release:QMAKE_CFLAGS_RELEASE -= -g
   release:QMAKE_CXXFLAGS_RELEASE -= -g
@@ -289,9 +279,6 @@ win32 {
 
   !win32-g++ {
     # Use the Qt DLL version. Only needed with Qt3
-    contains( QT_VERSION, "^3.*" ) {
-      DEFINES *= QT_DLL QT_THREAD_SUPPORT
-    }
 
     LIBS *= -L$${LIB_DIR} -l$${LIB_NAME}
   }

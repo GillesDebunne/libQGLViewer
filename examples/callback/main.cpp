@@ -30,11 +30,7 @@ int main(int argc, char** argv)
   // Create a scene, giving a pointer to the associated viewer.
   Scene s(&viewer);
 
-#if QT_VERSION < 0x040000
-  application.setMainWidget(&viewer);
-#else
   viewer.setWindowTitle("callback");
-#endif
 
   help();
 

@@ -1,13 +1,8 @@
 #ifndef QGLVIEWER_FRAME_H
 #define QGLVIEWER_FRAME_H
 
-#if QT_VERSION >= 0x040000
-# include <QObject>
-# include <QString>
-#else
-# include <qobject.h>
-# include <qstring.h>
-#endif
+#include <QObject>
+#include <QString>
 
 #include "constraint.h"
 // #include "GL/gl.h" is now included in config.h for ease of configuration

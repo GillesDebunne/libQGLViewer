@@ -2,13 +2,8 @@
 #include "Exporter.h"
 #include "../qglviewer.h"
 
-#if QT_VERSION >= 0x040000
-# include <QFile>
-# include <QMessageBox>
-#else
-# include <qfile.h>
-# include <qmessagebox.h>
-#endif
+#include <QFile>
+#include <QMessageBox>
 
 using namespace vrender ;
 using namespace std ;
@@ -25,11 +20,7 @@ void Exporter::exportToFile(const QString& filename,
 {
 	QFile file(filename);
 
-#if QT_VERSION >= 0x040000
 	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-#else
-	if (!file.open(IO_WriteOnly | IO_Translate)) {
-#endif
 		QMessageBox::warning(NULL, QGLViewer::tr("Exporter error", "Message box window title"), QGLViewer::tr("Unable to open file %1.").arg(filename));
 		return;
 	}
@@ -38,7 +29,7 @@ void Exporter::exportToFile(const QString& filename,
 
 	writeHeader(out) ;
 
-        unsigned int N = primitive_tab.size()/200 + 1 ;
+		unsigned int N = primitive_tab.size()/200 + 1 ;
 
 	for(unsigned int i=0;i<primitive_tab.size();++i)
 	{

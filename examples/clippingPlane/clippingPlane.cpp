@@ -11,32 +11,32 @@ void Viewer::draw()
 
   glBegin(GL_QUAD_STRIP);
   for (int i=0; i<nbSteps; ++i)
-    {
-      const float ratio = i/nbSteps;
-      const float angle = 21.0*ratio;
-      const float c = cos(angle);
-      const float s = sin(angle);
-      const float r1 = 1.0 - 0.8f*ratio;
-      const float r2 = 0.8f - 0.8f*ratio;
-      const float alt = ratio - 0.5f;
-      const float nor = 0.5f;
-      const float up = sqrt(1.0-nor*nor);
-      glColor3f(1.0-ratio, 0.2f , ratio);
-      glNormal3f(nor*c, up, nor*s);
-      glVertex3f(r1*c, alt, r1*s);
-      glVertex3f(r2*c, alt+0.05f, r2*s);
-    }
+	{
+	  const float ratio = i/nbSteps;
+	  const float angle = 21.0*ratio;
+	  const float c = cos(angle);
+	  const float s = sin(angle);
+	  const float r1 = 1.0 - 0.8f*ratio;
+	  const float r2 = 0.8f - 0.8f*ratio;
+	  const float alt = ratio - 0.5f;
+	  const float nor = 0.5f;
+	  const float up = sqrt(1.0-nor*nor);
+	  glColor3f(1.0-ratio, 0.2f , ratio);
+	  glNormal3f(nor*c, up, nor*s);
+	  glVertex3f(r1*c, alt, r1*s);
+	  glVertex3f(r2*c, alt+0.05f, r2*s);
+	}
   glEnd();
 
 
   glPushMatrix();
   glMultMatrixd(manipulatedFrame()->matrix());
-  // Since the Clipping Plane equation is multiplied by the current modelView, we can define a 
+  // Since the Clipping Plane equation is multiplied by the current modelView, we can define a
   // constant equation (plane normal along Z and passing by the origin) since we are here in the
   // manipulatedFrame coordinates system (we glMultMatrixd() with the manipulatedFrame matrix()).
   static const GLdouble equation[] = { 0.0, 0.0, 1.0, 0.0 };
   glClipPlane(GL_CLIP_PLANE0, equation);
-  
+
   // Draw a plane representation: Its normal...
   glColor3f(0.8f, 0.8f, 0.8f);
   drawArrow(0.4f, 0.015f);
@@ -54,13 +54,13 @@ void Viewer::init()
 {
   // Restore previous viewer state.
   restoreStateFromFile();
-  
+
   // Opens help window
   help();
-  
+
   // The ManipulatedFrame will be used to position the clipping plane
   setManipulatedFrame(new ManipulatedFrame());
-  
+
   // Enable plane clipping
   glEnable(GL_CLIP_PLANE0);
 }

@@ -20,12 +20,7 @@ TARGET   = interface
 HEADERS  = interface.h
 SOURCES  = interface.cpp main.cpp
 
-QT_VERSION=$$[QT_VERSION]
-contains( QT_VERSION, "^3.*" ) {
-  FORMS *= viewerInterface.Qt3.ui
-} else {
-  FORMS *= viewerInterface.ui
-}
+FORMS *= viewerInterface.ui
 
 include( ../examples.pri )
 

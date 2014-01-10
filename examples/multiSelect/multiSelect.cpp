@@ -1,32 +1,24 @@
 #include "multiSelect.h"
 #include "manipulatedFrameSetConstraint.h"
 
-#if QT_VERSION >= 0x040000
-# include <QMouseEvent>
-#endif
+#include <QMouseEvent>
 
 using namespace qglviewer;
 
 Viewer::Viewer()
 {
-  selectionMode_ = NONE;
+	selectionMode_ = NONE;
 
-  // Fill the scene with objects positionned on a regular grid.
-  // Consider increasing selectBufferSize() if you use more objects.
-  const int nb = 10;
-  for (int i=-nb; i<=nb; ++i)
-    for (int j=-nb; j<=nb; ++j)
-      {
-	Object* o = new Object();
-	o->frame.setPosition(Vec(i/float(nb), j/float(nb), 0.0));
-#if QT_VERSION < 0x040000
-	// How could they sell this ?
-	objects_.resize(objects_.size()+1);
-	objects_.insert(objects_.size()-1, o);
-#else
-	objects_.append(o);
-#endif	
-      }
+	// Fill the scene with objects positionned on a regular grid.
+	// Consider increasing selectBufferSize() if you use more objects.
+	const int nb = 10;
+	for (int i=-nb; i<=nb; ++i)
+		for (int j=-nb; j<=nb; ++j)
+		{
+			Object* o = new Object();
+			o->frame.setPosition(Vec(i/float(nb), j/float(nb), 0.0));
+			objects_.append(o);
+		}
 }
 
 void Viewer::init()
@@ -34,10 +26,10 @@ void Viewer::init()
   // A ManipulatedFrameSetConstraint will apply displacements to the selection
   setManipulatedFrame(new ManipulatedFrame());
   manipulatedFrame()->setConstraint(new ManipulatedFrameSetConstraint());
-  
+
   // Used to display semi-transparent relection rectangle
   glBlendFunc(GL_ONE, GL_ONE);
-  
+
   restoreStateFromFile();
   help();
 }
@@ -65,30 +57,26 @@ void Viewer::draw()
 {
   // Draws selected objects only.
   glColor3f(0.9f, 0.3f, 0.3f);
-#if QT_VERSION < 0x040000
-  for (QValueList<int>::const_iterator it=selection_.begin(), end=selection_.end(); it != end; ++it)
-#else
-    for (QList<int>::const_iterator it=selection_.begin(), end=selection_.end(); it != end; ++it)
-#endif
-      objects_.at(*it)->draw();
+	for (QList<int>::const_iterator it=selection_.begin(), end=selection_.end(); it != end; ++it)
+	  objects_.at(*it)->draw();
 
   // Draws all the objects. Selected ones are not repainted because of GL depth test.
   glColor3f(0.8f, 0.8f, 0.8f);
   for (int i=0; i<int(objects_.size()); i++)
-    objects_.at(i)->draw();
+	objects_.at(i)->draw();
 
   // Draws manipulatedFrame (the set's rotation center)
   if (manipulatedFrame()->isManipulated())
-    {
-      glPushMatrix();
-      glMultMatrixd(manipulatedFrame()->matrix());
-      drawAxis(0.5);
-      glPopMatrix();
-    }
-  
+	{
+	  glPushMatrix();
+	  glMultMatrixd(manipulatedFrame()->matrix());
+	  drawAxis(0.5);
+	  glPopMatrix();
+	}
+
   // Draws rectangular selection area. Could be done in postDraw() instead.
   if (selectionMode_ != NONE)
-    drawSelectionRectangle();
+	drawSelectionRectangle();
 }
 
 
@@ -96,73 +84,51 @@ void Viewer::draw()
 
 void Viewer::mousePressEvent(QMouseEvent* e)
 {
-  // Start selection. Mode is ADD with Shift key and TOGGLE with Alt key.
-  rectangle_ = QRect(e->pos(), e->pos());
+	// Start selection. Mode is ADD with Shift key and TOGGLE with Alt key.
+	rectangle_ = QRect(e->pos(), e->pos());
 
-#if QT_VERSION < 0x040000
-  if ((e->button() == Qt::LeftButton) && (e->state() == Qt::ShiftButton))
-    selectionMode_ = ADD;
-  else
-    if ((e->button() == Qt::LeftButton) && (e->state() == Qt::AltButton))
-      selectionMode_ = REMOVE;
-    else
-      {
-	if (e->state() == Qt::ControlButton)
-
-#else
-	
-  if ((e->button() == Qt::LeftButton) && (e->modifiers() == Qt::ShiftModifier))
-    selectionMode_ = ADD;
-  else
-    if ((e->button() == Qt::LeftButton) && (e->modifiers() == Qt::AltModifier))
-      selectionMode_ = REMOVE;
-    else
-      {
-	if (e->modifiers() == Qt::ControlModifier)      
-#endif
-	  startManipulation();
-        QGLViewer::mousePressEvent(e);
-      }
+	if ((e->button() == Qt::LeftButton) && (e->modifiers() == Qt::ShiftModifier))
+		selectionMode_ = ADD;
+	else
+		if ((e->button() == Qt::LeftButton) && (e->modifiers() == Qt::AltModifier))
+			selectionMode_ = REMOVE;
+		else
+		{
+			if (e->modifiers() == Qt::ControlModifier)
+				startManipulation();
+			QGLViewer::mousePressEvent(e);
+		}
 }
 
 void Viewer::mouseMoveEvent(QMouseEvent* e)
 {
   if (selectionMode_ != NONE)
-    {
-      // Updates rectangle_ coordinates and redraws rectangle
-#if QT_VERSION < 0x030000
-      rectangle_.setX(e->x());
-      rectangle_.setY(e->y());
-#else
-      rectangle_.setBottomRight(e->pos());
-#endif
-      updateGL();
-    }
+	{
+	  // Updates rectangle_ coordinates and redraws rectangle
+	  rectangle_.setBottomRight(e->pos());
+	  updateGL();
+	}
   else
-    QGLViewer::mouseMoveEvent(e);
+	QGLViewer::mouseMoveEvent(e);
 }
 
 void Viewer::mouseReleaseEvent(QMouseEvent* e)
 {
   if (selectionMode_ != NONE)
-    {
-      // Actual selection on the rectangular area.
-      // Possibly swap left/right and top/bottom to make rectangle_ valid.
-#if QT_VERSION < 0x040000
-      rectangle_ = rectangle_.normalize();
-#else
-      rectangle_ = rectangle_.normalized();
-#endif
-      // Define selection window dimensions
-      setSelectRegionWidth(rectangle_.width());
-      setSelectRegionHeight(rectangle_.height());
-      // Compute rectangle center and perform selection
-      select(rectangle_.center());
-      // Update display to show new selected objects
-      updateGL();
-    }
+	{
+	  // Actual selection on the rectangular area.
+	  // Possibly swap left/right and top/bottom to make rectangle_ valid.
+	  rectangle_ = rectangle_.normalized();
+	  // Define selection window dimensions
+	  setSelectRegionWidth(rectangle_.width());
+	  setSelectRegionHeight(rectangle_.height());
+	  // Compute rectangle center and perform selection
+	  select(rectangle_.center());
+	  // Update display to show new selected objects
+	  updateGL();
+	}
   else
-    QGLViewer::mouseReleaseEvent(e);
+	QGLViewer::mouseReleaseEvent(e);
 }
 
 
@@ -171,11 +137,11 @@ void Viewer::mouseReleaseEvent(QMouseEvent* e)
 void Viewer::drawWithNames()
 {
   for (int i=0; i<int(objects_.size()); i++)
-    {
-      glPushName(i);
-      objects_.at(i)->draw();
-      glPopName();
-    }
+	{
+	  glPushName(i);
+	  objects_.at(i)->draw();
+	  glPopName();
+	}
 }
 
 void Viewer::endSelection(const QPoint&)
@@ -187,17 +153,17 @@ void Viewer::endSelection(const QPoint&)
   GLint nbHits = glRenderMode(GL_RENDER);
 
   if (nbHits > 0)
-    {
-      // Interpret results : each object created 4 values in the selectBuffer().
-      // (selectBuffer())[4*i+3] is the id pushed on the stack.
-      for (int i=0; i<nbHits; ++i)
+	{
+	  // Interpret results : each object created 4 values in the selectBuffer().
+	  // (selectBuffer())[4*i+3] is the id pushed on the stack.
+	  for (int i=0; i<nbHits; ++i)
 	switch (selectionMode_)
 	  {
 	  case ADD    : addIdToSelection((selectBuffer())[4*i+3]); break;
 	  case REMOVE : removeIdFromSelection((selectBuffer())[4*i+3]);  break;
 	  default : break;
 	  }
-    }
+	}
   selectionMode_ = NONE;
 }
 
@@ -207,18 +173,14 @@ void Viewer::startManipulation()
   ManipulatedFrameSetConstraint* mfsc = (ManipulatedFrameSetConstraint*)(manipulatedFrame()->constraint());
   mfsc->clearSet();
 
-#if QT_VERSION < 0x040000
-  for (QValueList<int>::const_iterator it=selection_.begin(), end=selection_.end(); it != end; ++it)
-#else
   for (QList<int>::const_iterator it=selection_.begin(), end=selection_.end(); it != end; ++it)
-#endif
-    {
-      mfsc->addObjectToSet(objects_[*it]);
-      averagePosition += objects_[*it]->frame.position();
-    }
+	{
+	  mfsc->addObjectToSet(objects_[*it]);
+	  averagePosition += objects_[*it]->frame.position();
+	}
 
   if (selection_.size() > 0)
-    manipulatedFrame()->setPosition(averagePosition / selection_.size());
+	manipulatedFrame()->setPosition(averagePosition / selection_.size());
 }
 
 
@@ -227,16 +189,12 @@ void Viewer::startManipulation()
 void Viewer::addIdToSelection(int id)
 {
   if (!selection_.contains(id))
-    selection_.push_back(id);
+	selection_.push_back(id);
 }
 
 void Viewer::removeIdFromSelection(int id)
 {
-#if QT_VERSION < 0x040000
-  selection_.remove(id);
-#else
   selection_.removeAll(id);
-#endif
 }
 
 void Viewer::drawSelectionRectangle() const

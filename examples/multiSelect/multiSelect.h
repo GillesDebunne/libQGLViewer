@@ -1,10 +1,6 @@
 #include "QGLViewer/qglviewer.h"
 #include "object.h"
 
-#if QT_VERSION < 0x040000
-# include "qptrvector.h"
-#endif
-
 class Viewer : public QGLViewer
 {
 public:
@@ -37,14 +33,6 @@ private :
   enum SelectionMode { NONE, ADD, REMOVE };
   SelectionMode selectionMode_;
 
-#if QT_VERSION < 0x040000
-  // Objects of the scene
-  QPtrVector<Object> objects_;
-  // ids of the selected objects
-  QValueList<int> selection_;
-#else
   QList<Object*> objects_;
   QList<int> selection_;
-#endif
-
 };

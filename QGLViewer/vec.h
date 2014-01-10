@@ -4,11 +4,7 @@
 #include <math.h>
 #include <iostream>
 
-#if QT_VERSION >= 0x040000
 # include <QDomElement>
-#else
-# include <qdom.h>
-#endif
 
 // Included by all files as vec.h is at the end of the include hierarchy
 #include "config.h" // Specific configuration options.

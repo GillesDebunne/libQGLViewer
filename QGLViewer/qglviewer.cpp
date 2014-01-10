@@ -139,10 +139,7 @@ QGLViewer::QGLViewer(QWidget* parent, const QGLWidget* shareWidget, Qt::WindowFl
 { defaultConstructor(); }
 
 /*! Same as QGLViewer(), but a \c QGLContext can be provided so that viewers share GL contexts, even
-with \c QGLContext sub-classes (use \p shareWidget otherwise).
-
-\note This constructor is correctly working only with Qt versions greater or equal than 3.2. The
-provided \p context is simply ignored otherwise. */
+with \c QGLContext sub-classes (use \p shareWidget otherwise). */
 QGLViewer::QGLViewer(QGLContext *context, QWidget* parent, const QGLWidget* shareWidget, Qt::WindowFlags flags)
 	: QGLWidget(context, parent, shareWidget, flags)
 { defaultConstructor(); }
@@ -709,7 +706,7 @@ conveniently remove all the displayed text with a single keyboard shortcut.
 
 See also displayMessage() to drawText() for only a short amount of time.
 
-Use QGLWidget::renderText(x,y,z, text) instead (Qt version >= 3.1) if you want to draw a text located
+Use QGLWidget::renderText(x,y,z, text) instead if you want to draw a text located
  at a specific 3D position instead of 2D screen coordinates (fixed size text, facing the camera).
 
 The \c GL_MODELVIEW and \c GL_PROJECTION matrices are not modified by this method.
@@ -717,139 +714,18 @@ The \c GL_MODELVIEW and \c GL_PROJECTION matrices are not modified by this metho
 \attention This method uses display lists to render the characters, with an index that starts at
 2000 by default (see the QGLWidget::renderText() documentation). If you use more than 2000 Display
 Lists, they may overlap with these. Directly use QGLWidget::renderText() in that case, with a
-higher \c listBase parameter (or overload <code>fontDisplayListBase</code> with Qt4).
-
-\attention There is a problem with anti-aliased font with nVidia cards and Qt versions lower than
-3.3. Until this version, the \p fnt parameter is not taken into account to prevent a crash. It is
-replaced by a fixed font that should be compatible with the \c qtconfig anti-aliased font
-configuration (disable this option otherwise).
-
-\note This method uses QGLWidget::renderText() if your Qt version is greater or equal to 3.1,
-otherwise it uses (and requires) GLUT. When GLUT is used, only the \p fnt size attribute (set with
-QFont::setPixelSize() or QFont::setPointSize()) is taken into account. Also note that in that case
-each call to drawText() changes the camera projection matrix and restores it back (using
-startScreenCoordinatesSystem() and stopScreenCoordinatesSystem()). If you call this method several
-times and it slows down your frame rate, consider factorizing the context changes. */
+higher \c listBase parameter (or overload <code>fontDisplayListBase</code>).*/
 void QGLViewer::drawText(int x, int y, const QString& text, const QFont& fnt)
 {
 	if (!textIsEnabled())
 		return;
 
-#if QT_VERSION < QGLVIEWER_QT_VERSION_WITHOUT_GLUT
-	const GLfloat font_scale = 119.05f - 33.33f; // see glutStrokeCharacter man page
-
-	startScreenCoordinatesSystem();
-
-	// Anti-aliased characters
-	glPushAttrib(GL_ALL_ATTRIB_BITS);
-	glDisable(GL_LIGHTING);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);
-	glDisable(GL_DEPTH_TEST);
-	glEnable(GL_LINE_SMOOTH);
-	glLineWidth(1.0);
-
-	glTranslatef((GLfloat)x, (GLfloat)y, 0.0);
-	const GLfloat scale = ((fnt.pixelSize()>0)?fnt.pixelSize():fnt.pointSize()) / font_scale;
-	glScalef(scale, -scale, scale);
-
-	for (uint i=0; i<text.length(); ++i)
-		glutStrokeCharacter(GLUT_STROKE_ROMAN, text.at(i));
-
-	glPopAttrib();
-
-	stopScreenCoordinatesSystem();
-#else
-
-# if QT_VERSION < 0x030300 && defined Q_OS_UNIX
-	// Fix bug with anti-aliased fonts on nVidia driver
-	QFont newFont(fnt);
-	newFont.setFamily("fixed");
-	newFont.setRawMode(true);
-	newFont.setPixelSize(10);
-	newFont.setFixedPitch(true);
-#   if QT_VERSION >= 0x030200
-	newFont.setStyleStrategy(QFont::OpenGLCompatible);
-#   endif
-	newFont.setStyleHint(QFont::AnyStyle, QFont::PreferBitmap);
-	renderText(x, y, text, newFont);
-# else
 	if (tileRegion_ != NULL) {
 		renderText((x-tileRegion_->xMin) * width() / (tileRegion_->xMax - tileRegion_->xMin),
 				   (y-tileRegion_->yMin) * height() / (tileRegion_->yMax - tileRegion_->yMin), text, scaledFont(fnt));
 	} else
 		renderText(x, y, text, fnt);
-# endif
-
-#endif
 }
-
-/* Similar to drawText(), but the text is handled as a classical 3D object of the scene.
-
-Although useful, this method is deprecated with recent Qt versions. Indeed, Qt renders text as
-pixmaps that cannot be oriented. However, when GLUT is used instead of Qt (when your Qt version is
-lower than 3.1, see drawText() documentation) orientated characters are possible and this method will work.
-
-\p pos and \p normal respectively represent the 3D coordinate of the text and the normal to the text
-plane. They are expressed with respect to the \e current \c GL_MODELVIEW matrix.
-
-If you want your text to always face the camera (normal parallel to camera()->viewDirection), use
-QGLWidget::renderText(x,y,z).
-
-See the <a href="../examples/draw3DText.html">draw3DText example</a> for an illustration. */
-/*
-void QGLViewer::draw3DText(const Vec& pos, const Vec& normal, const QString& text, GLfloat height)
-{
-#if QT_VERSION < QGLVIEWER_QT_VERSION_WITHOUT_GLUT
-if (!textIsEnabled())
-return;
-
-glMatrixMode(GL_MODELVIEW) ;
-glPushMatrix() ;
-
-const GLfloat font_scale = (119.05f - 33.33f) / 8; // see glutStrokeCharacter man page
-// const GLfloat font_scale = (119.05f - 33.33f) * 15.0f; // see glutStrokeCharacter man page
-
-static GLfloat lineWidth;
-glGetFloatv(GL_LINE_WIDTH, &lineWidth);
-
-glTranslatef(pos.x, pos.y, pos.z);
-glMultMatrixd(Quaternion(Vec(0.0, 0.0, 1.0), normal).matrix());
-
-glLineWidth(2.0);
-
-glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-glEnable(GL_BLEND);
-glEnable(GL_LINE_SMOOTH);
-
-const GLfloat scale = height / font_scale;
-glScalef(scale, scale, scale);
-
-for (uint i=0; i<text.length(); ++i)
-glutStrokeCharacter(GLUT_STROKE_ROMAN, text.at(i));
-
-glLineWidth(lineWidth);
-
-glMatrixMode(GL_MODELVIEW);
-glPopMatrix() ;
-#else
-static bool displayed = false;
-
-if (!displayed)
-{
-qWarning("draw3DText is not supported with Qt >= 3.1.");
-qWarning("Use QGLWidget::renderText() instead,");
-qWarning("or use the glut glutStrokeCharacter() method.");
-displayed = true;
-}
-
-Q_UNUSED(pos)
-Q_UNUSED(normal)
-Q_UNUSED(text)
-Q_UNUSED(height)
-#endif
-}
-*/
 
 /*! Briefly displays a message in the lower left corner of the widget. Convenient to provide
 feedback to the user.
@@ -1354,10 +1230,8 @@ void QGLViewer::mousePressEvent(QMouseEvent* e)
 					// Display visual hint line
 					update();
 			}
-#if QT_VERSION >= 0x030000
 			else
 				e->ignore();
-#endif
 		}
 }
 
@@ -1477,10 +1351,8 @@ void QGLViewer::mouseReleaseEvent(QMouseEvent* e)
 				else
 					manipulatedFrame()->mouseReleaseEvent(e, camera());
 			}
-#if QT_VERSION >= 0x030000
 			else
 				e->ignore();
-#endif
 
 	// Not absolutely needed (see above commented code for the optimal version), but may reveal
 	// useful for specific applications.
@@ -1548,10 +1420,8 @@ void QGLViewer::wheelEvent(QWheelEvent* e)
 				break;
 			}
 		}
-#if QT_VERSION >= 0x030000
 		else
 			e->ignore();
-#endif
 	}
 }
 
@@ -2108,11 +1978,6 @@ void QGLViewer::help()
 		}
 	}
 
-
-#if QT_VERSION < 0x030000
-	const int currentPageIndex = helpWidget()->currentPageIndex();
-#endif
-
 	for (int i=0; i<4; ++i)
 	{
 		QString text;
@@ -2126,7 +1991,7 @@ void QGLViewer::help()
 						"<h3>Version %1</h3><br>"
 						"A versatile 3D viewer based on OpenGL and Qt<br>"
 						"Copyright 2002-%2 Gilles Debunne<br>"
-						"<code>%3</code>").arg(QGLViewerVersionString()).arg("2013").arg("http://www.libqglviewer.com") +
+						"<code>%3</code>").arg(QGLViewerVersionString()).arg("2014").arg("http://www.libqglviewer.com") +
 					QString("</center>");
 			break;
 		default : break;
@@ -2511,6 +2376,7 @@ void QGLViewer::setPlayKeyFramePathStateKey(int buttonState)
 ////////////////////////////////////////////////////////////////////////////////
 //              M o u s e   b e h a v i o r   s t a t e   k e y s             //
 ////////////////////////////////////////////////////////////////////////////////
+#ifndef DOXYGEN
 /*! This method has been deprecated in version 2.5.0
 
 Associates keyboard modifiers to MouseHandler \p handler.
@@ -2600,8 +2466,6 @@ void QGLViewer::setHandlerKeyboardModifiers(MouseHandler handler, Qt::KeyboardMo
 	clickBinding_ = newClickBinding_;
 }
 
-
-#ifndef DOXYGEN
 void QGLViewer::setHandlerStateKey(MouseHandler handler, int buttonState)
 {
 	qWarning("setHandlerStateKey has been renamed setHandlerKeyboardModifiers");
@@ -2741,8 +2605,7 @@ illustration.
 The binding is ignored if Qt::NoButton is specified as \p buttons.
 
 See also setMouseBinding(Qt::KeyboardModifiers, Qt::MouseButtons, MouseHandler, MouseAction, bool), setWheelBinding() and clearMouseBindings().
-
-\note If you use Qt version 2 or 3, the \p buttonsBefore parameter is actually a Qt::ButtonState. */
+*/
 void QGLViewer::setMouseBinding(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button, ClickAction action, bool doubleClick, Qt::MouseButtons buttonsBefore)
 {
 	if ((buttonsBefore != Qt::NoButton) && !doubleClick) {
@@ -2981,6 +2844,19 @@ int QGLViewer::wheelHandler(Qt::Key key, Qt::KeyboardModifiers modifiers) const
 		return -1;
 }
 
+/*! Same as mouseAction(), but for the ClickAction set using setMouseBinding().
+
+Returns NO_CLICK_ACTION if no click action is associated with this keyboard and mouse buttons combination. */
+QGLViewer::ClickAction QGLViewer::clickAction(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button,
+											  bool doubleClick, Qt::MouseButtons buttonsBefore) const {
+	ClickBindingPrivate cbp(modifiers, button, doubleClick, buttonsBefore, key);
+	if (clickBinding_.contains(cbp))
+		return clickBinding_[cbp];
+	else
+		return NO_CLICK_ACTION;
+}
+
+#ifndef DOXYGEN
 /*! This method is deprecated in version 2.5.0
 
   Use wheelAction() and wheelHandler() instead. */
@@ -3006,19 +2882,6 @@ QGLViewer::ClickAction QGLViewer::clickAction(int state, bool doubleClick, Qt::M
 					   buttonsBefore);
 }
 
-/*! Same as mouseAction(), but for the ClickAction set using setMouseBinding().
-
-Returns NO_CLICK_ACTION if no click action is associated with this keyboard and mouse buttons combination. */
-QGLViewer::ClickAction QGLViewer::clickAction(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button,
-											  bool doubleClick, Qt::MouseButtons buttonsBefore) const {
-	ClickBindingPrivate cbp(modifiers, button, doubleClick, buttonsBefore, key);
-	if (clickBinding_.contains(cbp))
-		return clickBinding_[cbp];
-	else
-		return NO_CLICK_ACTION;
-}
-
-#ifndef DOXYGEN
 /*! This method is deprecated since version 2.5.0
 
  Use getClickActionState(ClickAction, Qt::Key, Qt::KeyboardModifiers, Qt::MouseButton, bool, Qt::MouseButtons) instead.
@@ -3580,11 +3443,7 @@ bool QGLViewer::restoreStateFromFile()
 	}
 	else
 	{
-#if QT_VERSION < 0x030200
-		QMessageBox::warning(this, tr("Open file error", "Message box window title"), tr("Unable to open file %1").arg(name));
-#else
 		QMessageBox::warning(this, tr("Open file error", "Message box window title"), tr("Unable to open file %1").arg(name) + ":\n" + f.errorString());
-#endif
 		return false;
 	}
 

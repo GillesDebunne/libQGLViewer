@@ -1,9 +1,7 @@
 #include "viewer.h"
 #include "standardCamera.h"
 
-#if QT_VERSION >= 0x040000
-# include <QKeyEvent>
-#endif
+#include <QKeyEvent>
 
 using namespace std;
 using namespace qglviewer;
@@ -23,21 +21,21 @@ void Viewer::draw()
 
   glBegin(GL_QUAD_STRIP);
   for (int i=0; i<nbSteps; ++i)
-    {
-      const float ratio = i/nbSteps;
-      const float angle = 21.0*ratio;
-      const float c = cos(angle);
-      const float s = sin(angle);
-      const float r1 = 1.0 - 0.8f*ratio;
-      const float r2 = 0.8f - 0.8f*ratio;
-      const float alt = ratio - 0.5f;
-      const float nor = 0.5f;
-      const float up = sqrt(1.0-nor*nor);
-      glColor3f(1.0-ratio, 0.2f , ratio);
-      glNormal3f(nor*c, up, nor*s);
-      glVertex3f(r1*c, alt, r1*s);
-      glVertex3f(r2*c, alt+0.05f, r2*s);
-    }
+	{
+	  const float ratio = i/nbSteps;
+	  const float angle = 21.0*ratio;
+	  const float c = cos(angle);
+	  const float s = sin(angle);
+	  const float r1 = 1.0 - 0.8f*ratio;
+	  const float r2 = 0.8f - 0.8f*ratio;
+	  const float alt = ratio - 0.5f;
+	  const float nor = 0.5f;
+	  const float up = sqrt(1.0-nor*nor);
+	  glColor3f(1.0-ratio, 0.2f , ratio);
+	  glNormal3f(nor*c, up, nor*s);
+	  glVertex3f(r1*c, alt, r1*s);
+	  glVertex3f(r2*c, alt+0.05f, r2*s);
+	}
   glEnd();
 }
 
@@ -68,35 +66,31 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 {
   if (e->key() == Qt::Key_M) {
   // 'M' changes mode : standard or QGLViewer camera
-    ((StandardCamera*)camera())->toggleMode();
-    showMessage();
+	((StandardCamera*)camera())->toggleMode();
+	showMessage();
   } else
-    if (e->key() == Qt::Key_T) {
-    // 'T' changes the projection type : perspective or orthogonal
-      if (camera()->type() == Camera::ORTHOGRAPHIC)
-        camera()->setType(Camera::PERSPECTIVE);
-      else
-        camera()->setType(Camera::ORTHOGRAPHIC);
-        showMessage();
-      } else
-        QGLViewer::keyPressEvent(e);
+	if (e->key() == Qt::Key_T) {
+	// 'T' changes the projection type : perspective or orthogonal
+	  if (camera()->type() == Camera::ORTHOGRAPHIC)
+		camera()->setType(Camera::PERSPECTIVE);
+	  else
+		camera()->setType(Camera::ORTHOGRAPHIC);
+		showMessage();
+	  } else
+		QGLViewer::keyPressEvent(e);
 }
 
 void Viewer::wheelEvent(QWheelEvent *e)
 {
   if ((camera()->type() == Camera::ORTHOGRAPHIC) && (((StandardCamera*)camera())->isStandard()) &&
-#if QT_VERSION >= 0x040000
-    (e->modifiers() & Qt::ShiftModifier))
-#else
-    (e->state() & Qt::ShiftButton))
-#endif
+	(e->modifiers() & Qt::ShiftModifier))
   {
-    ((StandardCamera*)camera())->changeOrthoFrustumSize(e->delta());
-    Q_EMIT cameraChanged();
-    updateGL();
+	((StandardCamera*)camera())->changeOrthoFrustumSize(e->delta());
+	Q_EMIT cameraChanged();
+	updateGL();
   }
   else
-    QGLViewer::wheelEvent(e);
+	QGLViewer::wheelEvent(e);
 }
 
 QString Viewer::helpString() const

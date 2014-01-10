@@ -1,8 +1,6 @@
 #include "constrainedCamera.h"
 
-#if QT_VERSION >= 0x040000
-# include <QKeyEvent>
-#endif
+#include <QKeyEvent>
 
 using namespace qglviewer;
 using namespace std;
@@ -10,25 +8,25 @@ using namespace std;
 AxisPlaneConstraint::Type Viewer::nextTranslationConstraintType(const AxisPlaneConstraint::Type& type)
 {
   switch (type)
-    {
-    case AxisPlaneConstraint::FREE  : return AxisPlaneConstraint::PLANE; break;
-    case AxisPlaneConstraint::PLANE : return AxisPlaneConstraint::AXIS;  break;
-    case AxisPlaneConstraint::AXIS  : return AxisPlaneConstraint::FORBIDDEN;  break;
-    case AxisPlaneConstraint::FORBIDDEN   : return AxisPlaneConstraint::FREE; break;
-    default : return AxisPlaneConstraint::FREE;
-    }
+	{
+	case AxisPlaneConstraint::FREE  : return AxisPlaneConstraint::PLANE; break;
+	case AxisPlaneConstraint::PLANE : return AxisPlaneConstraint::AXIS;  break;
+	case AxisPlaneConstraint::AXIS  : return AxisPlaneConstraint::FORBIDDEN;  break;
+	case AxisPlaneConstraint::FORBIDDEN   : return AxisPlaneConstraint::FREE; break;
+	default : return AxisPlaneConstraint::FREE;
+	}
 }
 
 AxisPlaneConstraint::Type Viewer::nextRotationConstraintType(const AxisPlaneConstraint::Type& type)
 {
   switch (type)
-    {
-    case AxisPlaneConstraint::FREE  : return AxisPlaneConstraint::AXIS; break;
-    case AxisPlaneConstraint::PLANE : return AxisPlaneConstraint::FREE; break;
-    case AxisPlaneConstraint::AXIS  : return AxisPlaneConstraint::FORBIDDEN;  break;
-    case AxisPlaneConstraint::FORBIDDEN   : return AxisPlaneConstraint::FREE; break;
-    default : return AxisPlaneConstraint::FREE;
-    }
+	{
+	case AxisPlaneConstraint::FREE  : return AxisPlaneConstraint::AXIS; break;
+	case AxisPlaneConstraint::PLANE : return AxisPlaneConstraint::FREE; break;
+	case AxisPlaneConstraint::AXIS  : return AxisPlaneConstraint::FORBIDDEN;  break;
+	case AxisPlaneConstraint::FORBIDDEN   : return AxisPlaneConstraint::FREE; break;
+	default : return AxisPlaneConstraint::FREE;
+	}
 }
 
 void Viewer::changeConstraint()
@@ -76,21 +74,21 @@ void Viewer::draw()
   const float nbSteps = 200.0;
   glBegin(GL_QUAD_STRIP);
   for (float i=0; i<nbSteps; ++i)
-    {
-      float ratio = i/nbSteps;
-      float angle = 21.0*ratio;
-      float c = cos(angle);
-      float s = sin(angle);
-      float r1 = 1.0 - 0.8*ratio;
-      float r2 = 0.8 - 0.8*ratio;
-      float alt = ratio - 0.5;
-      const float nor = .5;
-      const float up = sqrt(1.0-nor*nor);
-      glColor3f(1-ratio, 0.2f , ratio);
-      glNormal3f(nor*c, up, nor*s);
-      glVertex3f(r1*c, alt, r1*s);
-      glVertex3f(r2*c, alt+0.05, r2*s);
-    }
+	{
+	  float ratio = i/nbSteps;
+	  float angle = 21.0*ratio;
+	  float c = cos(angle);
+	  float s = sin(angle);
+	  float r1 = 1.0 - 0.8*ratio;
+	  float r2 = 0.8 - 0.8*ratio;
+	  float alt = ratio - 0.5;
+	  const float nor = .5;
+	  const float up = sqrt(1.0-nor*nor);
+	  glColor3f(1-ratio, 0.2f , ratio);
+	  glNormal3f(nor*c, up, nor*s);
+	  glVertex3f(r1*c, alt, r1*s);
+	  glVertex3f(r2*c, alt+0.05, r2*s);
+	}
   glEnd();
 
   displayText();
@@ -99,19 +97,19 @@ void Viewer::draw()
 void Viewer::keyPressEvent(QKeyEvent *e)
 {
   switch (e->key())
-    {
-    case Qt::Key_G : transDir = (transDir+1)%3; break;
-    case Qt::Key_D : rotDir   = (rotDir+1)%3;   break;
-    case Qt::Key_Space: changeConstraint();     break;
-    case Qt::Key_T :
-      constraints[activeConstraint]->setTranslationConstraintType(nextTranslationConstraintType(constraints[activeConstraint]->translationConstraintType()));
-      break;
-    case Qt::Key_R :
-      constraints[activeConstraint]->setRotationConstraintType(nextRotationConstraintType(constraints[activeConstraint]->rotationConstraintType()));
-      break;
-    default:
-      QGLViewer::keyPressEvent(e);
-    }
+	{
+	case Qt::Key_G : transDir = (transDir+1)%3; break;
+	case Qt::Key_D : rotDir   = (rotDir+1)%3;   break;
+	case Qt::Key_Space: changeConstraint();     break;
+	case Qt::Key_T :
+	  constraints[activeConstraint]->setTranslationConstraintType(nextTranslationConstraintType(constraints[activeConstraint]->translationConstraintType()));
+	  break;
+	case Qt::Key_R :
+	  constraints[activeConstraint]->setRotationConstraintType(nextRotationConstraintType(constraints[activeConstraint]->rotationConstraintType()));
+	  break;
+	default:
+	  QGLViewer::keyPressEvent(e);
+	}
 
   Vec dir(0.0, 0.0, 0.0);
   dir[transDir] = 1.0;
@@ -128,12 +126,12 @@ void Viewer::displayType(const AxisPlaneConstraint::Type type, const int x, cons
 {
   QString text;
   switch (type)
-    {
-    case AxisPlaneConstraint::FREE:  text = QString("FREE (%1)").arg(c);  break;
-    case AxisPlaneConstraint::PLANE: text = QString("PLANE (%1)").arg(c); break;
-    case AxisPlaneConstraint::AXIS:  text = QString("AXIS (%1)").arg(c); break;
-    case AxisPlaneConstraint::FORBIDDEN: text = QString("FORBIDDEN (%1)").arg(c); break;
-    }
+	{
+	case AxisPlaneConstraint::FREE:  text = QString("FREE (%1)").arg(c);  break;
+	case AxisPlaneConstraint::PLANE: text = QString("PLANE (%1)").arg(c); break;
+	case AxisPlaneConstraint::AXIS:  text = QString("AXIS (%1)").arg(c); break;
+	case AxisPlaneConstraint::FORBIDDEN: text = QString("FORBIDDEN (%1)").arg(c); break;
+	}
   drawText(x, y, text);
 }
 
@@ -141,11 +139,11 @@ void Viewer::displayDir(const unsigned short dir, const int x, const int y, cons
 {
   QString text;
   switch (dir)
-    {
-    case 0: text = QString("X (%1)").arg(c); break;
-    case 1: text = QString("Y (%1)").arg(c); break;
-    case 2: text = QString("Z (%1)").arg(c); break;
-    }
+	{
+	case 0: text = QString("X (%1)").arg(c); break;
+	case 1: text = QString("Y (%1)").arg(c); break;
+	case 2: text = QString("Z (%1)").arg(c); break;
+	}
   drawText(x, y, text);
 }
 
@@ -162,11 +160,11 @@ void Viewer::displayText()
   displayType(constraints[activeConstraint]->rotationConstraintType(), width()-220, height()-60, 'R');
 
   switch (activeConstraint)
-    {
-    case 0 : drawText(20,20, "Constraint direction defined w/r to WORLD (SPACE)"); break;
-    case 1 : drawText(20,20, "Constraint direction defined w/r to CAMERA (SPACE)"); break;
-    }
-  
+	{
+	case 0 : drawText(20,20, "Constraint direction defined w/r to WORLD (SPACE)"); break;
+	case 1 : drawText(20,20, "Constraint direction defined w/r to CAMERA (SPACE)"); break;
+	}
+
   glEnable(GL_LIGHTING);
 }
 

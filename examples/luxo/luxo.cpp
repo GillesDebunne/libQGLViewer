@@ -13,7 +13,7 @@ QString Viewer::helpString() const
   text += "showing how easy it is to create a moderately complex application.<br><br>";
   text += "The famous luxo lamp (©Pixar) can interactively be manipulated ";
   text += "with the mouse. <b>Shift</b> left click on an a part of the lamp to select it, ";
-  text += "and then move it with the mouse. Press the <b>Control</b> key or select the background ";
+  text += "and then move it with the mouse. Press the <b>Alt</b> key or select the background ";
   text += "to move the camera instead.<br><br>";
   text += "A simpler object selection example is given in the <i>select</i> example. ";
   text += "A simpler frame displacement example is available in <i>manipulatedFrame</i> and ";
@@ -53,18 +53,15 @@ void Viewer::init()
   // Make camera the default manipulated frame.
   setManipulatedFrame( camera()->frame() );
 
-#if QT_VERSION < 0x040000
-  // Preserve CAMERA bindings, see setHandlerKeyboardModifiers documentation.
-  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::AltButton);
-  // The frames can be move without any key pressed
-  setHandlerKeyboardModifiers(QGLViewer::FRAME, Qt::NoButton);
-  // The camera can always be moved with the Control key.
-  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::ControlButton);
-#else
-  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::AltModifier);
-  setHandlerKeyboardModifiers(QGLViewer::FRAME, Qt::NoModifier);
-  setHandlerKeyboardModifiers(QGLViewer::CAMERA, Qt::ControlModifier);
-#endif
+  setMouseBinding(Qt::AltModifier, Qt::LeftButton, QGLViewer::CAMERA, QGLViewer::ROTATE);
+  setMouseBinding(Qt::AltModifier, Qt::RightButton, QGLViewer::CAMERA, QGLViewer::TRANSLATE);
+  setMouseBinding(Qt::AltModifier, Qt::MidButton, QGLViewer::CAMERA, QGLViewer::ZOOM);
+  setWheelBinding(Qt::AltModifier, QGLViewer::CAMERA, QGLViewer::ZOOM);
+
+  setMouseBinding(Qt::NoModifier, Qt::LeftButton, QGLViewer::FRAME, QGLViewer::ROTATE);
+  setMouseBinding(Qt::NoModifier, Qt::RightButton, QGLViewer::FRAME, QGLViewer::TRANSLATE);
+  setMouseBinding(Qt::NoModifier, Qt::MidButton, QGLViewer::FRAME, QGLViewer::ZOOM);
+  setWheelBinding(Qt::NoModifier, QGLViewer::FRAME, QGLViewer::ZOOM);
 
   initSpotLight();
 
@@ -80,15 +77,15 @@ void Viewer::draw()
   const float nbPatches = 100;
   glNormal3f(0.0,0.0,1.0);
   for (int j=0; j<nbPatches; ++j)
-    {
-      glBegin(GL_QUAD_STRIP);
-      for (int i=0; i<=nbPatches; ++i)
+	{
+	  glBegin(GL_QUAD_STRIP);
+	  for (int i=0; i<=nbPatches; ++i)
 	{
 	  glVertex2f((2*i/nbPatches-1.0), (2*j/nbPatches-1.0));
 	  glVertex2f((2*i/nbPatches-1.0), (2*(j+1)/nbPatches-1.0));
 	}
-      glEnd();
-    }
+	  glEnd();
+	}
 }
 
 void Viewer::drawWithNames()
@@ -100,16 +97,16 @@ void Viewer::drawWithNames()
 void Viewer::postSelection(const QPoint&)
 {
   if (selectedName() == -1)
-    {
-      // Camera will be the default frame is no object is selected.
-      setManipulatedFrame( camera()->frame() );
-      luxo.setSelectedFrameNumber(4); // dummy value meaning camera
-    }
+	{
+	  // Camera will be the default frame is no object is selected.
+	  setManipulatedFrame( camera()->frame() );
+	  luxo.setSelectedFrameNumber(4); // dummy value meaning camera
+	}
   else
-    {
-      setManipulatedFrame(luxo.frame(selectedName()));
-      luxo.setSelectedFrameNumber(selectedName());
-    }
+	{
+	  setManipulatedFrame(luxo.frame(selectedName()));
+	  luxo.setSelectedFrameNumber(selectedName());
+	}
 }
 
 //////////////////////////////////  L u x o ////////////////////////////////////////
@@ -117,13 +114,13 @@ void Viewer::postSelection(const QPoint&)
 Luxo::Luxo()
 {
   for (unsigned short i=0; i<4; ++i)
-    {
-      frame_[i] = new ManipulatedFrame();
+	{
+	  frame_[i] = new ManipulatedFrame();
 
-      // Creates a hierarchy of frames.
-      if (i>0)
+	  // Creates a hierarchy of frames.
+	  if (i>0)
 	frame(i)->setReferenceFrame(frame(i-1));
-    }
+	}
 
   // Initialize frames
   frame(1)->setTranslation(Vec(0.0, 0.0, 0.08f)); // Base height
@@ -228,9 +225,9 @@ void Luxo::drawCylinder()
 void Luxo::setColor(unsigned short nb)
 {
   if (nb == selected)
-    glColor3f(0.9f, 0.9f, 0.0);
+	glColor3f(0.9f, 0.9f, 0.0);
   else
-    glColor3f(0.9f, 0.9f, 0.9f);
+	glColor3f(0.9f, 0.9f, 0.9f);
 }
 
 // Draws a truncated cone aligned with the Z axis.

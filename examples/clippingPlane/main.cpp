@@ -9,11 +9,7 @@ int main(int argc, char** argv)
   // Instantiate the viewer.
   Viewer viewer;
 
-#if QT_VERSION < 0x040000
-  application.setMainWidget(&viewer);
-#else
   viewer.setWindowTitle("clippingPlane");
-#endif
 
   // Make the viewer window visible on screen.
   viewer.show();

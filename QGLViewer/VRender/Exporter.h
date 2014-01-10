@@ -6,13 +6,8 @@
 #include "Primitive.h"
 
 #include "../config.h"
-#if QT_VERSION >= 0x040000
-# include <QTextStream>
-# include <QString>
-#else
-# include <qtextstream.h>
-# include <qstring.h>
-#endif
+#include <QTextStream>
+#include <QString>
 
 namespace vrender
 {

@@ -11,11 +11,7 @@ protected :
 private :
   void drawSaucer() const;
 
-#if WIN32 && QT_VERSION < 0x030000
-# define nbSaucers 10
-#else
   static const int nbSaucers = 10;
-#endif
   qglviewer::Frame saucerPos[nbSaucers];
   QColor saucerColor[nbSaucers];
 };

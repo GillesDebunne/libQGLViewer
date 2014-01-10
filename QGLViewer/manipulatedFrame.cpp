@@ -5,9 +5,7 @@
 
 #include <cstdlib>
 
-#if QT_VERSION >= 0x040000
-# include <QMouseEvent>
-#endif
+#include <QMouseEvent>
 
 using namespace qglviewer;
 using namespace std;
@@ -262,10 +260,8 @@ void ManipulatedFrame::mousePressEvent(QMouseEvent* const event, Camera* const c
 
 	// #CONNECTION setMouseBinding
 	// action_ should no longer possibly be NO_MOUSE_ACTION since this value is not inserted in mouseBinding_
-	//#if QT_VERSION >= 0x030000
 	//if (action_ == QGLViewer::NO_MOUSE_ACTION)
 	//event->ignore();
-	//#endif
 
 	prevPos_ = pressPos_ = event->pos();
 }
@@ -431,11 +427,7 @@ Left button double click aligns the ManipulatedFrame with the \p camera axis (se
  direction. */
 void ManipulatedFrame::mouseDoubleClickEvent(QMouseEvent* const event, Camera* const camera)
 {
-#if QT_VERSION >= 0x040000
 	if (event->modifiers() == Qt::NoModifier)
-#else
-	if (event->state() == Qt::NoButton)
-#endif
 		switch (event->button())
 		{
 		case Qt::LeftButton:  alignWithFrame(camera->frame()); break;

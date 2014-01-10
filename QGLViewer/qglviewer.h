@@ -3,25 +3,14 @@
 
 #include "camera.h"
 
-#if QT_VERSION >= 0x040000
-# include <QMap>
-# include <QClipboard>
-#else
-# include <qmap.h>
-# include <qclipboard.h>
-#endif
+#include <QMap>
+#include <QClipboard>
 
 class QTabWidget;
 
 namespace qglviewer {
 class MouseGrabber;
 }
-
-#if QT_VERSION < 0x040000
-# define Qt::KeyboardModifiers Qt::ButtonState
-# define Qt::MouseButtons Qt::ButtonState
-# define Qt::WindowFlags Qt::WFlags
-#endif
 
 /*! \brief A versatile 3D OpenGL viewer based on QGLWidget.
 \class QGLViewer qglviewer.h QGLViewer/qglviewer.h
@@ -52,7 +41,7 @@ class QGLVIEWER_EXPORT QGLViewer : public QGLWidget
 public:
 	// Complete implementation is provided so that the constructor is defined with QT3_SUPPORT when .h is included.
 	// (Would not be available otherwise since lib is compiled without QT3_SUPPORT).
-#if QT_VERSION < 0x040000 || defined QT3_SUPPORT
+#ifdef QT3_SUPPORT
 	explicit QGLViewer(QWidget* parent=NULL, const char* name=0, const QGLWidget* shareWidget=0, Qt::WindowFlags flags=0)
 		: QGLWidget(parent, name, shareWidget, flags)
 	{ defaultConstructor(); }
@@ -62,14 +51,7 @@ public:
 	{ defaultConstructor(); }
 
 	QGLViewer(QGLContext* context, QWidget* parent, const char* name=0, const QGLWidget* shareWidget=0, Qt::WindowFlags flags=0)
-# if QT_VERSION >= 0x030200
 		: QGLWidget(context, parent, name, shareWidget, flags) {
-# else
-	// MOC_SKIP_BEGIN
-		: QGLWidget(parent, name, shareWidget, flags) {
-		Q_UNUSED(context);
-		// MOC_SKIP_END
-# endif
 		defaultConstructor(); }
 
 #else
@@ -436,9 +418,6 @@ protected Q_SLOTS:
 	/*! @name Snapshots */
 	//@{
 public:
-#if QT_VERSION < 0x030000
-	virtual QImage grabFrameBuffer(bool withAlpha=false);
-#endif
 	/*! Returns the snapshot file name used by saveSnapshot().
 
 	This value is used in \p automatic mode (see saveSnapshot()). A dialog is otherwise popped-up to
@@ -551,11 +530,7 @@ public:
 		else {
 			QFont f(font);
 			if (f.pixelSize() == -1)
-#if QT_VERSION >= 0x040000
 				f.setPointSizeF(f.pointSizeF() * tileRegion_->textScale);
-#else
-				f.setPointSizeFloat(f.pointSizeFloat() * tileRegion_->textScale);
-#endif
 			else
 				f.setPixelSize(f.pixelSize() * tileRegion_->textScale);
 			return f;
@@ -1079,11 +1054,7 @@ public:
 
 	\attention With Qt version 3, this method returns a \c QPtrList instead. Use a \c QPtrListIterator
 	to iterate on the list instead.*/
-#if QT_VERSION >= 0x040000
 	static const QList<QGLViewer*>& QGLViewerPool() { return QGLViewer::QGLViewerPool_; }
-#else
-	static const QPtrList<QGLViewer>& QGLViewerPool() { return QGLViewer::QGLViewerPool_; }
-#endif
 
 
 	/*! Returns the index of the QGLViewer \p viewer in the QGLViewerPool(). This index in unique and
@@ -1093,11 +1064,7 @@ public:
 	When a QGLViewer is deleted, the QGLViewers' indexes are preserved and NULL is set for that index.
 		When a QGLViewer is created, it is placed in the first available position in that list.
 		Returns -1 if the QGLViewer could not be found (which should not be possible). */
-#if QT_VERSION >= 0x040000
 	static int QGLViewerIndex(const QGLViewer* const viewer) { return QGLViewer::QGLViewerPool_.indexOf(const_cast<QGLViewer*>(viewer)); }
-#else
-	static int QGLViewerIndex(const QGLViewer* const viewer) { return QGLViewer::QGLViewerPool_.findRef(viewer); }
-#endif
 	//@}
 
 #ifndef DOXYGEN
@@ -1291,11 +1258,7 @@ private:
 	TileRegion* tileRegion_;
 
 	// Q G L V i e w e r   p o o l
-#if QT_VERSION >= 0x040000
 	static QList<QGLViewer*> QGLViewerPool_;
-#else
-	static QPtrList<QGLViewer> QGLViewerPool_;
-#endif
 
 	// S t a t e   F i l e
 	QString stateFileName_;

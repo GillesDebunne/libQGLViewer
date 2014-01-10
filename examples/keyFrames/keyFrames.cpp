@@ -1,8 +1,6 @@
 #include "keyFrames.h"
 
-#if QT_VERSION >= 0x040000
-# include <QKeyEvent>
-#endif
+#include <QKeyEvent>
 
 using namespace qglviewer;
 using namespace std;
@@ -24,11 +22,11 @@ Viewer::Viewer()
 
   // Create an initial path
   for (int i=0; i<nbKeyFrames; i++)
-    {
-      keyFrame_[i] = new ManipulatedFrame();
-      keyFrame_[i]->setPosition(-1.0 + 2.0*i/(nbKeyFrames-1), 0.0, 0.0);
-      kfi_.addKeyFrame(keyFrame_[i]);
-    }
+	{
+	  keyFrame_[i] = new ManipulatedFrame();
+	  keyFrame_[i]->setPosition(-1.0 + 2.0*i/(nbKeyFrames-1), 0.0, 0.0);
+	  kfi_.addKeyFrame(keyFrame_[i]);
+	}
 
   currentKF_ = 0;
   setManipulatedFrame(keyFrame_[currentKF_]);
@@ -66,32 +64,32 @@ QString Viewer::helpString() const
 void Viewer::keyPressEvent(QKeyEvent *e)
 {
   switch (e->key())
-    {
-    case Qt::Key_Left :
-      currentKF_ = (currentKF_+nbKeyFrames-1) % nbKeyFrames;
-      setManipulatedFrame(keyFrame_[currentKF_]);
-      updateGL();
-      break;
-    case Qt::Key_Right :
-      currentKF_ = (currentKF_+1) % nbKeyFrames;
-      setManipulatedFrame(keyFrame_[currentKF_]);
-      updateGL();
-      break;
-    case Qt::Key_Return :
-      kfi_.toggleInterpolation();
-      break;
-    case Qt::Key_Plus :
-      kfi_.setInterpolationSpeed(kfi_.interpolationSpeed()+0.25);
-      break;
-    case Qt::Key_Minus :
-      kfi_.setInterpolationSpeed(kfi_.interpolationSpeed()-0.25);
-      break;
-    // case Qt::Key_C :
-      // kfi_.setClosedPath(!kfi_.closedPath());
-      // break;
-    default:
-      QGLViewer::keyPressEvent(e);
-    }
+	{
+	case Qt::Key_Left :
+	  currentKF_ = (currentKF_+nbKeyFrames-1) % nbKeyFrames;
+	  setManipulatedFrame(keyFrame_[currentKF_]);
+	  updateGL();
+	  break;
+	case Qt::Key_Right :
+	  currentKF_ = (currentKF_+1) % nbKeyFrames;
+	  setManipulatedFrame(keyFrame_[currentKF_]);
+	  updateGL();
+	  break;
+	case Qt::Key_Return :
+	  kfi_.toggleInterpolation();
+	  break;
+	case Qt::Key_Plus :
+	  kfi_.setInterpolationSpeed(kfi_.interpolationSpeed()+0.25);
+	  break;
+	case Qt::Key_Minus :
+	  kfi_.setInterpolationSpeed(kfi_.interpolationSpeed()-0.25);
+	  break;
+	// case Qt::Key_C :
+	  // kfi_.setClosedPath(!kfi_.closedPath());
+	  // break;
+	default:
+	  QGLViewer::keyPressEvent(e);
+	}
 }
 
 void Viewer::draw()
@@ -105,15 +103,15 @@ void Viewer::draw()
   kfi_.drawPath(5, 10);
 
   for (int i=0; i<nbKeyFrames; ++i)
-    {
-      glPushMatrix();
-      glMultMatrixd(kfi_.keyFrame(i).matrix());
+	{
+	  glPushMatrix();
+	  glMultMatrixd(kfi_.keyFrame(i).matrix());
 
-      if ((i == currentKF_) || (keyFrame_[i]->grabsMouse()))
+	  if ((i == currentKF_) || (keyFrame_[i]->grabsMouse()))
 	drawAxis(0.4f);
-      else
+	  else
 	drawAxis(0.2f);
 
-      glPopMatrix();
-    }
+	  glPopMatrix();
+	}
 }

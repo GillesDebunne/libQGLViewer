@@ -1,13 +1,8 @@
 #ifndef QGLVIEWER_KEY_FRAME_INTERPOLATOR_H
 #define QGLVIEWER_KEY_FRAME_INTERPOLATOR_H
 
-#if QT_VERSION > 0x040000
-# include <QObject>
-# include <QTimer>
-#else
-# include <qobject.h>
-# include <qtimer.h>
-#endif
+#include <QObject>
+#include <QTimer>
 
 #include "quaternion.h"
 // Not actually needed, but some bad compilers (Microsoft VS6) complain.
@@ -309,21 +304,9 @@ private:
 #endif
 
 	// K e y F r a m e s
-#if QT_VERSION >= 0x040000
 	mutable QList<KeyFrame*> keyFrame_;
 	QMutableListIterator<KeyFrame*>* currentFrame_[4];
 	QList<Frame> path_;
-#else
-	mutable QPtrList<KeyFrame> keyFrame_;
-	// 4 succesive frames. interpolationTime_ is between index 1 and 2.
-	QPtrListIterator<KeyFrame>* currentFrame_[4];
-# if QT_VERSION >= 0x030000
-	// Cached path computed values (for drawPath()).
-	QValueVector<Frame> path_;
-# else
-	QVector<Frame> path_;
-# endif
-#endif
 
 	// A s s o c i a t e d   f r a m e
 	Frame* frame_;

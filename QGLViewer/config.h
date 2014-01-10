@@ -16,10 +16,8 @@
 // Get QT_VERSION and other Qt flags
 #include <qglobal.h>
 
-#if QT_VERSION < 0x030000
-# ifdef _OS_WIN32_
-#  define Q_OS_WIN32
-# endif
+#if QT_VERSION < 0x040000
+Error : libQGLViewer requires a minimum Qt version of 4.0
 #endif
 
 // Win 32 DLL export macros
@@ -54,50 +52,19 @@
 #endif
 
 // OpenGL includes - Included here and hence shared by all the files that need OpenGL headers.
-#if QT_VERSION >= 0x040000
 # include <QGLWidget>
-#else
-# include <qgl.h>
-#endif
 
-// GLU was removed from Qt in version 4.8 
+// GLU was removed from Qt in version 4.8
 #ifdef Q_OS_MAC
 # include <OpenGL/glu.h>
 #else
 # include <GL/glu.h>
 #endif
 
-// Old Qt versions require GLUT for text rendering
-#define QGLVIEWER_QT_VERSION_WITHOUT_GLUT 0x030100
-#if QT_VERSION < QGLVIEWER_QT_VERSION_WITHOUT_GLUT
-# ifdef Q_OS_MAC
-#  include <GLUT/glut.h>
-# else
-#  ifdef Q_OS_WIN32
-#   include <glut.h>
-#  else
-#   include <GL/glut.h>
-#  endif
-# endif
-#endif
-
 // Container classes interfaces changed a lot in Qt.
 // Compatibility patches are all grouped here.
-#if QT_VERSION >= 0x040000
-# include <QList>
-# include <QVector>
-#else
-# define qMax(a,b) QMAX(a,b)
-# include <qptrlist.h>
-# include <qvaluevector.h>
-#endif
-
-// Support for the no_keywords CONFIG option on previous Qt versions
-#if QT_VERSION < 0x040400
-# define Q_SLOTS slots
-# define Q_SIGNALS signals
-# define Q_EMIT emit
-#endif
+#include <QList>
+#include <QVector>
 
 // For deprecated methods
 // #define __WHERE__ "In file "<<__FILE__<<", line "<<__LINE__<<": "

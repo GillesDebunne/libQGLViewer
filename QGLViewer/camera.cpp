@@ -229,10 +229,10 @@ void Camera::setFieldOfView(float fov) {
 
 Changing the camera Type alters the viewport and the objects' size can be changed. This method garantees that the two frustum match in a plane normal to viewDirection(), passing through the Revolve Around Point (RAP).
 
-Prefix the type with \c Camera if needed, as in: 
-\code 
-camera()->setType(Camera::ORTHOGRAPHIC); 
-// or even qglviewer::Camera::ORTHOGRAPHIC if you do not use namespace 
+Prefix the type with \c Camera if needed, as in:
+\code
+camera()->setType(Camera::ORTHOGRAPHIC);
+// or even qglviewer::Camera::ORTHOGRAPHIC if you do not use namespace
 \endcode */
 void Camera::setType(Type type)
 {
@@ -589,7 +589,7 @@ void Camera::loadModelViewMatrixStereo(bool leftBuffer) const
  represents the state of the \c GL_PROJECTION after QGLViewer::preDraw(), at the beginning of
  QGLViewer::draw(). If you modified the \c GL_PROJECTION matrix (for instance using
  QGLViewer::startScreenCoordinatesSystem()), the two results differ.
- 
+
  The result is an OpenGL 4x4 matrix, which is given in \e column-major order (see \c glMultMatrix
  man page for details).
 
@@ -633,7 +633,7 @@ void Camera::getModelViewProjectionMatrix(GLdouble m[16]) const
 	GLdouble proj[16];
 	getModelViewMatrix(mv);
 	getProjectionMatrix(proj);
-	
+
 	for (unsigned short i=0; i<4; ++i)
 	{
 		for (unsigned short j=0; j<4; ++j)
@@ -890,7 +890,7 @@ void Camera::interpolateToFitScene()
 
   \p fr is expressed in world coordinates. \p duration tunes the interpolation speed (default is
   1 second).
-  
+
   See also interpolateToFitScene() and interpolateToZoomOnPixel(). */
 void Camera::interpolateTo(const Frame& fr, float duration)
 {
@@ -1646,11 +1646,7 @@ void Camera::deletePath(int i)
 void Camera::drawAllPaths()
 {
 	for (QMap<int, KeyFrameInterpolator*>::ConstIterator it = kfi_.begin(), end=kfi_.end(); it != end; ++it)
-#if QT_VERSION >= 0x040000
 		(it.value())->drawPath(3, 5, sceneRadius());
-#else
-		(it.data())->drawPath(3, 5, sceneRadius());
-#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1709,11 +1705,7 @@ QDomElement Camera::domElement(const QString& name, QDomDocument& document) cons
 	// KeyFrame paths
 	for (QMap<int, KeyFrameInterpolator*>::ConstIterator it = kfi_.begin(), end=kfi_.end(); it != end; ++it)
 	{
-#if QT_VERSION >= 0x040000
 		QDomElement kfNode = (it.value())->domElement("KeyFrameInterpolator", document);
-#else
-		QDomElement kfNode = (it.data())->domElement("KeyFrameInterpolator", document);
-#endif
 		kfNode.setAttribute("index", QString::number(it.key()));
 		de.appendChild(kfNode);
 	}
@@ -1746,13 +1738,9 @@ void Camera::initFromDOMElement(const QDomElement& element)
 {
 	QDomElement child=element.firstChild().toElement();
 
-#if QT_VERSION >= 0x040000
 	QMutableMapIterator<int, KeyFrameInterpolator*> it(kfi_);
 	while (it.hasNext()) {
 		it.next();
-#else
-	for (QMap<int, KeyFrameInterpolator*>::Iterator it = kfi_.begin(), end=kfi_.end(); it != end; ++it) {
-#endif
 		deletePath(it.key());
 	}
 
@@ -1853,7 +1841,7 @@ void Camera::drawCamera(float, float, float)
 /*! Draws a representation of the Camera in the 3D world.
 
 The near and far planes are drawn as quads, the frustum is drawn using lines and the camera up
-vector is represented by an arrow to disambiguate the drawing. See the 
+vector is represented by an arrow to disambiguate the drawing. See the
 <a href="../examples/standardCamera.html">standardCamera example</a> for an illustration.
 
 Note that the current \c glColor and \c glPolygonMode are used to draw the near and far planes. See
@@ -1980,7 +1968,7 @@ void Camera::draw(bool drawFarPlane, float scale) const
 The six 4-component vectors of \p coef respectively correspond to the left, right, near, far, top
 and bottom Camera frustum planes. Each vector holds a plane equation of the form:
 \code
-a*x + b*y + c*z + d = 0 
+a*x + b*y + c*z + d = 0
 \endcode
 where \c a, \c b, \c c and \c d are the 4 components of each vector, in that order.
 

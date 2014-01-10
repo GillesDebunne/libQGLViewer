@@ -4,10 +4,6 @@
 # Run "qmake; make; make install" to compile and install the library on Unix systems.
 # Optional arguments can tune install paths (as in "qmake PREFIX=$HOME"). See doc/download.html for details.
 
-# If your Qt version is lower than 3.1 (look at $QTDIR/lib), you need to link with GLUT.
-# Uncomment the following line:
-# USE_GLUT = yes
-
 TEMPLATE = lib
 TARGET = QGLViewer
 VERSION = 2.5.1
@@ -43,13 +39,9 @@ DISTFILES *= qglviewer-icon.xpm
 
 TRANSLATIONS = qglviewer_fr.ts
 
-QT_VERSION=$$[QT_VERSION]
+QT *= xml opengl
 
-!contains( QT_VERSION, "^3.*" ) {
-	QT *= xml opengl
-}
-
-contains ( QT_VERSION, "^5.*" ) {
+contains ( $$[QT_VERSION], "^5.*" ) {
 	QT *= gui widgets
 }
 
@@ -60,11 +52,7 @@ contains ( QT_VERSION, "^5.*" ) {
 # -----------------------------------
 # --  I m a g e I n t e r f a c e  --
 # -----------------------------------
-contains( QT_VERSION, "^3.*" ) {
-  FORMS *= ImageInterface.Qt3.ui
-} else {
-  FORMS *= ImageInterface.ui
-}
+FORMS *= ImageInterface.ui
 
 # ---------------------------------------------
 # --  V e c t o r i a l   R e n d e r i n g  --
@@ -75,11 +63,7 @@ contains( QT_VERSION, "^3.*" ) {
 contains( DEFINES, NO_VECTORIAL_RENDER ) {
   message( Vectorial rendering disabled )
 } else {
-  contains( QT_VERSION, "^3.*" ) {
-	FORMS *= VRenderInterface.Qt3.ui
-  } else {
-	FORMS *= VRenderInterface.ui
-  }
+  FORMS *= VRenderInterface.ui
 
   SOURCES *= \
 	VRender/BackFaceCullingOptimizer.cpp \
@@ -304,9 +288,6 @@ win32 {
 	DEFINES *= CREATE_QGLVIEWER_DLL
   }
 
-  # Use the DLL version of Qt (Qt3 only)
-  DEFINES *= QT_DLL QT_THREAD_SUPPORT
-
   CONFIG *= embed_manifest_dll
 
   # Make sure to have C++ files, PentiumPro code, few warnings, add
@@ -324,9 +305,7 @@ win32 {
 }
 
 
-!contains( QT_VERSION, "^3.*" ) {
-   build_pass:CONFIG(debug, debug|release) {
-	 unix: TARGET = $$join(TARGET,,,_debug)
-	 else: TARGET = $$join(TARGET,,,d)
-   }
+build_pass:CONFIG(debug, debug|release) {
+  unix: TARGET = $$join(TARGET,,,_debug)
+  else: TARGET = $$join(TARGET,,,d)
 }

@@ -18,12 +18,8 @@ int main(int argc, char** argv)
   // Also update on camera change (type or mode)
   QObject::connect(&viewer, SIGNAL(cameraChanged()), &cviewer, SLOT(updateGL()));
 
-#if QT_VERSION < 0x040000
-  application.setMainWidget(&viewer);
-#else
   viewer.setWindowTitle("standardCamera");
   cviewer.setWindowTitle("Camera viewer");
-#endif
 
   cviewer.show();
   viewer.show();
