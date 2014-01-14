@@ -5,11 +5,14 @@
 
 #include <QMap>
 #include <QClipboard>
+#include <QTime>
 
 class QTabWidget;
 
 namespace qglviewer {
 class MouseGrabber;
+class ManipulatedFrame;
+class ManipulatedCameraFrame;
 }
 
 /*! \brief A versatile 3D OpenGL viewer based on QGLWidget.
@@ -1234,7 +1237,7 @@ private:
 				return modifiers < cbp.modifiers;
 			if (button != cbp.button)
 				return button < cbp.button;
-			return !doubleClick && cbp.doubleClick;
+			return doubleClick != cbp.doubleClick;
 		}
 	};
 #endif

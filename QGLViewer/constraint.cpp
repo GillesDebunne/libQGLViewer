@@ -1,6 +1,7 @@
 #include "constraint.h"
 #include "frame.h"
 #include "camera.h"
+#include "manipulatedCameraFrame.h"
 
 using namespace qglviewer;
 using namespace std;

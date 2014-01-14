@@ -1,6 +1,7 @@
 #include "domUtils.h"
 #include "camera.h"
 #include "qglviewer.h"
+#include "manipulatedCameraFrame.h"
 
 using namespace std;
 using namespace qglviewer;
@@ -1141,6 +1142,89 @@ static inline unsigned int ind(unsigned int i, unsigned int j)
 	return (i*4+j);
 }
 
+/*! Returns the Camera position (the eye), defined in the world coordinate system.
+
+Use setPosition() to set the Camera position. Other convenient methods are showEntireScene() or
+fitSphere(). Actually returns \c frame()->position().
+
+This position corresponds to the projection center of a Camera::PERSPECTIVE Camera. It is not
+located in the image plane, which is at a zNear() distance ahead. */
+Vec Camera::position() const { return frame()->position(); }
+
+/*! Returns the normalized up vector of the Camera, defined in the world coordinate system.
+
+Set using setUpVector() or setOrientation(). It is orthogonal to viewDirection() and to
+rightVector().
+
+It corresponds to the Y axis of the associated frame() (actually returns
+frame()->inverseTransformOf(Vec(0.0, 1.0, 0.0)) ). */
+Vec Camera::upVector() const
+{
+	return frame()->inverseTransformOf(Vec(0.0, 1.0, 0.0));
+}
+/*! Returns the normalized view direction of the Camera, defined in the world coordinate system.
+
+Change this value using setViewDirection(), lookAt() or setOrientation(). It is orthogonal to
+upVector() and to rightVector().
+
+This corresponds to the negative Z axis of the frame() ( frame()->inverseTransformOf(Vec(0.0,
+0.0, -1.0)) ). */
+Vec Camera::viewDirection() const { return frame()->inverseTransformOf(Vec(0.0, 0.0, -1.0)); }
+
+/*! Returns the normalized right vector of the Camera, defined in the world coordinate system.
+
+This vector lies in the Camera horizontal plane, directed along the X axis (orthogonal to
+upVector() and to viewDirection()). Set using setUpVector(), lookAt() or setOrientation().
+
+Simply returns frame()->inverseTransformOf(Vec(1.0, 0.0, 0.0)). */
+Vec Camera::rightVector() const
+{
+	return frame()->inverseTransformOf(Vec(1.0, 0.0, 0.0));
+}
+
+/*! Returns the Camera orientation, defined in the world coordinate system.
+
+Actually returns \c frame()->orientation(). Use setOrientation(), setUpVector() or lookAt() to
+set the Camera orientation. */
+Quaternion Camera::orientation() const { return frame()->orientation(); }
+
+/*! Sets the Camera position() (the eye), defined in the world coordinate system. */
+void Camera::setPosition(const Vec& pos) { frame()->setPosition(pos); }
+
+/*! Returns the Camera frame coordinates of a point \p src defined in world coordinates.
+
+worldCoordinatesOf() performs the inverse transformation.
+
+Note that the point coordinates are simply converted in a different coordinate system. They are
+not projected on screen. Use projectedCoordinatesOf() for that. */
+Vec Camera::cameraCoordinatesOf(const Vec& src) const { return frame()->coordinatesOf(src); }
+
+/*! Returns the world coordinates of the point whose position \p src is defined in the Camera
+coordinate system.
+
+cameraCoordinatesOf() performs the inverse transformation. */
+Vec Camera::worldCoordinatesOf(const Vec& src) const { return frame()->inverseCoordinatesOf(src); }
+
+/*! Returns the fly speed of the Camera.
+
+Simply returns frame()->flySpeed(). See the ManipulatedCameraFrame::flySpeed() documentation.
+This value is only meaningful when the MouseAction bindings is QGLViewer::MOVE_FORWARD or
+QGLViewer::MOVE_BACKWARD.
+
+Set to 1% of the sceneRadius() by setSceneRadius(). See also setFlySpeed(). */
+float Camera::flySpeed() const { return frame()->flySpeed(); }
+
+/*! Sets the Camera flySpeed().
+
+\attention This value is modified by setSceneRadius(). */
+void Camera::setFlySpeed(float speed) { frame()->setFlySpeed(speed); }
+
+/*! The point the Camera revolves around with the QGLViewer::ROTATE mouse binding. Defined in world coordinate system.
+
+Default value is the sceneCenter().
+
+\attention setSceneCenter() changes this value. */
+Vec Camera::revolveAroundPoint() const { return frame()->revolveAroundPoint(); }
 
 /*! Sets the Camera's position() and orientation() from an OpenGL ModelView matrix.
 

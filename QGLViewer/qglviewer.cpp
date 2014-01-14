@@ -2,6 +2,7 @@
 #include "qglviewer.h"
 #include "camera.h"
 #include "keyFrameInterpolator.h"
+#include "manipulatedCameraFrame.h"
 
 # include <QtAlgorithms>
 # include <QTextEdit>

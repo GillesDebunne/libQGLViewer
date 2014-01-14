@@ -3,6 +3,7 @@
 
 #include "frame.h"
 #include "mouseGrabber.h"
+#include "qglviewer.h"
 
 #include <QString>
 #include <QTimer>
@@ -222,6 +223,15 @@ public:
 	/*! @name Current state */
 	//@{
 	bool isManipulated() const;
+	/*! Returns the \c MouseAction currently applied to this ManipulatedFrame.
+
+	  Will return QGLViewer::NO_MOUSE_ACTION unless a mouse button is being pressed
+	  and has been bound to this QGLViewer::MouseHandler.
+
+	 The binding between mouse buttons and key modifiers and MouseAction is set using
+	 QGLViewer::setMouseBinding(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton buttons, MouseHandler handler, MouseAction action, bool withConstraint).
+	  */
+	QGLViewer::MouseAction currentMouseAction() const { return action_; }
 	//@}
 
 	/*! @name MouseGrabber implementation */
@@ -242,7 +252,7 @@ public Q_SLOTS:
 protected:
 	Quaternion deformedBallQuaternion(int x, int y, float cx, float cy, const Camera* const camera);
 
-	int action_; // Should be a QGLViewer::MouseAction, but include loop
+	QGLViewer::MouseAction action_;
 	Constraint* previousConstraint_; // When manipulation is without Contraint.
 
 	virtual void startAction(int ma, bool withConstraint=true); // int is really a QGLViewer::MouseAction

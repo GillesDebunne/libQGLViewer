@@ -1,5 +1,6 @@
 #include "domUtils.h"
 #include "manipulatedFrame.h"
+#include "manipulatedCameraFrame.h"
 #include "qglviewer.h"
 #include "camera.h"
 
@@ -193,18 +194,18 @@ void ManipulatedFrame::startAction(int ma, bool withConstraint)
 
 	switch (action_)
 	{
-	case QGLViewer::ROTATE:
-	case QGLViewer::SCREEN_ROTATE:
-		mouseSpeed_ = 0.0;
-		stopSpinning();
-		break;
+		case QGLViewer::ROTATE:
+		case QGLViewer::SCREEN_ROTATE:
+			mouseSpeed_ = 0.0;
+			stopSpinning();
+			break;
 
-	case QGLViewer::SCREEN_TRANSLATE:
-		dirIsFixed_ = false;
-		break;
+		case QGLViewer::SCREEN_TRANSLATE:
+			dirIsFixed_ = false;
+			break;
 
-	default:
-		break;
+		default:
+			break;
 	}
 }
 
@@ -279,115 +280,124 @@ void ManipulatedFrame::mouseMoveEvent(QMouseEvent* const event, Camera* const ca
 {
 	switch (action_)
 	{
-	case QGLViewer::TRANSLATE:
-	{
-		const QPoint delta = event->pos() - prevPos_;
-		Vec trans(static_cast<float>(delta.x()), static_cast<float>(-delta.y()), 0.0);
-		// Scale to fit the screen mouse displacement
-		switch (camera->type())
+		case QGLViewer::TRANSLATE:
 		{
-		case Camera::PERSPECTIVE :
-			trans *= 2.0 * tan(camera->fieldOfView()/2.0) * fabs((camera->frame()->coordinatesOf(position())).z) / camera->screenHeight();
-			break;
-		case Camera::ORTHOGRAPHIC :
-		{
-			GLdouble w,h;
-			camera->getOrthoWidthHeight(w, h);
-			trans[0] *= 2.0 * w / camera->screenWidth();
-			trans[1] *= 2.0 * h / camera->screenHeight();
-			break;
-		}
-		}
-		// Transform to world coordinate system.
-		trans = camera->frame()->orientation().rotate(translationSensitivity()*trans);
-		// And then down to frame
-		if (referenceFrame()) trans = referenceFrame()->transformOf(trans);
-		translate(trans);
-		break;
-	}
-
-	case QGLViewer::ZOOM:
-	{
-		//#CONNECTION# wheelEvent ZOOM case
-		Vec trans(0.0, 0.0, (camera->position()-position()).norm() * (event->y() - prevPos_.y()) / camera->screenHeight());
-
-		trans = camera->frame()->orientation().rotate(trans);
-		if (referenceFrame())
-			trans = referenceFrame()->transformOf(trans);
-		translate(trans);
-		break;
-	}
-
-	case QGLViewer::SCREEN_ROTATE:
-	{
-		Vec trans = camera->projectedCoordinatesOf(position());
-
-		const double prev_angle = atan2(prevPos_.y()-trans[1], prevPos_.x()-trans[0]);
-		const double      angle = atan2(event->y()-trans[1], event->x()-trans[0]);
-
-		const Vec axis = transformOf(camera->frame()->inverseTransformOf(Vec(0.0, 0.0, -1.0)));
-		Quaternion rot(axis, angle-prev_angle);
-		//#CONNECTION# These two methods should go together (spinning detection and activation)
-		computeMouseSpeed(event);
-		setSpinningQuaternion(rot);
-		spin();
-		break;
-	}
-
-	case QGLViewer::SCREEN_TRANSLATE:
-	{
-		Vec trans;
-		int dir = mouseOriginalDirection(event);
-		if (dir == 1)
-			trans.setValue(static_cast<float>(event->x() - prevPos_.x()), 0.0, 0.0);
-		else if (dir == -1)
-			trans.setValue(0.0, static_cast<float>(prevPos_.y() - event->y()), 0.0);
-
-		switch (camera->type())
-		{
-		case Camera::PERSPECTIVE :
-			trans *= 2.0 * tan(camera->fieldOfView()/2.0) * fabs((camera->frame()->coordinatesOf(position())).z) / camera->screenHeight();
-			break;
-		case Camera::ORTHOGRAPHIC :
-		{
-			GLdouble w,h;
-			camera->getOrthoWidthHeight(w, h);
-			trans[0] *= 2.0 * w / camera->screenWidth();
-			trans[1] *= 2.0 * h / camera->screenHeight();
+			const QPoint delta = event->pos() - prevPos_;
+			Vec trans(static_cast<float>(delta.x()), static_cast<float>(-delta.y()), 0.0);
+			// Scale to fit the screen mouse displacement
+			switch (camera->type())
+			{
+				case Camera::PERSPECTIVE :
+					trans *= 2.0 * tan(camera->fieldOfView()/2.0) * fabs((camera->frame()->coordinatesOf(position())).z) / camera->screenHeight();
+					break;
+				case Camera::ORTHOGRAPHIC :
+				{
+					GLdouble w,h;
+					camera->getOrthoWidthHeight(w, h);
+					trans[0] *= 2.0 * w / camera->screenWidth();
+					trans[1] *= 2.0 * h / camera->screenHeight();
+					break;
+				}
+			}
+			// Transform to world coordinate system.
+			trans = camera->frame()->orientation().rotate(translationSensitivity()*trans);
+			// And then down to frame
+			if (referenceFrame()) trans = referenceFrame()->transformOf(trans);
+			translate(trans);
 			break;
 		}
+
+		case QGLViewer::ZOOM:
+		{
+			//#CONNECTION# wheelEvent ZOOM case
+			Vec trans(0.0, 0.0, (camera->position()-position()).norm() * (event->y() - prevPos_.y()) / camera->screenHeight());
+
+			trans = camera->frame()->orientation().rotate(trans);
+			if (referenceFrame())
+				trans = referenceFrame()->transformOf(trans);
+			translate(trans);
+			break;
 		}
-		// Transform to world coordinate system.
-		trans = camera->frame()->orientation().rotate(translationSensitivity()*trans);
-		// And then down to frame
-		if (referenceFrame())
-			trans = referenceFrame()->transformOf(trans);
 
-		translate(trans);
-		break;
-	}
+		case QGLViewer::SCREEN_ROTATE:
+		{
+			Vec trans = camera->projectedCoordinatesOf(position());
 
-	case QGLViewer::ROTATE:
-	{
-		Vec trans = camera->projectedCoordinatesOf(position());
-		Quaternion rot = deformedBallQuaternion(event->x(), event->y(), trans[0], trans[1], camera);
-		trans = Vec(-rot[0], -rot[1], -rot[2]);
-		trans = camera->frame()->orientation().rotate(trans);
-		trans = transformOf(trans);
-		rot[0] = trans[0];
-		rot[1] = trans[1];
-		rot[2] = trans[2];
-		//#CONNECTION# These two methods should go together (spinning detection and activation)
-		computeMouseSpeed(event);
-		setSpinningQuaternion(rot);
-		spin();
-		break;
-	}
+			const double prev_angle = atan2(prevPos_.y()-trans[1], prevPos_.x()-trans[0]);
+			const double      angle = atan2(event->y()-trans[1], event->x()-trans[0]);
 
-	case QGLViewer::NO_MOUSE_ACTION:
-		// Possible when the ManipulatedFrame is a MouseGrabber. This method is then called without startAction
-		// because of mouseTracking.
-		break;
+			const Vec axis = transformOf(camera->frame()->inverseTransformOf(Vec(0.0, 0.0, -1.0)));
+			Quaternion rot(axis, angle-prev_angle);
+			//#CONNECTION# These two methods should go together (spinning detection and activation)
+			computeMouseSpeed(event);
+			setSpinningQuaternion(rot);
+			spin();
+			break;
+		}
+
+		case QGLViewer::SCREEN_TRANSLATE:
+		{
+			Vec trans;
+			int dir = mouseOriginalDirection(event);
+			if (dir == 1)
+				trans.setValue(static_cast<float>(event->x() - prevPos_.x()), 0.0, 0.0);
+			else if (dir == -1)
+				trans.setValue(0.0, static_cast<float>(prevPos_.y() - event->y()), 0.0);
+
+			switch (camera->type())
+			{
+				case Camera::PERSPECTIVE :
+					trans *= 2.0 * tan(camera->fieldOfView()/2.0) * fabs((camera->frame()->coordinatesOf(position())).z) / camera->screenHeight();
+					break;
+				case Camera::ORTHOGRAPHIC :
+				{
+					GLdouble w,h;
+					camera->getOrthoWidthHeight(w, h);
+					trans[0] *= 2.0 * w / camera->screenWidth();
+					trans[1] *= 2.0 * h / camera->screenHeight();
+					break;
+				}
+			}
+			// Transform to world coordinate system.
+			trans = camera->frame()->orientation().rotate(translationSensitivity()*trans);
+			// And then down to frame
+			if (referenceFrame())
+				trans = referenceFrame()->transformOf(trans);
+
+			translate(trans);
+			break;
+		}
+
+		case QGLViewer::ROTATE:
+		{
+			Vec trans = camera->projectedCoordinatesOf(position());
+			Quaternion rot = deformedBallQuaternion(event->x(), event->y(), trans[0], trans[1], camera);
+			trans = Vec(-rot[0], -rot[1], -rot[2]);
+			trans = camera->frame()->orientation().rotate(trans);
+			trans = transformOf(trans);
+			rot[0] = trans[0];
+			rot[1] = trans[1];
+			rot[2] = trans[2];
+			//#CONNECTION# These two methods should go together (spinning detection and activation)
+			computeMouseSpeed(event);
+			setSpinningQuaternion(rot);
+			spin();
+			break;
+		}
+
+		case QGLViewer::MOVE_FORWARD:
+		case QGLViewer::MOVE_BACKWARD:
+		case QGLViewer::LOOK_AROUND:
+		case QGLViewer::ROLL:
+		case QGLViewer::DRIVE:
+		case QGLViewer::ZOOM_ON_REGION:
+			// These MouseAction values make no sense for a manipulatedFrame
+			break;
+
+		case QGLViewer::NO_MOUSE_ACTION:
+			// Possible when the ManipulatedFrame is a MouseGrabber. This method is then called without startAction
+			// because of mouseTracking.
+			break;
 	}
 
 	if (action_ != QGLViewer::NO_MOUSE_ACTION)
@@ -430,9 +440,9 @@ void ManipulatedFrame::mouseDoubleClickEvent(QMouseEvent* const event, Camera* c
 	if (event->modifiers() == Qt::NoModifier)
 		switch (event->button())
 		{
-		case Qt::LeftButton:  alignWithFrame(camera->frame()); break;
-		case Qt::RightButton: projectOnLine(camera->position(), camera->viewDirection()); break;
-		default: break;
+			case Qt::LeftButton:  alignWithFrame(camera->frame()); break;
+			case Qt::RightButton: projectOnLine(camera->position(), camera->viewDirection()); break;
+			default: break;
 		}
 }
 

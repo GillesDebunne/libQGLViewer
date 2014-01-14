@@ -1,10 +1,13 @@
 #ifndef QGLVIEWER_CAMERA_H
 #define QGLVIEWER_CAMERA_H
 
-#include "manipulatedCameraFrame.h"
 #include "keyFrameInterpolator.h"
+class QGLViewer;
 
 namespace qglviewer {
+
+class ManipulatedCameraFrame;
+
 /*! \brief A perspective or orthographic camera.
   \class Camera camera.h QGLViewer/camera.h
 
@@ -82,58 +85,17 @@ public:
 	/*! @name Position and orientation */
 	//@{
 public:
-	/*! Returns the Camera position (the eye), defined in the world coordinate system.
-
-	Use setPosition() to set the Camera position. Other convenient methods are showEntireScene() or
-	fitSphere(). Actually returns \c frame()->position().
-
-	This position corresponds to the projection center of a Camera::PERSPECTIVE Camera. It is not
-	located in the image plane, which is at a zNear() distance ahead. */
-	Vec position() const { return frame()->position(); }
-
-	/*! Returns the normalized up vector of the Camera, defined in the world coordinate system.
-
-	Set using setUpVector() or setOrientation(). It is orthogonal to viewDirection() and to
-	rightVector().
-
-	It corresponds to the Y axis of the associated frame() (actually returns
-	frame()->inverseTransformOf(Vec(0.0, 1.0, 0.0)) ). */
-	Vec upVector() const
-	{
-		return frame()->inverseTransformOf(Vec(0.0, 1.0, 0.0));
-	}
-	/*! Returns the normalized view direction of the Camera, defined in the world coordinate system.
-
-	Change this value using setViewDirection(), lookAt() or setOrientation(). It is orthogonal to
-	upVector() and to rightVector().
-
-	This corresponds to the negative Z axis of the frame() ( frame()->inverseTransformOf(Vec(0.0,
-	0.0, -1.0)) ). */
-	Vec viewDirection() const { return frame()->inverseTransformOf(Vec(0.0, 0.0, -1.0)); }
-
-	/*! Returns the normalized right vector of the Camera, defined in the world coordinate system.
-
-	This vector lies in the Camera horizontal plane, directed along the X axis (orthogonal to
-	upVector() and to viewDirection()). Set using setUpVector(), lookAt() or setOrientation().
-
-	Simply returns frame()->inverseTransformOf(Vec(1.0, 0.0, 0.0)). */
-	Vec rightVector() const
-	{
-		return frame()->inverseTransformOf(Vec(1.0, 0.0, 0.0));
-	}
-
-	/*! Returns the Camera orientation, defined in the world coordinate system.
-
-	Actually returns \c frame()->orientation(). Use setOrientation(), setUpVector() or lookAt() to
-	set the Camera orientation. */
-	Quaternion orientation() const { return frame()->orientation(); }
+	Vec position() const;
+	Vec upVector() const;
+	Vec viewDirection() const;
+	Vec rightVector() const;
+	Quaternion orientation() const;
 
 	void setFromModelViewMatrix(const GLdouble* const modelViewMatrix);
 	void setFromProjectionMatrix(const float matrix[12]);
 
 public Q_SLOTS:
-	/*! Sets the Camera position() (the eye), defined in the world coordinate system. */
-	void setPosition(const Vec& pos) { frame()->setPosition(pos); }
+	void setPosition(const Vec& pos);
 	void setOrientation(const Quaternion& q);
 	void setOrientation(float theta, float phi);
 	void setUpVector(const Vec& up, bool noMove=true);
@@ -328,12 +290,7 @@ public Q_SLOTS:
 	bool setRevolveAroundPointFromPixel(const QPoint& pixel);
 
 public:
-	/*! The point the Camera revolves around with the QGLViewer::ROTATE mouse binding. Defined in world coordinate system.
-
-	Default value is the sceneCenter().
-
-	\attention setSceneCenter() changes this value. */
-	Vec revolveAroundPoint() const { return frame()->revolveAroundPoint(); }
+	Vec revolveAroundPoint() const;
 	//@}
 
 
@@ -401,18 +358,8 @@ public:
 	/*! @name World to Camera coordinate systems conversions */
 	//@{
 public:
-	/*! Returns the Camera frame coordinates of a point \p src defined in world coordinates.
-
-	worldCoordinatesOf() performs the inverse transformation.
-
-	Note that the point coordinates are simply converted in a different coordinate system. They are
-	not projected on screen. Use projectedCoordinatesOf() for that. */
-	Vec cameraCoordinatesOf(const Vec& src) const { return frame()->coordinatesOf(src); }
-	/*! Returns the world coordinates of the point whose position \p src is defined in the Camera
-	coordinate system.
-
-	cameraCoordinatesOf() performs the inverse transformation. */
-	Vec worldCoordinatesOf(const Vec& src) const { return frame()->inverseCoordinatesOf(src); }
+	Vec cameraCoordinatesOf(const Vec& src) const;
+	Vec worldCoordinatesOf(const Vec& src) const;
 	void getCameraCoordinatesOf(const float src[3], float res[3]) const;
 	void getWorldCoordinatesOf(const float src[3], float res[3]) const;
 	//@}
@@ -433,19 +380,9 @@ public:
 	/*! @name Fly speed */
 	//@{
 public:
-	/*! Returns the fly speed of the Camera.
-
-	Simply returns frame()->flySpeed(). See the ManipulatedCameraFrame::flySpeed() documentation.
-	This value is only meaningful when the MouseAction bindings is QGLViewer::MOVE_FORWARD or
-	QGLViewer::MOVE_BACKWARD.
-
-	Set to 1% of the sceneRadius() by setSceneRadius(). See also setFlySpeed(). */
-	float flySpeed() const { return frame()->flySpeed(); }
+	float flySpeed() const;
 public Q_SLOTS:
-	/*! Sets the Camera flySpeed().
-
-	\attention This value is modified by setSceneRadius(). */
-	void setFlySpeed(float speed) { frame()->setFlySpeed(speed); }
+	void setFlySpeed(float speed);
 	//@}
 
 
