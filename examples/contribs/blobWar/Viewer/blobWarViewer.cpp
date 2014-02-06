@@ -9,12 +9,10 @@
 #include <qtextedit.h>
 #include <qtimer.h>
 
-#if QT_VERSION >= 0x040000
-# include "ui_blobWarWindow.h"
-  class BlobWarWindow : public QMainWindow, public Ui::BlobWarWindow {};
-#else
-# include <qmainwindow.h>
-#endif
+#include <QGLViewer/manipulatedCameraFrame.h>
+
+#include "ui_blobWarWindow.h"
+class BlobWarWindow : public QMainWindow, public Ui::BlobWarWindow {};
 
 using namespace std;
 using namespace qglviewer;
@@ -27,13 +25,13 @@ class BoardConstraint : public Constraint
 public:
   virtual void constrainRotation(Quaternion& q, Frame * const fr)
   {
-    const Vec up = fr->transformOf(Vec(0.0, 0.0, 1.0));
-    Vec axis = q.axis();
-    float angle = 2.0*acos(q[3]);
-    if (fabs(axis*up) > fabs(axis.x))
-      axis.projectOnAxis(up);
-    else
-      {
+	const Vec up = fr->transformOf(Vec(0.0, 0.0, 1.0));
+	Vec axis = q.axis();
+	float angle = 2.0*acos(q[3]);
+	if (fabs(axis*up) > fabs(axis.x))
+	  axis.projectOnAxis(up);
+	else
+	  {
 	angle = (axis.x > 0.0) ? angle : -angle;
 	axis.setValue(fabs(axis.x), 0.0, 0.0);
 	const float currentAngle = asin(fr->inverseTransformOf(Vec(0.0, 0.0, -1.0)).z);
@@ -41,8 +39,8 @@ public:
 	  angle = -0.2 - currentAngle; // Not too low
 	if (currentAngle + angle < -M_PI/2.0)
 	  angle = -M_PI/2.0 - currentAngle; // Do not pass on the other side
-      }
-    q = Quaternion(axis, angle);
+	  }
+	q = Quaternion(axis, angle);
   }
 };
 
@@ -55,11 +53,11 @@ BlobWarViewer::BlobWarViewer(QWidget* parent, const char* name)
 BlobWarViewer::BlobWarViewer(QWidget* parent)
   : QGLViewer(parent),
 #endif
-    boardFileName_("4x4.bwb"), selectedPiece_(-1),
-    displayPossibleMoves_(true), animatePlays_(true), animationStep_(0)
+	boardFileName_("4x4.bwb"), selectedPiece_(-1),
+	displayPossibleMoves_(true), animatePlays_(true), animationStep_(0)
 {
   kfi_ = new KeyFrameInterpolator(new Frame());
-  
+
   QObject::connect(kfi_, SIGNAL(interpolated()), this, SLOT(updateGL()));
   QObject::connect(kfi_, SIGNAL(endReached()), this, SLOT(flipColor()));
 
@@ -68,9 +66,9 @@ BlobWarViewer::BlobWarViewer(QWidget* parent)
   undoTimer_->setSingleShot(true);
 #endif
   QObject::connect(undoTimer_, SIGNAL(timeout()), this, SLOT(playNextMove()));
-    
+
   for (int i=0; i<2; ++i)
-    connect(&(computerPlayer_[i]), SIGNAL(moveMade(QString, int)), this, SLOT(playComputerMove(QString, int)));
+	connect(&(computerPlayer_[i]), SIGNAL(moveMade(QString, int)), this, SLOT(playComputerMove(QString, int)));
 
   QStringList programFileNames;
   programFileNames << "blobWarAI" << "blobWarAI.exe" << "../AI/blobWarAI" << "../../AI/release/blobWarAI.exe" << "../../AI/debug/blobWarAI.exe";
@@ -104,19 +102,19 @@ void BlobWarViewer::init()
   connect(bww->gameNewGameAction, SIGNAL(activated()), this, SLOT(newGame()));
   connect(bww->gameUndoAction, SIGNAL(activated()), this, SLOT(undo()));
   connect(bww->gameRedoAction, SIGNAL(activated()), this, SLOT(redo()));
-  
+
   connect(bww->gameBlueIsHumanAction, SIGNAL(toggled(bool)), this, SLOT(bluePlayerIsHuman(bool)));
   connect(bww->gameRedIsHumanAction, SIGNAL(toggled(bool)), this, SLOT(redPlayerIsHuman(bool)));
-  
+
   connect(bww->gameBlueIsHumanAction, SIGNAL(toggled(bool)), bww->gameConfigureBluePlayerAction, SLOT(setDisabled(bool)));
   connect(bww->gameRedIsHumanAction, SIGNAL(toggled(bool)), bww->gameConfigureRedPlayerAction, SLOT(setDisabled(bool)));
-  
+
   connect(bww->gameConfigureBluePlayerAction, SIGNAL(activated()), this, SLOT(configureBluePlayer()));
   connect(bww->gameConfigureRedPlayerAction, SIGNAL(activated()), this, SLOT(configureRedPlayer()));
-  
+
   connect(bww->togglePossibleMoveAction, SIGNAL(toggled(bool)), this, SLOT(toggleDisplayPossibleMoves(bool)));
   connect(bww->toggleAnimationAction, SIGNAL(toggled(bool)), this, SLOT(toggleAnimation(bool)));
-  
+
   connect(bww->helpAboutAction, SIGNAL(activated()), this, SLOT(about()));
   connect(bww->helpRulesAction, SIGNAL(activated()), this, SLOT(displayRules()));
 #endif
@@ -143,11 +141,11 @@ void BlobWarViewer::initViewer()
 void BlobWarViewer::newGame()
 {
   if (!QFileInfo(boardFileName_).isReadable())
-    {
-      QMessageBox::warning(NULL ,"Unreadable board file", "Unable to read board file ("+boardFileName_+").\nLoad another board.");
-      return;
-    }
-  
+	{
+	  QMessageBox::warning(NULL ,"Unreadable board file", "Unable to read board file ("+boardFileName_+").\nLoad another board.");
+	  return;
+	}
+
 #if QT_VERSION < 0x040000
   std::ifstream f(boardFileName_.latin1());
 #else
@@ -164,7 +162,7 @@ void BlobWarViewer::newGame()
 void BlobWarViewer::fitCameraToBoard()
 {
   static BoardConstraint* boardConstraint = new BoardConstraint();
-  
+
   // Free camera rotation motion
   camera()->frame()->setConstraint(NULL);
 
@@ -185,26 +183,26 @@ void BlobWarViewer::fitCameraToBoard()
 void BlobWarViewer::draw()
 {
   glEnable(GL_LIGHTING);
-  
-  if (animationStep_ > 0)
-    {
-      glPushMatrix();
-      glMultMatrixd(kfi_->frame()->matrix());
-      Board::drawPiece(board_->bluePlays());
-      glPopMatrix();
 
-      if (animationStep_ > 1)
+  if (animationStep_ > 0)
+	{
+	  glPushMatrix();
+	  glMultMatrixd(kfi_->frame()->matrix());
+	  Board::drawPiece(board_->bluePlays());
+	  glPopMatrix();
+
+	  if (animationStep_ > 1)
 	board_->drawFlippingPieces(currentMove_.end(), animationStep_%2);
-    }
+	}
 
   board_->draw();
 
   if (selectedPiece_ >= 0)
-    {
-      board_->drawSelectedPiece(selectedPiece_);
-      if (displayPossibleMoves_)
+	{
+	  board_->drawSelectedPiece(selectedPiece_);
+	  if (displayPossibleMoves_)
 	board_->drawPossibleDestinations(selectedPiece_);
-    }
+	}
 
   board_->drawShadows();
 }
@@ -214,17 +212,17 @@ void BlobWarViewer::play(const Move& m)
 {
   currentMove_ = m;
   if (animatePlays_)
-    animatePlay();
+	animatePlay();
   else
-    simplePlay();
+	simplePlay();
 }
 
 void BlobWarViewer::simplePlay()
 {
   if ((!currentMove_.isClose()) && (animatePlays_))
-    board_->doDrawPiece(currentMove_.start());
+	board_->doDrawPiece(currentMove_.start());
 
-  board_->play(currentMove_);  
+  board_->play(currentMove_);
   updateGL();
   playNextMove();
 }
@@ -241,20 +239,20 @@ void BlobWarViewer::playNextMove()
 #endif
 
   if (board_->gameIsOver())
-    QMessageBox::information(this, "Game over", board_->statusMessage());
+	QMessageBox::information(this, "Game over", board_->statusMessage());
   else
-    {
-      // Save board state
+	{
+	  // Save board state
 #if QT_VERSION < 0x040000
-      std::ofstream f(stateFileName.latin1());
+	  std::ofstream f(stateFileName.latin1());
 #else
-      std::ofstream f(stateFileName.toLatin1().constData());
+	  std::ofstream f(stateFileName.toLatin1().constData());
 #endif
-      f << *board_;
-      f.close();
+	  f << *board_;
+	  f.close();
 
-      computerPlayer_[board_->bluePlays()].play(board_->bluePlays(), stateFileName);
-    }
+	  computerPlayer_[board_->bluePlays()].play(board_->bluePlays(), stateFileName);
+	}
 }
 
 void BlobWarViewer::playComputerMove(QString move, int duration)
@@ -268,9 +266,9 @@ void BlobWarViewer::playComputerMove(QString move, int duration)
 #endif
   Move m(move);
   if (m.isValid(board_))
-    play(m);
+	play(m);
   else
-    QMessageBox::warning(this, "Wrong move", "The move "+move+" is not legal for "+colorString[board_->bluePlays()]);
+	QMessageBox::warning(this, "Wrong move", "The move "+move+" is not legal for "+colorString[board_->bluePlays()]);
 }
 
 void BlobWarViewer::animatePlay()
@@ -279,20 +277,20 @@ void BlobWarViewer::animatePlay()
   // Cut/pasted from board posOf(). Not shared to prevent QGLViewer dependency in board.h
 
   if (currentMove_.isClose())
-    {
-      kfi_->addKeyFrame(Frame(Vec(currentMove_.start().x()+0.5,currentMove_.start().y()+0.5,0.0), Quaternion()));
-      kfi_->addKeyFrame(Frame(Vec(currentMove_.end().x()+0.5,currentMove_.end().y()+0.5,0.0), Quaternion()));
-    }
+	{
+	  kfi_->addKeyFrame(Frame(Vec(currentMove_.start().x()+0.5,currentMove_.start().y()+0.5,0.0), Quaternion()));
+	  kfi_->addKeyFrame(Frame(Vec(currentMove_.end().x()+0.5,currentMove_.end().y()+0.5,0.0), Quaternion()));
+	}
   else
-    {
-      kfi_->addKeyFrame(Frame(Vec(currentMove_.start().x()+0.5,currentMove_.start().y()+0.5,0.0), Quaternion()));
-      kfi_->addKeyFrame(Frame(Vec((currentMove_.start().x()+currentMove_.end().x()+1.0)/2.0,
+	{
+	  kfi_->addKeyFrame(Frame(Vec(currentMove_.start().x()+0.5,currentMove_.start().y()+0.5,0.0), Quaternion()));
+	  kfi_->addKeyFrame(Frame(Vec((currentMove_.start().x()+currentMove_.end().x()+1.0)/2.0,
 				(currentMove_.start().y()+currentMove_.end().y()+1.0)/2.0, 1.0), Quaternion()), 0.6f);
-      kfi_->addKeyFrame(Frame(Vec(currentMove_.end().x()+0.5,currentMove_.end().y()+0.5,0.0), Quaternion()), 1.2f);
-    }
-  
+	  kfi_->addKeyFrame(Frame(Vec(currentMove_.end().x()+0.5,currentMove_.end().y()+0.5,0.0), Quaternion()), 1.2f);
+	}
+
   if (!currentMove_.isClose())
-    board_->doNotDrawPiece(currentMove_.start());
+	board_->doNotDrawPiece(currentMove_.start());
 
   animationStep_ = 1;
   kfi_->startInterpolation();
@@ -301,14 +299,14 @@ void BlobWarViewer::animatePlay()
 void BlobWarViewer::flipColor()
 {
   updateGL();
-  
+
   if (animationStep_++ < 10)
-    QTimer::singleShot(100, this, SLOT(flipColor()));
+	QTimer::singleShot(100, this, SLOT(flipColor()));
   else
-    {
-      animationStep_ = 0;
-      simplePlay();
-    }
+	{
+	  animationStep_ = 0;
+	  simplePlay();
+	}
 }
 
 // M o v e   S e l e c t i o n
@@ -316,42 +314,42 @@ void BlobWarViewer::drawWithNames()
 {
   // Selection enabled only when the computer program is not active
   if ((!computerPlayer_[board_->bluePlays()].isActive()) && (animationStep_ ==0))
-    {
-      if (selectedPiece_ >= 0)
+	{
+	  if (selectedPiece_ >= 0)
 	board_->drawPossibleDestinations(selectedPiece_, true);
-  
-      // Always drawned, so that a new selection can occur
-      board_->drawSelectablePieces();
-    }
+
+	  // Always drawned, so that a new selection can occur
+	  board_->drawSelectablePieces();
+	}
 }
 
 void BlobWarViewer::postSelection(const QPoint&)
 {
   if (selectedPiece_ >= 0)
-    {
-      if (selectedName() >= 0)
+	{
+	  if (selectedName() >= 0)
 	if (selectedName() == selectedPiece_)
-	    selectedPiece_ = -1;
+		selectedPiece_ = -1;
 	else
 	  {
-	    Move m(board_, selectedPiece_, selectedName());
-	    if (m.isValid(board_))
-	      {
+		Move m(board_, selectedPiece_, selectedName());
+		if (m.isValid(board_))
+		  {
 		selectedPiece_ = -1;
 		play(m);
-	      }
-	    else
-	      if (board_->canBeSelected(selectedName()))
+		  }
+		else
+		  if (board_->canBeSelected(selectedName()))
 		  selectedPiece_ = selectedName();
-	      else
+		  else
 		  selectedPiece_ = -1;
 	  }
-      else
+	  else
 	  selectedPiece_ = -1;
-    }
+	}
   else
-    if (selectedName() >= 0)
-      selectedPiece_ = selectedName();
+	if (selectedName() >= 0)
+	  selectedPiece_ = selectedName();
 }
 
 
@@ -369,11 +367,11 @@ void BlobWarViewer::selectBoardFileName()
 void BlobWarViewer::load()
 {
   selectBoardFileName();
-  
+
   // In case of Cancel
   if (boardFileName_.isEmpty())
-    return;
-  
+	return;
+
   newGame();
   fitCameraToBoard();
 }
@@ -402,29 +400,29 @@ void BlobWarViewer::saveAs()
 #if QT_VERSION < 0x040000
   if (fi.extension().isEmpty())
 #else
-    if (fi.suffix().isEmpty())
+	if (fi.suffix().isEmpty())
 #endif
-      {
+	  {
 	boardFileName_ += ".bwb";
 	fi.setFile(boardFileName_);
-      }
+	  }
 
 #if QT_VERSION < 0x040000
   if (fi.exists())
-    {
-      if (QMessageBox::warning(this ,"Existing file",
-			       "File "+fi.fileName()+" already exists.\nSave anyway ?",
-			       QMessageBox::Yes,QMessageBox::Cancel) == QMessageBox::Cancel)
+	{
+	  if (QMessageBox::warning(this ,"Existing file",
+				   "File "+fi.fileName()+" already exists.\nSave anyway ?",
+				   QMessageBox::Yes,QMessageBox::Cancel) == QMessageBox::Cancel)
 	return;
 
-      if (!fi.isWritable())
+	  if (!fi.isWritable())
 	{
 	  QMessageBox::warning(this ,"Cannot save", "File "+fi.fileName()+" is not writeable.");
 	  return;
 	}
-    }
+	}
 #endif
-  
+
   save();
 }
 
@@ -468,13 +466,13 @@ void BlobWarViewer::configurePlayer(bool blue)
 void BlobWarViewer::undo()
 {
   if ((animationStep_==0) && (board_->undo()))
-    finalizeUndoRedo();
+	finalizeUndoRedo();
 }
 
 void BlobWarViewer::redo()
 {
   if ((animationStep_==0) && (board_->redo()))
-    finalizeUndoRedo();
+	finalizeUndoRedo();
 }
 
 void BlobWarViewer::finalizeUndoRedo()
@@ -498,19 +496,19 @@ void BlobWarViewer::displayRules()
   static QTextEdit* te;
 
   static const QString rules = "<b>B l o b   W a r</b><br><br>" \
-    "Blob war is a strategy game for two players.<br><br>" \
-    "The goal is to have the maximum number of pieces when the board is full.<br><br>" \
-    "A piece can be moved on a empty square at a distance of one (i.e. adjacent) or two squares. " \
-    "If the distance is one, the piece is cloned, otherwise it jumps to its destination.<br><br>" \
-    "In both cases, all the pieces located in the neighborhood of the destination square change their color " \
-    "to that of the current player.<br><br>" \
-    "Enjoy !";
-  
+	"Blob war is a strategy game for two players.<br><br>" \
+	"The goal is to have the maximum number of pieces when the board is full.<br><br>" \
+	"A piece can be moved on a empty square at a distance of one (i.e. adjacent) or two squares. " \
+	"If the distance is one, the piece is cloned, otherwise it jumps to its destination.<br><br>" \
+	"In both cases, all the pieces located in the neighborhood of the destination square change their color " \
+	"to that of the current player.<br><br>" \
+	"Enjoy !";
+
   if (!te)
-    {
-      te = new QTextEdit(rules);
-      te->resize(500,300);
-    }
-  
+	{
+	  te = new QTextEdit(rules);
+	  te->resize(500,300);
+	}
+
   te->show();
 }

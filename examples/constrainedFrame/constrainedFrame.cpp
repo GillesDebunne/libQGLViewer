@@ -1,6 +1,7 @@
 #include "constrainedFrame.h"
 
 #include <QKeyEvent>
+#include <QGLViewer/manipulatedCameraFrame.h>
 
 using namespace qglviewer;
 using namespace std;

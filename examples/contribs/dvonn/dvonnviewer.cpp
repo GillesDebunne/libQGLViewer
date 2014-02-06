@@ -5,9 +5,9 @@
 #include <math.h>
 #include <qmessagebox.h>
 
-#if QT_VERSION >= 0x040000
-# include <QMouseEvent>
-#endif
+#include <QGLViewer/manipulatedCameraFrame.h>
+
+#include <QMouseEvent>
 
 using namespace std;
 using namespace qglviewer;
@@ -20,8 +20,8 @@ namespace
   class BoardConstraint : public Constraint
   {
   public:
-    virtual void constrainRotation(Quaternion& q, Frame * const fr)
-      {
+	virtual void constrainRotation(Quaternion& q, Frame * const fr)
+	  {
 	const Vec up = fr->transformOf(Vec(0.0, 0.0, 1.0));
 	Vec axis = q.axis();
 	float angle = 2.0*acos(q[3]);
@@ -33,12 +33,12 @@ namespace
 	  axis.setValue(fabs(axis.x), 0.0, 0.0);
 	  const float currentAngle = asin(fr->inverseTransformOf(Vec(0.0, 0.0, -1.0)).z);
 	  if (currentAngle + angle > -0.2)
-	    angle = -0.2 - currentAngle; // Not too low
+		angle = -0.2 - currentAngle; // Not too low
 	  if (currentAngle + angle < -M_PI/2.0)
-	    angle = -M_PI/2.0 - currentAngle; // Do not pass on the other side
+		angle = -M_PI/2.0 - currentAngle; // Do not pass on the other side
 	}
 	q = Quaternion(axis, angle);
-      }
+	  }
   };
 }
 //************************************************************
@@ -51,20 +51,20 @@ DvonnViewer::DvonnViewer(QWidget* parent, const char* name)
 DvonnViewer::DvonnViewer(QWidget* parent)
   : QGLViewer(parent),
 #endif
-    game_(NULL),
-    selectionMode_(-1),
-    piecePicked_(false),
-    dstPicked_(Board::ConstStackHandle::null()),
-    srcPicked_(Board::ConstStackHandle::null()),
-    showPossDest_(true),
-    showStatus_(false),
-    showLabels_(false),
-    useLight_(true),
-    dragToPlay_(false),
-    fadeGhosts_(NULL),
-    animateT_(-1.0f),
-    showAnimation_(true),
-    scoreT_(-1.0f)
+	game_(NULL),
+	selectionMode_(-1),
+	piecePicked_(false),
+	dstPicked_(Board::ConstStackHandle::null()),
+	srcPicked_(Board::ConstStackHandle::null()),
+	showPossDest_(true),
+	showStatus_(false),
+	showLabels_(false),
+	useLight_(true),
+	dragToPlay_(false),
+	fadeGhosts_(NULL),
+	animateT_(-1.0f),
+	showAnimation_(true),
+	scoreT_(-1.0f)
 {
   drawer_ = new Drawer;
   fadeTimer_ = new QTimer();
@@ -87,9 +87,9 @@ DvonnViewer::advanceFadeOut()
   fadeAlpha_ -= 0.05f;
   if (fadeAlpha_ < 0.0f)
   {
-    fadeTimer_->stop();
-    fadeAlpha_ = 0.0f;
-    fadeGhosts_ = NULL;
+	fadeTimer_->stop();
+	fadeAlpha_ = 0.0f;
+	fadeGhosts_ = NULL;
   }
   updateGL();
 }
@@ -98,8 +98,8 @@ DvonnViewer::fadeOut(const Board::Ghosts* g)
 {
   if ((fadeGhosts_ = g) != NULL && !g->empty())
   {
-    fadeAlpha_ = 1.0f;
-    fadeTimer_->start(30);
+	fadeAlpha_ = 1.0f;
+	fadeTimer_->start(30);
   }
 }
 void
@@ -108,9 +108,9 @@ DvonnViewer::advanceAnimateMove()
   animateT_ += 1.0f/nbAnimationSteps;
   if (animateT_ >= 1.0f)
   {
-    animateTimer_->stop();
-    animateT_ = -1.0f;
-    Q_EMIT requested(animateMove_);
+	animateTimer_->stop();
+	animateT_ = -1.0f;
+	Q_EMIT requested(animateMove_);
   }
   updateGL();
 }
@@ -119,19 +119,19 @@ DvonnViewer::animateMove(Game::Move m)
 {
   if (animateT_ < 0.0f)
   {
-    if (showAnimation_)
-    {
-      animateMove_ = m;
-      animateT_ = 0.0f;
-      static const float v = 1.0f/250;
-      const float d = drawer_->estimateDrawMoveLength(game_->board(),m);
-      const float T = d/v;
-      animateTimer_->start(static_cast<int>(T/nbAnimationSteps));
-    }
-    else
-    {
-      Q_EMIT requested(m);
-    }
+	if (showAnimation_)
+	{
+	  animateMove_ = m;
+	  animateT_ = 0.0f;
+	  static const float v = 1.0f/250;
+	  const float d = drawer_->estimateDrawMoveLength(game_->board(),m);
+	  const float T = d/v;
+	  animateTimer_->start(static_cast<int>(T/nbAnimationSteps));
+	}
+	else
+	{
+	  Q_EMIT requested(m);
+	}
   }
 }
 void
@@ -140,9 +140,9 @@ DvonnViewer::advanceAnimateScore()
   scoreT_ += 1.0f/nbAnimationSteps;
   if (scoreT_ >= 1.0f)
   {
-    scoreTimer_->stop();
-    scoreT_ = -1.0f;
-    Q_EMIT requested(scoreMove_);
+	scoreTimer_->stop();
+	scoreT_ = -1.0f;
+	Q_EMIT requested(scoreMove_);
   }
   updateGL();
 }
@@ -151,22 +151,22 @@ DvonnViewer::animateScore()
 {
   if (scoreT_ < 0.0f)
   {
-    // Stack will be moved to to positions at center of the board
-    static const Board::Coord centers[2] =
-      {
+	// Stack will be moved to to positions at center of the board
+	static const Board::Coord centers[2] =
+	  {
 	Board::Coord(Board::nbSpacesMaxOnRow()/2,Board::nbRows()/2+1),
 	Board::Coord(Board::nbSpacesMaxOnRow()/2+1,Board::nbRows()/2+1)
-      };
-    // Search for a stack to move
-    for (Board::ConstStackIterator
+	  };
+	// Search for a stack to move
+	for (Board::ConstStackIterator
 	   iter = game_->board().stacks_begin(),
 	   istop= game_->board().stacks_end();
 	 iter != istop;++iter)
-    {
-      if (iter.stackCoord() != centers[0] &&
+	{
+	  if (iter.stackCoord() != centers[0] &&
 	  iter.stackCoord() != centers[1] &&
 	  iter->hasPieces())
-      {
+	  {
 	Color c = iter->onTop()->color();
 	if (c != Red)
 	{
@@ -179,8 +179,8 @@ DvonnViewer::animateScore()
 	  scoreTimer_->start(debugInterval = static_cast<int>(T/nbAnimationSteps));
 	  return;
 	}
-      }
-    }
+	  }
+	}
   }
 }
 void
@@ -220,10 +220,10 @@ DvonnViewer::toggleShowPossible(bool b)
 {
   showPossDest_ = b;
   if (showPossDest_ &&
-      game_->phase() == MovePhase &&
-      !srcPicked_.isNull())
+	  game_->phase() == MovePhase &&
+	  !srcPicked_.isNull())
   {
-    possDests_ = game_->possibleDestinations(srcPicked_);
+	possDests_ = game_->possibleDestinations(srcPicked_);
   }
   updateGL();
 }
@@ -336,57 +336,57 @@ DvonnViewer::draw()
   Player p = game_->theOnePlaying();
   Color c = game_->phase() == RedPlacementPhase?Red:colorOf(p);
   drawer_->drawWhitePiecePools(game_->board(),
-			       p==WhitePlayer && piecePicked_);
+				   p==WhitePlayer && piecePicked_);
   drawer_->drawBlackPiecePools(game_->board(),
-			       p==BlackPlayer && piecePicked_);
+				   p==BlackPlayer && piecePicked_);
   if (piecePicked_ && !dstPicked_.isNull())
   {
-    drawer_->drawTransparentPiece(c,dstPicked_);
+	drawer_->drawTransparentPiece(c,dstPicked_);
   }
   if (!piecePicked_ && !srcPicked_.isNull())
   {
-    drawer_->drawTransparentPieces(srcPicked_->begin(),srcPicked_->end(),
+	drawer_->drawTransparentPieces(srcPicked_->begin(),srcPicked_->end(),
 				   srcPicked_.stackCoord(),0.0f,0.4f);
-    if (showPossDest_)
-    {
-      glColor3f(1.0f,1.0f,0.0f);
-      for (deque<Board::ConstStackHandle>::const_iterator
-	     iter = possDests_.begin();
+	if (showPossDest_)
+	{
+	  glColor3f(1.0f,1.0f,0.0f);
+	  for (deque<Board::ConstStackHandle>::const_iterator
+		 iter = possDests_.begin();
 	   iter != possDests_.end();++iter)
-      {
+	  {
 	drawer_->highlightPieces(*iter);
-      }
-    }
-    if (!dstPicked_.isNull())
-    {
-      drawer_->drawTransparentPieces(srcPicked_->begin(),srcPicked_->end(),
-				     dstPicked_.stackCoord(),
-				     dstPicked_->height(),
-				     0.9f);
-    }
+	  }
+	}
+	if (!dstPicked_.isNull())
+	{
+	  drawer_->drawTransparentPieces(srcPicked_->begin(),srcPicked_->end(),
+					 dstPicked_.stackCoord(),
+					 dstPicked_->height(),
+					 0.9f);
+	}
   }
   // Ghosts
   if (fadeGhosts_)
   {
-    for (Board::Ghosts::const_iterator
+	for (Board::Ghosts::const_iterator
 	   iter = fadeGhosts_->begin();
 	 iter != fadeGhosts_->end();++iter)
-    {
-      drawer_->drawTransparentPieces(iter->stack.begin(),
-				     iter->stack.end(),
-				     iter->coord,
-				     0.0f,
-				     fadeAlpha_*fadeAlpha_);
-    }
+	{
+	  drawer_->drawTransparentPieces(iter->stack.begin(),
+					 iter->stack.end(),
+					 iter->coord,
+					 0.0f,
+					 fadeAlpha_*fadeAlpha_);
+	}
   }
   // Animated move
   if (animateT_>=0.0f)
   {
-    drawer_->drawMove(game_->board(),animateMove_,animateT_);
+	drawer_->drawMove(game_->board(),animateMove_,animateT_);
   }
   if (scoreT_>=0.0f)
   {
-    drawer_->drawMove(game_->board(),scoreMove_,scoreT_);
+	drawer_->drawMove(game_->board(),scoreMove_,scoreT_);
   }
 }
 void
@@ -396,29 +396,29 @@ DvonnViewer::drawAllPieces(bool pick)
   for (Board::ConstStackIterator
 	 iter = game_->board().stacks_begin(),
 	 istop= game_->board().stacks_end();
-       iter != istop;++iter)
+	   iter != istop;++iter)
   {
-    if (pick) glPushName(name++);
-    if (srcPicked_ != iter &&
+	if (pick) glPushName(name++);
+	if (srcPicked_ != iter &&
 	(animateT_ < 0.0f || iter.stackCoord() != animateMove_.src) &&
 	(scoreT_ < 0.0f || iter.stackCoord() != scoreMove_.src))
-    {
-      drawer_->drawPieces(iter);
-    }
-    if (pick) glPopName();
+	{
+	  drawer_->drawPieces(iter);
+	}
+	if (pick) glPopName();
   }
   if (showStatus_ && !pick)
   {
-    glPushAttrib(GL_ALL_ATTRIB_BITS);
-    glDisable(GL_LIGHTING);
-    glColor3f(0.0,1.0,0.0f);
-    for (Board::ConstStackIterator
+	glPushAttrib(GL_ALL_ATTRIB_BITS);
+	glDisable(GL_LIGHTING);
+	glColor3f(0.0,1.0,0.0f);
+	for (Board::ConstStackIterator
 	   iter = game_->board().stacks_begin(),
 	   istop= game_->board().stacks_end();
 	 iter != istop;++iter)
-    {
-      drawer_->drawStatus(iter,this);
-    }
+	{
+	  drawer_->drawStatus(iter,this);
+	}
   }
   glPopAttrib();
 }
@@ -429,11 +429,11 @@ DvonnViewer::drawAllSpaces(bool pick)
   for (Board::ConstStackIterator
 	 iter = game_->board().stacks_begin(),
 	 istop= game_->board().stacks_end();
-       iter != istop;++iter)
+	   iter != istop;++iter)
   {
-    if (pick) glPushName(name++);
-    drawer_->draw(iter);
-    if (pick) glPopName();
+	if (pick) glPushName(name++);
+	drawer_->draw(iter);
+	if (pick) glPopName();
   }
 }
 void
@@ -443,27 +443,27 @@ DvonnViewer::drawWithNames()
   switch (selectionMode_)
   {
   case 1:
-    glPushName(0);
-    if (game_->theOnePlaying() == WhitePlayer)
-    {
-      drawer_->drawWhitePiecePools(game_->board(),false);
-    }
-    else
-    {
-      drawer_->drawBlackPiecePools(game_->board(),false);
-    }
-    glPopName();
-    break;
+	glPushName(0);
+	if (game_->theOnePlaying() == WhitePlayer)
+	{
+	  drawer_->drawWhitePiecePools(game_->board(),false);
+	}
+	else
+	{
+	  drawer_->drawBlackPiecePools(game_->board(),false);
+	}
+	glPopName();
+	break;
   case 2:
   case 5:
-    drawAllSpaces(true);
-    break;
+	drawAllSpaces(true);
+	break;
   case 3:
   case 4:
-    drawAllPieces(true);
-    break;
+	drawAllPieces(true);
+	break;
   default:
-    cout<<"No selection mode active!"<<endl;
+	cout<<"No selection mode active!"<<endl;
   }
 }
 void
@@ -472,63 +472,63 @@ DvonnViewer::postSelection(const QPoint&)
   switch (selectionMode_)
   {
   case 1:
-    piecePicked_ = (selectedName() != -1);
-    break;
+	piecePicked_ = (selectedName() != -1);
+	break;
   case 2:
-    if (selectedName() != -1)
-    {
-      Board::ConstStackIterator iter = game_->board().stacks_begin();
-      for (int i=0;i<selectedName();++i) ++iter;
-      dstPicked_ = iter;
-      if (dstPicked_->hasPieces())
+	if (selectedName() != -1)
+	{
+	  Board::ConstStackIterator iter = game_->board().stacks_begin();
+	  for (int i=0;i<selectedName();++i) ++iter;
+	  dstPicked_ = iter;
+	  if (dstPicked_->hasPieces())
 	dstPicked_ = Board::ConstStackHandle::null();
-    }
-    else
-    {
-      dstPicked_ = Board::ConstStackHandle::null();
-    }
-    break;
+	}
+	else
+	{
+	  dstPicked_ = Board::ConstStackHandle::null();
+	}
+	break;
   case 3:
-    if (selectedName() != -1)
-    {
-      Board::ConstStackIterator iter = game_->board().stacks_begin();
-      for (int i=0;i<selectedName();++i) ++iter;
-      srcPicked_ = iter;
-      if (!srcPicked_.isNull() &&
+	if (selectedName() != -1)
+	{
+	  Board::ConstStackIterator iter = game_->board().stacks_begin();
+	  for (int i=0;i<selectedName();++i) ++iter;
+	  srcPicked_ = iter;
+	  if (!srcPicked_.isNull() &&
 	  srcPicked_->onTop()->color() !=
 	  colorOf(game_->theOnePlaying()))
-      {
+	  {
 	srcPicked_ = Board::ConstStackHandle::null();
-      }
-    }
-    else
-    {
-      srcPicked_ = Board::ConstStackHandle::null();
-    }
-    break;
+	  }
+	}
+	else
+	{
+	  srcPicked_ = Board::ConstStackHandle::null();
+	}
+	break;
   case 4:
   case 5:
-    if (selectedName() != -1)
-    {
-      Board::ConstStackIterator iter = game_->board().stacks_begin();
-      for (int i=0;i<selectedName();++i) ++iter;
-      dstPicked_ = iter;
-      if (dstPicked_ == srcPicked_)
-      {
+	if (selectedName() != -1)
+	{
+	  Board::ConstStackIterator iter = game_->board().stacks_begin();
+	  for (int i=0;i<selectedName();++i) ++iter;
+	  dstPicked_ = iter;
+	  if (dstPicked_ == srcPicked_)
+	  {
 	dstPicked_ = Board::ConstStackHandle::null();
-      }
-      if (!dstPicked_.isNull() &&
+	  }
+	  if (!dstPicked_.isNull() &&
 	  !game_->isLegalMove(Game::Move(srcPicked_.stackCoord(),
 					 dstPicked_.stackCoord())))
-      {
+	  {
 	dstPicked_ = Board::ConstStackHandle::null();
-      }
-    }
-    else
-    {
-      dstPicked_ = Board::ConstStackHandle::null();
-    }
-    break;
+	  }
+	}
+	else
+	{
+	  dstPicked_ = Board::ConstStackHandle::null();
+	}
+	break;
   };
   selectionMode_ = -1;
 }
@@ -540,21 +540,21 @@ DvonnViewer::mousePressEvent(QMouseEvent* e)
 #else
   if (e->stateAfter() == Qt::LeftButton)
 #endif
-    {
-    if (game_->phase() == RedPlacementPhase ||
+	{
+	if (game_->phase() == RedPlacementPhase ||
 	game_->phase() == PiecePlacementPhase)
-    {
-      if (dragToPlay_)
-      {
+	{
+	  if (dragToPlay_)
+	  {
 	selectionMode_ = 1;
 	select(e);
 	if (!dstPicked_.isNull())
 	{
 	  piecePicked_ = true;
 	}
-      }
-      else
-      {
+	  }
+	  else
+	  {
 	piecePicked_ = true;;
 	Board::ConstStackHandle firstClickDstPicked = dstPicked_;
 	selectionMode_ = 2;
@@ -567,19 +567,19 @@ DvonnViewer::mousePressEvent(QMouseEvent* e)
 	{
 	  piecePicked_ = false;
 	}
-      }
-      updateGL();
-    }
-    else // phase == MovePhase
-    {
-      if (dragToPlay_ ||
+	  }
+	  updateGL();
+	}
+	else // phase == MovePhase
+	{
+	  if (dragToPlay_ ||
 	  (!dragToPlay_ && srcPicked_.isNull()))
-      {
+	  {
 	selectionMode_ = 3;
 	select(e);
 	// Check that the picked src is free
 	if (!srcPicked_.isNull() &&
-	    !game_->board().isFree(srcPicked_))
+		!game_->board().isFree(srcPicked_))
 	{
 	  srcPicked_ = Board::ConstStackHandle::null();
 	}
@@ -589,9 +589,9 @@ DvonnViewer::mousePressEvent(QMouseEvent* e)
 	  possDests_ = game_->possibleDestinations(srcPicked_);
 	}
 	setMouseTracking(true);
-      }
-      else
-      {
+	  }
+	  else
+	  {
 	selectionMode_ = 4;
 	select(e);
 	// Since selection in mode 4 can work only for case with pieces, we
@@ -602,9 +602,9 @@ DvonnViewer::mousePressEvent(QMouseEvent* e)
 	  select(e);
 	}
 	commitDstPicked();
-      }
-      updateGL();
-    }
+	  }
+	  updateGL();
+	}
   }
   else QGLViewer::mousePressEvent(e);
 }
@@ -616,22 +616,22 @@ DvonnViewer::mouseMoveEvent(QMouseEvent* e)
 #else
   if ((dragToPlay_ && e->stateAfter() == Qt::LeftButton) ||
 #endif
-      ( (!dragToPlay_) && (!srcPicked_.isNull()) && (!camera()->frame()->isManipulated()) ) )
+	  ( (!dragToPlay_) && (!srcPicked_.isNull()) && (!camera()->frame()->isManipulated()) ) )
   {
-    if (game_->phase() == RedPlacementPhase ||
+	if (game_->phase() == RedPlacementPhase ||
 	game_->phase() == PiecePlacementPhase)
-    {
-      if (piecePicked_)
-      {
+	{
+	  if (piecePicked_)
+	  {
 	selectionMode_ = 2;
 	select(e);
 	updateGL();
-      }
-    }
-    else // phase == MovePhase
-    {
-      if (!srcPicked_.isNull())
-      {
+	  }
+	}
+	else // phase == MovePhase
+	{
+	  if (!srcPicked_.isNull())
+	  {
 	selectionMode_ = 4;
 	select(e);
 	// Since selection in mode 4 can work only for case with pieces, we
@@ -642,8 +642,8 @@ DvonnViewer::mouseMoveEvent(QMouseEvent* e)
 	  select(e);
 	}
 	updateGL();
-      }
-    }
+	  }
+	}
   }
   else QGLViewer::mouseMoveEvent(e);
 }
@@ -656,10 +656,10 @@ DvonnViewer::mouseReleaseEvent(QMouseEvent* e)
   if (e->state() == Qt::LeftButton)
 #endif
   {
-    if (dragToPlay_)
-    {
-      commitDstPicked();
-    }
+	if (dragToPlay_)
+	{
+	  commitDstPicked();
+	}
   }
   else QGLViewer::mouseReleaseEvent(e);
 }
@@ -667,23 +667,23 @@ void
 DvonnViewer::commitDstPicked()
 {
   if (game_->phase() == RedPlacementPhase ||
-      game_->phase() == PiecePlacementPhase)
+	  game_->phase() == PiecePlacementPhase)
   {
-    if (piecePicked_ && !dstPicked_.isNull())
-    {
-      Player p = game_->theOnePlaying();
-      Q_EMIT requested(Game::Placement(game_->phase() == RedPlacementPhase?Red:colorOf(p),
-		     dstPicked_.stackCoord()));
-      updateGL();
-    }
+	if (piecePicked_ && !dstPicked_.isNull())
+	{
+	  Player p = game_->theOnePlaying();
+	  Q_EMIT requested(Game::Placement(game_->phase() == RedPlacementPhase?Red:colorOf(p),
+			 dstPicked_.stackCoord()));
+	  updateGL();
+	}
   }
   else // phase == MovePhase
   {
-    if (!srcPicked_.isNull() && !dstPicked_.isNull())
-    {
-      Q_EMIT requested(Game::Move(srcPicked_.stackCoord(),
+	if (!srcPicked_.isNull() && !dstPicked_.isNull())
+	{
+	  Q_EMIT requested(Game::Move(srcPicked_.stackCoord(),
 				dstPicked_.stackCoord()));
-    }
+	}
   }
   piecePicked_ = false;
   dstPicked_ = Board::ConstStackHandle::null();
@@ -697,14 +697,14 @@ DvonnViewer::keyPressEvent(QKeyEvent* e)
 {
   if (e->key() == Qt::Key_D && scoreT_ > 0.0f)
   {
-    if (scoreTimer_->isActive())
-      scoreTimer_->stop();
-    else
-      scoreTimer_->start(debugInterval);
+	if (scoreTimer_->isActive())
+	  scoreTimer_->stop();
+	else
+	  scoreTimer_->start(debugInterval);
   }
   else if (e->key() == Qt::Key_T)
   {
-    toggleShowStatus(!showStatus_);
+	toggleShowStatus(!showStatus_);
   }
   else
   QGLViewer::keyPressEvent(e);

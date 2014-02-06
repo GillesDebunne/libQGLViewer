@@ -1,6 +1,7 @@
 #include "keyFrames.h"
 
 #include <QKeyEvent>
+#include <QGLViewer/manipulatedFrame.h>
 
 using namespace qglviewer;
 using namespace std;

@@ -35,9 +35,13 @@
 <h2>Jan 22nd 2014 - 2.5.1</h2>
 <b>Changes in the API</b>
 <ul>
-  <li>Support for Qt version 2 and 3 dropped. Minimum supported Qt version is now Qt 4.0</li>
-  <li>New <code>setMouseBinding</code> methods take a <code>Qt:Key</code> argument, which has to be pressed to trigger the action. Getter functions changed accordingly.</li>
-  <li><code>setMouseBinding</code> methods accepts only one button, instead of an improbable combination of these. Use key modifiers instead if needed.</li>
+  <li>Support for Qt version 2 and 3 has been dropped. Minimum supported Qt version is now Qt 4.0</li>
+  <li>Two new <code>setMouseBinding</code> methods take an optional <code>Qt:Key</code> argument, indicating that this key has to be pressed to trigger the action.</li>
+  <li>Mouse binding getter functions have been harmonized.</li>
+  <li><code>setMouseBinding</code> methods accept only one button, instead of an improbable combination of buttons.</li>
+  <li>Refactored include dependencies: you may have to manually include <code>QGLViewer/manipulatedFrame.h</code>.</li>
+  <li><code>QGLviewer</code>'s <code>MouseHandler</code>, <code>ClickAction</code> and <code>MouseAction</code> are public and not protected.</li>
+  <li>New <code>ManipulatedFrame::currentMouseAction()</code> method.</li>
 </ul>
 
 <b>Bug fixes or improvements</b>

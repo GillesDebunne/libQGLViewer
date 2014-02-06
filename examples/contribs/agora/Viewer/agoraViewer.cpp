@@ -9,12 +9,10 @@
 #include <qtextedit.h>
 #include <qtimer.h>
 
-#if QT_VERSION >= 0x040000
-# include "ui_agoraWindow.h"
+#include <QGLViewer/manipulatedCameraFrame.h>
+
+#include "ui_agoraWindow.h"
 class AgoraWindow : public QMainWindow, public Ui::AgoraWindow {};
-#else
-# include <qmainwindow.h>
-#endif
 
 using namespace std;
 using namespace qglviewer;
@@ -176,7 +174,7 @@ void AgoraViewer::initBoard()
 		}
 	}
 
-	if (boardFileName_.isEmpty()) 
+	if (boardFileName_.isEmpty())
 	{
 		QMessageBox::warning(NULL ,"Unable to find agora board directory", "Unable to find agora board directory\n(tried "+boardDir.join(", ")+")");
 		return;
@@ -264,9 +262,9 @@ void AgoraViewer::draw()
 	}
 
 	const GLfloat pos[4] = {board_->size().width() / 2.0, board_->size().height() / 2.0, 3.0, 1.0};
-    const GLfloat spot_dir[3] = {0.0, 0.0, -1.0};
-    glLightfv(GL_LIGHT1, GL_POSITION, pos);
-    glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_dir);
+	const GLfloat spot_dir[3] = {0.0, 0.0, -1.0};
+	glLightfv(GL_LIGHT1, GL_POSITION, pos);
+	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_dir);
 
 	board_->draw();
 

@@ -1,6 +1,8 @@
 #include "luxo.h"
 #include <math.h>
 
+#include <QGLViewer/manipulatedCameraFrame.h>
+
 using namespace qglviewer;
 using namespace std;
 

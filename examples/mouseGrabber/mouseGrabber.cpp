@@ -1,5 +1,7 @@
 #include "mouseGrabber.h"
 
+#include <QGLViewer/manipulatedFrame.h>
+
 using namespace qglviewer;
 using namespace std;
 

@@ -1,7 +1,9 @@
 #include "standardCamera.h"
 #include "viewer.h"
 #include "cameraViewer.h"
-#include <qapplication.h>
+
+#include <QApplication>
+#include <QGLViewer/manipulatedCameraFrame.h>
 
 int main(int argc, char** argv)
 {

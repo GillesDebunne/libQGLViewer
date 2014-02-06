@@ -1,5 +1,7 @@
 #include "multiView.h"
 
+#include <QGLViewer/manipulatedCameraFrame.h>
+
 using namespace qglviewer;
 using namespace std;
 

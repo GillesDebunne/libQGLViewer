@@ -1,14 +1,16 @@
 #include <QGLViewer/qglviewer.h>
+#include <QGLViewer/mouseGrabber.h>
+#include <QGLViewer/manipulatedFrame.h>
 
 class CameraPathPlayer : public qglviewer::MouseGrabber
 {
 public:
-  CameraPathPlayer(int nb) : pathNb(nb) {};
+  CameraPathPlayer(int nb) : pathNb(nb) {}
   void checkIfGrabsMouse(int x, int y, const qglviewer::Camera* const camera);
-  int yPos() { return 25*pathNb; };
+  int yPos() { return 25*pathNb; }
 
 protected:
-  void mousePressEvent(QMouseEvent* const, qglviewer::Camera* const camera) { camera->playPath(pathNb); };
+  void mousePressEvent(QMouseEvent* const, qglviewer::Camera* const camera) { camera->playPath(pathNb); }
 
 private:
   int pathNb;

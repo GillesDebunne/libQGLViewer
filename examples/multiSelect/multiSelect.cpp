@@ -1,6 +1,8 @@
 #include "multiSelect.h"
 #include "manipulatedFrameSetConstraint.h"
 
+#include <QGLViewer/manipulatedFrame.h>
+
 #include <QMouseEvent>
 
 using namespace qglviewer;
