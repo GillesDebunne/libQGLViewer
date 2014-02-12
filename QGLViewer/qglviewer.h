@@ -997,6 +997,9 @@ public Q_SLOTS:
 	void clearMouseBindings();
 
 #ifndef DOXYGEN
+	MouseAction wheelAction(Qt::KeyboardModifiers modifiers) const;
+	int wheelHandler(Qt::KeyboardModifiers modifiers) const;
+
 	void setHandlerKeyboardModifiers(MouseHandler handler, Qt::KeyboardModifiers modifiers);
 	void setHandlerStateKey(MouseHandler handler, int buttonState);
 	void setMouseStateKey(MouseHandler handler, int buttonState);

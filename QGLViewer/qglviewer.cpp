@@ -1606,12 +1606,12 @@ bool QGLViewer::isValidShortcutKey(int key) {
  Use setMouseBindingDescription(Qt::KeyboardModifiers, Qt::MouseButtons, QString, bool, Qt::MouseButtons) instead.
 */
  void QGLViewer::setMouseBindingDescription(int state, QString description, bool doubleClick, Qt::MouseButtons buttonsBefore) {
- 	qWarning("setMouseBindingDescription(int state,...) is deprecated. Use the modifier/button equivalent");
- 	setMouseBindingDescription(keyboardModifiersFromState(state),
- 		mouseButtonFromState(state),
- 		description,
- 		doubleClick,
- 		buttonsBefore);
+	qWarning("setMouseBindingDescription(int state,...) is deprecated. Use the modifier/button equivalent");
+	setMouseBindingDescription(keyboardModifiersFromState(state),
+		mouseButtonFromState(state),
+		description,
+		doubleClick,
+		buttonsBefore);
  }
 #endif
 
@@ -1621,7 +1621,7 @@ bool QGLViewer::isValidShortcutKey(int key) {
  with a key value of Qt::Key(0) (i.e. binding description when no regular key needs to be pressed). */
  void QGLViewer::setMouseBindingDescription(Qt::KeyboardModifiers modifiers, Qt::MouseButton button, QString description, bool doubleClick, Qt::MouseButtons buttonsBefore)
  {
- 	setMouseBindingDescription(Qt::Key(0), modifiers, button, description, doubleClick, buttonsBefore);
+	setMouseBindingDescription(Qt::Key(0), modifiers, button, description, doubleClick, buttonsBefore);
  }
 
 /*! Defines a custom mouse binding description, displayed in the help() window's Mouse tab.
@@ -2378,7 +2378,7 @@ Qt::KeyboardModifiers QGLViewer::addKeyFrameStateKey() const
 //              M o u s e   b e h a v i o r   s t a t e   k e y s             //
 ////////////////////////////////////////////////////////////////////////////////
 #ifndef DOXYGEN
-/*! This method has been deprecated in version 2.5.0
+/*! This method has been deprecated since version 2.5.0
 
 Associates keyboard modifiers to MouseHandler \p handler.
 
@@ -2485,12 +2485,12 @@ void QGLViewer::setHandlerKeyboardModifiers(MouseHandler handler, Qt::KeyboardMo
 */
  void QGLViewer::setMouseBinding(int state, MouseHandler handler, MouseAction action, bool withConstraint)
  {
- 	qWarning("setMouseBinding(int state, MouseHandler...) is deprecated. Use the modifier/button equivalent");
- 	setMouseBinding(keyboardModifiersFromState(state),
- 		mouseButtonFromState(state),
- 		handler,
- 		action,
- 		withConstraint);
+	qWarning("setMouseBinding(int state, MouseHandler...) is deprecated. Use the modifier/button equivalent");
+	setMouseBinding(keyboardModifiersFromState(state),
+		mouseButtonFromState(state),
+		handler,
+		action,
+		withConstraint);
  }
 #endif
 
@@ -2499,7 +2499,7 @@ void QGLViewer::setHandlerKeyboardModifiers(MouseHandler handler, Qt::KeyboardMo
   Same as calling setMouseBinding(Qt::Key, Qt::KeyboardModifiers, Qt::MouseButton, MouseHandler, MouseAction, bool),
   with a key value of Qt::Key(0) (i.e. no regular extra key needs to be pressed to perform this action). */
   void QGLViewer::setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButton button, MouseHandler handler, MouseAction action, bool withConstraint) {
-  	setMouseBinding(Qt::Key(0), modifiers, button, handler, action, withConstraint);
+	setMouseBinding(Qt::Key(0), modifiers, button, handler, action, withConstraint);
   }
 
 /*! Associates a MouseAction to any mouse \p button, while keyboard \p modifiers and \p key are pressed.
@@ -2569,12 +2569,12 @@ clickBinding_.remove(cbp);
  Use setMouseBinding(Qt::KeyboardModifiers, Qt::MouseButtons, MouseHandler, MouseAction, bool) instead.
 */
  void QGLViewer::setMouseBinding(int state, ClickAction action, bool doubleClick, Qt::MouseButtons buttonsBefore) {
- 	qWarning("setMouseBinding(int state, ClickAction...) is deprecated. Use the modifier/button equivalent");
- 	setMouseBinding(keyboardModifiersFromState(state),
- 		mouseButtonFromState(state),
- 		action,
- 		doubleClick,
- 		buttonsBefore);
+	qWarning("setMouseBinding(int state, ClickAction...) is deprecated. Use the modifier/button equivalent");
+	setMouseBinding(keyboardModifiersFromState(state),
+		mouseButtonFromState(state),
+		action,
+		doubleClick,
+		buttonsBefore);
  }
 #endif
 
@@ -2584,7 +2584,7 @@ clickBinding_.remove(cbp);
  with a key value of Qt::Key(0) (i.e. no regular key needs to be pressed to activate this action). */
  void QGLViewer::setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButton button, ClickAction action, bool doubleClick, Qt::MouseButtons buttonsBefore)
  {
- 	setMouseBinding(Qt::Key(0), modifiers, button, action, doubleClick, buttonsBefore);
+	setMouseBinding(Qt::Key(0), modifiers, button, action, doubleClick, buttonsBefore);
  }
 
 /*! Associates a ClickAction to a button and keyboard key and modifier(s) combination.
@@ -2638,7 +2638,7 @@ void QGLViewer::setMouseBinding(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt
  Same as calling setWheelBinding(Qt::Key, Qt::KeyboardModifiers, MouseHandler, MouseAction, bool),
  with a key value of Qt::Key(0) (i.e. no regular key needs to be pressed to activate this action). */
  void QGLViewer::setWheelBinding(Qt::KeyboardModifiers modifiers, MouseHandler handler, MouseAction action, bool withConstraint) {
- 	setWheelBinding(Qt::Key(0), modifiers, handler, action, withConstraint);
+	setWheelBinding(Qt::Key(0), modifiers, handler, action, withConstraint);
  }
 
 /*! Associates a MouseAction and a MouseHandler to a mouse wheel event.
@@ -2700,8 +2700,8 @@ void QGLViewer::clearShortcuts() {
  Use mouseAction(Qt::Key, Qt::KeyboardModifiers, Qt::MouseButtons) instead.
 */
  QGLViewer::MouseAction QGLViewer::mouseAction(int state) const {
- 	qWarning("mouseAction(int state,...) is deprecated. Use the modifier/button equivalent");
- 	return mouseAction(Qt::Key(0), keyboardModifiersFromState(state), mouseButtonFromState(state));
+	qWarning("mouseAction(int state,...) is deprecated. Use the modifier/button equivalent");
+	return mouseAction(Qt::Key(0), keyboardModifiersFromState(state), mouseButtonFromState(state));
  }
 
 /*! Returns the MouseAction the will be triggered when the mouse \p button is pressed,
@@ -2732,8 +2732,8 @@ QGLViewer::MouseAction QGLViewer::mouseAction(Qt::Key key, Qt::KeyboardModifiers
  Use mouseHanler(Qt::Key, Qt::KeyboardModifiers, Qt::MouseButtons) instead.
 */
  int QGLViewer::mouseHandler(int state) const {
- 	qWarning("mouseHandler(int state,...) is deprecated. Use the modifier/button equivalent");
- 	return mouseHandler(Qt::Key(0), keyboardModifiersFromState(state), mouseButtonFromState(state));
+	qWarning("mouseHandler(int state,...) is deprecated. Use the modifier/button equivalent");
+	return mouseHandler(Qt::Key(0), keyboardModifiersFromState(state), mouseButtonFromState(state));
  }
 
 /*! Returns the MouseHandler which will be activated when the mouse \p button is pressed, while the \p modifiers and \p key are pressed.
@@ -2764,13 +2764,13 @@ int QGLViewer::mouseHandler(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::Mo
  Use mouseButtons() and keyboardModifiers() instead.
 */
  int QGLViewer::mouseButtonState(MouseHandler handler, MouseAction action, bool withConstraint) const {
- 	qWarning("mouseButtonState() is deprecated. Use mouseButtons() and keyboardModifiers() instead");
- 	for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator it=mouseBinding_.begin(), end=mouseBinding_.end(); it != end; ++it)
- 		if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) )
- 			return (int) it.key().modifiers | (int) it.key().button;
+	qWarning("mouseButtonState() is deprecated. Use mouseButtons() and keyboardModifiers() instead");
+	for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator it=mouseBinding_.begin(), end=mouseBinding_.end(); it != end; ++it)
+		if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) )
+			return (int) it.key().modifiers | (int) it.key().button;
 
- 		return Qt::NoButton;
- 	}
+		return Qt::NoButton;
+	}
 #endif
 
 /*! Returns the keyboard state that triggers \p action on \p handler \p withConstraint using the mouse wheel.
@@ -2838,49 +2838,66 @@ QGLViewer::MouseAction QGLViewer::wheelAction(Qt::Key key, Qt::KeyboardModifiers
 */
   int QGLViewer::wheelHandler(Qt::Key key, Qt::KeyboardModifiers modifiers) const
   {
-  	WheelBindingPrivate wbp(modifiers, key);
-  	if (wheelBinding_.contains(wbp))
-  		return wheelBinding_[wbp].handler;
-  	else
-  		return -1;
+	WheelBindingPrivate wbp(modifiers, key);
+	if (wheelBinding_.contains(wbp))
+		return wheelBinding_[wbp].handler;
+	else
+		return -1;
   }
 
 /*! Same as mouseAction(), but for the ClickAction set using setMouseBinding().
 
 Returns NO_CLICK_ACTION if no click action is associated with this keyboard and mouse buttons combination. */
   QGLViewer::ClickAction QGLViewer::clickAction(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button,
-  	bool doubleClick, Qt::MouseButtons buttonsBefore) const {
-  	ClickBindingPrivate cbp(modifiers, button, doubleClick, buttonsBefore, key);
-  	if (clickBinding_.contains(cbp))
-  		return clickBinding_[cbp];
-  	else
-  		return NO_CLICK_ACTION;
+	bool doubleClick, Qt::MouseButtons buttonsBefore) const {
+	ClickBindingPrivate cbp(modifiers, button, doubleClick, buttonsBefore, key);
+	if (clickBinding_.contains(cbp))
+		return clickBinding_[cbp];
+	else
+		return NO_CLICK_ACTION;
   }
 
 #ifndef DOXYGEN
-/*! This method is deprecated in version 2.5.0
+  /*! This method is deprecated since version 2.5.0
+
+	Use wheelAction(Qt::Key key, Qt::KeyboardModifiers modifiers) instead. */
+  QGLViewer::MouseAction QGLViewer::wheelAction(Qt::KeyboardModifiers modifiers) const {
+	  qWarning("wheelAction() is deprecated. Use the new wheelAction() method with a key parameter instead");
+	  return wheelAction(Qt::Key(0), modifiers);
+  }
+
+  /*! This method is deprecated since version 2.5.0
+
+	Use wheelHandler(Qt::Key key, Qt::KeyboardModifiers modifiers) instead. */
+  int QGLViewer::wheelHandler(Qt::KeyboardModifiers modifiers) const {
+	  qWarning("wheelHandler() is deprecated. Use the new wheelHandler() method with a key parameter instead");
+	  return wheelHandler(Qt::Key(0), modifiers);
+  }
+
+/*! This method is deprecated since version 2.5.0
 
   Use wheelAction() and wheelHandler() instead. */
   int QGLViewer::wheelButtonState(MouseHandler handler, MouseAction action, bool withConstraint) const
   {
-  	for (QMap<WheelBindingPrivate, MouseActionPrivate>::ConstIterator it=wheelBinding_.begin(), end=wheelBinding_.end(); it!=end; ++it)
-  		if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) )
-  			return it.key().key + it.key().modifiers;
+	qWarning("wheelButtonState() is deprecated. Use the wheelAction() and wheelHandler() instead");
+	for (QMap<WheelBindingPrivate, MouseActionPrivate>::ConstIterator it=wheelBinding_.begin(), end=wheelBinding_.end(); it!=end; ++it)
+		if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) )
+			return it.key().key + it.key().modifiers;
 
-  		return -1;
-  	}
+		return -1;
+	}
 
 /*! This method is deprecated since version 2.5.0
 
  Use clickAction(Qt::KeyboardModifiers, Qt::MouseButtons, bool, Qt::MouseButtons) instead.
 */
  QGLViewer::ClickAction QGLViewer::clickAction(int state, bool doubleClick, Qt::MouseButtons buttonsBefore) const {
- 	qWarning("clickAction(int state,...) is deprecated. Use the modifier/button equivalent");
- 	return clickAction(Qt::Key(0),
- 		keyboardModifiersFromState(state),
- 		mouseButtonFromState(state),
- 		doubleClick,
- 		buttonsBefore);
+	qWarning("clickAction(int state,...) is deprecated. Use the modifier/button equivalent");
+	return clickAction(Qt::Key(0),
+		keyboardModifiersFromState(state),
+		mouseButtonFromState(state),
+		doubleClick,
+		buttonsBefore);
  }
 
 /*! This method is deprecated since version 2.5.0
@@ -2888,12 +2905,12 @@ Returns NO_CLICK_ACTION if no click action is associated with this keyboard and 
  Use getClickActionState(ClickAction, Qt::Key, Qt::KeyboardModifiers, Qt::MouseButton, bool, Qt::MouseButtons) instead.
 */
  void QGLViewer::getClickButtonState(ClickAction action, int& state, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const {
- 	qWarning("getClickButtonState(int state,...) is deprecated. Use the modifier/button equivalent");
- 	Qt::KeyboardModifiers modifiers;
- 	Qt::MouseButton button;
- 	Qt::Key key;
- 	getClickActionBinding(action, key, modifiers, button, doubleClick, buttonsBefore);
- 	state = (int) modifiers | (int) button | (int) key;
+	qWarning("getClickButtonState(int state,...) is deprecated. Use the modifier/button equivalent");
+	Qt::KeyboardModifiers modifiers;
+	Qt::MouseButton button;
+	Qt::Key key;
+	getClickActionBinding(action, key, modifiers, button, doubleClick, buttonsBefore);
+	state = (int) modifiers | (int) button | (int) key;
  }
 #endif
 
