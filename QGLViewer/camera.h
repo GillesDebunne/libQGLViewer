@@ -79,7 +79,7 @@ public:
 
 	See type() and setType(). This type mainly defines different Camera projection matrix (see
 	loadProjectionMatrix()). Many other methods (pointUnderPixel(), convertClickToLine(),
-	projectedCoordinatesOf(), pixelGLRatio()...) take this Type into account. */
+	projectedCoordinatesOf(), pixelGLRatio()...) are affected by this Type. */
 	enum Type { PERSPECTIVE, ORTHOGRAPHIC };
 
 	/*! @name Position and orientation */
@@ -270,7 +270,7 @@ public:
 	Default value is (0,0,0) (world origin). Use setSceneCenter() to change it. See also
 	setSceneBoundingBox().
 
-	Note that QGLViewer::sceneCenter() (resp. QGLViewer::setSceneCenter()) simply call this method
+	Note that QGLViewer::sceneCenter() (resp. QGLViewer::setSceneCenter()) simply calls this method
 	(resp. setSceneCenter()) on its associated QGLViewer::camera(). */
 	Vec sceneCenter() const { return sceneCenter_; }
 	float distanceToSceneCenter() const;

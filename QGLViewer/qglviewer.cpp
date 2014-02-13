@@ -582,9 +582,9 @@ void QGLViewer::setCamera(Camera* const camera)
 
 	camera->setSceneRadius(sceneRadius());
 	camera->setSceneCenter(sceneCenter());
-	camera->setScreenWidthAndHeight(width(),height());
+	camera->setScreenWidthAndHeight(width(), height());
 
-	// Disconnect current camera to this viewer.
+	// Disconnect current camera from this viewer.
 	disconnect(this->camera()->frame(), SIGNAL(manipulated()), this, SLOT(update()));
 	disconnect(this->camera()->frame(), SIGNAL(spun()), this, SLOT(update()));
 
@@ -2136,11 +2136,11 @@ void QGLViewer::handleKeyboardAction(KeyboardAction id)
 		case DISPLAY_FPS :		toggleFPSIsDisplayed(); break;
 		case ENABLE_TEXT :		toggleTextIsEnabled(); break;
 		case EXIT_VIEWER :		saveStateToFileForAllViewers(); qApp->closeAllWindows(); break;
-		case SAVE_SCREENSHOT :		saveSnapshot(false, false); break;
+		case SAVE_SCREENSHOT :	saveSnapshot(false, false); break;
 		case FULL_SCREEN :		toggleFullScreen(); break;
 		case STEREO :			toggleStereoDisplay(); break;
 		case ANIMATION :		toggleAnimation(); break;
-		case HELP :			help(); break;
+		case HELP :				help(); break;
 		case EDIT_CAMERA :		toggleCameraIsEdited(); break;
 		case SNAPSHOT_TO_CLIPBOARD :	snapshotToClipboard(); break;
 		case CAMERA_MODE :

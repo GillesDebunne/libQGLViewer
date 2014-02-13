@@ -131,8 +131,8 @@ Q_SIGNALS:
 	will prevent you from modifying the Frame \e inside your QGLViewer::draw() method as it would
 	result in an infinite loop. However, QGLViewer::draw() should not modify the scene.
 
-	\note For efficiency reasons, this signal is emitted even if the Frame is not actually modified, for
-	instance with translate(Vec(0,0,0)) or setPosition(position()). */
+	\note Note that this signal might be emitted even if the Frame is not actually modified, for
+	instance after a translate(Vec(0,0,0)) or a setPosition(position()). */
 	void modified();
 
 	/*! This signal is emitted when the Frame is interpolated by a KeyFrameInterpolator.
