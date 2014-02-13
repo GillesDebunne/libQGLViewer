@@ -30,7 +30,7 @@ class ManipulatedCameraFrame;
 
   The default button binding are: QGLViewer::ROTATE (left), QGLViewer::ZOOM (middle) and
   QGLViewer::TRANSLATE (right). With this configuration, the Camera \e observes a scene and rotates
-  around its revolveAroundPoint(). You can switch between this mode and a fly mode using the
+  around its pivotPoint(). You can switch between this mode and a fly mode using the
   QGLViewer::CAMERA_MODE (see QGLViewer::toggleCameraMode()) keyboard shortcut (default is 'Space').
 
   <h3>Other functionalities</h3>
@@ -128,7 +128,7 @@ public:
 	A Camera::PERSPECTIVE Camera uses a classical projection mainly defined by its fieldOfView().
 
 	With a Camera::ORTHOGRAPHIC type(), the fieldOfView() is meaningless and the width and height of
-	the Camera frustum are inferred from the distance to the revolveAroundPoint() using
+	the Camera frustum are inferred from the distance to the pivotPoint() using
 	getOrthoWidthHeight().
 
 	Both types use zNear() and zFar() (to define their clipping planes) and aspectRatio() (for
@@ -283,14 +283,22 @@ public Q_SLOTS:
 	//@}
 
 
-	/*! @name Revolve Around Point */
+	/*! @name Pivot Point */
 	//@{
 public Q_SLOTS:
-	void setRevolveAroundPoint(const Vec& rap);
-	bool setRevolveAroundPointFromPixel(const QPoint& pixel);
+	void setPivotPoint(const Vec& point);
+	bool setPivotPointFromPixel(const QPoint& pixel);
 
 public:
+	Vec pivotPoint() const;
+
+#ifndef DOXYGEN
+public Q_SLOTS:
+	void setRevolveAroundPoint(const Vec& point);
+	bool setRevolveAroundPointFromPixel(const QPoint& pixel);
+public:
 	Vec revolveAroundPoint() const;
+#endif
 	//@}
 
 

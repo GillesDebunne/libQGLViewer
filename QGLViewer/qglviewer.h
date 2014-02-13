@@ -189,7 +189,7 @@ public:
 	Default value is (0,0,0). Simply a wrapper for camera()->sceneCenter(). Set using
 	setSceneCenter().
 
-	Do not mismatch this value (that only depends on the scene) with the qglviewer::Camera::revolveAroundPoint(). */
+	Do not mismatch this value (that only depends on the scene) with the qglviewer::Camera::pivotPoint(). */
 	qglviewer::Vec sceneCenter() const { return camera()->sceneCenter(); }
 
 public Q_SLOTS:
@@ -201,7 +201,7 @@ public Q_SLOTS:
 
 	/*! Sets the sceneCenter(), defined in world coordinates.
 
-		\attention The qglviewer::Camera::revolveAroundPoint() is set to the sceneCenter() value by this
+		\attention The qglviewer::Camera::pivotPoint() is set to the sceneCenter() value by this
 		method. */
 	virtual void setSceneCenter(const qglviewer::Vec& center) { camera()->setSceneCenter(center); }
 
@@ -338,7 +338,7 @@ public Q_SLOTS:
 	void toggleCameraMode();
 
 private:
-	bool cameraIsInRevolveMode() const;
+	bool cameraIsInRotateMode() const;
 	//@}
 
 
@@ -969,7 +969,7 @@ public:
 							bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton) const;
 
 	void getClickActionBinding(ClickAction action, Qt::Key& key, Qt::KeyboardModifiers& modifiers,
-							 Qt::MouseButton& button, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const;
+							   Qt::MouseButton& button, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const;
 
 	MouseAction wheelAction(Qt::Key key, Qt::KeyboardModifiers modifiers) const;
 	int wheelHandler(Qt::Key key, Qt::KeyboardModifiers modifiers) const;

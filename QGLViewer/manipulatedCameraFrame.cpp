@@ -9,7 +9,7 @@ using namespace std;
 
 /*! Default constructor.
 
- flySpeed() is set to 0.0 and flyUpVector() is (0,1,0). The revolveAroundPoint() is set to (0,0,0).
+ flySpeed() is set to 0.0 and flyUpVector() is (0,1,0). The pivotPoint() is set to (0,0,0).
 
   \attention Created object is removeFromMouseGrabberPool(). */
 ManipulatedCameraFrame::ManipulatedCameraFrame()
@@ -45,10 +45,10 @@ ManipulatedCameraFrame::ManipulatedCameraFrame(const ManipulatedCameraFrame& mcf
 
 /*! Overloading of ManipulatedFrame::spin().
 
-Rotates the ManipulatedCameraFrame around its revolveAroundPoint() instead of its origin. */
+Rotates the ManipulatedCameraFrame around its pivotPoint() instead of its origin. */
 void ManipulatedCameraFrame::spin()
 {
-	rotateAroundPoint(spinningQuaternion(), revolveAroundPoint());
+	rotateAroundPoint(spinningQuaternion(), pivotPoint());
 }
 
 #ifndef DOXYGEN
@@ -189,7 +189,7 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 		{
 		case Camera::PERSPECTIVE :
 			trans *= 2.0 * tan(camera->fieldOfView()/2.0) *
-					fabs((camera->frame()->coordinatesOf(revolveAroundPoint())).z) / camera->screenHeight();
+					fabs((camera->frame()->coordinatesOf(pivotPoint())).z) / camera->screenHeight();
 			break;
 		case Camera::ORTHOGRAPHIC :
 		{
@@ -235,7 +235,7 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 	case QGLViewer::ZOOM:
 	{
 		//#CONNECTION# wheelEvent() ZOOM case
-		const float coef = qMax(fabsf((camera->frame()->coordinatesOf(camera->revolveAroundPoint())).z), 0.2f*camera->sceneRadius());
+		const float coef = qMax(fabsf((camera->frame()->coordinatesOf(camera->pivotPoint())).z), 0.2f*camera->sceneRadius());
 		Vec trans(0.0, 0.0, -coef * (event->y() - prevPos_.y()) / camera->screenHeight());
 		translate(inverseTransformOf(trans));
 		break;
@@ -250,7 +250,7 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 
 	case QGLViewer::ROTATE:
 	{
-		Vec trans = camera->projectedCoordinatesOf(revolveAroundPoint());
+		Vec trans = camera->projectedCoordinatesOf(pivotPoint());
 		Quaternion rot = deformedBallQuaternion(event->x(), event->y(), trans[0], trans[1], camera);
 		//#CONNECTION# These two methods should go together (spinning detection and activation)
 		computeMouseSpeed(event);
@@ -261,7 +261,7 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 
 	case QGLViewer::SCREEN_ROTATE:
 	{
-		Vec trans = camera->projectedCoordinatesOf(revolveAroundPoint());
+		Vec trans = camera->projectedCoordinatesOf(pivotPoint());
 
 		const float angle = atan2(event->y() - trans[1], event->x() - trans[0]) - atan2(prevPos_.y()-trans[1], prevPos_.x()-trans[0]);
 
@@ -297,7 +297,7 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 		{
 		case Camera::PERSPECTIVE :
 			trans *= 2.0 * tan(camera->fieldOfView()/2.0) *
-					fabs((camera->frame()->coordinatesOf(revolveAroundPoint())).z) / camera->screenHeight();
+					fabs((camera->frame()->coordinatesOf(pivotPoint())).z) / camera->screenHeight();
 			break;
 		case Camera::ORTHOGRAPHIC :
 		{
@@ -357,7 +357,7 @@ void ManipulatedCameraFrame::wheelEvent(QWheelEvent* const event, Camera* const 
 	{
 		const float wheelSensitivityCoef = 8E-4f;
 		//#CONNECTION# mouseMoveEvent() ZOOM case
-		const float coef = qMax(fabsf((camera->frame()->coordinatesOf(camera->revolveAroundPoint())).z), 0.2f*camera->sceneRadius());
+		const float coef = qMax(fabsf((camera->frame()->coordinatesOf(camera->pivotPoint())).z), 0.2f*camera->sceneRadius());
 		Vec trans(0.0, 0.0, coef * event->delta() * wheelSensitivity() * wheelSensitivityCoef);
 		translate(inverseTransformOf(trans));
 		Q_EMIT manipulated();

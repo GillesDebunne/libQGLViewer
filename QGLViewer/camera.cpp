@@ -29,7 +29,7 @@ Camera::Camera()
 	// Initial value (only scaled after this)
 	orthoCoef_ = tan(fieldOfView()/2.0);
 
-	// Also defines the revolveAroundPoint(), which changes orthoCoef_. Requires a frame().
+	// Also defines the pivotPoint(), which changes orthoCoef_. Requires a frame().
 	setSceneCenter(Vec(0.0, 0.0, 0.0));
 
 	// Requires fieldOfView() when called with ORTHOGRAPHIC. Attention to projectionMatrix_ below.
@@ -228,7 +228,8 @@ void Camera::setFieldOfView(float fov) {
 
 /*! Defines the Camera type().
 
-Changing the camera Type alters the viewport and the objects' size can be changed. This method garantees that the two frustum match in a plane normal to viewDirection(), passing through the Revolve Around Point (RAP).
+Changing the camera Type alters the viewport and the objects' sizes can be changed.
+This method garantees that the two frustum match in a plane normal to viewDirection(), passing through the pivotPoint().
 
 Prefix the type with \c Camera if needed, as in:
 \code
@@ -239,7 +240,7 @@ void Camera::setType(Type type)
 {
 	// make ORTHOGRAPHIC frustum fit PERSPECTIVE (at least in plane normal to viewDirection(), passing
 	// through RAP). Done only when CHANGING type since orthoCoef_ may have been changed with a
-	// setRevolveAroundPoint() in the meantime.
+	// setPivotPoint() in the meantime.
 	if ( (type == Camera::ORTHOGRAPHIC) && (type_ == Camera::PERSPECTIVE) )
 		orthoCoef_ = tan(fieldOfView()/2.0);
 	type_ = type;
@@ -292,7 +293,7 @@ float Camera::distanceToSceneCenter() const
  glOrtho( -halfWidth, halfWidth, -halfHeight, halfHeight, zNear(), zFar() )
  \endcode
 
- These values are proportional to the Camera (z projected) distance to the revolveAroundPoint().
+ These values are proportional to the Camera (z projected) distance to the pivotPoint().
  When zooming on the object, the Camera is translated forward \e and its frustum is narrowed, making
  the object appear bigger on screen, as intuitively expected.
 
@@ -300,7 +301,7 @@ float Camera::distanceToSceneCenter() const
  <a href="../examples/standardCamera.html">standardCamera example</a>. */
 void Camera::getOrthoWidthHeight(GLdouble& halfWidth, GLdouble& halfHeight) const
 {
-	const float dist = orthoCoef_ * fabs(cameraCoordinatesOf(revolveAroundPoint()).z);
+	const float dist = orthoCoef_ * fabs(cameraCoordinatesOf(pivotPoint()).z);
 	//#CONNECTION# fitScreenRegion
 	halfWidth  = dist * ((aspectRatio() < 1.0) ? 1.0 : aspectRatio());
 	halfHeight = dist * ((aspectRatio() < 1.0) ? 1.0/aspectRatio() : 1.0);
@@ -698,11 +699,11 @@ void Camera::setSceneBoundingBox(const Vec& min, const Vec& max)
 
 /*! Sets the sceneCenter().
 
- \attention This method also sets the revolveAroundPoint() to sceneCenter(). */
+ \attention This method also sets the pivotPoint() to sceneCenter(). */
 void Camera::setSceneCenter(const Vec& center)
 {
 	sceneCenter_ = center;
-	setRevolveAroundPoint(sceneCenter());
+	setPivotPoint(sceneCenter());
 	projectionMatrixIsUpToDate_ = false;
 }
 
@@ -710,7 +711,7 @@ void Camera::setSceneCenter(const Vec& center)
 
   Returns \c true if a pointUnderPixel() was found and sceneCenter() was actually changed.
 
-  See also setRevolveAroundPointFromPixel(). See the pointUnderPixel() documentation. */
+  See also setPivotPointFromPixel(). See the pointUnderPixel() documentation. */
 bool Camera::setSceneCenterFromPixel(const QPoint& pixel)
 {
 	bool found;
@@ -720,39 +721,54 @@ bool Camera::setSceneCenterFromPixel(const QPoint& pixel)
 	return found;
 }
 
-/*! Changes the revolveAroundPoint() to \p rap (defined in the world coordinate system). */
-void Camera::setRevolveAroundPoint(const Vec& rap)
+#ifndef DOXYGEN
+void Camera::setRevolveAroundPoint(const Vec& point) {
+	qWarning("setRevolveAroundPoint() is deprecated, use setPivotPoint() instead");
+	setPivotPoint(point);
+}
+bool Camera::setRevolveAroundPointFromPixel(const QPoint& pixel) {
+	qWarning("setRevolveAroundPointFromPixel() is deprecated, use setPivotPointFromPixel() instead");
+	return setPivotPointFromPixel(pixel);
+}
+Vec Camera::revolveAroundPoint() const {
+	qWarning("revolveAroundPoint() is deprecated, use pivotPoint() instead");
+	return pivotPoint();
+}
+#endif
+
+/*! Changes the pivotPoint() to \p point (defined in the world coordinate system). */
+void Camera::setPivotPoint(const Vec& point)
 {
-	const float prevDist = fabs(cameraCoordinatesOf(revolveAroundPoint()).z);
+	const float prevDist = fabs(cameraCoordinatesOf(pivotPoint()).z);
 
 	// If frame's RAP is set directly, projectionMatrixIsUpToDate_ should also be
 	// set to false to ensure proper recomputation of the ORTHO projection matrix.
-	frame()->setRevolveAroundPoint(rap);
+	frame()->setPivotPoint(point);
 
-	// orthoCoef_ is used to compensate for changes of the revolveAroundPoint, so that the image does
-	// not change when the revolveAroundPoint is changed in ORTHOGRAPHIC mode.
-	const float newDist = fabs(cameraCoordinatesOf(revolveAroundPoint()).z);
+	// orthoCoef_ is used to compensate for changes of the pivotPoint, so that the image does
+	// not change when the pivotPoint is changed in ORTHOGRAPHIC mode.
+	const float newDist = fabs(cameraCoordinatesOf(pivotPoint()).z);
 	// Prevents division by zero when rap is set to camera position
 	if ((prevDist > 1E-9) && (newDist > 1E-9))
 		orthoCoef_ *= prevDist / newDist;
 	projectionMatrixIsUpToDate_ = false;
 }
 
-/*! The revolveAroundPoint() is set to the point located under \p pixel on screen.
+/*! The pivotPoint() is set to the point located under \p pixel on screen.
 
 Returns \c true if a pointUnderPixel() was found. If no point was found under \p pixel, the
-revolveAroundPoint() is left unchanged.
+pivotPoint() is left unchanged.
 
 \p pixel is expressed in Qt format (origin in the upper left corner of the window). See
 pointUnderPixel().
 
 See also setSceneCenterFromPixel(). */
-bool Camera::setRevolveAroundPointFromPixel(const QPoint& pixel)
+bool Camera::setPivotPointFromPixel(const QPoint& pixel)
 {
 	bool found;
 	Vec point = pointUnderPixel(pixel, found);
 	if (found)
-		setRevolveAroundPoint(point);
+		setPivotPoint(point);
 	return found;
 }
 
@@ -985,7 +1001,7 @@ void Camera::fitSphere(const Vec& center, float radius)
 	}
 	case Camera::ORTHOGRAPHIC :
 	{
-		distance = ((center-revolveAroundPoint()) * viewDirection()) + (radius / orthoCoef_);
+		distance = ((center-pivotPoint()) * viewDirection()) + (radius / orthoCoef_);
 		break;
 	}
 	}
@@ -1037,7 +1053,7 @@ void Camera::fitScreenRegion(const QRect& rectangle)
 	}
 	case Camera::ORTHOGRAPHIC :
 	{
-		const float dist = ((newCenter-revolveAroundPoint()) * vd);
+		const float dist = ((newCenter-pivotPoint()) * vd);
 		//#CONNECTION# getOrthoWidthHeight
 		const float distX = (pointX-newCenter).norm() / orthoCoef_ / ((aspectRatio() < 1.0) ? 1.0 : aspectRatio());
 		const float distY = (pointY-newCenter).norm() / orthoCoef_ / ((aspectRatio() < 1.0) ? 1.0/aspectRatio() : 1.0);
@@ -1057,7 +1073,7 @@ void Camera::fitScreenRegion(const QRect& rectangle)
  Use this method in order to define the Camera horizontal plane.
 
  When \p noMove is set to \c false, the orientation modification is compensated by a translation, so
- that the revolveAroundPoint() stays projected at the same position on screen. This is especially
+ that the pivotPoint() stays projected at the same position on screen. This is especially
  useful when the Camera is an observer of the scene (default mouse binding).
 
  When \p noMove is \c true (default), the Camera position() is left unchanged, which is an intuitive
@@ -1070,7 +1086,7 @@ void Camera::setUpVector(const Vec& up, bool noMove)
 	Quaternion q(Vec(0.0, 1.0, 0.0), frame()->transformOf(up));
 
 	if (!noMove)
-		frame()->setPosition(revolveAroundPoint() - (frame()->orientation()*q).rotate(frame()->coordinatesOf(revolveAroundPoint())));
+		frame()->setPosition(pivotPoint() - (frame()->orientation()*q).rotate(frame()->coordinatesOf(pivotPoint())));
 
 	frame()->rotate(q);
 
@@ -1219,12 +1235,12 @@ float Camera::flySpeed() const { return frame()->flySpeed(); }
 \attention This value is modified by setSceneRadius(). */
 void Camera::setFlySpeed(float speed) { frame()->setFlySpeed(speed); }
 
-/*! The point the Camera revolves around with the QGLViewer::ROTATE mouse binding. Defined in world coordinate system.
+/*! The point the Camera pivots around with the QGLViewer::ROTATE mouse binding. Defined in world coordinate system.
 
 Default value is the sceneCenter().
 
 \attention setSceneCenter() changes this value. */
-Vec Camera::revolveAroundPoint() const { return frame()->revolveAroundPoint(); }
+Vec Camera::pivotPoint() const { return frame()->pivotPoint(); }
 
 /*! Sets the Camera's position() and orientation() from an OpenGL ModelView matrix.
 

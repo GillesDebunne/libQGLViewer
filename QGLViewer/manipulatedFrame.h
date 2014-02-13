@@ -145,9 +145,9 @@ public:
 
 	\note When the ManipulatedFrame is used to move a \e Camera (see the ManipulatedCameraFrame
 	class documentation), after zooming on a small region of your scene, the camera may translate
-	too fast. For a camera, it is the Camera::revolveAroundPoint() that exactly matches the mouse
+	too fast. For a camera, it is the Camera::pivotPoint() that exactly matches the mouse
 	displacement. Hence, instead of changing the translationSensitivity(), solve the problem by
-	(temporarily) setting the Camera::revolveAroundPoint() to a point on the zoomed region (see the
+	(temporarily) setting the Camera::pivotPoint() to a point on the zoomed region (see the
 	QGLViewer::RAP_FROM_PIXEL mouse binding in the <a href="../mouse.html">mouse page</a>).
 
 	See also setTranslationSensitivity(), rotationSensitivity(), spinningSensitivity() and

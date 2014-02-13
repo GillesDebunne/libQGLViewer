@@ -110,7 +110,7 @@
         <translation>Affiche ou non la grille XY</translation>
     </message>
     <message>
-        <source>Changes camera mode (revolve or fly)</source>
+        <source>Changes camera mode (observe or fly)</source>
         <comment>CAMERA_MODE action description</comment>
         <translation>Change le mode de la caméra (observateur ou vol)</translation>
     </message>
@@ -259,12 +259,12 @@
         <translation>Sélectionne</translation>
     </message>
     <message>
-        <source>Sets revolve around point</source>
+        <source>Sets pivot point</source>
         <comment>RAP_FROM_PIXEL click action</comment>
         <translation>Définit le point de rotation</translation>
     </message>
     <message>
-        <source>Resets revolve around point</source>
+        <source>Resets pivot point</source>
         <comment>RAP_IS_CENTER click action</comment>
         <translation>Restaure le point de rotation</translation>
     </message>
@@ -386,7 +386,7 @@
         <translation>Position %1 sauvegardée</translation>
     </message>
     <message>
-        <source>Camera in revolve around mode</source>
+        <source>Camera in observer mode</source>
         <comment>Feedback message</comment>
         <translation>Caméra en mode observateur</translation>
     </message>

@@ -104,7 +104,7 @@ QString Viewer::helpString() const
   text += "On the other hand, the QGLViewer camera fits the near and far distances to the scene radius. ";
   text += "Fine tuning is available using <code>zClippingCoefficient()</code> and <code>zNearCoefficient()</code>. ";
   text += "However, visual results do not seem to be impacted by this zBuffer fitted range.<br><br>";
-  text += "The QGLViewer camera also adapts the orthographic frustum dimensions to the distance to the <code>revolveAroundPoint()</code> to mimic a perspective camera. ";
+  text += "The QGLViewer camera also adapts the orthographic frustum dimensions to the distance to the <code>pivotPoint()</code> to mimic a perspective camera. ";
   text += "Since this behavior may not be needed, this example shows how to override it.<br><br>";
 
   text += "The second viewer displays the first one's camera to show its configuration.<br><br>";

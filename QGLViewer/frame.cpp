@@ -1009,10 +1009,11 @@ If, after this first rotation, two other axis are also almost parallel, a second
 performed. The two frames then have identical orientations, up to 90 degrees rotations.
 
 \p threshold measures how close two axis must be to be considered parallel. It is compared with the
-absolute values of the dot product of the normalized axis.
+absolute values of the dot product of the normalized axis. A value of 0 means axis will always be
+aligned, 1 means it will never happen.
 
 When \p move is set to \c true, the Frame position() is also affected by the alignment. The new
-Frame position() is such that the \p frame position (computed with coordinatesOf(), in the Frame
+Frame's position() is such that the \p frame position (computed with coordinatesOf(), in the Frame
 coordinates system) does not change.
 
 \p frame may be \c NULL and then represents the world coordinate system (same convention than for
@@ -1056,7 +1057,6 @@ void Frame::alignWithFrame(const Frame* const frame, bool move, float threshold)
 		float angle = asin(axis.norm());
 		if (coef >= 0.0)
 			angle = -angle;
-		// setOrientation(Quaternion(axis, angle) * orientation());
 		rotate(rotation().inverse() * Quaternion(axis, angle) * orientation());
 
 		// Try to align an other axis direction
@@ -1081,7 +1081,6 @@ void Frame::alignWithFrame(const Frame* const frame, bool move, float threshold)
 			float angle = asin(axis.norm());
 			if (directions[0][index[0]] * dir >= 0.0)
 				angle = -angle;
-			// setOrientation(Quaternion(axis, angle) * orientation());
 			rotate(rotation().inverse() * Quaternion(axis, angle) * orientation());
 		}
 	}
@@ -1092,7 +1091,6 @@ void Frame::alignWithFrame(const Frame* const frame, bool move, float threshold)
 		if (frame)
 			center = frame->position();
 
-		// setPosition(center - orientation().rotate(old.coordinatesOf(center)));
 		translate(center - orientation().rotate(old.coordinatesOf(center)) - translation());
 	}
 }

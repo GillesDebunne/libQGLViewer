@@ -5,7 +5,7 @@
 # scene dimensions as is done in the <code>QGLViewer::Camera</code>).
 
 # The orthographic frustum dimensions are fixed instead of depending on the distance
-# to the <code>revolveAroundPoint()</code>. Since this may be needed for some applications,
+# to the <code>pivotPoint()</code>. Since this may be needed for some applications,
 # you may want to use this <code>standardCamera</code> class in your code.
 
 TEMPLATE = app

@@ -12,8 +12,8 @@ namespace qglviewer {
   the right, the ManipulatedFrame translation goes to the right, while the ManipulatedCameraFrame
   has to go to the \e left, so that the \e scene seems to move to the right.
 
-  A ManipulatedCameraFrame rotates around its revolveAroundPoint(), which corresponds to the
-  associated Camera::revolveAroundPoint().
+  A ManipulatedCameraFrame rotates around its pivotPoint(), which corresponds to the
+  associated Camera::pivotPoint().
 
   A ManipulatedCameraFrame can also "fly" in the scene. It basically moves forward, and turns
   according to the mouse motion. See flySpeed(), flyUpVector() and the QGLViewer::MOVE_FORWARD and
@@ -42,17 +42,22 @@ public:
 	/*! @name Revolve around point */
 	//@{
 public:
-	/*! Returns the point the ManipulatedCameraFrame revolves around when rotated.
+	/*! Returns the point the ManipulatedCameraFrame pivot point, around which the camera rotates.
 
 	It is defined in the world coordinate system. Default value is (0,0,0).
 
-	When the ManipulatedCameraFrame is associated to a Camera, Camera::revolveAroundPoint() also
+	When the ManipulatedCameraFrame is associated to a Camera, Camera::pivotPoint() also
 	returns this value. This point can interactively be changed using the mouse (see
 	QGLViewer::RAP_FROM_PIXEL and QGLViewer::RAP_IS_CENTER in the <a href="../mouse.html">mouse
 	page</a>). */
-	Vec revolveAroundPoint() const { return revolveAroundPoint_; }
-	/*! Sets the revolveAroundPoint(), defined in the world coordinate system. */
-	void setRevolveAroundPoint(const Vec& revolveAroundPoint) { revolveAroundPoint_ = revolveAroundPoint; }
+	Vec pivotPoint() const { return pivotPoint_; }
+	/*! Sets the pivotPoint(), defined in the world coordinate system. */
+	void setPivotPoint(const Vec& point) { pivotPoint_ = point; }
+
+#ifndef DOXYGEN
+	Vec revolveAroundPoint() const { qWarning("revolveAroundPoint() is deprecated, use pivotPoint() instead"); return  pivotPoint(); }
+	void setRevolveArountPoint(const Vec& point) { qWarning("setRevolveAroundPoint() is deprecated, use setPivotPoint() instead"); setPivotPoint(point); }
+#endif
 	//@}
 
 	/*! @name Fly parameters */
@@ -136,7 +141,7 @@ private:
 	Vec flyUpVector_;
 	QTimer flyTimer_;
 
-	Vec revolveAroundPoint_;
+	Vec pivotPoint_;
 };
 
 } // namespace qglviewer
