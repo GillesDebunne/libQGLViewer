@@ -264,7 +264,7 @@ public:
 	void rotateAroundPoint(Quaternion& rotation, const Vec& point);
 	void rotateAroundPoint(const Quaternion& rotation, const Vec& point);
 
-	void alignWithFrame(const Frame* const frame, bool move=false, float threshold=0.85f);
+	void alignWithFrame(const Frame* const frame, bool move=false, float threshold=0.0f);
 	void projectOnLine(const Vec& origin, const Vec& direction);
 	//@}
 
