@@ -196,8 +196,8 @@ float Camera::zNear() const
 	if (z < zMin)
 		switch (type())
 		{
-		case Camera::PERSPECTIVE  : z = zMin; break;
-		case Camera::ORTHOGRAPHIC : z = 0.0;  break;
+			case Camera::PERSPECTIVE  : z = zMin; break;
+			case Camera::ORTHOGRAPHIC : z = 0.0;  break;
 		}
 	return z;
 }
@@ -334,32 +334,32 @@ void Camera::computeProjectionMatrix() const
 
 	switch (type())
 	{
-	case Camera::PERSPECTIVE:
-	{
-		// #CONNECTION# all non null coefficients were set to 0.0 in constructor.
-		const float f = 1.0/tan(fieldOfView()/2.0);
-		projectionMatrix_[0]  = f/aspectRatio();
-		projectionMatrix_[5]  = f;
-		projectionMatrix_[10] = (ZNear + ZFar) / (ZNear - ZFar);
-		projectionMatrix_[11] = -1.0;
-		projectionMatrix_[14] = 2.0 * ZNear * ZFar / (ZNear - ZFar);
-		projectionMatrix_[15] = 0.0;
-		// same as gluPerspective( 180.0*fieldOfView()/M_PI, aspectRatio(), zNear(), zFar() );
-		break;
-	}
-	case Camera::ORTHOGRAPHIC:
-	{
-		GLdouble w, h;
-		getOrthoWidthHeight(w,h);
-		projectionMatrix_[0]  = 1.0/w;
-		projectionMatrix_[5]  = 1.0/h;
-		projectionMatrix_[10] = -2.0/(ZFar - ZNear);
-		projectionMatrix_[11] = 0.0;
-		projectionMatrix_[14] = -(ZFar + ZNear)/(ZFar - ZNear);
-		projectionMatrix_[15] = 1.0;
-		// same as glOrtho( -w, w, -h, h, zNear(), zFar() );
-		break;
-	}
+		case Camera::PERSPECTIVE:
+		{
+			// #CONNECTION# all non null coefficients were set to 0.0 in constructor.
+			const float f = 1.0/tan(fieldOfView()/2.0);
+			projectionMatrix_[0]  = f/aspectRatio();
+			projectionMatrix_[5]  = f;
+			projectionMatrix_[10] = (ZNear + ZFar) / (ZNear - ZFar);
+			projectionMatrix_[11] = -1.0;
+			projectionMatrix_[14] = 2.0 * ZNear * ZFar / (ZNear - ZFar);
+			projectionMatrix_[15] = 0.0;
+			// same as gluPerspective( 180.0*fieldOfView()/M_PI, aspectRatio(), zNear(), zFar() );
+			break;
+		}
+		case Camera::ORTHOGRAPHIC:
+		{
+			GLdouble w, h;
+			getOrthoWidthHeight(w,h);
+			projectionMatrix_[0]  = 1.0/w;
+			projectionMatrix_[5]  = 1.0/h;
+			projectionMatrix_[10] = -2.0/(ZFar - ZNear);
+			projectionMatrix_[11] = 0.0;
+			projectionMatrix_[14] = -(ZFar + ZNear)/(ZFar - ZNear);
+			projectionMatrix_[15] = 1.0;
+			// same as glOrtho( -w, w, -h, h, zNear(), zFar() );
+			break;
+		}
 	}
 
 	projectionMatrixIsUpToDate_ = true;
@@ -521,30 +521,30 @@ void Camera::loadProjectionMatrixStereo(bool leftBuffer) const
 
 	switch (type())
 	{
-	case Camera::PERSPECTIVE:
-		// compute half width of screen,
-		// corresponding to zero parallax plane to deduce decay of cameras
-		screenHalfWidth = focusDistance() * tan(horizontalFieldOfView() / 2.0);
-		shift = screenHalfWidth * IODistance() / physicalScreenWidth();
-		// should be * current y  / y total
-		// to take into account that the window doesn't cover the entire screen
+		case Camera::PERSPECTIVE:
+			// compute half width of screen,
+			// corresponding to zero parallax plane to deduce decay of cameras
+			screenHalfWidth = focusDistance() * tan(horizontalFieldOfView() / 2.0);
+			shift = screenHalfWidth * IODistance() / physicalScreenWidth();
+			// should be * current y  / y total
+			// to take into account that the window doesn't cover the entire screen
 
-		// compute half width of "view" at znear and the delta corresponding to
-		// the shifted camera to deduce what to set for asymmetric frustums
-		halfWidth = zNear() * tan(horizontalFieldOfView() / 2.0);
-		delta  = shift * zNear() / focusDistance();
-		side   = leftBuffer ? -1.0 : 1.0;
+			// compute half width of "view" at znear and the delta corresponding to
+			// the shifted camera to deduce what to set for asymmetric frustums
+			halfWidth = zNear() * tan(horizontalFieldOfView() / 2.0);
+			delta  = shift * zNear() / focusDistance();
+			side   = leftBuffer ? -1.0 : 1.0;
 
-		left   = -halfWidth + side * delta;
-		right  =  halfWidth + side * delta;
-		top    = halfWidth / aspectRatio();
-		bottom = -top;
-		glFrustum(left, right, bottom, top, zNear(), zFar() );
-		break;
+			left   = -halfWidth + side * delta;
+			right  =  halfWidth + side * delta;
+			top    = halfWidth / aspectRatio();
+			bottom = -top;
+			glFrustum(left, right, bottom, top, zNear(), zFar() );
+			break;
 
-	case Camera::ORTHOGRAPHIC:
-		qWarning("Camera::setProjectionMatrixStereo: Stereo not available with Ortho mode");
-		break;
+		case Camera::ORTHOGRAPHIC:
+			qWarning("Camera::setProjectionMatrixStereo: Stereo not available with Ortho mode");
+			break;
 	}
 }
 
@@ -790,14 +790,14 @@ float Camera::pixelGLRatio(const Vec& position) const
 {
 	switch (type())
 	{
-	case Camera::PERSPECTIVE :
-		return 2.0 * fabs((frame()->coordinatesOf(position)).z) * tan(fieldOfView()/2.0) / screenHeight();
-	case Camera::ORTHOGRAPHIC :
-	{
-		GLdouble w, h;
-		getOrthoWidthHeight(w,h);
-		return 2.0 * h / screenHeight();
-	}
+		case Camera::PERSPECTIVE :
+			return 2.0 * fabs((frame()->coordinatesOf(position)).z) * tan(fieldOfView()/2.0) / screenHeight();
+		case Camera::ORTHOGRAPHIC :
+		{
+			GLdouble w, h;
+			getOrthoWidthHeight(w,h);
+			return 2.0 * h / screenHeight();
+		}
 	}
 	// Bad compilers complain
 	return 1.0;
@@ -992,18 +992,18 @@ void Camera::fitSphere(const Vec& center, float radius)
 	float distance = 0.0f;
 	switch (type())
 	{
-	case Camera::PERSPECTIVE :
-	{
-		const float yview = radius / sin(fieldOfView() / 2.0);
-		const float xview = radius / sin(horizontalFieldOfView() / 2.0);
-		distance = qMax(xview, yview);
-		break;
-	}
-	case Camera::ORTHOGRAPHIC :
-	{
-		distance = ((center-pivotPoint()) * viewDirection()) + (radius / orthoCoef_);
-		break;
-	}
+		case Camera::PERSPECTIVE :
+		{
+			const float yview = radius / sin(fieldOfView() / 2.0);
+			const float xview = radius / sin(horizontalFieldOfView() / 2.0);
+			distance = qMax(xview, yview);
+			break;
+		}
+		case Camera::ORTHOGRAPHIC :
+		{
+			distance = ((center-pivotPoint()) * viewDirection()) + (radius / orthoCoef_);
+			break;
+		}
 	}
 	Vec newPos(center - distance * viewDirection());
 	frame()->setPositionWithConstraint(newPos);
@@ -1044,22 +1044,22 @@ void Camera::fitScreenRegion(const QRect& rectangle)
 	float distance = 0.0f;
 	switch (type())
 	{
-	case Camera::PERSPECTIVE :
-	{
-		const float distX = (pointX-newCenter).norm() / sin(horizontalFieldOfView()/2.0);
-		const float distY = (pointY-newCenter).norm() / sin(fieldOfView()/2.0);
-		distance = qMax(distX, distY);
-		break;
-	}
-	case Camera::ORTHOGRAPHIC :
-	{
-		const float dist = ((newCenter-pivotPoint()) * vd);
-		//#CONNECTION# getOrthoWidthHeight
-		const float distX = (pointX-newCenter).norm() / orthoCoef_ / ((aspectRatio() < 1.0) ? 1.0 : aspectRatio());
-		const float distY = (pointY-newCenter).norm() / orthoCoef_ / ((aspectRatio() < 1.0) ? 1.0/aspectRatio() : 1.0);
-		distance = dist + qMax(distX, distY);
-		break;
-	}
+		case Camera::PERSPECTIVE :
+		{
+			const float distX = (pointX-newCenter).norm() / sin(horizontalFieldOfView()/2.0);
+			const float distY = (pointY-newCenter).norm() / sin(fieldOfView()/2.0);
+			distance = qMax(distX, distY);
+			break;
+		}
+		case Camera::ORTHOGRAPHIC :
+		{
+			const float dist = ((newCenter-pivotPoint()) * vd);
+			//#CONNECTION# getOrthoWidthHeight
+			const float distX = (pointX-newCenter).norm() / orthoCoef_ / ((aspectRatio() < 1.0) ? 1.0 : aspectRatio());
+			const float distY = (pointY-newCenter).norm() / orthoCoef_ / ((aspectRatio() < 1.0) ? 1.0/aspectRatio() : 1.0);
+			distance = dist + qMax(distX, distY);
+			break;
+		}
 	}
 
 	Vec newPos(newCenter - distance * vd);
@@ -1791,8 +1791,8 @@ QDomElement Camera::domElement(const QString& name, QDomDocument& document) cons
 
 	switch (type())
 	{
-	case Camera::PERSPECTIVE  :	paramNode.setAttribute("Type", "PERSPECTIVE"); break;
-	case Camera::ORTHOGRAPHIC :	paramNode.setAttribute("Type", "ORTHOGRAPHIC"); break;
+		case Camera::PERSPECTIVE  :	paramNode.setAttribute("Type", "PERSPECTIVE"); break;
+		case Camera::ORTHOGRAPHIC :	paramNode.setAttribute("Type", "ORTHOGRAPHIC"); break;
 	}
 	de.appendChild(paramNode);
 
@@ -1911,24 +1911,24 @@ void Camera::convertClickToLine(const QPoint& pixel, Vec& orig, Vec& dir) const
 {
 	switch (type())
 	{
-	case Camera::PERSPECTIVE:
-		orig = position();
-		dir = Vec( ((2.0 * pixel.x() / screenWidth()) - 1.0) * tan(fieldOfView()/2.0) * aspectRatio(),
-				   ((2.0 * (screenHeight()-pixel.y()) / screenHeight()) - 1.0) * tan(fieldOfView()/2.0),
-				   -1.0 );
-		dir = worldCoordinatesOf(dir) - orig;
-		dir.normalize();
-		break;
+		case Camera::PERSPECTIVE:
+			orig = position();
+			dir = Vec( ((2.0 * pixel.x() / screenWidth()) - 1.0) * tan(fieldOfView()/2.0) * aspectRatio(),
+					   ((2.0 * (screenHeight()-pixel.y()) / screenHeight()) - 1.0) * tan(fieldOfView()/2.0),
+					   -1.0 );
+			dir = worldCoordinatesOf(dir) - orig;
+			dir.normalize();
+			break;
 
-	case Camera::ORTHOGRAPHIC:
-	{
-		GLdouble w,h;
-		getOrthoWidthHeight(w,h);
-		orig = Vec((2.0 * pixel.x() / screenWidth() - 1.0)*w, -(2.0 * pixel.y() / screenHeight() - 1.0)*h, 0.0);
-		orig = worldCoordinatesOf(orig);
-		dir = viewDirection();
-		break;
-	}
+		case Camera::ORTHOGRAPHIC:
+		{
+			GLdouble w,h;
+			getOrthoWidthHeight(w,h);
+			orig = Vec((2.0 * pixel.x() / screenWidth() - 1.0)*w, -(2.0 * pixel.y() / screenHeight() - 1.0)*h, 0.0);
+			orig = worldCoordinatesOf(orig);
+			dir = viewDirection();
+			break;
+		}
 	}
 }
 
@@ -1973,25 +1973,25 @@ void Camera::draw(bool drawFarPlane, float scale) const
 
 	switch (type())
 	{
-	case Camera::PERSPECTIVE:
-	{
-		points[0].y = points[0].z * tan(fieldOfView()/2.0);
-		points[0].x = points[0].y * aspectRatio();
+		case Camera::PERSPECTIVE:
+		{
+			points[0].y = points[0].z * tan(fieldOfView()/2.0);
+			points[0].x = points[0].y * aspectRatio();
 
-		const float ratio = points[1].z / points[0].z;
+			const float ratio = points[1].z / points[0].z;
 
-		points[1].y = ratio * points[0].y;
-		points[1].x = ratio * points[0].x;
-		break;
-	}
-	case Camera::ORTHOGRAPHIC:
-	{
-		GLdouble hw, hh;
-		getOrthoWidthHeight(hw, hh);
-		points[0].x = points[1].x = scale * float(hw);
-		points[0].y = points[1].y = scale * float(hh);
-		break;
-	}
+			points[1].y = ratio * points[0].y;
+			points[1].x = ratio * points[0].x;
+			break;
+		}
+		case Camera::ORTHOGRAPHIC:
+		{
+			GLdouble hw, hh;
+			getOrthoWidthHeight(hw, hh);
+			points[0].x = points[1].x = scale * float(hw);
+			points[0].y = points[1].y = scale * float(hh);
+			break;
+		}
 	}
 
 	const int farIndex = drawFarPlane?1:0;
@@ -2033,32 +2033,32 @@ void Camera::draw(bool drawFarPlane, float scale) const
 	// Frustum lines
 	switch (type())
 	{
-	case Camera::PERSPECTIVE :
-		glBegin(GL_LINES);
-		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3f( points[farIndex].x,  points[farIndex].y, -points[farIndex].z);
-		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(-points[farIndex].x,  points[farIndex].y, -points[farIndex].z);
-		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(-points[farIndex].x, -points[farIndex].y, -points[farIndex].z);
-		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3f( points[farIndex].x, -points[farIndex].y, -points[farIndex].z);
-		glEnd();
-		break;
-	case Camera::ORTHOGRAPHIC :
-		if (drawFarPlane)
-		{
+		case Camera::PERSPECTIVE :
 			glBegin(GL_LINES);
-			glVertex3f( points[0].x,  points[0].y, -points[0].z);
-			glVertex3f( points[1].x,  points[1].y, -points[1].z);
-			glVertex3f(-points[0].x,  points[0].y, -points[0].z);
-			glVertex3f(-points[1].x,  points[1].y, -points[1].z);
-			glVertex3f(-points[0].x, -points[0].y, -points[0].z);
-			glVertex3f(-points[1].x, -points[1].y, -points[1].z);
-			glVertex3f( points[0].x, -points[0].y, -points[0].z);
-			glVertex3f( points[1].x, -points[1].y, -points[1].z);
+			glVertex3f(0.0f, 0.0f, 0.0f);
+			glVertex3f( points[farIndex].x,  points[farIndex].y, -points[farIndex].z);
+			glVertex3f(0.0f, 0.0f, 0.0f);
+			glVertex3f(-points[farIndex].x,  points[farIndex].y, -points[farIndex].z);
+			glVertex3f(0.0f, 0.0f, 0.0f);
+			glVertex3f(-points[farIndex].x, -points[farIndex].y, -points[farIndex].z);
+			glVertex3f(0.0f, 0.0f, 0.0f);
+			glVertex3f( points[farIndex].x, -points[farIndex].y, -points[farIndex].z);
 			glEnd();
-		}
+			break;
+		case Camera::ORTHOGRAPHIC :
+			if (drawFarPlane)
+			{
+				glBegin(GL_LINES);
+				glVertex3f( points[0].x,  points[0].y, -points[0].z);
+				glVertex3f( points[1].x,  points[1].y, -points[1].z);
+				glVertex3f(-points[0].x,  points[0].y, -points[0].z);
+				glVertex3f(-points[1].x,  points[1].y, -points[1].z);
+				glVertex3f(-points[0].x, -points[0].y, -points[0].z);
+				glVertex3f(-points[1].x, -points[1].y, -points[1].z);
+				glVertex3f( points[0].x, -points[0].y, -points[0].z);
+				glVertex3f( points[1].x, -points[1].y, -points[1].z);
+				glEnd();
+			}
 	}
 
 	glPopMatrix();
@@ -2102,60 +2102,60 @@ void Camera::getFrustumPlanesCoefficients(GLdouble coef[6][4]) const
 
 	switch (type())
 	{
-	case Camera::PERSPECTIVE :
-	{
-		const float hhfov = horizontalFieldOfView() / 2.0;
-		const float chhfov = cos(hhfov);
-		const float shhfov = sin(hhfov);
-		normal[0] = - shhfov * viewDir;
-		normal[1] = normal[0] + chhfov * right;
-		normal[0] = normal[0] - chhfov * right;
+		case Camera::PERSPECTIVE :
+		{
+			const float hhfov = horizontalFieldOfView() / 2.0;
+			const float chhfov = cos(hhfov);
+			const float shhfov = sin(hhfov);
+			normal[0] = - shhfov * viewDir;
+			normal[1] = normal[0] + chhfov * right;
+			normal[0] = normal[0] - chhfov * right;
 
-		normal[2] = -viewDir;
-		normal[3] =  viewDir;
+			normal[2] = -viewDir;
+			normal[3] =  viewDir;
 
-		const float hfov = fieldOfView() / 2.0;
-		const float chfov = cos(hfov);
-		const float shfov = sin(hfov);
-		normal[4] = - shfov * viewDir;
-		normal[5] = normal[4] - chfov * up;
-		normal[4] = normal[4] + chfov * up;
+			const float hfov = fieldOfView() / 2.0;
+			const float chfov = cos(hfov);
+			const float shfov = sin(hfov);
+			normal[4] = - shfov * viewDir;
+			normal[5] = normal[4] - chfov * up;
+			normal[4] = normal[4] + chfov * up;
 
-		for (int i=0; i<2; ++i)
-			dist[i] = pos * normal[i];
-		for (int j=4; j<6; ++j)
-			dist[j] = pos * normal[j];
+			for (int i=0; i<2; ++i)
+				dist[i] = pos * normal[i];
+			for (int j=4; j<6; ++j)
+				dist[j] = pos * normal[j];
 
-		// Natural equations are:
-		// dist[0,1,4,5] = pos * normal[0,1,4,5];
-		// dist[2] = (pos + zNear() * viewDir) * normal[2];
-		// dist[3] = (pos + zFar()  * viewDir) * normal[3];
+			// Natural equations are:
+			// dist[0,1,4,5] = pos * normal[0,1,4,5];
+			// dist[2] = (pos + zNear() * viewDir) * normal[2];
+			// dist[3] = (pos + zFar()  * viewDir) * normal[3];
 
-		// 2 times less computations using expanded/merged equations. Dir vectors are normalized.
-		const float posRightCosHH = chhfov * pos * right;
-		dist[0] = -shhfov * posViewDir;
-		dist[1] = dist[0] + posRightCosHH;
-		dist[0] = dist[0] - posRightCosHH;
-		const float posUpCosH = chfov * pos * up;
-		dist[4] = - shfov * posViewDir;
-		dist[5] = dist[4] - posUpCosH;
-		dist[4] = dist[4] + posUpCosH;
+			// 2 times less computations using expanded/merged equations. Dir vectors are normalized.
+			const float posRightCosHH = chhfov * pos * right;
+			dist[0] = -shhfov * posViewDir;
+			dist[1] = dist[0] + posRightCosHH;
+			dist[0] = dist[0] - posRightCosHH;
+			const float posUpCosH = chfov * pos * up;
+			dist[4] = - shfov * posViewDir;
+			dist[5] = dist[4] - posUpCosH;
+			dist[4] = dist[4] + posUpCosH;
 
-		break;
-	}
-	case Camera::ORTHOGRAPHIC :
-		normal[0] = -right;
-		normal[1] =  right;
-		normal[4] =  up;
-		normal[5] = -up;
+			break;
+		}
+		case Camera::ORTHOGRAPHIC :
+			normal[0] = -right;
+			normal[1] =  right;
+			normal[4] =  up;
+			normal[5] = -up;
 
-		GLdouble hw, hh;
-		getOrthoWidthHeight(hw, hh);
-		dist[0] = (pos - hw * right) * normal[0];
-		dist[1] = (pos + hw * right) * normal[1];
-		dist[4] = (pos + hh * up) * normal[4];
-		dist[5] = (pos - hh * up) * normal[5];
-		break;
+			GLdouble hw, hh;
+			getOrthoWidthHeight(hw, hh);
+			dist[0] = (pos - hw * right) * normal[0];
+			dist[1] = (pos + hw * right) * normal[1];
+			dist[4] = (pos + hh * up) * normal[4];
+			dist[5] = (pos - hh * up) * normal[5];
+			break;
 	}
 
 	// Front and far planes are identical for both camera types.

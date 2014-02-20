@@ -256,12 +256,12 @@ static int saveVectorialSnapshot(const QString& fileName, QGLWidget* widget, con
 
 	switch (VRinterface->sortMethod->currentIndex())
 	{
-	case 0: vparams.setSortMethod(vrender::VRenderParams::NoSorting); 		break;
-	case 1: vparams.setSortMethod(vrender::VRenderParams::BSPSort); 		break;
-	case 2: vparams.setSortMethod(vrender::VRenderParams::TopologicalSort); 	break;
-	case 3: vparams.setSortMethod(vrender::VRenderParams::AdvancedTopologicalSort);	break;
-	default:
-		qWarning("VRenderInterface::saveVectorialSnapshot: Unknown SortMethod");
+		case 0: vparams.setSortMethod(vrender::VRenderParams::NoSorting); 		break;
+		case 1: vparams.setSortMethod(vrender::VRenderParams::BSPSort); 		break;
+		case 2: vparams.setSortMethod(vrender::VRenderParams::TopologicalSort); 	break;
+		case 3: vparams.setSortMethod(vrender::VRenderParams::AdvancedTopologicalSort);	break;
+		default:
+			qWarning("VRenderInterface::saveVectorialSnapshot: Unknown SortMethod");
 	}
 
 	vparams.setProgressFunction(&ProgressDialog::updateProgress);

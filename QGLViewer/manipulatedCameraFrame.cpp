@@ -59,20 +59,20 @@ void ManipulatedCameraFrame::flyUpdate()
 	static Vec flyDisp(0.0, 0.0, 0.0);
 	switch (action_)
 	{
-	case QGLViewer::MOVE_FORWARD:
-		flyDisp.z = -flySpeed();
-		translate(localInverseTransformOf(flyDisp));
-		break;
-	case QGLViewer::MOVE_BACKWARD:
-		flyDisp.z = flySpeed();
-		translate(localInverseTransformOf(flyDisp));
-		break;
-	case QGLViewer::DRIVE:
-		flyDisp.z = flySpeed() * driveSpeed_;
-		translate(localInverseTransformOf(flyDisp));
-		break;
-	default:
-		break;
+		case QGLViewer::MOVE_FORWARD:
+			flyDisp.z = -flySpeed();
+			translate(localInverseTransformOf(flyDisp));
+			break;
+		case QGLViewer::MOVE_BACKWARD:
+			flyDisp.z = flySpeed();
+			translate(localInverseTransformOf(flyDisp));
+			break;
+		case QGLViewer::DRIVE:
+			flyDisp.z = flySpeed() * driveSpeed_;
+			translate(localInverseTransformOf(flyDisp));
+			break;
+		default:
+			break;
 	}
 
 	// Needs to be out of the switch since ZOOM/fastDraw()/wheelEvent use this callback to trigger a final draw().
@@ -170,17 +170,17 @@ void ManipulatedCameraFrame::startAction(int ma, bool withConstraint)
 
 	switch (action_)
 	{
-	case QGLViewer::MOVE_FORWARD:
-	case QGLViewer::MOVE_BACKWARD:
-	case QGLViewer::DRIVE:
-		flyTimer_.setSingleShot(false);
-		flyTimer_.start(10);
-		break;
-	case QGLViewer::ROTATE:
-		constrainedRotationIsReversed_ = transformOf(sceneUpVector_).y < 0.0;
-		break;
-	default:
-		break;
+		case QGLViewer::MOVE_FORWARD:
+		case QGLViewer::MOVE_BACKWARD:
+		case QGLViewer::DRIVE:
+			flyTimer_.setSingleShot(false);
+			flyTimer_.start(10);
+			break;
+		case QGLViewer::ROTATE:
+			constrainedRotationIsReversed_ = transformOf(sceneUpVector_).y < 0.0;
+			break;
+		default:
+			break;
 	}
 }
 #endif
@@ -194,76 +194,76 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 	// #CONNECTION# QGLViewer::mouseMoveEvent does the update().
 	switch (action_)
 	{
-	case QGLViewer::TRANSLATE:
-	{
-		const QPoint delta = prevPos_ - event->pos();
-		Vec trans(static_cast<float>(delta.x()), static_cast<float>(-delta.y()), 0.0);
-		// Scale to fit the screen mouse displacement
-		switch (camera->type())
+		case QGLViewer::TRANSLATE:
 		{
-		case Camera::PERSPECTIVE :
-			trans *= 2.0 * tan(camera->fieldOfView()/2.0) *
-					fabs((camera->frame()->coordinatesOf(pivotPoint())).z) / camera->screenHeight();
-			break;
-		case Camera::ORTHOGRAPHIC :
-		{
-			GLdouble w,h;
-			camera->getOrthoWidthHeight(w, h);
-			trans[0] *= 2.0 * w / camera->screenWidth();
-			trans[1] *= 2.0 * h / camera->screenHeight();
+			const QPoint delta = prevPos_ - event->pos();
+			Vec trans(static_cast<float>(delta.x()), static_cast<float>(-delta.y()), 0.0);
+			// Scale to fit the screen mouse displacement
+			switch (camera->type())
+			{
+				case Camera::PERSPECTIVE :
+					trans *= 2.0 * tan(camera->fieldOfView()/2.0) *
+							fabs((camera->frame()->coordinatesOf(pivotPoint())).z) / camera->screenHeight();
+					break;
+				case Camera::ORTHOGRAPHIC :
+				{
+					GLdouble w,h;
+					camera->getOrthoWidthHeight(w, h);
+					trans[0] *= 2.0 * w / camera->screenWidth();
+					trans[1] *= 2.0 * h / camera->screenHeight();
+					break;
+				}
+			}
+			translate(inverseTransformOf(translationSensitivity()*trans));
 			break;
 		}
+
+		case QGLViewer::MOVE_FORWARD:
+		{
+			Quaternion rot = pitchYawQuaternion(event->x(), event->y(), camera);
+			rotate(rot);
+			//#CONNECTION# wheelEvent MOVE_FORWARD case
+			// actual translation is made in flyUpdate().
+			//translate(inverseTransformOf(Vec(0.0, 0.0, -flySpeed())));
+			break;
 		}
-		translate(inverseTransformOf(translationSensitivity()*trans));
-		break;
-	}
 
-	case QGLViewer::MOVE_FORWARD:
-	{
-		Quaternion rot = pitchYawQuaternion(event->x(), event->y(), camera);
-		rotate(rot);
-		//#CONNECTION# wheelEvent MOVE_FORWARD case
-		// actual translation is made in flyUpdate().
-		//translate(inverseTransformOf(Vec(0.0, 0.0, -flySpeed())));
-		break;
-	}
+		case QGLViewer::MOVE_BACKWARD:
+		{
+			Quaternion rot = pitchYawQuaternion(event->x(), event->y(), camera);
+			rotate(rot);
+			// actual translation is made in flyUpdate().
+			//translate(inverseTransformOf(Vec(0.0, 0.0, flySpeed())));
+			break;
+		}
 
-	case QGLViewer::MOVE_BACKWARD:
-	{
-		Quaternion rot = pitchYawQuaternion(event->x(), event->y(), camera);
-		rotate(rot);
-		// actual translation is made in flyUpdate().
-		//translate(inverseTransformOf(Vec(0.0, 0.0, flySpeed())));
-		break;
-	}
+		case QGLViewer::DRIVE:
+		{
+			Quaternion rot = turnQuaternion(event->x(), camera);
+			rotate(rot);
+			// actual translation is made in flyUpdate().
+			driveSpeed_ = 0.01 * (event->y() - pressPos_.y());
+			break;
+		}
 
-	case QGLViewer::DRIVE:
-	{
-		Quaternion rot = turnQuaternion(event->x(), camera);
-		rotate(rot);
-		// actual translation is made in flyUpdate().
-		driveSpeed_ = 0.01 * (event->y() - pressPos_.y());
-		break;
-	}
+		case QGLViewer::ZOOM:
+		{
+			//#CONNECTION# wheelEvent() ZOOM case
+			const float coef = qMax(fabsf((camera->frame()->coordinatesOf(camera->pivotPoint())).z), 0.2f*camera->sceneRadius());
+			Vec trans(0.0, 0.0, -coef * deltaWithPrevPos(event, camera));
+			translate(inverseTransformOf(trans));
+			break;
+		}
 
-	case QGLViewer::ZOOM:
-	{
-		//#CONNECTION# wheelEvent() ZOOM case
-		const float coef = qMax(fabsf((camera->frame()->coordinatesOf(camera->pivotPoint())).z), 0.2f*camera->sceneRadius());
-		Vec trans(0.0, 0.0, -coef * deltaWithPrevPos(event, camera));
-		translate(inverseTransformOf(trans));
-		break;
-	}
+		case QGLViewer::LOOK_AROUND:
+		{
+			Quaternion rot = pitchYawQuaternion(event->x(), event->y(), camera);
+			rotate(rot);
+			break;
+		}
 
-	case QGLViewer::LOOK_AROUND:
-	{
-		Quaternion rot = pitchYawQuaternion(event->x(), event->y(), camera);
-		rotate(rot);
-		break;
-	}
-
-	case QGLViewer::ROTATE:
-	{
+		case QGLViewer::ROTATE:
+		{
 			Quaternion rot;
 			if (rotatesAroundUpVector_) {
 				// Multiply by 2.0 to get on average about the same speed as with the deformed ball
@@ -273,73 +273,73 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 				Vec verticalAxis = transformOf(sceneUpVector_);
 				rot = Quaternion(verticalAxis, dx) * Quaternion(Vec(1.0, 0.0, 0.0), dy);
 			} else {
-		Vec trans = camera->projectedCoordinatesOf(pivotPoint());
-		rot = deformedBallQuaternion(event->x(), event->y(), trans[0], trans[1], camera);
+				Vec trans = camera->projectedCoordinatesOf(pivotPoint());
+				rot = deformedBallQuaternion(event->x(), event->y(), trans[0], trans[1], camera);
 			}
-		//#CONNECTION# These two methods should go together (spinning detection and activation)
-		computeMouseSpeed(event);
-		setSpinningQuaternion(rot);
-		spin();
-		break;
-	}
-
-	case QGLViewer::SCREEN_ROTATE:
-	{
-		Vec trans = camera->projectedCoordinatesOf(pivotPoint());
-
-		const float angle = atan2(event->y() - trans[1], event->x() - trans[0]) - atan2(prevPos_.y()-trans[1], prevPos_.x()-trans[0]);
-
-		Quaternion rot(Vec(0.0, 0.0, 1.0), angle);
-		//#CONNECTION# These two methods should go together (spinning detection and activation)
-		computeMouseSpeed(event);
-		setSpinningQuaternion(rot);
-		spin();
-		updateSceneUpVector();
-		break;
-	}
-
-	case QGLViewer::ROLL:
-	{
-		const float angle = M_PI * (event->x() - prevPos_.x()) / camera->screenWidth();
-		Quaternion rot(Vec(0.0, 0.0, 1.0), angle);
-		rotate(rot);
-		setSpinningQuaternion(rot);
-		updateSceneUpVector();
-		break;
-	}
-
-	case QGLViewer::SCREEN_TRANSLATE:
-	{
-		Vec trans;
-		int dir = mouseOriginalDirection(event);
-		if (dir == 1)
-			trans.setValue(static_cast<float>(prevPos_.x() - event->x()), 0.0, 0.0);
-		else if (dir == -1)
-			trans.setValue(0.0, static_cast<float>(event->y() - prevPos_.y()), 0.0);
-
-		switch (camera->type())
-		{
-		case Camera::PERSPECTIVE :
-			trans *= 2.0 * tan(camera->fieldOfView()/2.0) *
-					fabs((camera->frame()->coordinatesOf(pivotPoint())).z) / camera->screenHeight();
-			break;
-		case Camera::ORTHOGRAPHIC :
-		{
-			GLdouble w,h;
-			camera->getOrthoWidthHeight(w, h);
-			trans[0] *= 2.0 * w / camera->screenWidth();
-			trans[1] *= 2.0 * h / camera->screenHeight();
+			//#CONNECTION# These two methods should go together (spinning detection and activation)
+			computeMouseSpeed(event);
+			setSpinningQuaternion(rot);
+			spin();
 			break;
 		}
+
+		case QGLViewer::SCREEN_ROTATE:
+		{
+			Vec trans = camera->projectedCoordinatesOf(pivotPoint());
+
+			const float angle = atan2(event->y() - trans[1], event->x() - trans[0]) - atan2(prevPos_.y()-trans[1], prevPos_.x()-trans[0]);
+
+			Quaternion rot(Vec(0.0, 0.0, 1.0), angle);
+			//#CONNECTION# These two methods should go together (spinning detection and activation)
+			computeMouseSpeed(event);
+			setSpinningQuaternion(rot);
+			spin();
+			updateSceneUpVector();
+			break;
 		}
 
-		translate(inverseTransformOf(translationSensitivity()*trans));
-		break;
-	}
+		case QGLViewer::ROLL:
+		{
+			const float angle = M_PI * (event->x() - prevPos_.x()) / camera->screenWidth();
+			Quaternion rot(Vec(0.0, 0.0, 1.0), angle);
+			rotate(rot);
+			setSpinningQuaternion(rot);
+			updateSceneUpVector();
+			break;
+		}
 
-	case QGLViewer::ZOOM_ON_REGION:
-	case QGLViewer::NO_MOUSE_ACTION:
-		break;
+		case QGLViewer::SCREEN_TRANSLATE:
+		{
+			Vec trans;
+			int dir = mouseOriginalDirection(event);
+			if (dir == 1)
+				trans.setValue(static_cast<float>(prevPos_.x() - event->x()), 0.0, 0.0);
+			else if (dir == -1)
+				trans.setValue(0.0, static_cast<float>(event->y() - prevPos_.y()), 0.0);
+
+			switch (camera->type())
+			{
+				case Camera::PERSPECTIVE :
+					trans *= 2.0 * tan(camera->fieldOfView()/2.0) *
+							fabs((camera->frame()->coordinatesOf(pivotPoint())).z) / camera->screenHeight();
+					break;
+				case Camera::ORTHOGRAPHIC :
+				{
+					GLdouble w,h;
+					camera->getOrthoWidthHeight(w, h);
+					trans[0] *= 2.0 * w / camera->screenWidth();
+					trans[1] *= 2.0 * h / camera->screenHeight();
+					break;
+				}
+			}
+
+			translate(inverseTransformOf(translationSensitivity()*trans));
+			break;
+		}
+
+		case QGLViewer::ZOOM_ON_REGION:
+		case QGLViewer::NO_MOUSE_ACTION:
+			break;
 	}
 
 	if (action_ != QGLViewer::NO_MOUSE_ACTION)
@@ -377,24 +377,24 @@ void ManipulatedCameraFrame::wheelEvent(QWheelEvent* const event, Camera* const 
 	//#CONNECTION# QGLViewer::setWheelBinding, ManipulatedFrame::wheelEvent.
 	switch (action_)
 	{
-	case QGLViewer::ZOOM:
-	{
-		const float wheelSensitivityCoef = 8E-4f;
-		//#CONNECTION# mouseMoveEvent() ZOOM case
-		const float coef = qMax(fabsf((camera->frame()->coordinatesOf(camera->pivotPoint())).z), 0.2f*camera->sceneRadius());
-		Vec trans(0.0, 0.0, coef * event->delta() * wheelSensitivity() * wheelSensitivityCoef);
-		translate(inverseTransformOf(trans));
-		Q_EMIT manipulated();
-		break;
-	}
-	case QGLViewer::MOVE_FORWARD:
-	case QGLViewer::MOVE_BACKWARD:
-		//#CONNECTION# mouseMoveEvent() MOVE_FORWARD case
-		translate(inverseTransformOf(Vec(0.0, 0.0, 0.2*flySpeed()*event->delta())));
-		Q_EMIT manipulated();
-		break;
-	default:
-		break;
+		case QGLViewer::ZOOM:
+		{
+			const float wheelSensitivityCoef = 8E-4f;
+			//#CONNECTION# mouseMoveEvent() ZOOM case
+			const float coef = qMax(fabsf((camera->frame()->coordinatesOf(camera->pivotPoint())).z), 0.2f*camera->sceneRadius());
+			Vec trans(0.0, 0.0, coef * event->delta() * wheelSensitivity() * wheelSensitivityCoef);
+			translate(inverseTransformOf(trans));
+			Q_EMIT manipulated();
+			break;
+		}
+		case QGLViewer::MOVE_FORWARD:
+		case QGLViewer::MOVE_BACKWARD:
+			//#CONNECTION# mouseMoveEvent() MOVE_FORWARD case
+			translate(inverseTransformOf(Vec(0.0, 0.0, 0.2*flySpeed()*event->delta())));
+			Q_EMIT manipulated();
+			break;
+		default:
+			break;
 	}
 
 	// #CONNECTION# startAction should always be called before
