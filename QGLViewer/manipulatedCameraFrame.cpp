@@ -9,15 +9,14 @@ using namespace std;
 
 /*! Default constructor.
 
- flySpeed() is set to 0.0 and flyUpVector() is (0,1,0). The pivotPoint() is set to (0,0,0).
+ flySpeed() is set to 0.0 and sceneUpVector() is (0,1,0). The pivotPoint() is set to (0,0,0).
 
   \attention Created object is removeFromMouseGrabberPool(). */
 ManipulatedCameraFrame::ManipulatedCameraFrame()
-	: driveSpeed_(0.0), flyUpVector_(0.0, 1.0, 0.0)
+	: driveSpeed_(0.0), sceneUpVector_(0.0, 1.0, 0.0), rotatesAroundUpVector_(false)
 {
 	setFlySpeed(0.0);
 	removeFromMouseGrabberPool();
-
 	connect(&flyTimer_, SIGNAL(timeout()), SLOT(flyUpdate()));
 }
 
@@ -27,7 +26,8 @@ ManipulatedCameraFrame& ManipulatedCameraFrame::operator=(const ManipulatedCamer
 	ManipulatedFrame::operator=(mcf);
 
 	setFlySpeed(mcf.flySpeed());
-	setFlyUpVector(mcf.flyUpVector());
+	setSceneUpVector(mcf.sceneUpVector());
+	setRotatesAroundUpVector(mcf.rotatesAroundUpVector_);
 
 	return *this;
 }
@@ -79,13 +79,24 @@ void ManipulatedCameraFrame::flyUpdate()
 	// #CONNECTION# wheelEvent.
 	Q_EMIT manipulated();
 }
+
+Vec ManipulatedCameraFrame::flyUpVector() const {
+	qWarning("flyUpVector() is deprecated. Use sceneUpVector() instead.");
+	return sceneUpVector();
+}
+
+void ManipulatedCameraFrame::setFlyUpVector(const Vec& up) {
+	qWarning("setFlyUpVector() is deprecated. Use setSceneUpVector() instead.");
+	setSceneUpVector(up);
+}
+
 #endif
 
 /*! This method will be called by the Camera when its orientation is changed, so that the
-flyUpVector (private) is changed accordingly. You should not need to call this method. */
-void ManipulatedCameraFrame::updateFlyUpVector()
+sceneUpVector (private) is changed accordingly. You should not need to call this method. */
+void ManipulatedCameraFrame::updateSceneUpVector()
 {
-	flyUpVector_ = inverseTransformOf(Vec(0.0, 1.0, 0.0));
+	sceneUpVector_ = inverseTransformOf(Vec(0.0, 1.0, 0.0));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -110,7 +121,7 @@ QDomElement ManipulatedCameraFrame::domElement(const QString& name, QDomDocument
 	QDomElement e = ManipulatedFrame::domElement(name, document);
 	QDomElement mcp = document.createElement("ManipulatedCameraParameters");
 	mcp.setAttribute("flySpeed", QString::number(flySpeed()));
-	mcp.appendChild(flyUpVector().domElement("flyUpVector", document));
+	mcp.appendChild(sceneUpVector().domElement("sceneUpVector", document));
 	e.appendChild(mcp);
 	return e;
 }
@@ -121,7 +132,7 @@ First calls ManipulatedFrame::initFromDOMElement() and then initializes Manipula
 specific parameters. */
 void ManipulatedCameraFrame::initFromDOMElement(const QDomElement& element)
 {
-	// No need to initialize, since default flyUpVector and flySpeed are not meaningful.
+	// No need to initialize, since default sceneUpVector and flySpeed are not meaningful.
 	// It's better to keep current ones. And it would destroy constraint() and referenceFrame().
 	// *this = ManipulatedCameraFrame();
 	ManipulatedFrame::initFromDOMElement(element);
@@ -136,8 +147,8 @@ void ManipulatedCameraFrame::initFromDOMElement(const QDomElement& element)
 			QDomElement schild=child.firstChild().toElement();
 			while (!schild.isNull())
 			{
-				if (schild.tagName() == "flyUpVector")
-					setFlyUpVector(Vec(schild));
+				if (schild.tagName() == "sceneUpVector")
+					setSceneUpVector(Vec(schild));
 
 				schild = schild.nextSibling().toElement();
 			}
@@ -164,6 +175,9 @@ void ManipulatedCameraFrame::startAction(int ma, bool withConstraint)
 	case QGLViewer::DRIVE:
 		flyTimer_.setSingleShot(false);
 		flyTimer_.start(10);
+		break;
+	case QGLViewer::ROTATE:
+		constrainedRotationIsReversed_ = transformOf(sceneUpVector_).y < 0.0;
 		break;
 	default:
 		break;
@@ -236,7 +250,7 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 	{
 		//#CONNECTION# wheelEvent() ZOOM case
 		const float coef = qMax(fabsf((camera->frame()->coordinatesOf(camera->pivotPoint())).z), 0.2f*camera->sceneRadius());
-		Vec trans(0.0, 0.0, -coef * (event->y() - prevPos_.y()) / camera->screenHeight());
+		Vec trans(0.0, 0.0, -coef * deltaWithPrevPos(event, camera));
 		translate(inverseTransformOf(trans));
 		break;
 	}
@@ -250,8 +264,18 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 
 	case QGLViewer::ROTATE:
 	{
+			Quaternion rot;
+			if (rotatesAroundUpVector_) {
+				// Multiply by 2.0 to get on average about the same speed as with the deformed ball
+				float dx = 2.0f * rotationSensitivity() * (prevPos_.x() - event->x()) / camera->screenWidth();
+				float dy = 2.0f * rotationSensitivity() * (prevPos_.y() - event->y()) / camera->screenHeight();
+				if (constrainedRotationIsReversed_) dx = -dx;
+				Vec verticalAxis = transformOf(sceneUpVector_);
+				rot = Quaternion(verticalAxis, dx) * Quaternion(Vec(1.0, 0.0, 0.0), dy);
+			} else {
 		Vec trans = camera->projectedCoordinatesOf(pivotPoint());
-		Quaternion rot = deformedBallQuaternion(event->x(), event->y(), trans[0], trans[1], camera);
+		rot = deformedBallQuaternion(event->x(), event->y(), trans[0], trans[1], camera);
+			}
 		//#CONNECTION# These two methods should go together (spinning detection and activation)
 		computeMouseSpeed(event);
 		setSpinningQuaternion(rot);
@@ -270,7 +294,7 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 		computeMouseSpeed(event);
 		setSpinningQuaternion(rot);
 		spin();
-		updateFlyUpVector();
+		updateSceneUpVector();
 		break;
 	}
 
@@ -280,7 +304,7 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 		Quaternion rot(Vec(0.0, 0.0, 1.0), angle);
 		rotate(rot);
 		setSpinningQuaternion(rot);
-		updateFlyUpVector();
+		updateSceneUpVector();
 		break;
 	}
 
@@ -402,10 +426,10 @@ Quaternion ManipulatedCameraFrame::turnQuaternion(int x, const Camera* const cam
 }
 
 /*! Returns a Quaternion that is the composition of two rotations, inferred from the
-  mouse pitch (X axis) and yaw (flyUpVector() axis). */
+  mouse pitch (X axis) and yaw (sceneUpVector() axis). */
 Quaternion ManipulatedCameraFrame::pitchYawQuaternion(int x, int y, const Camera* const camera)
 {
 	const Quaternion rotX(Vec(1.0, 0.0, 0.0), rotationSensitivity()*(prevPos_.y()-y)/camera->screenHeight());
-	const Quaternion rotY(transformOf(flyUpVector()), rotationSensitivity()*(prevPos_.x()-x)/camera->screenWidth());
+	const Quaternion rotY(transformOf(sceneUpVector()), rotationSensitivity()*(prevPos_.x()-x)/camera->screenWidth());
 	return rotY * rotX;
 }

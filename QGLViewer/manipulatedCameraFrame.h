@@ -16,7 +16,7 @@ namespace qglviewer {
   associated Camera::pivotPoint().
 
   A ManipulatedCameraFrame can also "fly" in the scene. It basically moves forward, and turns
-  according to the mouse motion. See flySpeed(), flyUpVector() and the QGLViewer::MOVE_FORWARD and
+  according to the mouse motion. See flySpeed(), sceneUpVector() and the QGLViewer::MOVE_FORWARD and
   QGLViewer::MOVE_BACKWARD QGLViewer::MouseAction.
 
   See the <a href="../mouse.html">mouse page</a> for a description of the possible actions that can
@@ -39,7 +39,7 @@ public:
 	ManipulatedCameraFrame(const ManipulatedCameraFrame& mcf);
 	ManipulatedCameraFrame& operator=(const ManipulatedCameraFrame& mcf);
 
-	/*! @name Revolve around point */
+	/*! @name Pivot point */
 	//@{
 public:
 	/*! Returns the point the ManipulatedCameraFrame pivot point, around which the camera rotates.
@@ -48,11 +48,35 @@ public:
 
 	When the ManipulatedCameraFrame is associated to a Camera, Camera::pivotPoint() also
 	returns this value. This point can interactively be changed using the mouse (see
-	QGLViewer::RAP_FROM_PIXEL and QGLViewer::RAP_IS_CENTER in the <a href="../mouse.html">mouse
-	page</a>). */
+	Camera::setPivotPointFromPixel() and QGLViewer::RAP_FROM_PIXEL and QGLViewer::RAP_IS_CENTER
+	in the <a href="../mouse.html">mouse page</a>). */
 	Vec pivotPoint() const { return pivotPoint_; }
 	/*! Sets the pivotPoint(), defined in the world coordinate system. */
 	void setPivotPoint(const Vec& point) { pivotPoint_ = point; }
+
+	/*! Returns \c true when the camera's rotation is constrained around the sceneUpVector(),
+		and \c false otherwise, when the rotation is completely free (default).
+
+		In free mode, the camera can be arbitrarily rotated in the scene, along its three
+		axis, thus possibly leading to any arbitrary rotation.
+
+		When you setRotatesAroundUpVector() to \c true, the sceneUpVector() defines a
+		'vertical' direction around which the camera rotates. The camera can rotate left
+		or right, around this axis. It can also be moved up or down to show the top and
+		bottom views of the scene. As a result, the sceneUpVector() will always stay vertical
+		in the scene. An other way to say it is that, in this mode, the horizon is preserved
+		and stays projected along the camera's horizontal axis.
+
+		Note that setting this value to \c true when the sceneUpVector() is not already
+		vertically projected on screen may limit the possible movement of the camera.
+		Use Camera::setUpVector() to define the sceneUpVector() before calling this method
+		to ensure this does not happen.
+	*/
+	bool rotatesAroundUpVector() const { return rotatesAroundUpVector_; }
+	/*! Sets the value of rotatesAroundUpVector().
+
+	   Default value is false (free rotation).  */
+	void setRotatesAroundUpVector(bool constrained) { rotatesAroundUpVector_ = constrained; }
 
 #ifndef DOXYGEN
 	Vec revolveAroundPoint() const { qWarning("revolveAroundPoint() is deprecated, use pivotPoint() instead"); return  pivotPoint(); }
@@ -69,11 +93,11 @@ public Q_SLOTS:
 	ManipulatedCameraFrame is set as the Camera::frame(). */
 	void setFlySpeed(float speed) { flySpeed_ = speed; }
 
-	/*! Sets the flyUpVector(), defined in the world coordinate system.
+	/*! Sets the sceneUpVector(), defined in the world coordinate system.
 
-	Default value is (0,1,0), but it is updated by the Camera when set as its Camera::frame(). Use
-	Camera::setUpVector() instead in that case. */
-	void setFlyUpVector(const Vec& up) { flyUpVector_ = up; }
+	Default value is (0,1,0), but it is updated by the Camera when this object is set as its Camera::frame().
+	Using Camera::setUpVector() instead is probably a better solution. */
+	void setSceneUpVector(const Vec& up) { sceneUpVector_ = up; }
 
 public:
 	/*! Returns the fly speed, expressed in OpenGL units.
@@ -86,17 +110,25 @@ public:
 	according to the QGLViewer::sceneRadius() by QGLViewer::setSceneRadius(). */
 	float flySpeed() const { return flySpeed_; }
 
-	/*! Returns the up vector used in fly mode, expressed in the world coordinate system.
+	/*! Returns the up vector of the scene, expressed in the world coordinate system.
 
-	Fly mode corresponds to the QGLViewer::MOVE_FORWARD and QGLViewer::MOVE_BACKWARD
-	QGLViewer::MouseAction bindings. In these modes, horizontal displacements of the mouse rotate
+	In 'fly mode' (corresponding to the QGLViewer::MOVE_FORWARD and QGLViewer::MOVE_BACKWARD
+	QGLViewer::MouseAction bindings), horizontal displacements of the mouse rotate
 	the ManipulatedCameraFrame around this vector. Vertical displacements rotate always around the
 	Camera \c X axis.
 
-	Default value is (0,1,0), but it is updated by the Camera when set as its Camera::frame().
-	Camera::setOrientation() and Camera::setUpVector()) modify this value and should be used
+	This value is also used when setRotationIsConstrained() is set to \c true to define the up vector
+	(and incidentally the 'horizon' plane) around which the camera will rotate.
+
+	Default value is (0,1,0), but it is updated by the Camera when this object is set as its Camera::frame().
+	Camera::setOrientation() and Camera::setUpVector()) direclty modify this value and should be used
 	instead. */
-	Vec flyUpVector() const { return flyUpVector_; }
+	Vec sceneUpVector() const { return sceneUpVector_; }
+
+#ifndef DOXYGEN
+	Vec flyUpVector() const;
+	void setFlyUpVector(const Vec& up);
+#endif
 	//@}
 
 	/*! @name Mouse event handlers */
@@ -130,7 +162,7 @@ private Q_SLOTS:
 	virtual void flyUpdate();
 
 private:
-	void updateFlyUpVector();
+	void updateSceneUpVector();
 	Quaternion turnQuaternion(int x, const Camera* const camera);
 	Quaternion pitchYawQuaternion(int x, int y, const Camera* const camera);
 
@@ -138,8 +170,13 @@ private:
 	// Fly mode data
 	float flySpeed_;
 	float driveSpeed_;
-	Vec flyUpVector_;
+	Vec sceneUpVector_;
 	QTimer flyTimer_;
+
+	bool rotatesAroundUpVector_;
+	// Inverse the direction of an horizontal mouse motion. Depends on the projected
+	// screen orientation of the vertical axis when the mouse button is pressed.
+	bool constrainedRotationIsReversed_;
 
 	Vec pivotPoint_;
 };

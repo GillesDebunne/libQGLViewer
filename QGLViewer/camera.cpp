@@ -70,12 +70,12 @@ Camera::~Camera()
 
 /*! Copy constructor. Performs a deep copy using operator=(). */
 Camera::Camera(const Camera& camera)
-	: QObject()
+	: QObject(), frame_(NULL)
 {
 	// #CONNECTION# Camera constructor
 	interpolationKfi_ = new KeyFrameInterpolator;
 	// Requires the interpolationKfi_
-	setFrame(new ManipulatedCameraFrame());
+	setFrame(new ManipulatedCameraFrame(*camera.frame()));
 
 	for (unsigned short j=0; j<16; ++j)
 	{
@@ -1074,11 +1074,13 @@ void Camera::fitScreenRegion(const QRect& rectangle)
 
  When \p noMove is set to \c false, the orientation modification is compensated by a translation, so
  that the pivotPoint() stays projected at the same position on screen. This is especially
- useful when the Camera is an observer of the scene (default mouse binding).
+ useful when the Camera is used as an observer of the scene (default mouse binding).
 
  When \p noMove is \c true (default), the Camera position() is left unchanged, which is an intuitive
  behavior when the Camera is in a walkthrough fly mode (see the QGLViewer::MOVE_FORWARD and
  QGLViewer::MOVE_BACKWARD QGLViewer::MouseAction).
+
+ The frame()'s ManipulatedCameraFrame::sceneUpVector() is set accordingly.
 
  See also setViewDirection(), lookAt() and setOrientation(). */
 void Camera::setUpVector(const Vec& up, bool noMove)
@@ -1091,7 +1093,7 @@ void Camera::setUpVector(const Vec& up, bool noMove)
 	frame()->rotate(q);
 
 	// Useful in fly mode to keep the horizontal direction.
-	frame()->updateFlyUpVector();
+	frame()->updateSceneUpVector();
 }
 
 /*! Sets the orientation() of the Camera using polar coordinates.
@@ -1118,7 +1120,7 @@ void Camera::setOrientation(float theta, float phi)
 void Camera::setOrientation(const Quaternion& q)
 {
 	frame()->setOrientation(q);
-	frame()->updateFlyUpVector();
+	frame()->updateSceneUpVector();
 }
 
 /*! Rotates the Camera so that its viewDirection() is \p direction (defined in the world coordinate

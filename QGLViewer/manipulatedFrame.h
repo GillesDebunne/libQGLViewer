@@ -259,6 +259,10 @@ protected:
 	void computeMouseSpeed(const QMouseEvent* const e);
 	int mouseOriginalDirection(const QMouseEvent* const e);
 
+	/*! Returns a screen scaled delta from event's position to prevPos_, along the
+		X or Y direction, whichever has the largest magnitude. */
+	float deltaWithPrevPos(QMouseEvent* const event, Camera* const camera);
+
 	// Previous mouse position (used for incremental updates) and mouse press position.
 	QPoint prevPos_, pressPos_;
 #endif // DOXYGEN

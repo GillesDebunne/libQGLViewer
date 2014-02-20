@@ -6,7 +6,7 @@
 
 TEMPLATE = lib
 TARGET = QGLViewer
-VERSION = 2.5.1
+VERSION = 2.5.2
 CONFIG *= qt opengl warn_on shared thread create_prl rtti no_keywords
 
 QGL_HEADERS = qglviewer.h \

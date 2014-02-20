@@ -46,6 +46,7 @@ ManipulatedFrame& ManipulatedFrame::operator=(const ManipulatedFrame& mf)
 	mouseSpeed_ = 0.0;
 	dirIsFixed_ = false;
 	keepsGrabbingMouse_ = false;
+	action_ = QGLViewer::NO_MOUSE_ACTION;
 
 	return *this;
 }
@@ -244,6 +245,14 @@ int ManipulatedFrame::mouseOriginalDirection(const QMouseEvent* const e)
 	else
 		return 0;
 }
+
+float ManipulatedFrame::deltaWithPrevPos(QMouseEvent* const event, Camera* const camera) {
+	float dx = float(event->x() - prevPos_.x()) / camera->screenWidth();
+	float dy = float(event->y() - prevPos_.y()) / camera->screenHeight();
+
+	return fabs(dx) > fabs(dy) ? dx : dy;
+}
+
 #endif // DOXYGEN
 
 /*! Initiates the ManipulatedFrame mouse manipulation.
@@ -310,7 +319,7 @@ void ManipulatedFrame::mouseMoveEvent(QMouseEvent* const event, Camera* const ca
 		case QGLViewer::ZOOM:
 		{
 			//#CONNECTION# wheelEvent ZOOM case
-			Vec trans(0.0, 0.0, (camera->position()-position()).norm() * (event->y() - prevPos_.y()) / camera->screenHeight());
+			Vec trans(0.0, 0.0, (camera->position() - position()).norm() * deltaWithPrevPos(event, camera));
 
 			trans = camera->frame()->orientation().rotate(trans);
 			if (referenceFrame())

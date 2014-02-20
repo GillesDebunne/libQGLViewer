@@ -2983,7 +2983,7 @@ void QGLViewer::toggleCameraMode()
 	//#CONNECTION# setDefaultMouseBindings()
 	if (rotateMode)
 	{
-		camera()->frame()->updateFlyUpVector();
+		camera()->frame()->updateSceneUpVector();
 		camera()->frame()->stopSpinning();
 
 		setMouseBinding(modifiers, Qt::LeftButton,  CAMERA, MOVE_FORWARD);
