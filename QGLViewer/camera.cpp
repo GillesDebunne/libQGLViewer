@@ -980,9 +980,9 @@ void Camera::lookAt(const Vec& target)
 	setViewDirection(target - position());
 }
 
-/*! Moves the Camera so that the sphere defined by (\p center, \p radius) is visible and fits the window.
+/*! Moves the Camera so that the sphere defined by (\p center, \p radius) is visible and fits in the frustum.
 
- The Camera is simply translated along its viewDirection() so that the sphere fits the screen. Its
+ The Camera is simply translated to center the sphere in the screen and make it fit the frustum. Its
  orientation() and its fieldOfView() are unchanged.
 
  You should therefore orientate the Camera before you call this method. See lookAt(),
@@ -994,9 +994,9 @@ void Camera::fitSphere(const Vec& center, float radius)
 	{
 	case Camera::PERSPECTIVE :
 	{
-		const float yview = radius / sin(fieldOfView()/2.0);
-		const float xview = radius / sin(horizontalFieldOfView()/2.0);
-		distance = qMax(xview,yview);
+		const float yview = radius / sin(fieldOfView() / 2.0);
+		const float xview = radius / sin(horizontalFieldOfView() / 2.0);
+		distance = qMax(xview, yview);
 		break;
 	}
 	case Camera::ORTHOGRAPHIC :

@@ -347,7 +347,7 @@ public:
 	void getModelViewProjectionMatrix(GLdouble m[16]) const;
 
 #ifndef DOXYGEN
-	// Required for windows which otherwise silently fills
+	// Required for Windows which otherwise silently fails
 	void getProjectionMatrix(GLfloat m[16]) const;
 	void getModelViewMatrix(GLfloat m[16]) const;
 #endif

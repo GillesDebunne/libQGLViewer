@@ -1009,8 +1009,8 @@ If, after this first rotation, two other axis are also almost parallel, a second
 performed. The two frames then have identical orientations, up to 90 degrees rotations.
 
 \p threshold measures how close two axis must be to be considered parallel. It is compared with the
-absolute values of the dot product of the normalized axis. A value of 0 means axis will always be
-aligned, 1 means it will never happen.
+absolute values of the dot product of the normalized axis. As a result, useful range is sqrt(2)/2
+(systematic alignment) to 1 (no alignment).
 
 When \p move is set to \c true, the Frame position() is also affected by the alignment. The new
 Frame's position() is such that the \p frame position (computed with coordinatesOf(), in the Frame
