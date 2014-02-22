@@ -38,8 +38,16 @@
   <li>Camera's <code>revolveArountPoint</code> is renamed <code>pivotPoint</code>.</li>
   <li>ManipulatedCameraFrame's <code>flyUpVector</code> is renamed <code>sceneUpVector</code>.</li>
   <li>A new ManipulatedCameraFrame's <code>setRotatesAroundUpVector</code> method defines a new rotation mode, where the horizon is preserved.</li>
-  <li>Frame's <code>alignWithAxis</code> threshold set to 0 (i.e. always align).</li>
+  <li>Similarly, a new <code>setZoomsOnPivotPoint</code> method defines a new zoom behavior.</li>
+  <li>Frame's <code>alignWithAxis</code> threshold set to 0 (i.e. it will always align).</li>
 </ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+  <li>The Frame's <code>position()</code> method is faster and more precise in case there is no <code>referenceFrame</code>.</li>
+  <li>DomUtils error messages improved.</li>
+</ul>
+
 
 <h2>Feb 12th 2014 - 2.5.1</h2>
 <b>Changes in the API</b>

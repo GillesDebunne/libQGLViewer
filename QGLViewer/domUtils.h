@@ -27,17 +27,21 @@ public:
 			bool ok;
 			value = s.toFloat(&ok);
 			if (!ok) {
-				warning("Bad float syntax for attribute \""+attribute+"\" in initialization of \""+e.tagName()+"\". Setting value to "+QString::number(value)+".");
+				warning(QString("'%1' is not a valid float syntax for attribute \"%2\" in initialization of \"%3\". Setting value to %4.")
+						.arg(s).arg(attribute).arg(e.tagName()).arg(QString::number(defValue)));
 				value = defValue;
 			}
-		} else
-			warning("\""+attribute+"\" attribute missing in initialization of \""+e.tagName()+"\". Setting value to "+QString::number(value)+".");
+		} else {
+			warning(QString("\"%1\" attribute missing in initialization of \"%2\". Setting value to %3.")
+					.arg(attribute).arg(e.tagName()).arg(QString::number(value)));
+		}
 
 #if defined(isnan)
 		// The "isnan" method may not be available on all platforms.
 		// Find its equivalent or simply remove these two lines
 		if (isnan(value))
-			warning("Warning, attribute \""+attribute+"\" initialized to Not a Number in \""+e.tagName()+"\"");
+			warning(QString("Warning, attribute \"%1\" initialized to Not a Number in \"%2\"")
+					.arg(attribute).arg(e.tagName()));
 #endif
 
 		return value;
@@ -51,17 +55,21 @@ public:
 			bool ok;
 			value = s.toDouble(&ok);
 			if (!ok) {
-				warning("Bad double syntax for attribute \""+attribute+"\" in initialization of \""+e.tagName()+"\". Setting value to "+QString::number(value)+".");
+				warning(QString("'%1' is not a valid double syntax for attribute \"%2\" in initialization of \"%3\". Setting value to %4.")
+						.arg(s).arg(attribute).arg(e.tagName()).arg(QString::number(defValue)));
 				value = defValue;
 			}
-		} else
-			warning("\""+attribute+"\" attribute missing in initialization of \""+e.tagName()+"\". Setting value to "+QString::number(value)+".");
+		} else {
+			warning(QString("\"%1\" attribute missing in initialization of \"%2\". Setting value to %3.")
+					.arg(attribute).arg(e.tagName()).arg(QString::number(value)));
+		}
 
 #if defined(isnan)
 		// The "isnan" method may not be available on all platforms.
 		// Find its equivalent or simply remove these two lines
 		if (isnan(value))
-			warning("Warning, attribute \""+attribute+"\" initialized to Not a Number in \""+e.tagName()+"\"");
+			warning(QString("Warning, attribute \"%1\" initialized to Not a Number in \"%2\"")
+					.arg(attribute).arg(e.tagName()));
 #endif
 
 		return value;
@@ -74,14 +82,17 @@ public:
 		{
 			const QString s = e.attribute(attribute);
 			bool ok;
-			s.toInt(&ok);
-			if (ok)
-				value = s.toInt();
-			else
-				warning("Bad integer syntax for attribute \""+attribute+"\" in initialization of \""+e.tagName()+"\". Setting value to "+QString::number(value)+".");
+			value = s.toInt(&ok);
+			if (!ok) {
+				warning(QString("'%1' is not a valid integer syntax for attribute \"%2\" in initialization of \"%3\". Setting value to %4.")
+						.arg(s).arg(attribute).arg(e.tagName()).arg(QString::number(defValue)));
+				value = defValue;
+			}
+		} else {
+			warning(QString("\"%1\" attribute missing in initialization of \"%2\". Setting value to %3.")
+					.arg(attribute).arg(e.tagName()).arg(QString::number(value)));
 		}
-		else
-			warning("\""+attribute+"\" attribute missing in initialization of \""+e.tagName()+"\". Setting value to "+QString::number(value)+".");
+
 		return value;
 	}
 
@@ -97,13 +108,19 @@ public:
 				value = false;
 			else
 			{
-				warning("Bad boolean syntax for attribute \""+attribute+"\" in initialization of \""+e.tagName()+"\" (should be \"true\" or \"false\").");
-				warning("Setting value to "+(value?QString("true."):QString("false.")));
+				warning(QString("'%1' is not a valid boolean syntax for attribute \"%2\" in initialization of \"%3\". Setting value to %4.")
+						.arg(s).arg(attribute).arg(e.tagName()).arg(defValue?"true":"false"));
 			}
+		} else {
+			warning(QString("\"%1\" attribute missing in initialization of \"%2\". Setting value to %3.")
+					.arg(attribute).arg(e.tagName()).arg(value?"true":"false"));
 		}
-		else
-			warning("\""+attribute+"\" attribute missing in initialization of \""+e.tagName()+"\". Setting value to "+(value?QString("true."):QString("false.")));
+
 		return value;
+	}
+
+	static void setBoolAttribute(QDomElement& element, const QString& attribute, bool value) {
+		element.setAttribute(attribute, (value ? "true" : "false"));
 	}
 
 	static QDomElement QColorDomElement(const QColor& color, const QString& name, QDomDocument& doc)
