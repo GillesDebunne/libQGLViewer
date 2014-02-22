@@ -160,9 +160,7 @@ public:
 	void setPositionAndOrientation(const Vec& position, const Quaternion& orientation);
 	void setPositionAndOrientationWithConstraint(Vec& position, Quaternion& orientation);
 
-	/*! Returns the position of the Frame, defined in the world coordinate system. See also
-	  orientation(), setPosition() and translation(). */
-	Vec position() const { return inverseCoordinatesOf(Vec(0.0,0.0,0.0)); }
+	Vec position() const;
 	Quaternion orientation() const;
 
 	void getPosition(float& x, float& y, float& z) const;

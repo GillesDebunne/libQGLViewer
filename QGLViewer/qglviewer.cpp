@@ -3509,23 +3509,23 @@ QDomElement QGLViewer::domElement(const QString& name, QDomDocument& document) c
 	de.setAttribute("version", QGLViewerVersionString());
 
 	QDomElement stateNode = document.createElement("State");
-	// stateNode.setAttribute("mouseTracking", (hasMouseTracking()?"true":"false"));
+	// hasMouseTracking() is not saved
 	stateNode.appendChild(DomUtils::QColorDomElement(foregroundColor(), "foregroundColor", document));
 	stateNode.appendChild(DomUtils::QColorDomElement(backgroundColor(), "backgroundColor", document));
-	stateNode.setAttribute("stereo", (displaysInStereo()?"true":"false"));
-	//stateNode.setAttribute("cameraMode", (cameraIsInRotateMode()?"revolve":"fly"));
+	DomUtils::setBoolAttribute(stateNode, "stereo", displaysInStereo());
+	// Revolve or fly camera mode is not saved
 	de.appendChild(stateNode);
 
 	QDomElement displayNode = document.createElement("Display");
-	displayNode.setAttribute("axisIsDrawn",       (axisIsDrawn()?"true":"false"));
-	displayNode.setAttribute("gridIsDrawn",       (gridIsDrawn()?"true":"false"));
-	displayNode.setAttribute("FPSIsDisplayed",    (FPSIsDisplayed()?"true":"false"));
-	displayNode.setAttribute("cameraIsEdited",    (cameraIsEdited()?"true":"false"));
-	// displayNode.setAttribute("textIsEnabled",  (textIsEnabled()?"true":"false"));
+	DomUtils::setBoolAttribute(displayNode, "axisIsDrawn", axisIsDrawn());
+	DomUtils::setBoolAttribute(displayNode, "gridIsDrawn", gridIsDrawn());
+	DomUtils::setBoolAttribute(displayNode, "FPSIsDisplayed", FPSIsDisplayed());
+	DomUtils::setBoolAttribute(displayNode, "cameraIsEdited", cameraIsEdited());
+	// textIsEnabled() is not saved
 	de.appendChild(displayNode);
 
 	QDomElement geometryNode = document.createElement("Geometry");
-	geometryNode.setAttribute("fullScreen", (isFullScreen()?"true":"false"));
+	DomUtils::setBoolAttribute(geometryNode, "fullScreen", isFullScreen());
 	if (isFullScreen())
 	{
 		geometryNode.setAttribute("prevPosX", QString::number(prevPos_.x()));

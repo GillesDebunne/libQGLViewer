@@ -510,6 +510,15 @@ void Frame::getOrientation(double& q0, double& q1, double& q2, double& q3) const
 	q3 = o[3];
 }
 
+/*! Returns the position of the Frame, defined in the world coordinate system. See also
+	orientation(), setPosition() and translation(). */
+Vec Frame::position() const {
+	if (referenceFrame_)
+		return inverseCoordinatesOf(Vec(0.0,0.0,0.0));
+	else
+		return t_;
+}
+
 /*! Returns the orientation of the Frame, defined in the world coordinate system. See also
   position(), setOrientation() and rotation(). */
 Quaternion Frame::orientation() const

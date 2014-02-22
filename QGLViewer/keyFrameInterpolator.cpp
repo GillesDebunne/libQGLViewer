@@ -609,8 +609,8 @@ QDomElement KeyFrameInterpolator::domElement(const QString& name, QDomDocument& 
 	de.setAttribute("time", QString::number(interpolationTime()));
 	de.setAttribute("speed", QString::number(interpolationSpeed()));
 	de.setAttribute("period", QString::number(interpolationPeriod()));
-	de.setAttribute("closedPath", (closedPath()?"true":"false"));
-	de.setAttribute("loop", (loopInterpolation()?"true":"false"));
+	DomUtils::setBoolAttribute(de, "closedPath", closedPath());
+	DomUtils::setBoolAttribute(de, "loop", loopInterpolation());
 	return de;
 }
 

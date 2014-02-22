@@ -54,33 +54,56 @@ public:
 	/*! Sets the pivotPoint(), defined in the world coordinate system. */
 	void setPivotPoint(const Vec& point) { pivotPoint_ = point; }
 
-	/*! Returns \c true when the camera's rotation is constrained around the sceneUpVector(),
-		and \c false otherwise, when the rotation is completely free (default).
-
-		In free mode, the camera can be arbitrarily rotated in the scene, along its three
-		axis, thus possibly leading to any arbitrary rotation.
-
-		When you setRotatesAroundUpVector() to \c true, the sceneUpVector() defines a
-		'vertical' direction around which the camera rotates. The camera can rotate left
-		or right, around this axis. It can also be moved up or down to show the top and
-		bottom views of the scene. As a result, the sceneUpVector() will always stay vertical
-		in the scene. An other way to say it is that, in this mode, the horizon is preserved
-		and stays projected along the camera's horizontal axis.
-
-		Note that setting this value to \c true when the sceneUpVector() is not already
-		vertically projected on screen may limit the possible movement of the camera.
-		Use Camera::setUpVector() to define the sceneUpVector() before calling this method
-		to ensure this does not happen.
-	*/
-	bool rotatesAroundUpVector() const { return rotatesAroundUpVector_; }
-	/*! Sets the value of rotatesAroundUpVector().
-
-	   Default value is false (free rotation).  */
-	void setRotatesAroundUpVector(bool constrained) { rotatesAroundUpVector_ = constrained; }
-
 #ifndef DOXYGEN
 	Vec revolveAroundPoint() const { qWarning("revolveAroundPoint() is deprecated, use pivotPoint() instead"); return  pivotPoint(); }
 	void setRevolveArountPoint(const Vec& point) { qWarning("setRevolveAroundPoint() is deprecated, use setPivotPoint() instead"); setPivotPoint(point); }
+#endif
+	//@}
+
+	/*! @name Camera manipulation */
+	//@{
+public:
+	/*! Returns \c true when the frame's rotation is constrained around the sceneUpVector(),
+		and \c false otherwise, when the rotation is completely free (default).
+
+		In free mode, the associated camera can be arbitrarily rotated in the scene, along its
+		three axis, thus possibly leading to any arbitrary orientation.
+
+		When you setRotatesAroundUpVector() to \c true, the sceneUpVector() defines a
+		'vertical' direction around which the camera rotates. The camera can rotate left
+		or right, around this axis. It can also be moved up or down to show the 'top' and
+		'bottom' views of the scene. As a result, the sceneUpVector() will always appear vertical
+		in the scene, and the horizon is preserved and stays projected along the camera's
+		horizontal axis.
+
+		Note that setting this value to \c true when the sceneUpVector() is not already
+		vertically projected will break these invariants. It will also limit the possible movement
+		of the camera, possibly up to a lock when the sceneUpVector() is projected horizontally.
+		Use Camera::setUpVector() to define the sceneUpVector() and align the camera before calling
+		this method to ensure this does not happen. */
+	bool rotatesAroundUpVector() const { return rotatesAroundUpVector_; }
+	/*! Sets the value of rotatesAroundUpVector().
+
+	   Default value is false (free rotation). */
+	void setRotatesAroundUpVector(bool constrained) { rotatesAroundUpVector_ = constrained; }
+
+	/*! Returns whether or not the QGLViewer::ZOOM action zooms on the pivot point.
+
+	  When set to \c false (default), a zoom action will move the camera along its Camera::viewDirection(),
+	  i.e. back and forth along a direction perpendicular to the projection screen.
+
+	  setZoomsOnPivotPoint() to \c true will move the camera along an axis defined by the
+	  Camera::pivotPoint() and its current position instead. As a result, the projected position of the
+	  pivot point on screen will stay the same during a zoom. */
+	bool zoomsOnPivotPoint() const { return zoomsOnPivotPoint_; }
+	/*! Sets the value of zoomsOnPivotPoint().
+
+	   Default value is false. */
+	void setZoomsOnPivotPoint(bool enabled) { zoomsOnPivotPoint_ = enabled; }
+
+private:
+#ifndef DOXYGEN
+	void zoom(float delta, const Camera * const camera);
 #endif
 	//@}
 
@@ -177,6 +200,8 @@ private:
 	// Inverse the direction of an horizontal mouse motion. Depends on the projected
 	// screen orientation of the vertical axis when the mouse button is pressed.
 	bool constrainedRotationIsReversed_;
+
+	bool zoomsOnPivotPoint_;
 
 	Vec pivotPoint_;
 };

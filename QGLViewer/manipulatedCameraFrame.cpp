@@ -13,7 +13,7 @@ using namespace std;
 
   \attention Created object is removeFromMouseGrabberPool(). */
 ManipulatedCameraFrame::ManipulatedCameraFrame()
-	: driveSpeed_(0.0), sceneUpVector_(0.0, 1.0, 0.0), rotatesAroundUpVector_(false)
+	: driveSpeed_(0.0), sceneUpVector_(0.0, 1.0, 0.0), rotatesAroundUpVector_(false), zoomsOnPivotPoint_(false)
 {
 	setFlySpeed(0.0);
 	removeFromMouseGrabberPool();
@@ -28,6 +28,7 @@ ManipulatedCameraFrame& ManipulatedCameraFrame::operator=(const ManipulatedCamer
 	setFlySpeed(mcf.flySpeed());
 	setSceneUpVector(mcf.sceneUpVector());
 	setRotatesAroundUpVector(mcf.rotatesAroundUpVector_);
+	setZoomsOnPivotPoint(mcf.zoomsOnPivotPoint_);
 
 	return *this;
 }
@@ -121,6 +122,8 @@ QDomElement ManipulatedCameraFrame::domElement(const QString& name, QDomDocument
 	QDomElement e = ManipulatedFrame::domElement(name, document);
 	QDomElement mcp = document.createElement("ManipulatedCameraParameters");
 	mcp.setAttribute("flySpeed", QString::number(flySpeed()));
+	DomUtils::setBoolAttribute(mcp, "rotatesAroundUpVector", rotatesAroundUpVector());
+	DomUtils::setBoolAttribute(mcp, "zoomsOnPivotPoint", zoomsOnPivotPoint());
 	mcp.appendChild(sceneUpVector().domElement("sceneUpVector", document));
 	e.appendChild(mcp);
 	return e;
@@ -143,6 +146,8 @@ void ManipulatedCameraFrame::initFromDOMElement(const QDomElement& element)
 		if (child.tagName() == "ManipulatedCameraParameters")
 		{
 			setFlySpeed(DomUtils::floatFromDom(child, "flySpeed", flySpeed()));
+			setRotatesAroundUpVector(DomUtils::boolFromDom(child, "rotatesAroundUpVector", false));
+			setZoomsOnPivotPoint(DomUtils::boolFromDom(child, "zoomsOnPivotPoint", false));
 
 			QDomElement schild=child.firstChild().toElement();
 			while (!schild.isNull())
@@ -183,6 +188,20 @@ void ManipulatedCameraFrame::startAction(int ma, bool withConstraint)
 			break;
 	}
 }
+
+void ManipulatedCameraFrame::zoom(float delta, const Camera * const camera) {
+	const float sceneRadius = camera->sceneRadius();
+	if (zoomsOnPivotPoint_) {
+		Vec direction = position() - camera->pivotPoint();
+		if (direction.norm() > 0.02f * sceneRadius || delta > 0.0f)
+			translate(delta * direction);
+	} else {
+		const float coef = qMax(fabsf((camera->frame()->coordinatesOf(camera->pivotPoint())).z), 0.2f * sceneRadius);
+		Vec trans(0.0, 0.0, -coef * delta);
+		translate(inverseTransformOf(trans));
+	}
+}
+
 #endif
 
 /*! Overloading of ManipulatedFrame::mouseMoveEvent().
@@ -248,10 +267,7 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 
 		case QGLViewer::ZOOM:
 		{
-			//#CONNECTION# wheelEvent() ZOOM case
-			const float coef = qMax(fabsf((camera->frame()->coordinatesOf(camera->pivotPoint())).z), 0.2f*camera->sceneRadius());
-			Vec trans(0.0, 0.0, -coef * deltaWithPrevPos(event, camera));
-			translate(inverseTransformOf(trans));
+			zoom(deltaWithPrevPos(event, camera), camera);
 			break;
 		}
 
@@ -380,10 +396,7 @@ void ManipulatedCameraFrame::wheelEvent(QWheelEvent* const event, Camera* const 
 		case QGLViewer::ZOOM:
 		{
 			const float wheelSensitivityCoef = 8E-4f;
-			//#CONNECTION# mouseMoveEvent() ZOOM case
-			const float coef = qMax(fabsf((camera->frame()->coordinatesOf(camera->pivotPoint())).z), 0.2f*camera->sceneRadius());
-			Vec trans(0.0, 0.0, coef * event->delta() * wheelSensitivity() * wheelSensitivityCoef);
-			translate(inverseTransformOf(trans));
+			zoom(event->delta() * wheelSensitivity() * wheelSensitivityCoef, camera);
 			Q_EMIT manipulated();
 			break;
 		}
