@@ -26,6 +26,7 @@ ManipulatedFrame::ManipulatedFrame()
 	setTranslationSensitivity(1.0f);
 	setSpinningSensitivity(0.3f);
 	setWheelSensitivity(1.0f);
+	setZoomIsInversed(false);
 
 	isSpinning_ = false;
 	previousConstraint_ = NULL;
@@ -42,6 +43,7 @@ ManipulatedFrame& ManipulatedFrame::operator=(const ManipulatedFrame& mf)
 	setTranslationSensitivity(mf.translationSensitivity());
 	setSpinningSensitivity(mf.spinningSensitivity());
 	setWheelSensitivity(mf.wheelSensitivity());
+	setZoomIsInversed(mf.zoomIsInversed());
 
 	mouseSpeed_ = 0.0;
 	dirIsFixed_ = false;
@@ -97,6 +99,7 @@ QDomElement ManipulatedFrame::domElement(const QString& name, QDomDocument& docu
 	mp.setAttribute("transSens", QString::number(translationSensitivity()));
 	mp.setAttribute("spinSens", QString::number(spinningSensitivity()));
 	mp.setAttribute("wheelSens", QString::number(wheelSensitivity()));
+	DomUtils::setBoolAttribute(mp, "inversedZoom", zoomIsInversed());
 	e.appendChild(mp);
 	return e;
 }
@@ -128,6 +131,7 @@ void ManipulatedFrame::initFromDOMElement(const QDomElement& element)
 			setTranslationSensitivity(DomUtils::floatFromDom(child, "transSens", 1.0f));
 			setSpinningSensitivity   (DomUtils::floatFromDom(child, "spinSens",  0.3f));
 			setWheelSensitivity      (DomUtils::floatFromDom(child, "wheelSens", 1.0f));
+			setZoomIsInversed        (DomUtils::boolFromDom(child,  "inversedZoom", false));
 		}
 		child = child.nextSibling().toElement();
 	}
@@ -246,11 +250,27 @@ int ManipulatedFrame::mouseOriginalDirection(const QMouseEvent* const e)
 		return 0;
 }
 
-float ManipulatedFrame::deltaWithPrevPos(QMouseEvent* const event, Camera* const camera) {
+float ManipulatedFrame::deltaWithPrevPos(QMouseEvent* const event, Camera* const camera) const {
 	float dx = float(event->x() - prevPos_.x()) / camera->screenWidth();
 	float dy = float(event->y() - prevPos_.y()) / camera->screenHeight();
+	if (zoomIsInversed_) dy = -dy;
 
 	return fabs(dx) > fabs(dy) ? dx : dy;
+}
+
+float ManipulatedFrame::wheelDelta(const QWheelEvent* event) const {
+	static const float WHEEL_SENSITIVITY_COEF = 8E-4f;
+	const float inverse = zoomIsInversed_ ? -1.0f : 1.0f;
+	return inverse * event->delta() * wheelSensitivity() * WHEEL_SENSITIVITY_COEF;
+}
+
+void ManipulatedFrame::zoom(float delta, const Camera * const camera) {
+	Vec trans(0.0, 0.0, (camera->position() - position()).norm() * delta);
+
+	trans = camera->frame()->orientation().rotate(trans);
+	if (referenceFrame())
+		trans = referenceFrame()->transformOf(trans);
+	translate(trans);
 }
 
 #endif // DOXYGEN
@@ -318,13 +338,7 @@ void ManipulatedFrame::mouseMoveEvent(QMouseEvent* const event, Camera* const ca
 
 		case QGLViewer::ZOOM:
 		{
-			//#CONNECTION# wheelEvent ZOOM case
-			Vec trans(0.0, 0.0, (camera->position() - position()).norm() * deltaWithPrevPos(event, camera));
-
-			trans = camera->frame()->orientation().rotate(trans);
-			if (referenceFrame())
-				trans = referenceFrame()->transformOf(trans);
-			translate(trans);
+			zoom(deltaWithPrevPos(event, camera), camera);
 			break;
 		}
 
@@ -458,20 +472,13 @@ void ManipulatedFrame::mouseDoubleClickEvent(QMouseEvent* const event, Camera* c
 /*! Overloading of MouseGrabber::wheelEvent().
 
 Using the wheel is equivalent to a QGLViewer::ZOOM QGLViewer::MouseAction. See
- QGLViewer::setWheelBinding() and setWheelSensitivity(). */
+ QGLViewer::setWheelBinding(), setWheelSensitivity() and setZoomIsInversed(). */
 void ManipulatedFrame::wheelEvent(QWheelEvent* const event, Camera* const camera)
 {
 	//#CONNECTION# QGLViewer::setWheelBinding
 	if (action_ == QGLViewer::ZOOM)
 	{
-		const float wheelSensitivityCoef = 8E-4f;
-		Vec trans(0.0, 0.0, -event->delta()*wheelSensitivity()*wheelSensitivityCoef*(camera->position()-position()).norm());
-
-		//#CONNECTION# Cut-pasted from the mouseMoveEvent ZOOM case
-		trans = camera->frame()->orientation().rotate(trans);
-		if (referenceFrame())
-			trans = referenceFrame()->transformOf(trans);
-		translate(trans);
+		zoom(wheelDelta(event), camera);
 		Q_EMIT manipulated();
 	}
 
@@ -516,7 +523,7 @@ Quaternion ManipulatedFrame::deformedBallQuaternion(int x, int y, float cx, floa
 	// Approximation of rotation angle
 	// Should be divided by the projectOnBall size, but it is 1.0
 	const Vec axis = cross(p2,p1);
-	const float angle = 2.0 * asin(sqrt(axis.squaredNorm() / p1.squaredNorm() / p2.squaredNorm()));
+	const float angle = 5.0 * asin(sqrt(axis.squaredNorm() / p1.squaredNorm() / p2.squaredNorm()));
 	return Quaternion(axis, angle);
 }
 #endif // DOXYGEN

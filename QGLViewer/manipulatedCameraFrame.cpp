@@ -395,8 +395,7 @@ void ManipulatedCameraFrame::wheelEvent(QWheelEvent* const event, Camera* const 
 	{
 		case QGLViewer::ZOOM:
 		{
-			const float wheelSensitivityCoef = 8E-4f;
-			zoom(event->delta() * wheelSensitivity() * wheelSensitivityCoef, camera);
+			zoom(wheelDelta(event), camera);
 			Q_EMIT manipulated();
 			break;
 		}

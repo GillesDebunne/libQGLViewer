@@ -45,6 +45,10 @@ void Viewer::init()
   glEnable(GL_RESCALE_NORMAL);
 #endif
 
+  // Make sure the manipulatedFrame is not easily clipped by the zNear and zFar planes
+  setSceneRadius(30);
+  camera()->fitSphere(Vec(0,0,0), 1);
+
   // Add a manipulated frame to the viewer.
   // If you are not "using namespace qglqglviewer", you need
   // to specify: new qglviewer::ManipulatedFrame().
@@ -52,15 +56,12 @@ void Viewer::init()
 
   help();
   restoreStateFromFile();
-
-  // Make world axis visible
-  setAxisIsDrawn();
 }
 
 void Viewer::draw()
 {
-  // Here we are in the world coordinate system.
-  // Draw your scene here.
+  // Here we are in the world coordinate system. Draw unit size axis.
+  drawAxis();
 
   // Save the current model view matrix (not needed here in fact)
   glPushMatrix();
