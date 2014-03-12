@@ -124,8 +124,8 @@ public Q_SLOTS:
 	void setSpinningSensitivity(float sensitivity) { spinningSensitivity_ = sensitivity; }
 	/*! Defines the wheelSensitivity(). */
 	void setWheelSensitivity(float sensitivity) { wheelSensitivity_ = sensitivity; }
-	/*! Defines whether or not zoomIsInversed(). */
-	void setZoomIsInversed(bool inverse) { zoomIsInversed_ = inverse; }
+	/*! Defines whether or not zoomIsInverted(). */
+	void setZoomIsInverted(bool inverted) { zoomIsInverted_ = inverted; }
 
 public:
 	/*! Returns the influence of a mouse displacement on the ManipulatedFrame rotation.
@@ -173,21 +173,20 @@ public:
 	Default value is 1.0. A higher value will make the wheel action more efficient (usually meaning
 	a faster zoom). Use a negative value to invert the zoom in and out directions.
 
-	See also setWheelSensitivity(), translationSensitivity(), rotationSensitivity() zoomIsInversed()
+	See also setWheelSensitivity(), translationSensitivity(), rotationSensitivity() zoomIsInverted()
 	and spinningSensitivity(). */
 	float wheelSensitivity() const { return wheelSensitivity_; }
-	/*! Returns the relation between a vertical mouse (or wheel) displacement and the zoom.
+	/*! Returns the relation between a mouse displacement and the zoom.
 
-	Default value is false, meaning moving the mouse (or turning the mouse wheel) in the \c up direction
-	will zoom \c out. When you setZoomIsInversed() to \c true, you get the inverse behavior.
+	Default value is false, meaning moving the mouse (or its wheel) in the \c up or \c left direction
+	will zoom \c out. When you setZoomIsInverted() to \c true, you get the inverse behavior.
 
 	Note that you can use a negative wheelSensitivity() to separately invert the influence of the
-	mouse wheel on the zoom. This setting has no effect on the influence of an \c horizontal mouse
-	displacement.
+	mouse wheel on the zoom.
 
-	See also setZoomIsInversed(), wheelSensitivity(), translationSensitivity(), rotationSensitivity() and
+	See also setZoomIsInverted(), wheelSensitivity(), translationSensitivity(), rotationSensitivity() and
 	spinningSensitivity(). */
-	bool zoomIsInversed() const { return zoomIsInversed_; }
+	bool zoomIsInverted() const { return zoomIsInverted_; }
 	//@}
 
 
@@ -277,7 +276,7 @@ protected:
 	/*! Returns a screen scaled delta from event's position to prevPos_, along the
 		X or Y direction, whichever has the largest magnitude. */
 	float deltaWithPrevPos(QMouseEvent* const event, Camera* const camera) const;
-	/*! Returns a normalized wheel delta, inversed when zoomIsInversed(). */
+	/*! Returns a normalized wheel delta, inverted when zoomIsInverted(). */
 	float wheelDelta(const QWheelEvent* event) const;
 
 	// Previous mouse position (used for incremental updates) and mouse press position.
@@ -294,7 +293,7 @@ private:
 	float translationSensitivity_;
 	float spinningSensitivity_;
 	float wheelSensitivity_;
-	bool zoomIsInversed_;
+	bool zoomIsInverted_;
 
 	// Mouse speed and spinning
 	QTime last_move_time;

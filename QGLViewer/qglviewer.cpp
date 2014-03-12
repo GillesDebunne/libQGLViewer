@@ -3454,7 +3454,7 @@ bool QGLViewer::restoreStateFromFile()
 
 	// Read the DOM tree form file
 	QFile f(name);
-	if (f.open(QIODevice::ReadOnly) == true)
+	if (f.open(QIODevice::ReadOnly))
 	{
 		QDomDocument doc;
 		doc.setContent(&f);

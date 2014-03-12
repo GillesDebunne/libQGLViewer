@@ -26,7 +26,7 @@ ManipulatedFrame::ManipulatedFrame()
 	setTranslationSensitivity(1.0f);
 	setSpinningSensitivity(0.3f);
 	setWheelSensitivity(1.0f);
-	setZoomIsInversed(false);
+	setZoomIsInverted(false);
 
 	isSpinning_ = false;
 	previousConstraint_ = NULL;
@@ -43,7 +43,7 @@ ManipulatedFrame& ManipulatedFrame::operator=(const ManipulatedFrame& mf)
 	setTranslationSensitivity(mf.translationSensitivity());
 	setSpinningSensitivity(mf.spinningSensitivity());
 	setWheelSensitivity(mf.wheelSensitivity());
-	setZoomIsInversed(mf.zoomIsInversed());
+	setZoomIsInverted(mf.zoomIsInverted());
 
 	mouseSpeed_ = 0.0;
 	dirIsFixed_ = false;
@@ -99,7 +99,7 @@ QDomElement ManipulatedFrame::domElement(const QString& name, QDomDocument& docu
 	mp.setAttribute("transSens", QString::number(translationSensitivity()));
 	mp.setAttribute("spinSens", QString::number(spinningSensitivity()));
 	mp.setAttribute("wheelSens", QString::number(wheelSensitivity()));
-	DomUtils::setBoolAttribute(mp, "inversedZoom", zoomIsInversed());
+	DomUtils::setBoolAttribute(mp, "invertedZoom", zoomIsInverted());
 	e.appendChild(mp);
 	return e;
 }
@@ -131,7 +131,7 @@ void ManipulatedFrame::initFromDOMElement(const QDomElement& element)
 			setTranslationSensitivity(DomUtils::floatFromDom(child, "transSens", 1.0f));
 			setSpinningSensitivity   (DomUtils::floatFromDom(child, "spinSens",  0.3f));
 			setWheelSensitivity      (DomUtils::floatFromDom(child, "wheelSens", 1.0f));
-			setZoomIsInversed        (DomUtils::boolFromDom(child,  "inversedZoom", false));
+			setZoomIsInverted        (DomUtils::boolFromDom(child,  "invertedZoom", false));
 		}
 		child = child.nextSibling().toElement();
 	}
@@ -253,15 +253,15 @@ int ManipulatedFrame::mouseOriginalDirection(const QMouseEvent* const e)
 float ManipulatedFrame::deltaWithPrevPos(QMouseEvent* const event, Camera* const camera) const {
 	float dx = float(event->x() - prevPos_.x()) / camera->screenWidth();
 	float dy = float(event->y() - prevPos_.y()) / camera->screenHeight();
-	if (zoomIsInversed_) dy = -dy;
 
-	return fabs(dx) > fabs(dy) ? dx : dy;
+	float value = fabs(dx) > fabs(dy) ? dx : dy;
+	return zoomIsInverted_ ? -value : value;
 }
 
 float ManipulatedFrame::wheelDelta(const QWheelEvent* event) const {
 	static const float WHEEL_SENSITIVITY_COEF = 8E-4f;
-	const float inverse = zoomIsInversed_ ? -1.0f : 1.0f;
-	return inverse * event->delta() * wheelSensitivity() * WHEEL_SENSITIVITY_COEF;
+	float value = event->delta() * wheelSensitivity() * WHEEL_SENSITIVITY_COEF;
+	return zoomIsInverted_ ? -value : value;
 }
 
 void ManipulatedFrame::zoom(float delta, const Camera * const camera) {
@@ -472,7 +472,7 @@ void ManipulatedFrame::mouseDoubleClickEvent(QMouseEvent* const event, Camera* c
 /*! Overloading of MouseGrabber::wheelEvent().
 
 Using the wheel is equivalent to a QGLViewer::ZOOM QGLViewer::MouseAction. See
- QGLViewer::setWheelBinding(), setWheelSensitivity() and setZoomIsInversed(). */
+ QGLViewer::setWheelBinding(), setWheelSensitivity() and setZoomIsInverted(). */
 void ManipulatedFrame::wheelEvent(QWheelEvent* const event, Camera* const camera)
 {
 	//#CONNECTION# QGLViewer::setWheelBinding
