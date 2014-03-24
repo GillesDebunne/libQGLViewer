@@ -103,6 +103,7 @@ function makeDist()
 {
   for source in $SOURCES
   do
+    if [[ $source =~ ^ui_.*\.h$ ]] ; then continue; fi
     dir=$tmpDir/$TARGET/$(dirname $source)
     test -d $dir || mkdir -p $dir
     #echo "### cp $source $dir   depuis $(pwd)"
@@ -265,7 +266,7 @@ echo -n " examples"
 
 function makeDistExample()
 {
-  #echo "makeDirsEx sur $DIR"
+  #echo "makeDistExample sur $DIR"
   name=$(basename $DIR)
   test -f $DIR/$name.pro || error "No example $name.pro file - Aborting"
 
@@ -303,6 +304,7 @@ function makeDistExample()
     ls *.h &> /dev/null && SOURCES="$SOURCES *.h"
     ls *.ui &> /dev/null && SOURCES="$SOURCES *.ui"
     ls *.vcproj &> /dev/null && SOURCES="$SOURCES *.vcproj"
+    #echo "Example sources=$SOURCES"
     makeDist
     cd - > /dev/null
   fi

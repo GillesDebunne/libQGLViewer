@@ -24,7 +24,6 @@ namespace
   const float pieceRMin = pieceRMax/3.0f;
   const float pieceH = 0.14f;
   const float pieceC = 0.25f; // curvature of normal on vring part
-  const float pieceT = 0.5f;  // piece transparence
   // Dimension of the label case
   float hLabelW = caseD;        // must be caseD
   float hLabelH = caseD/3.0f;
