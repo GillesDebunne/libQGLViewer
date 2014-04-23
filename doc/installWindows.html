@@ -38,6 +38,7 @@
 <h1>libQGLViewer installation<br/>
 on <img src="images/windows.png" width="55" height="54" alt="windows"/>Windows</h1>
 
+<!--
 The installer allows you to evaluate the library from its demonstration examples and its documentation and to start creating your own programs. 
 The library and the examples were here compiled using (and can be used with) MinGW and the open source version of Qt.
 
@@ -45,15 +46,14 @@ The library and the examples were here compiled using (and can be used with) Min
 <img src="images/downloadButton.jpg" width="41" height="46" align="middle" alt="download"/>
 <span>Download the libQGLViewer installer (version 2.3)</span>
 </a></p>
+-->
 
 This source code is released under the GPL license. If you are using libQGLViewer in a
 commercial application, you need to purchase a <a href="mailto:contact@libqglviewer.com?Subject=Commercial license">libQGLViewer commercial license</a>. 
 
-
 <h2>Compilation from the sources</h2>
 
-If you want to compile the library from its sources, first download and install the latest Qt version from the 
-<a href="http://www.qtsoftware.com/downloads">Qt Software web site</a>.
+Make sure your Qt installation is up to date and running. Try building one of the Qt OpenGL examples first.
 
 <p>
 Then download and unzip <a href="#WEBURL#/src/libQGLViewer-#VERSION#.zip" onclick="javascript: _gaq.push(['_trackPageview', 'libQGLViewer-#VERSION#.zip']);">libQGLViewer-#VERSION#.zip</a>.
@@ -61,15 +61,15 @@ Then download and unzip <a href="#WEBURL#/src/libQGLViewer-#VERSION#.zip" onclic
 
 Depending on your environment:
 <ul>
-<li><a name="mingw"></a><b>MinGW</b> (available when you install the OpenSource Qt 4 version): 
-launch the <i>Qt 4.x Command Prompt</i> from the <i>Start</i> menu and type:
+<li><a name="qtcreator"></a><b>QtCreator</b>: open the <code>QGLViewer/QGLViewer.pro</code> project file and "build all".</li>
+
+<li><a name="mingw"></a><b>MinGW</b> (available when you install the OpenSource Qt version): 
+launch the <i>Qt Command Prompt</i> from the <i>Start</i> menu and type:
 <pre>
 cd \path\to\libQGLViewer-#VERSION#\QGLViewer
 qmake
 mingw32-make
 </pre></li>
-
-<li><a name="qtcreator"></a><b>QtCreator</b>: open the <code>QGLViewer/QGLViewer.pro</code> project file and "build all".</li>
 
 <li><a name="qtVisual"></a><b>Visual Studio</b>: install the Qt Visual Studio add-in, open <code>QGLViewer/QGLViewer.pro</code> and build the solution
 <span class="redStar">*</span>. This <a href="http://www.qtcentre.org/wiki/index.php?title=Qt4_with_Visual_Studio">page</a> explains how to use Qt with Visual Studio.
@@ -79,7 +79,7 @@ mingw32-make
 
 <p>
 Then copy the generated <code>QGLViewer#VERSION_MAJOR#.dll</code> and <code>QGLViewer#VERSION_MAJOR#d.dll</code> to a system
-shared directory such as <code>C:\Windows\System32</code>. An other option is to copy the <code>dll</code> in every executable's directory.
+shared directory such as <code>C:\Windows\System32</code>. An alternative is to copy the <code>dll</code> in every executable's directory.
 
 <p>
 See the <a href="compilation.html">compilation with libQGLViewer</a> page for details on examples' compilation.

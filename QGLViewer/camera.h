@@ -342,15 +342,14 @@ public:
 	virtual void loadProjectionMatrixStereo(bool leftBuffer=true) const;
 	virtual void loadModelViewMatrixStereo(bool leftBuffer=true) const;
 
-	void getProjectionMatrix(GLdouble m[16]) const;
-	void getModelViewMatrix(GLdouble m[16]) const;
-	void getModelViewProjectionMatrix(GLdouble m[16]) const;
-
-#ifndef DOXYGEN
-	// Required for Windows which otherwise silently fails
 	void getProjectionMatrix(GLfloat m[16]) const;
+	void getProjectionMatrix(GLdouble m[16]) const;
+	
 	void getModelViewMatrix(GLfloat m[16]) const;
-#endif
+	void getModelViewMatrix(GLdouble m[16]) const;
+	
+	void getModelViewProjectionMatrix(GLfloat m[16]) const;
+	void getModelViewProjectionMatrix(GLdouble m[16]) const;
 	//@}
 
 

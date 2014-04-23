@@ -875,7 +875,7 @@ void Viewer::drawWithNames() {
 
 	/*! @name Keyboard customization */
 	//@{
-protected:
+public:
 	/*! Defines the different actions that can be associated with a keyboard shortcut using
 	setShortcut().
 
@@ -884,7 +884,7 @@ protected:
 						  SAVE_SCREENSHOT, CAMERA_MODE, FULL_SCREEN, STEREO, ANIMATION, HELP, EDIT_CAMERA,
 						  MOVE_CAMERA_LEFT, MOVE_CAMERA_RIGHT, MOVE_CAMERA_UP, MOVE_CAMERA_DOWN,
 						  INCREASE_FLYSPEED, DECREASE_FLYSPEED, SNAPSHOT_TO_CLIPBOARD };
-public:
+
 	unsigned int shortcut(KeyboardAction action) const;
 #ifndef DOXYGEN
 	// QGLViewer 1.x

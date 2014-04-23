@@ -584,7 +584,7 @@ void Camera::loadModelViewMatrixStereo(bool leftBuffer) const
 
 /*! Fills \p m with the Camera projection matrix values.
 
- Calls computeProjectionMatrix() to define the Camera projection matrix.
+ Based on computeProjectionMatrix() to make sure the Camera projection matrix is up to date.
 
  This matrix only reflects the Camera's internal parameters and it may differ from the \c
  GL_PROJECTION matrix retrieved using \c glGetDoublev(GL_PROJECTION_MATRIX, m). It actually
@@ -601,6 +601,15 @@ void Camera::getProjectionMatrix(GLdouble m[16]) const
 	computeProjectionMatrix();
 	for (unsigned short i=0; i<16; ++i)
 		m[i] = projectionMatrix_[i];
+}
+
+/*! Overloaded getProjectionMatrix(GLdouble m[16]) method using a \c float array instead. */
+void Camera::getProjectionMatrix(GLfloat m[16]) const
+{
+	static GLdouble mat[16];
+	getProjectionMatrix(mat);
+	for (unsigned short i=0; i<16; ++i)
+		m[i] = float(mat[i]);
 }
 
 /*! Fills \p m with the Camera modelView matrix values.
@@ -626,6 +635,16 @@ void Camera::getModelViewMatrix(GLdouble m[16]) const
 		m[i] = modelViewMatrix_[i];
 }
 
+
+/*! Overloaded getModelViewMatrix(GLdouble m[16]) method using a \c float array instead. */
+void Camera::getModelViewMatrix(GLfloat m[16]) const
+{
+	static GLdouble mat[16];
+	getModelViewMatrix(mat);
+	for (unsigned short i=0; i<16; ++i)
+		m[i] = float(mat[i]);
+}
+
 /*! Fills \p m with the product of the ModelView and Projection matrices.
 
   Calls getModelViewMatrix() and getProjectionMatrix() and then fills \p m with the product of these two matrices. */
@@ -648,25 +667,14 @@ void Camera::getModelViewProjectionMatrix(GLdouble m[16]) const
 	}
 }
 
-#ifndef DOXYGEN
-void Camera::getProjectionMatrix(GLfloat m[16]) const
+/*! Overloaded getModelViewProjectionMatrix(GLdouble m[16]) method using a \c float array instead. */
+void Camera::getModelViewProjectionMatrix(GLfloat m[16]) const
 {
-	qWarning("Warning : Camera::getProjectionMatrix requires a GLdouble matrix array");
 	static GLdouble mat[16];
-	getProjectionMatrix(mat);
-	for (int i=0; i<16; ++i)
+	getModelViewProjectionMatrix(mat);
+	for (unsigned short i=0; i<16; ++i)
 		m[i] = float(mat[i]);
 }
-
-void Camera::getModelViewMatrix(GLfloat m[16]) const
-{
-	qWarning("Warning : Camera::getModelViewMatrix requires a GLdouble matrix array");
-	static GLdouble mat[16];
-	getModelViewMatrix(mat);
-	for (int i=0; i<16; ++i)
-		m[i] = float(mat[i]);
-}
-#endif
 
 /*! Sets the sceneRadius() value. Negative values are ignored.
 
