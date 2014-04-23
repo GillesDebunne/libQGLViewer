@@ -136,9 +136,6 @@ unix {
 	  !plugin:QMAKE_RPATHDIR *= $${LIB_DIR_ABSOLUTE_PATH}
 	}
 	LIBS *= -L$${LIB_DIR} -lQGLViewer
-
-	# Qt 4.8 removed the GLU dependency
-	QMAKE_LIBS_OPENGL *= -lGLU
   }
 
   # Paths were correctly detected
@@ -152,6 +149,9 @@ unix {
   # Remove debugging options in release mode makes files much smaller
   release:QMAKE_CFLAGS_RELEASE -= -g
   release:QMAKE_CXXFLAGS_RELEASE -= -g
+
+  # Qt 4.8 removed the GLU dependency
+  QMAKE_LIBS_OPENGL *= -lGLU
 
   # Intermediate files are created in an hidden folder
   MOC_DIR = .moc
