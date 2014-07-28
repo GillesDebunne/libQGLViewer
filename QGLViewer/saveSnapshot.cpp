@@ -520,7 +520,7 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite)
 		QString fileName;
 		QString selectedFormat = FDFormatString[snapshotFormat()];
 		fileName = QFileDialog::getSaveFileName(this, "Choose a file name to save under", snapshotFileName(), formats, &selectedFormat,
-												overwrite?QFileDialog::DontConfirmOverwrite:QFlag(0));
+												overwrite?QFileDialog::DontConfirmOverwrite:QFlags<QFileDialog::Option>(0));
 		setSnapshotFormat(Qtformat[selectedFormat]);
 
 		if (checkFileName(fileName, this, snapshotFormat()))
