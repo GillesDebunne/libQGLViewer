@@ -147,6 +147,8 @@ unix {
 	QMAKE_LIBS_OPENGL *= -lglut
   }
 
+  QMAKE_LIBS_OPENGL *= -lGLU
+
   MOC_DIR = .moc
   OBJECTS_DIR = .obj
 

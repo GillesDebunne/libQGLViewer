@@ -2,6 +2,7 @@
 #include "AxisAlignedBox.h"
 #include "PrimitivePositioning.h"
 #include "math.h"
+#include <algorithm>
 #include "Vector2.h"
 
 #include <algorithm>
