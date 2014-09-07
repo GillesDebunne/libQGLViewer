@@ -291,6 +291,6 @@ macx|darwin-g++ {
 
 win32 {
    !designer {
-	   RC_FILE = ../qglviewer.rc
+	   RC_FILE = ../examples/qglviewer.rc
    }
 }
