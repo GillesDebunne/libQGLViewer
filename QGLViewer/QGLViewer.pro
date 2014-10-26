@@ -292,14 +292,17 @@ win32 {
 
   CONFIG *= embed_manifest_dll
 
-  # Make sure to have C++ files, PentiumPro code, few warnings, add
-  # support to RTTI and Exceptions, and generate debug info "program database".
+  # TP : C++ source code
+  # GR : Enables run-time type information (RTTI).
+  # Zi : Generates complete debugging information.
+  # EHs : The exception-handling model that catches C++ exceptions only and tells the
+      compiler to assume that functions declared as extern "C" may throw an exception.
   # Any feedback on these flags is welcome.
   !win32-g++ {
-	QMAKE_CXXFLAGS = -TP -GR -Zi
+	QMAKE_CXXFLAGS *= -TP -GR -Zi
 	DEFINES += NOMINMAX
 	win32-msvc {
-	  QMAKE_CXXFLAGS *= -GX
+	  QMAKE_CXXFLAGS *= -EH
 	} else {
 	  QMAKE_CXXFLAGS *= -EHs
 	}
