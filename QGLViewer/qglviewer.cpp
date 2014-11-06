@@ -2807,13 +2807,14 @@ See also setMouseBinding(), getClickActionBinding() and getWheelActionBinding().
 void QGLViewer::getMouseActionBinding(MouseHandler handler, MouseAction action, bool withConstraint,
 									  Qt::Key& key, Qt::KeyboardModifiers& modifiers, Qt::MouseButton& button) const
 {
-	for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator it=mouseBinding_.begin(), end=mouseBinding_.end(); it != end; ++it)
+	for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator it=mouseBinding_.begin(), end=mouseBinding_.end(); it != end; ++it) {
 		if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) ) {
 			key = it.key().key;
 			modifiers = it.key().modifiers;
 			button = it.key().button;
 			return;
 		}
+	}
 
 	key = Qt::Key(0);
 	modifiers = Qt::NoModifier;
@@ -2952,7 +2953,7 @@ bool QGLViewer::cameraIsInRotateMode() const
 	Qt::Key key;
 	Qt::KeyboardModifiers modifiers;
 	Qt::MouseButton button;
-	getMouseActionBinding(CAMERA, ROTATE, false /*constraint*/, key, modifiers, button);
+	getMouseActionBinding(CAMERA, ROTATE, true /*constraint*/, key, modifiers, button);
 	return button != Qt::NoButton;
 }
 
@@ -2973,11 +2974,11 @@ void QGLViewer::toggleCameraMode()
 	Qt::Key key;
 	Qt::KeyboardModifiers modifiers;
 	Qt::MouseButton button;
-	getMouseActionBinding(CAMERA, ROTATE, false /*constraint*/, key, modifiers, button);
+	getMouseActionBinding(CAMERA, ROTATE, true /*constraint*/, key, modifiers, button);
 	bool rotateMode = button != Qt::NoButton;
 
 	if (!rotateMode) {
-		getMouseActionBinding(CAMERA, MOVE_FORWARD, false /*constraint*/, key, modifiers, button);
+		getMouseActionBinding(CAMERA, MOVE_FORWARD, true /*constraint*/, key, modifiers, button);
 	}
 
 	//#CONNECTION# setDefaultMouseBindings()

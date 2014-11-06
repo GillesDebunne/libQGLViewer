@@ -1,6 +1,7 @@
 #include "board.h"
 #include <algorithm>
 #include <sstream>
+#include <functionnal>
 
 using namespace std;
 using namespace dvonn;

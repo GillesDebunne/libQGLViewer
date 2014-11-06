@@ -1,7 +1,7 @@
 
 %define version_major 2
 %define version_minor 5
-%define version_revision 3
+%define version_revision 4
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -155,7 +155,10 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
-* Wed Mar 5 2014 Gilles Debunne <contact@libQGLViewer.com> 2.5.3
+* Thu Nov 6 2014 Gilles Debunne <contact@libQGLViewer.com> 2.5.4
+- More minor compilation warning and error fixes.
+
+* Mon Sep 1 2014 Gilles Debunne <contact@libQGLViewer.com> 2.5.3
 - Minor compilation warning and error fixes for recent compilers.
 
 * Wed Mar 5 2014 Gilles Debunne <contact@libQGLViewer.com> 2.5.2
