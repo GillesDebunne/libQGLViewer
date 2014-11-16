@@ -14,12 +14,18 @@ void Viewer::draw()
 
   pos[3] = 1.0;
   // Spot light
-  light1->getPosition(pos[0], pos[1], pos[2]);
+  Vec pos1 = light1->position();
+  pos[0] = float(pos1.x);
+  pos[1] = float(pos1.y);
+  pos[2] = float(pos1.z);
   glLightfv(GL_LIGHT1, GL_POSITION, pos);
   glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, light1->inverseTransformOf(Vec(0,0,1)));
 
   // Point light
-  light2->getPosition(pos[0], pos[1], pos[2]);
+  Vec pos2 = light2->position();
+  pos[0] = float(pos2.x);
+  pos[1] = float(pos2.y);
+  pos[2] = float(pos2.z);
   glLightfv(GL_LIGHT2, GL_POSITION, pos);
 
   // Draws the spiral

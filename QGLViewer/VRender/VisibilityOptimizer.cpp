@@ -17,7 +17,7 @@ void VisibilityOptimizer::optimize(vector<PtrPrimitive>& primitives,VRenderParam
 #ifdef DEBUG_VO
         cout << "Optimizing visibility." << endl ;
 #endif
-        unsigned int N = primitives.size()/200 + 1 ;
+        unsigned long N = primitives.size()/200 + 1 ;
 
 #ifdef DEBUG_EPSRENDER__SHOW1
 //	cout << "Showing viewer." << endl ;
@@ -55,9 +55,9 @@ void VisibilityOptimizer::optimize(vector<PtrPrimitive>& primitives,VRenderParam
         cumulated_union.num_contours = 0 ;
         cumulated_union.hole = NULL ;
         cumulated_union.contour = NULL ;
-        int nboptimised = 0 ;
+        size_t nboptimised = 0 ;
 
-        for(int pindex = (int)(primitives.size()) - 1; pindex >= 0;--pindex,++nboptimised)
+        for(size_t pindex = primitives.size() - 1; long(pindex) >= 0;--pindex,++nboptimised)
                 if(primitives[pindex] != NULL)
                 {
 #ifdef A_FAIRE
@@ -70,7 +70,7 @@ void VisibilityOptimizer::optimize(vector<PtrPrimitive>& primitives,VRenderParam
                                 if(pindex%50==0)
                                 {
                                         char buff[500] ;
-                                        sprintf(buff,"Left: % 6ld - Culled: % 6ld", (long)pindex,(long)nb_culled) ;
+                                        sprintf(buff,"Left: % 6ld - Culled: % 6ld", pindex,(long)nb_culled) ;
                                         fprintf(stdout,buff);
 
                                         for(unsigned int j=0;j<strlen(buff);++j)
@@ -137,7 +137,7 @@ void VisibilityOptimizer::optimize(vector<PtrPrimitive>& primitives,VRenderParam
                                                 new_poly_verts->num_vertices = p->nbVertices() ;
                                                 new_poly_verts->vertex = new gpc_vertex[p->nbVertices()] ;
 
-                                                for(unsigned int i=0;i<p->nbVertices();++i)
+                                                for(size_t i=0;i<p->nbVertices();++i)
                                                 {
                                                         new_poly_verts->vertex[i].x = p->vertex(i).x() ;
                                                         new_poly_verts->vertex[i].y = p->vertex(i).y() ;
@@ -150,7 +150,7 @@ void VisibilityOptimizer::optimize(vector<PtrPrimitive>& primitives,VRenderParam
                                                 new_poly_reduced_verts->num_vertices = p->nbVertices() ;
                                                 new_poly_reduced_verts->vertex = new gpc_vertex[p->nbVertices()] ;
 
-                                                for(unsigned int j=0;j<p->nbVertices();++j)
+                                                for(size_t j=0;j<p->nbVertices();++j)
                                                 {
                                                         new_poly_reduced_verts->vertex[j].x = mx + (p->vertex(j).x() - mx)*0.999 ;
                                                         new_poly_reduced_verts->vertex[j].y = my + (p->vertex(j).y() - my)*0.999 ;
@@ -199,10 +199,10 @@ void VisibilityOptimizer::optimize(vector<PtrPrimitive>& primitives,VRenderParam
 
                                         glColor3f(1.0,0.0,0.0) ;
 
-                                        for(int i=0;i<cumulated_union.num_contours;++i)
+                                        for(unsigned long i=0;i<cumulated_union.num_contours;++i)
                                         {
                                                 glBegin(GL_LINE_LOOP) ;
-                                                for(int j=0;j<cumulated_union.contour[i].num_vertices;++j)
+                                                for(unsigned long j=0;j<cumulated_union.contour[i].num_vertices;++j)
                                                         glVertex2f(cumulated_union.contour[i].vertex[j].x,cumulated_union.contour[i].vertex[j].y) ;
                                                 glEnd() ;
                                         }

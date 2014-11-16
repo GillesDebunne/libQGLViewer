@@ -148,8 +148,8 @@ void KeyFrameInterpolator::resetInterpolation()
   \c NULL \p frame pointers are silently ignored. The keyFrameTime() has to be monotonously
   increasing over keyFrames.
 
-  Use addKeyFrame(const Frame&, float) to add keyFrame by values. */
-void KeyFrameInterpolator::addKeyFrame(const Frame* const frame, float time)
+  Use addKeyFrame(const Frame&, qreal) to add keyFrame by values. */
+void KeyFrameInterpolator::addKeyFrame(const Frame* const frame, qreal time)
 {
 	if (!frame)
 		return;
@@ -172,10 +172,10 @@ void KeyFrameInterpolator::addKeyFrame(const Frame* const frame, float time)
 
   The path will use the current \p frame state. If you want the path to change when \p frame is
   modified, you need to pass a \e pointer to the Frame instead (see addKeyFrame(const Frame*,
-  float)).
+  qreal)).
 
   The keyFrameTime() have to be monotonously increasing over keyFrames. */
-void KeyFrameInterpolator::addKeyFrame(const Frame& frame, float time)
+void KeyFrameInterpolator::addKeyFrame(const Frame& frame, qreal time)
 {
 	if (keyFrame_.isEmpty())
 		interpolationTime_ = time;
@@ -194,11 +194,11 @@ void KeyFrameInterpolator::addKeyFrame(const Frame& frame, float time)
 
 /*! Appends a new keyFrame to the path.
 
- Same as addKeyFrame(const Frame* frame, float), except that the keyFrameTime() is set to the
+ Same as addKeyFrame(const Frame* frame, qreal), except that the keyFrameTime() is set to the
  previous keyFrameTime() plus one second (or 0.0 if there is no previous keyFrame). */
 void KeyFrameInterpolator::addKeyFrame(const Frame* const frame)
 {
-	float time;
+	qreal time;
 	if (keyFrame_.isEmpty())
 		time = 0.0;
 	else
@@ -209,11 +209,11 @@ void KeyFrameInterpolator::addKeyFrame(const Frame* const frame)
 
 /*! Appends a new keyFrame to the path.
 
- Same as addKeyFrame(const Frame& frame, float), except that the keyFrameTime() is automatically set
+ Same as addKeyFrame(const Frame& frame, qreal), except that the keyFrameTime() is automatically set
  to previous keyFrameTime() plus one second (or 0.0 if there is no previous keyFrame). */
 void KeyFrameInterpolator::addKeyFrame(const Frame& frame)
 {
-	float time;
+	qreal time;
 	if (keyFrame_.isEmpty())
 		time = 0.0;
 	else
@@ -233,51 +233,51 @@ void KeyFrameInterpolator::deletePath()
 	currentFrameValid_ = false;
 }
 
-static void drawCamera(float scale)
+static void drawCamera(qreal scale)
 {
 	glDisable(GL_LIGHTING);
 
-	const float halfHeight = scale * 0.07;
-	const float halfWidth  = halfHeight * 1.3;
-	const float dist = halfHeight / tan(M_PI/8.0);
+	const qreal halfHeight = scale * 0.07;
+	const qreal halfWidth  = halfHeight * 1.3;
+	const qreal dist = halfHeight / tan(qreal(M_PI)/8.0);
 
-	const float arrowHeight    = 1.5f * halfHeight;
-	const float baseHeight     = 1.2f * halfHeight;
-	const float arrowHalfWidth = 0.5f * halfWidth;
-	const float baseHalfWidth  = 0.3f * halfWidth;
+	const qreal arrowHeight    = 1.5 * halfHeight;
+	const qreal baseHeight     = 1.2 * halfHeight;
+	const qreal arrowHalfWidth = 0.5 * halfWidth;
+	const qreal baseHalfWidth  = 0.3 * halfWidth;
 
 	// Frustum outline
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBegin(GL_LINE_STRIP);
-	glVertex3f(-halfWidth, halfHeight,-dist);
-	glVertex3f(-halfWidth,-halfHeight,-dist);
-	glVertex3f( 0.0f, 0.0f, 0.0f);
-	glVertex3f( halfWidth,-halfHeight,-dist);
-	glVertex3f(-halfWidth,-halfHeight,-dist);
+	glVertex3d(-halfWidth, halfHeight,-dist);
+	glVertex3d(-halfWidth,-halfHeight,-dist);
+	glVertex3d( 0.0, 0.0, 0.0);
+	glVertex3d( halfWidth,-halfHeight,-dist);
+	glVertex3d(-halfWidth,-halfHeight,-dist);
 	glEnd();
 	glBegin(GL_LINE_STRIP);
-	glVertex3f( halfWidth,-halfHeight,-dist);
-	glVertex3f( halfWidth, halfHeight,-dist);
-	glVertex3f( 0.0f, 0.0f, 0.0f);
-	glVertex3f(-halfWidth, halfHeight,-dist);
-	glVertex3f( halfWidth, halfHeight,-dist);
+	glVertex3d( halfWidth,-halfHeight,-dist);
+	glVertex3d( halfWidth, halfHeight,-dist);
+	glVertex3d( 0.0, 0.0, 0.0);
+	glVertex3d(-halfWidth, halfHeight,-dist);
+	glVertex3d( halfWidth, halfHeight,-dist);
 	glEnd();
 
 	// Up arrow
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	// Base
 	glBegin(GL_QUADS);
-	glVertex3f(-baseHalfWidth, halfHeight,-dist);
-	glVertex3f( baseHalfWidth, halfHeight,-dist);
-	glVertex3f( baseHalfWidth, baseHeight,-dist);
-	glVertex3f(-baseHalfWidth, baseHeight,-dist);
+	glVertex3d(-baseHalfWidth, halfHeight,-dist);
+	glVertex3d( baseHalfWidth, halfHeight,-dist);
+	glVertex3d( baseHalfWidth, baseHeight,-dist);
+	glVertex3d(-baseHalfWidth, baseHeight,-dist);
 	glEnd();
 
 	// Arrow
 	glBegin(GL_TRIANGLES);
-	glVertex3f( 0.0f,           arrowHeight,-dist);
-	glVertex3f(-arrowHalfWidth, baseHeight, -dist);
-	glVertex3f( arrowHalfWidth, baseHeight, -dist);
+	glVertex3d( 0.0,           arrowHeight,-dist);
+	glVertex3d(-arrowHalfWidth, baseHeight, -dist);
+	glVertex3d( arrowHalfWidth, baseHeight, -dist);
 	glEnd();
 }
 
@@ -312,7 +312,7 @@ static void drawCamera(float scale)
   drawPathModifyGLState(mask, nbFrames, scale);
   glPopAttrib();
   \endcode */
-void KeyFrameInterpolator::drawPath(int mask, int nbFrames, float scale)
+void KeyFrameInterpolator::drawPath(int mask, int nbFrames, qreal scale)
 {
 	const int nbSteps = 30;
 	if (!pathIsValid_)
@@ -347,7 +347,7 @@ void KeyFrameInterpolator::drawPath(int mask, int nbFrames, float scale)
 				// cout << kf_[0]->time() << " , " << kf_[1]->time() << " , " << kf_[2]->time() << " , " << kf_[3]->time() << endl;
 				for (int step=0; step<nbSteps; ++step)
 				{
-					float alpha = step / static_cast<float>(nbSteps);
+					qreal alpha = step / static_cast<qreal>(nbSteps);
 					fr.setPosition(kf_[1]->position() + alpha * (kf_[1]->tgP() + alpha * (v1+alpha*v2)));
 					fr.setOrientation(Quaternion::squad(kf_[1]->orientation(), kf_[1]->tgQ(), kf_[2]->tgQ(), kf_[2]->orientation(), alpha));
 					path_.push_back(fr);
@@ -383,11 +383,11 @@ void KeyFrameInterpolator::drawPath(int mask, int nbFrames, float scale)
 			int count = 0;
 			if (nbFrames > nbSteps)
 				nbFrames = nbSteps;
-			float goal = 0.0f;
+			qreal goal = 0.0;
 			Q_FOREACH (Frame fr, path_)
 				if ((count++) >= goal)
 				{
-					goal += nbSteps / static_cast<float>(nbFrames);
+					goal += nbSteps / static_cast<qreal>(nbFrames);
 					glPushMatrix();
 					glMultMatrixd(fr.matrix());
 					if (mask & 2) drawCamera(scale);
@@ -443,7 +443,7 @@ Frame KeyFrameInterpolator::keyFrame(int index) const
 /*! Returns the time corresponding to the \p index keyFrame.
 
  See also keyFrame(). \p index has to be in the range 0..numberOfKeyFrames()-1. */
-float KeyFrameInterpolator::keyFrameTime(int index) const
+qreal KeyFrameInterpolator::keyFrameTime(int index) const
 {
 	return keyFrame_.at(index)->time();
 }
@@ -452,7 +452,7 @@ float KeyFrameInterpolator::keyFrameTime(int index) const
 
  Simply corresponds to lastTime() - firstTime(). Returns 0.0 if the path has less than 2 keyFrames.
  See also keyFrameTime(). */
-float KeyFrameInterpolator::duration() const
+qreal KeyFrameInterpolator::duration() const
 {
 	return lastTime() - firstTime();
 }
@@ -460,7 +460,7 @@ float KeyFrameInterpolator::duration() const
 /*! Returns the time corresponding to the first keyFrame, expressed in seconds.
 
 Returns 0.0 if the path is empty. See also lastTime(), duration() and keyFrameTime(). */
-float KeyFrameInterpolator::firstTime() const
+qreal KeyFrameInterpolator::firstTime() const
 {
 	if (keyFrame_.isEmpty())
 		return 0.0;
@@ -471,7 +471,7 @@ float KeyFrameInterpolator::firstTime() const
 /*! Returns the time corresponding to the last keyFrame, expressed in seconds.
 
 Returns 0.0 if the path is empty. See also firstTime(), duration() and keyFrameTime(). */
-float KeyFrameInterpolator::lastTime() const
+qreal KeyFrameInterpolator::lastTime() const
 {
 	if (keyFrame_.isEmpty())
 		return 0.0;
@@ -479,7 +479,7 @@ float KeyFrameInterpolator::lastTime() const
 		return keyFrame_.last()->time();
 }
 
-void KeyFrameInterpolator::updateCurrentKeyFrameForTime(float time)
+void KeyFrameInterpolator::updateCurrentKeyFrameForTime(qreal time)
 {
 	// Assertion: times are sorted in monotone order.
 	// Assertion: keyFrame_ is not empty
@@ -545,7 +545,7 @@ void KeyFrameInterpolator::updateSplineCache()
   setInterpolationTime() instead.
 
   Emits the interpolated() signal and makes the frame() emit the Frame::interpolated() signal. */
-void KeyFrameInterpolator::interpolateAtTime(float time)
+void KeyFrameInterpolator::interpolateAtTime(qreal time)
 {
 	setInterpolationTime(time);
 
@@ -560,8 +560,8 @@ void KeyFrameInterpolator::interpolateAtTime(float time)
 	if (!splineCacheIsValid_)
 		updateSplineCache();
 
-	float alpha;
-	float dt = currentFrame_[2]->peekNext()->time() - currentFrame_[1]->peekNext()->time();
+	qreal alpha;
+	qreal dt = currentFrame_[2]->peekNext()->time() - currentFrame_[1]->peekNext()->time();
 	if (dt == 0.0)
 		alpha = 0.0;
 	else
@@ -633,7 +633,7 @@ void KeyFrameInterpolator::initFromDOMElement(const QDomElement& element)
 		{
 			Frame fr;
 			fr.initFromDOMElement(child);
-			float time = DomUtils::floatFromDom(child, "time", 0.0);
+			qreal time = DomUtils::qrealFromDom(child, "time", 0.0);
 			addKeyFrame(fr, time);
 		}
 
@@ -641,8 +641,8 @@ void KeyFrameInterpolator::initFromDOMElement(const QDomElement& element)
 	}
 
 	// #CONNECTION# Values cut pasted from constructor
-	setInterpolationTime(DomUtils::floatFromDom(element, "time", 0.0));
-	setInterpolationSpeed(DomUtils::floatFromDom(element, "speed", 1.0));
+	setInterpolationTime(DomUtils::qrealFromDom(element, "time", 0.0));
+	setInterpolationSpeed(DomUtils::qrealFromDom(element, "speed", 1.0));
 	setInterpolationPeriod(DomUtils::intFromDom(element, "period", 40));
 	setClosedPath(DomUtils::boolFromDom(element, "closedPath", false));
 	setLoopInterpolation(DomUtils::boolFromDom(element, "loop", false));
@@ -658,14 +658,14 @@ void KeyFrameInterpolator::initFromDOMElement(const QDomElement& element)
 #ifndef DOXYGEN
 
 //////////// KeyFrame private class implementation /////////
-KeyFrameInterpolator::KeyFrame::KeyFrame(const Frame& fr, float t)
+KeyFrameInterpolator::KeyFrame::KeyFrame(const Frame& fr, qreal t)
 	: time_(t), frame_(NULL)
 {
 	p_ = fr.position();
 	q_ = fr.orientation();
 }
 
-KeyFrameInterpolator::KeyFrame::KeyFrame(const Frame* fr, float t)
+KeyFrameInterpolator::KeyFrame::KeyFrame(const Frame* fr, qreal t)
 	: time_(t), frame_(fr)
 {
 	updateValuesFromPointer();

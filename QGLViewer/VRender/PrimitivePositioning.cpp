@@ -84,7 +84,7 @@ int PrimitivePositioning::computeRelativePosition(const Polygone *P,const Segmen
 
 	double t1,t2 ;
 
-        for(unsigned int i=0;i<P->nbVertices();++i)
+		for(size_t i=0;i<P->nbVertices();++i)
 		if(intersectSegments_XY(Vector2(S->vertex(0)),Vector2(S->vertex(1)),Vector2(P->vertex(i)),Vector2(P->vertex(i+1)),_EPS,t1,t2))
 			intersections.push_back(t1) ;
 
@@ -151,9 +151,9 @@ int PrimitivePositioning::computeRelativePosition(const Polygone *P1,const Polyg
 
 	if (gpc_int.num_contours != 1) // There is some numerical error in gpc. Let's skip.
 	  {
-	    gpc_free_polygon(&gpc_int) ;
-	    return res ;
-	    // throw runtime_error("Intersection with more than 1 contour ! Non convex polygons ?") ;
+		gpc_free_polygon(&gpc_int) ;
+		return res ;
+		// throw runtime_error("Intersection with more than 1 contour ! Non convex polygons ?") ;
 	  }
 
 	// 2 - polygons are not independent. Compute their relative position.
@@ -161,7 +161,7 @@ int PrimitivePositioning::computeRelativePosition(const Polygone *P1,const Polyg
 	//   support plane of each polygon. The epsilon-signs of each point toward
 	//   both planes give the relative position of the polygons.
 
-	for(int i=0;i<gpc_int.contour[0].num_vertices && (res < (Upper | Lower));++i)
+	for(long i=0;i<gpc_int.contour[0].num_vertices && (res < (Upper | Lower));++i)
 	{
 		if(P1->normal().z() == 0.0) throw runtime_error("could not project point. Unexpected case !") ;
 		if(P2->normal().z() == 0.0) throw runtime_error("could not project point. Unexpected case !") ;
@@ -214,13 +214,13 @@ int PrimitivePositioning::computeRelativePosition(const Segment *S1,const Segmen
 
 bool PrimitivePositioning::pointOutOfPolygon_XY(const Vector3& P,const Polygone *Q,double I_EPS)
 {
-	int nq = Q->nbVertices() ;
+	size_t nq = Q->nbVertices() ;
 	Vector2 p = Vector2(P) ;
 
 	FLOAT MaxZ = -FLT_MAX ;
 	FLOAT MinZ =  FLT_MAX ;
 
-	for(int j=0;j<nq;j++)  				//  Regarde si P.(x,y) est a l'interieur
+	for(size_t j=0;j<nq;j++)  				//  Regarde si P.(x,y) est a l'interieur
 	{                               	// ou a l'exterieur du polygone.
 		Vector2 q1 = Vector2(Q->vertex(j)) ;
 		Vector2 q2 = Vector2(Q->vertex(j+1)) ;
@@ -363,7 +363,7 @@ gpc_polygon PrimitivePositioning::createGPCPolygon_XY(const Polygone *P)
 	gpc_p_verts->num_vertices = P->nbVertices() ;
 	gpc_p_verts->vertex = new gpc_vertex[P->nbVertices()] ;
 
-        for(unsigned int i=0;i<P->nbVertices();++i)
+		for(size_t i=0;i<P->nbVertices();++i)
 	{
 		gpc_p_verts->vertex[i].x = P->vertex(i).x() ;
 		gpc_p_verts->vertex[i].y = P->vertex(i).y() ;
@@ -380,7 +380,7 @@ void PrimitivePositioning::getsigns(const Primitive *P,const NVector3& v,double 
 	if(P == NULL)
 		throw runtime_error("Null primitive in getsigns !") ;
 
-	int n = P->nbVertices() ;
+	size_t n = P->nbVertices() ;
 
 	Smin =  1 ;
 	Smax = -1 ;
@@ -391,7 +391,7 @@ void PrimitivePositioning::getsigns(const Primitive *P,const NVector3& v,double 
 	double zmin =  FLT_MAX ;
 	zvals.resize(n) ;
 
-	for(int i=0;i<n;i++)
+	for(size_t i=0;i<n;i++)
 	{
 		double Z = P->vertex(i) * v - C ;
 
@@ -403,7 +403,7 @@ void PrimitivePositioning::getsigns(const Primitive *P,const NVector3& v,double 
 
 	signs.resize(n) ;
 
-	for(int j=0;j<n;j++)
+	for(size_t j=0;j<n;j++)
 	{
 		if(zvals[j] < -I_EPS)
 			signs[j] = -1 ;
@@ -430,7 +430,7 @@ void PrimitivePositioning::split(Polygone *P,const NVector3& v,double C,Primitiv
 
 	getsigns(P,v,C,Signs,Zvals,Smin,Smax,_EPS) ;
 
-	int n = P->nbVertices() ;
+	size_t n = P->nbVertices() ;
 
 	if((Smin == 0)&&(Smax == 0)){ P_moins = P ; P_plus = NULL ; return ; }	// Polygone inclus dans le plan
 	if(Smin == 1) 					{ P_plus = P ; P_moins = NULL ; return ; }	// Polygone tout positif
@@ -449,7 +449,7 @@ void PrimitivePositioning::split(Polygone *P,const NVector3& v,double C,Primitiv
 	int nZero = 0 ;
 	int nconsZero = 0 ;
 
-	for(int i=0;i<n;i++)
+	for(size_t i=0;i<n;i++)
 	{
 		if(Signs[i] == 0)
 		{
@@ -466,7 +466,7 @@ void PrimitivePositioning::split(Polygone *P,const NVector3& v,double C,Primitiv
 	int dep=0 ; while(Signs[dep] == 0) dep++ ;
 	int prev_sign = Signs[dep] ;
 
-	for(int j=1;j<=n;j++)
+	for(size_t j=1;j<=n;j++)
 	{
 		int sign = Signs[(j+dep)%n] ;
 
@@ -561,7 +561,7 @@ void PrimitivePositioning::split(Segment *S,const NVector3& v,double C,Primitive
 
 	getsigns(S,v,C,Signs,Zvals,Smin,Smax,_EPS) ;
 
-	int n = S->nbVertices() ;
+	size_t n = S->nbVertices() ;
 
 	if((Smin == 0)&&(Smax == 0)) 	{ P_moins = S ; P_plus = NULL ; return ; }	// Polygone inclus dans le plan
 	if(Smin == 1) 						{ P_plus = S ; P_moins = NULL ; return ; }	// Polygone tout positif
@@ -576,7 +576,7 @@ void PrimitivePositioning::split(Segment *S,const NVector3& v,double C,Primitive
 	int nZero = 0 ;
 	int nconsZero = 0 ;
 
-	for(int i=0;i<n;i++)
+	for(size_t i=0;i<n;i++)
 	{
 		if(Signs[i] == 0)
 		{

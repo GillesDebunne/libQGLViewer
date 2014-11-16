@@ -19,43 +19,15 @@ private:
 	}
 
 public:
-	static float floatFromDom(const QDomElement& e, const QString& attribute, float defValue)
+	static qreal qrealFromDom(const QDomElement& e, const QString& attribute, qreal defValue)
 	{
-		float value = defValue;
-		if (e.hasAttribute(attribute)) {
-			const QString s = e.attribute(attribute);
-			bool ok;
-			value = s.toFloat(&ok);
-			if (!ok) {
-				warning(QString("'%1' is not a valid float syntax for attribute \"%2\" in initialization of \"%3\". Setting value to %4.")
-						.arg(s).arg(attribute).arg(e.tagName()).arg(QString::number(defValue)));
-				value = defValue;
-			}
-		} else {
-			warning(QString("\"%1\" attribute missing in initialization of \"%2\". Setting value to %3.")
-					.arg(attribute).arg(e.tagName()).arg(QString::number(value)));
-		}
-
-#if defined(isnan)
-		// The "isnan" method may not be available on all platforms.
-		// Find its equivalent or simply remove these two lines
-		if (isnan(value))
-			warning(QString("Warning, attribute \"%1\" initialized to Not a Number in \"%2\"")
-					.arg(attribute).arg(e.tagName()));
-#endif
-
-		return value;
-	}
-
-	static double doubleFromDom(const QDomElement& e, const QString& attribute, double defValue)
-	{
-		double value = defValue;
+		qreal value = defValue;
 		if (e.hasAttribute(attribute)) {
 			const QString s = e.attribute(attribute);
 			bool ok;
 			value = s.toDouble(&ok);
 			if (!ok) {
-				warning(QString("'%1' is not a valid double syntax for attribute \"%2\" in initialization of \"%3\". Setting value to %4.")
+				warning(QString("'%1' is not a valid qreal syntax for attribute \"%2\" in initialization of \"%3\". Setting value to %4.")
 						.arg(s).arg(attribute).arg(e.tagName()).arg(QString::number(defValue)));
 				value = defValue;
 			}
@@ -85,6 +57,27 @@ public:
 			value = s.toInt(&ok);
 			if (!ok) {
 				warning(QString("'%1' is not a valid integer syntax for attribute \"%2\" in initialization of \"%3\". Setting value to %4.")
+						.arg(s).arg(attribute).arg(e.tagName()).arg(QString::number(defValue)));
+				value = defValue;
+			}
+		} else {
+			warning(QString("\"%1\" attribute missing in initialization of \"%2\". Setting value to %3.")
+					.arg(attribute).arg(e.tagName()).arg(QString::number(value)));
+		}
+
+		return value;
+	}
+
+	static unsigned int uintFromDom(const QDomElement& e, const QString& attribute, unsigned int defValue)
+	{
+		unsigned int value = defValue;
+		if (e.hasAttribute(attribute))
+		{
+			const QString s = e.attribute(attribute);
+			bool ok;
+			value = s.toUInt(&ok);
+			if (!ok) {
+				warning(QString("'%1' is not a valid unsigned integer syntax for attribute \"%2\" in initialization of \"%3\". Setting value to %4.")
 						.arg(s).arg(attribute).arg(e.tagName()).arg(QString::number(defValue)));
 				value = defValue;
 			}

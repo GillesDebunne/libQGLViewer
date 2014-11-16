@@ -185,13 +185,13 @@ static QString QGLViewerVersionString()
 			QString::number(QGLVIEWER_VERSION & 0x0000ff);
 }
 
-static Qt::KeyboardModifiers keyboardModifiersFromState(int state) {
+static Qt::KeyboardModifiers keyboardModifiersFromState(unsigned int state) {
 	// Convertion of keyboard modifiers and mouse buttons as an int is no longer supported : emulate
-	return Qt::KeyboardModifiers(state & 0xFF000000);
+	return Qt::KeyboardModifiers(int(state & 0xFF000000));
 }
 
 
-static Qt::MouseButton mouseButtonFromState(int state) {
+static Qt::MouseButton mouseButtonFromState(unsigned int state) {
 	// Convertion of keyboard modifiers and mouse buttons as an int is no longer supported : emulate
 	return Qt::MouseButton(state & 0xFFFF);
 }
@@ -364,9 +364,9 @@ void QGLViewer::postDraw()
 
 	// Restore foregroundColor
 	float color[4];
-	color[0] = foregroundColor().red()   / 255.0;
-	color[1] = foregroundColor().green() / 255.0;
-	color[2] = foregroundColor().blue()  / 255.0;
+	color[0] = foregroundColor().red()   / 255.0f;
+	color[1] = foregroundColor().green() / 255.0f;
+	color[2] = foregroundColor().blue()  / 255.0f;
 	color[3] = 1.0;
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
 	glDisable(GL_LIGHTING);
@@ -545,7 +545,7 @@ void QGLViewer::setDefaultMouseBindings()
 	setMouseBinding(Qt::Key_Z, Qt::NoModifier, Qt::RightButton, ZOOM_TO_FIT);
 
 #ifdef Q_OS_MAC
-	// Specific Mac bindings for touchpads. Double finger emulates a wheelEvent which zooms.
+	// Specific Mac bindings for touchpads. Two fingers emulate a wheelEvent which zooms.
 	// There is no right button available : make Option key + left emulate the right button.
 	// A Control+Left indeed emulates a right click (OS X system configuration), but it does
 	// no seem to support dragging.
@@ -601,7 +601,7 @@ void QGLViewer::setCamera(Camera* const camera)
 
 void QGLViewer::connectAllCameraKFIInterpolatedSignals(bool connection)
 {
-	for (QMap<int, KeyFrameInterpolator*>::ConstIterator it = camera()->kfi_.begin(), end=camera()->kfi_.end(); it != end; ++it)
+	for (QMap<unsigned int, KeyFrameInterpolator*>::ConstIterator it = camera()->kfi_.begin(), end=camera()->kfi_.end(); it != end; ++it)
 	{
 		if (connection)
 			connect(camera()->keyFrameInterpolator(it.key()), SIGNAL(interpolated()), SLOT(update()));
@@ -631,11 +631,11 @@ See the <a href="../examples/drawLight.html">drawLight example</a> for an illust
 
 \attention You need to enable \c GL_COLOR_MATERIAL before calling this method. \c glColor is set to
 the light diffuse color. */
-void QGLViewer::drawLight(GLenum light, float scale) const
+void QGLViewer::drawLight(GLenum light, qreal scale) const
 {
 	static GLUquadric* quadric = gluNewQuadric();
 
-	const float length = sceneRadius() / 5.0 * scale;
+	const qreal length = sceneRadius() / 5.0 * scale;
 
 	GLboolean lightIsOn;
 	glGetBooleanv(light, &lightIsOn);
@@ -722,8 +722,8 @@ void QGLViewer::drawText(int x, int y, const QString& text, const QFont& fnt)
 		return;
 
 	if (tileRegion_ != NULL) {
-		renderText((x-tileRegion_->xMin) * width() / (tileRegion_->xMax - tileRegion_->xMin),
-				   (y-tileRegion_->yMin) * height() / (tileRegion_->yMax - tileRegion_->yMin), text, scaledFont(fnt));
+		renderText(int((x-tileRegion_->xMin) * width() / (tileRegion_->xMax - tileRegion_->xMin)),
+				   int((y-tileRegion_->yMin) * height() / (tileRegion_->yMax - tileRegion_->yMin)), text, scaledFont(fnt));
 	} else
 		renderText(x, y, text, fnt);
 }
@@ -1066,12 +1066,12 @@ void QGLViewer::endSelection(const QPoint& point)
 		// Of all the objects that were projected in the pick region, we select the closest one (zMin comparison).
 		// This code needs to be modified if you use several stack levels. See glSelectBuffer() man page.
 		GLuint zMin = (selectBuffer())[1];
-		setSelectedName((selectBuffer())[3]);
+		setSelectedName(int((selectBuffer())[3]));
 		for (int i=1; i<nbHits; ++i)
 			if ((selectBuffer())[4*i+1] < zMin)
 			{
 				zMin = (selectBuffer())[4*i+1];
-				setSelectedName((selectBuffer())[4*i+3]);
+				setSelectedName(int((selectBuffer())[4*i+3]));
 			}
 	}
 }
@@ -1566,10 +1566,10 @@ QString QGLViewer::clickActionString(QGLViewer::ClickAction ca)
 	return QString::null;
 }
 
-static QString keyString(int key)
+static QString keyString(unsigned int key)
 {
 # if QT_VERSION >= 0x040100
-	return QKeySequence(key).toString(QKeySequence::NativeText);
+	return QKeySequence(int(key)).toString(QKeySequence::NativeText);
 # else
 	return QString(QKeySequence(key));
 # endif
@@ -1608,7 +1608,7 @@ bool QGLViewer::isValidShortcutKey(int key) {
 
  Use setMouseBindingDescription(Qt::KeyboardModifiers, Qt::MouseButtons, QString, bool, Qt::MouseButtons) instead.
 */
-void QGLViewer::setMouseBindingDescription(int state, QString description, bool doubleClick, Qt::MouseButtons buttonsBefore) {
+void QGLViewer::setMouseBindingDescription(unsigned int state, QString description, bool doubleClick, Qt::MouseButtons buttonsBefore) {
 	qWarning("setMouseBindingDescription(int state,...) is deprecated. Use the modifier/button equivalent");
 	setMouseBindingDescription(keyboardModifiersFromState(state),
 							   mouseButtonFromState(state),
@@ -1798,7 +1798,7 @@ setKeyDescription(Qt::CTRL+Qt::Key_C, "");
 
 See the <a href="../examples/keyboardAndMouse.html">keyboardAndMouse example</a> for illustration
 and the <a href="../keyboard.html">keyboard page</a> for details. */
-void QGLViewer::setKeyDescription(int key, QString description)
+void QGLViewer::setKeyDescription(unsigned int key, QString description)
 {
 	if (description.isEmpty())
 		keyDescription_.remove(key);
@@ -1811,18 +1811,18 @@ QString QGLViewer::cameraPathKeysString() const
 	if (pathIndex_.isEmpty())
 		return QString::null;
 
-	QVector<int> keys;
+	QVector<Qt::Key> keys;
 	keys.reserve(pathIndex_.count());
-	for (QMap<Qt::Key, int>::ConstIterator i = pathIndex_.begin(), endi=pathIndex_.end(); i != endi; ++i)
+	for (QMap<Qt::Key, unsigned int>::ConstIterator i = pathIndex_.begin(), endi=pathIndex_.end(); i != endi; ++i)
 		keys.push_back(i.key());
 	qSort(keys);
 
-	QVector<int>::const_iterator it = keys.begin(), end = keys.end();
+	QVector<Qt::Key>::const_iterator it = keys.begin(), end = keys.end();
 	QString res = keyString(*it);
 
 	const int maxDisplayedKeys = 6;
 	int nbDisplayedKeys = 0;
-	int previousKey = (*it);
+	Qt::Key previousKey = (*it);
 	int state = 0;
 	++it;
 	while ((it != end) && (nbDisplayedKeys < maxDisplayedKeys-1))
@@ -1887,14 +1887,14 @@ QString QGLViewer::keyboardString() const
 	text += QString("<tr bgcolor=\"#aaaacc\"><th align=\"center\">%1</th><th align=\"center\">%2</th></tr>\n").
 			arg(QGLViewer::tr("Key(s)", "Keys column header in help window mouse tab")).arg(QGLViewer::tr("Description", "Description column header in help window mouse tab"));
 
-	QMap<int, QString> keyDescription;
+	QMap<unsigned int, QString> keyDescription;
 
 	// 1 - User defined key descriptions
-	for (QMap<int, QString>::ConstIterator kd=keyDescription_.begin(), kdend=keyDescription_.end(); kd!=kdend; ++kd)
+	for (QMap<unsigned int, QString>::ConstIterator kd=keyDescription_.begin(), kdend=keyDescription_.end(); kd!=kdend; ++kd)
 		keyDescription[kd.key()] = kd.value();
 
 	// Add to text in sorted order
-	for (QMap<int, QString>::ConstIterator kb=keyDescription.begin(), endb=keyDescription.end(); kb!=endb; ++kb)
+	for (QMap<unsigned int, QString>::ConstIterator kb=keyDescription.begin(), endb=keyDescription.end(); kb!=endb; ++kb)
 		text += tableLine(keyString(kb.key()), kb.value());
 
 
@@ -1912,7 +1912,7 @@ QString QGLViewer::keyboardString() const
 			keyDescription[it.value()] = keyboardActionDescription_[it.key()];
 
 	// Add to text in sorted order
-	for (QMap<int, QString>::ConstIterator kb2=keyDescription.begin(), endb2=keyDescription.end(); kb2!=endb2; ++kb2)
+	for (QMap<unsigned int, QString>::ConstIterator kb2=keyDescription.begin(), endb2=keyDescription.end(); kb2!=endb2; ++kb2)
 		text += tableLine(keyString(kb2.key()), kb2.value());
 
 
@@ -2064,7 +2064,7 @@ void QGLViewer::keyPressEvent(QKeyEvent *e)
 		if (pathIndex_.contains(Qt::Key(key)))
 		{
 			// Camera paths
-			int index = pathIndex_[Qt::Key(key)];
+			unsigned int index = pathIndex_[Qt::Key(key)];
 
 			// not safe, but try to double press on two viewers at the same time !
 			static QTime doublePress;
@@ -2231,13 +2231,13 @@ unsigned int QGLViewer::shortcut(KeyboardAction action) const
 }
 
 #ifndef DOXYGEN
-void QGLViewer::setKeyboardAccelerator(KeyboardAction action, int key)
+void QGLViewer::setKeyboardAccelerator(KeyboardAction action, unsigned int key)
 {
 	qWarning("setKeyboardAccelerator is deprecated. Use setShortcut instead.");
 	setShortcut(action, key);
 }
 
-int QGLViewer::keyboardAccelerator(KeyboardAction action) const
+unsigned int QGLViewer::keyboardAccelerator(KeyboardAction action) const
 {
 	qWarning("keyboardAccelerator is deprecated. Use shortcut instead.");
 	return shortcut(action);
@@ -2261,9 +2261,9 @@ If several keys are binded to a given \p index (see setPathKey()), one of them i
 Returns \c 0 if no key is associated with this index.
 
 See also the <a href="../keyboard.html">keyboard page</a>. */
-Qt::Key QGLViewer::pathKey(int index) const
+Qt::Key QGLViewer::pathKey(unsigned int index) const
 {
-	for (QMap<Qt::Key, int>::ConstIterator it = pathIndex_.begin(), end=pathIndex_.end(); it != end; ++it)
+	for (QMap<Qt::Key, unsigned int>::ConstIterator it = pathIndex_.begin(), end=pathIndex_.end(); it != end; ++it)
 		if (it.value() == index)
 			return it.key();
 	return Qt::Key(0);
@@ -2280,12 +2280,13 @@ setPathKey(Qt::Key_Space, 0);
 // Remove this binding
 setPathKey(-Qt::Key_Space);
 \endcode */
-void QGLViewer::setPathKey(int key, int index)
+void QGLViewer::setPathKey(int key, unsigned int index)
 {
+	Qt::Key k = Qt::Key(abs(key));
 	if (key < 0)
-		pathIndex_.remove(Qt::Key(-key));
+		pathIndex_.remove(k);
 	else
-		pathIndex_[Qt::Key(key)] = index;
+		pathIndex_[k] = index;
 }
 
 /*! Sets the playPathKeyboardModifiers() value. */
@@ -2340,19 +2341,19 @@ Qt::KeyboardModifiers QGLViewer::playPathStateKey() const
 	return playPathKeyboardModifiers();
 }
 
-void QGLViewer::setAddKeyFrameStateKey(int buttonState)
+void QGLViewer::setAddKeyFrameStateKey(unsigned int buttonState)
 {
 	qWarning("setAddKeyFrameStateKey has been renamed setAddKeyFrameKeyboardModifiers");
 	setAddKeyFrameKeyboardModifiers(keyboardModifiersFromState(buttonState));
 }
 
-void QGLViewer::setPlayPathStateKey(int buttonState)
+void QGLViewer::setPlayPathStateKey(unsigned int buttonState)
 {
 	qWarning("setPlayPathStateKey has been renamed setPlayPathKeyboardModifiers");
 	setPlayPathKeyboardModifiers(keyboardModifiersFromState(buttonState));
 }
 
-Qt::Key QGLViewer::keyFrameKey(int index) const
+Qt::Key QGLViewer::keyFrameKey(unsigned int index) const
 {
 	qWarning("keyFrameKey has been renamed pathKey.");
 	return pathKey(index);
@@ -2364,13 +2365,13 @@ Qt::KeyboardModifiers QGLViewer::playKeyFramePathStateKey() const
 	return playPathKeyboardModifiers();
 }
 
-void QGLViewer::setKeyFrameKey(int index, int key)
+void QGLViewer::setKeyFrameKey(unsigned int index, int key)
 {
 	qWarning("setKeyFrameKey is deprecated, use setPathKey instead, with swapped parameters.");
 	setPathKey(key, index);
 }
 
-void QGLViewer::setPlayKeyFramePathStateKey(int buttonState)
+void QGLViewer::setPlayKeyFramePathStateKey(unsigned int buttonState)
 {
 	qWarning("setPlayKeyFramePathStateKey has been renamed setPlayPathKeyboardModifiers.");
 	setPlayPathKeyboardModifiers(keyboardModifiersFromState(buttonState));
@@ -2470,13 +2471,13 @@ void QGLViewer::setHandlerKeyboardModifiers(MouseHandler handler, Qt::KeyboardMo
 	clickBinding_ = newClickBinding_;
 }
 
-void QGLViewer::setHandlerStateKey(MouseHandler handler, int buttonState)
+void QGLViewer::setHandlerStateKey(MouseHandler handler, unsigned int buttonState)
 {
 	qWarning("setHandlerStateKey has been renamed setHandlerKeyboardModifiers");
 	setHandlerKeyboardModifiers(handler, keyboardModifiersFromState(buttonState));
 }
 
-void QGLViewer::setMouseStateKey(MouseHandler handler, int buttonState)
+void QGLViewer::setMouseStateKey(MouseHandler handler, unsigned int buttonState)
 {
 	qWarning("setMouseStateKey has been renamed setHandlerKeyboardModifiers.");
 	setHandlerKeyboardModifiers(handler, keyboardModifiersFromState(buttonState));
@@ -2486,7 +2487,7 @@ void QGLViewer::setMouseStateKey(MouseHandler handler, int buttonState)
 
  Use setMouseBinding(Qt::KeyboardModifiers, Qt::MouseButtons, MouseHandler, MouseAction, bool) instead.
 */
-void QGLViewer::setMouseBinding(int state, MouseHandler handler, MouseAction action, bool withConstraint)
+void QGLViewer::setMouseBinding(unsigned int state, MouseHandler handler, MouseAction action, bool withConstraint)
 {
 	qWarning("setMouseBinding(int state, MouseHandler...) is deprecated. Use the modifier/button equivalent");
 	setMouseBinding(keyboardModifiersFromState(state),
@@ -2571,7 +2572,7 @@ void QGLViewer::setMouseBinding(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt
 
  Use setMouseBinding(Qt::KeyboardModifiers, Qt::MouseButtons, MouseHandler, MouseAction, bool) instead.
 */
-void QGLViewer::setMouseBinding(int state, ClickAction action, bool doubleClick, Qt::MouseButtons buttonsBefore) {
+void QGLViewer::setMouseBinding(unsigned int state, ClickAction action, bool doubleClick, Qt::MouseButtons buttonsBefore) {
 	qWarning("setMouseBinding(int state, ClickAction...) is deprecated. Use the modifier/button equivalent");
 	setMouseBinding(keyboardModifiersFromState(state),
 					mouseButtonFromState(state),
@@ -2702,7 +2703,7 @@ void QGLViewer::clearShortcuts() {
 
  Use mouseAction(Qt::Key, Qt::KeyboardModifiers, Qt::MouseButtons) instead.
 */
-QGLViewer::MouseAction QGLViewer::mouseAction(int state) const {
+QGLViewer::MouseAction QGLViewer::mouseAction(unsigned int state) const {
 	qWarning("mouseAction(int state,...) is deprecated. Use the modifier/button equivalent");
 	return mouseAction(Qt::Key(0), keyboardModifiersFromState(state), mouseButtonFromState(state));
 }
@@ -2734,7 +2735,7 @@ QGLViewer::MouseAction QGLViewer::mouseAction(Qt::Key key, Qt::KeyboardModifiers
 
  Use mouseHanler(Qt::Key, Qt::KeyboardModifiers, Qt::MouseButtons) instead.
 */
-int QGLViewer::mouseHandler(int state) const {
+int QGLViewer::mouseHandler(unsigned int state) const {
 	qWarning("mouseHandler(int state,...) is deprecated. Use the modifier/button equivalent");
 	return mouseHandler(Qt::Key(0), keyboardModifiersFromState(state), mouseButtonFromState(state));
 }
@@ -2881,7 +2882,7 @@ int QGLViewer::wheelHandler(Qt::KeyboardModifiers modifiers) const {
 /*! This method is deprecated since version 2.5.0
 
   Use wheelAction() and wheelHandler() instead. */
-int QGLViewer::wheelButtonState(MouseHandler handler, MouseAction action, bool withConstraint) const
+unsigned int QGLViewer::wheelButtonState(MouseHandler handler, MouseAction action, bool withConstraint) const
 {
 	qWarning("wheelButtonState() is deprecated. Use the wheelAction() and wheelHandler() instead");
 	for (QMap<WheelBindingPrivate, MouseActionPrivate>::ConstIterator it=wheelBinding_.begin(), end=wheelBinding_.end(); it!=end; ++it)
@@ -2895,7 +2896,7 @@ int QGLViewer::wheelButtonState(MouseHandler handler, MouseAction action, bool w
 
  Use clickAction(Qt::KeyboardModifiers, Qt::MouseButtons, bool, Qt::MouseButtons) instead.
 */
-QGLViewer::ClickAction QGLViewer::clickAction(int state, bool doubleClick, Qt::MouseButtons buttonsBefore) const {
+QGLViewer::ClickAction QGLViewer::clickAction(unsigned int state, bool doubleClick, Qt::MouseButtons buttonsBefore) const {
 	qWarning("clickAction(int state,...) is deprecated. Use the modifier/button equivalent");
 	return clickAction(Qt::Key(0),
 					   keyboardModifiersFromState(state),
@@ -2908,13 +2909,13 @@ QGLViewer::ClickAction QGLViewer::clickAction(int state, bool doubleClick, Qt::M
 
  Use getClickActionState(ClickAction, Qt::Key, Qt::KeyboardModifiers, Qt::MouseButton, bool, Qt::MouseButtons) instead.
 */
-void QGLViewer::getClickButtonState(ClickAction action, int& state, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const {
+void QGLViewer::getClickButtonState(ClickAction action, unsigned int& state, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const {
 	qWarning("getClickButtonState(int state,...) is deprecated. Use the modifier/button equivalent");
 	Qt::KeyboardModifiers modifiers;
 	Qt::MouseButton button;
 	Qt::Key key;
 	getClickActionBinding(action, key, modifiers, button, doubleClick, buttonsBefore);
-	state = (int) modifiers | (int) button | (int) key;
+	state = (unsigned int) modifiers | (unsigned int) button | (unsigned int) key;
 }
 #endif
 
@@ -3084,17 +3085,17 @@ void QGLViewer::drawVisualHints()
 	// Pivot point cross
 	if (visualHint_ & 1)
 	{
-		const float size = 15.0;
+		const qreal size = 15.0;
 		Vec proj = camera()->projectedCoordinatesOf(camera()->pivotPoint());
 		startScreenCoordinatesSystem();
 		glDisable(GL_LIGHTING);
 		glDisable(GL_DEPTH_TEST);
 		glLineWidth(3.0);
 		glBegin(GL_LINES);
-		glVertex2f(proj.x - size, proj.y);
-		glVertex2f(proj.x + size, proj.y);
-		glVertex2f(proj.x, proj.y - size);
-		glVertex2f(proj.x, proj.y + size);
+		glVertex2d(proj.x - size, proj.y);
+		glVertex2d(proj.x + size, proj.y);
+		glVertex2d(proj.x, proj.y - size);
+		glVertex2d(proj.x, proj.y + size);
 		glEnd();
 		glEnable(GL_DEPTH_TEST);
 		stopScreenCoordinatesSystem();
@@ -3127,8 +3128,8 @@ void QGLViewer::drawVisualHints()
 		glDisable(GL_DEPTH_TEST);
 		glLineWidth(3.0);
 		glBegin(GL_LINES);
-		glVertex2f(pnt.x, pnt.y);
-		glVertex2f(mf->prevPos_.x(), mf->prevPos_.y());
+		glVertex2d(pnt.x, pnt.y);
+		glVertex2i(mf->prevPos_.x(), mf->prevPos_.y());
 		glEnd();
 		glEnable(GL_DEPTH_TEST);
 		stopScreenCoordinatesSystem();
@@ -3177,34 +3178,34 @@ void QGLViewer::resetVisualHints()
 \p length, \p radius and \p nbSubdivisions define its geometry. If \p radius is negative
 (default), it is set to 0.05 * \p length.
 
-Use drawArrow(const Vec& from, const Vec& to, float radius, int nbSubdivisions) or change the \c
+Use drawArrow(const Vec& from, const Vec& to, qreal radius, int nbSubdivisions) or change the \c
 ModelView matrix to place the arrow in 3D.
 
 Uses current color and does not modify the OpenGL state. */
-void QGLViewer::drawArrow(float length, float radius, int nbSubdivisions)
+void QGLViewer::drawArrow(qreal length, qreal radius, int nbSubdivisions)
 {
 	static GLUquadric* quadric = gluNewQuadric();
 
 	if (radius < 0.0)
 		radius = 0.05 * length;
 
-	const float head = 2.5*(radius / length) + 0.1;
-	const float coneRadiusCoef = 4.0 - 5.0 * head;
+	const qreal head = 2.5*(radius / length) + 0.1;
+	const qreal coneRadiusCoef = 4.0 - 5.0 * head;
 
 	gluCylinder(quadric, radius, radius, length * (1.0 - head/coneRadiusCoef), nbSubdivisions, 1);
-	glTranslatef(0.0, 0.0, length * (1.0 - head));
+	glTranslatef(0.0f, 0.0f, float(length * (1.0 - head)));
 	gluCylinder(quadric, coneRadiusCoef * radius, 0.0, head * length, nbSubdivisions, 1);
-	glTranslatef(0.0, 0.0, -length * (1.0 - head));
+	glTranslatef(0.0f, 0.0f, float(-length * (1.0 - head)));
 }
 
 /*! Draws a 3D arrow between the 3D point \p from and the 3D point \p to, both defined in the
 current ModelView coordinates system.
 
-See drawArrow(float length, float radius, int nbSubdivisions) for details. */
-void QGLViewer::drawArrow(const Vec& from, const Vec& to, float radius, int nbSubdivisions)
+See drawArrow(qreal length, qreal radius, int nbSubdivisions) for details. */
+void QGLViewer::drawArrow(const Vec& from, const Vec& to, qreal radius, int nbSubdivisions)
 {
 	glPushMatrix();
-	glTranslatef(from[0],from[1],from[2]);
+	glTranslatef(float(from[0]), float(from[1]), float(from[2]));
 	const Vec dir = to-from;
 	glMultMatrixd(Quaternion(Vec(0,0,1), dir).matrix());
 	QGLViewer::drawArrow(dir.norm(), radius, nbSubdivisions);
@@ -3229,11 +3230,11 @@ the three arrows. The OpenGL state is not modified by this method.
 
 axisIsDrawn() uses this method to draw a representation of the world coordinate system. See also
 QGLViewer::drawArrow() and QGLViewer::drawGrid(). */
-void QGLViewer::drawAxis(float length)
+void QGLViewer::drawAxis(qreal length)
 {
-	const float charWidth = length / 40.0;
-	const float charHeight = length / 30.0;
-	const float charShift = 1.04 * length;
+	const qreal charWidth = length / 40.0;
+	const qreal charHeight = length / 30.0;
+	const qreal charShift = 1.04 * length;
 
 	GLboolean lighting, colorMaterial;
 	glGetBooleanv(GL_LIGHTING, &lighting);
@@ -3243,24 +3244,24 @@ void QGLViewer::drawAxis(float length)
 
 	glBegin(GL_LINES);
 	// The X
-	glVertex3f(charShift,  charWidth, -charHeight);
-	glVertex3f(charShift, -charWidth,  charHeight);
-	glVertex3f(charShift, -charWidth, -charHeight);
-	glVertex3f(charShift,  charWidth,  charHeight);
+	glVertex3d(charShift,  charWidth, -charHeight);
+	glVertex3d(charShift, -charWidth,  charHeight);
+	glVertex3d(charShift, -charWidth, -charHeight);
+	glVertex3d(charShift,  charWidth,  charHeight);
 	// The Y
-	glVertex3f( charWidth, charShift, charHeight);
-	glVertex3f(0.0,        charShift, 0.0);
-	glVertex3f(-charWidth, charShift, charHeight);
-	glVertex3f(0.0,        charShift, 0.0);
-	glVertex3f(0.0,        charShift, 0.0);
-	glVertex3f(0.0,        charShift, -charHeight);
+	glVertex3d( charWidth, charShift, charHeight);
+	glVertex3d(0.0,        charShift, 0.0);
+	glVertex3d(-charWidth, charShift, charHeight);
+	glVertex3d(0.0,        charShift, 0.0);
+	glVertex3d(0.0,        charShift, 0.0);
+	glVertex3d(0.0,        charShift, -charHeight);
 	// The Z
-	glVertex3f(-charWidth,  charHeight, charShift);
-	glVertex3f( charWidth,  charHeight, charShift);
-	glVertex3f( charWidth,  charHeight, charShift);
-	glVertex3f(-charWidth, -charHeight, charShift);
-	glVertex3f(-charWidth, -charHeight, charShift);
-	glVertex3f( charWidth, -charHeight, charShift);
+	glVertex3d(-charWidth,  charHeight, charShift);
+	glVertex3d( charWidth,  charHeight, charShift);
+	glVertex3d( charWidth,  charHeight, charShift);
+	glVertex3d(-charWidth, -charHeight, charShift);
+	glVertex3d(-charWidth, -charHeight, charShift);
+	glVertex3d( charWidth, -charHeight, charShift);
 	glEnd();
 
 	glEnable(GL_LIGHTING);
@@ -3274,14 +3275,14 @@ void QGLViewer::drawAxis(float length)
 	color[0] = 1.0f;  color[1] = 0.7f;  color[2] = 0.7f;  color[3] = 1.0f;
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
 	glPushMatrix();
-	glRotatef(90.0, 0.0, 1.0, 0.0);
+	glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
 	QGLViewer::drawArrow(length, 0.01*length);
 	glPopMatrix();
 
 	color[0] = 0.7f;  color[1] = 1.0f;  color[2] = 0.7f;  color[3] = 1.0f;
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
 	glPushMatrix();
-	glRotatef(-90.0, 1.0, 0.0, 0.0);
+	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 	QGLViewer::drawArrow(length, 0.01*length);
 	glPopMatrix();
 
@@ -3297,7 +3298,7 @@ void QGLViewer::drawAxis(float length)
 place and orientate the grid in 3D space (see the drawAxis() documentation).
 
 The OpenGL state is not modified by this method. */
-void QGLViewer::drawGrid(float size, int nbSubdivisions)
+void QGLViewer::drawGrid(qreal size, int nbSubdivisions)
 {
 	GLboolean lighting;
 	glGetBooleanv(GL_LIGHTING, &lighting);
@@ -3307,11 +3308,11 @@ void QGLViewer::drawGrid(float size, int nbSubdivisions)
 	glBegin(GL_LINES);
 	for (int i=0; i<=nbSubdivisions; ++i)
 	{
-		const float pos = size*(2.0*i/nbSubdivisions-1.0);
-		glVertex2f(pos, -size);
-		glVertex2f(pos, +size);
-		glVertex2f(-size, pos);
-		glVertex2f( size, pos);
+		const qreal pos = size*(2.0*i/nbSubdivisions-1.0);
+		glVertex2d(pos, -size);
+		glVertex2d(pos, +size);
+		glVertex2d(-size, pos);
+		glVertex2d( size, pos);
 	}
 	glEnd();
 
@@ -3774,8 +3775,8 @@ void QGLViewer::copyBufferToTexture(GLint internalFormat, GLenum format)
 	{
 		bufferTextureWidth_ = w;
 		bufferTextureHeight_ = h;
-		bufferTextureMaxU_ = width()  / float(bufferTextureWidth_);
-		bufferTextureMaxV_ = height() / float(bufferTextureHeight_);
+		bufferTextureMaxU_ = width()  / qreal(bufferTextureWidth_);
+		bufferTextureMaxV_ = height() / qreal(bufferTextureHeight_);
 		init = true;
 	}
 
@@ -3801,7 +3802,7 @@ void QGLViewer::copyBufferToTexture(GLint internalFormat, GLenum format)
 	if (init)
 	{
 		if (format == GL_NONE)
-			format = internalFormat;
+			format = GLenum(internalFormat);
 
 		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, bufferTextureWidth_, bufferTextureHeight_, 0, format, GL_UNSIGNED_BYTE, NULL);
 	}

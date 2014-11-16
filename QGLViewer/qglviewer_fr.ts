@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="fr_FR">
+<TS version="2.1" language="fr_FR">
 <context>
     <name>ImageInterface</name>
     <message>
@@ -519,7 +519,7 @@
     <message>
         <source>&amp;About</source>
         <comment>Help window about title</comment>
-        <translation>À propos</translation>
+        <translation>À &amp;propos</translation>
     </message>
     <message>
         <source>&lt;h1&gt;libQGLViewer&lt;/h1&gt;&lt;h3&gt;Version %1&lt;/h3&gt;&lt;br&gt;A versatile 3D viewer based on OpenGL and Qt&lt;br&gt;Copyright 2002-%2 Gilles Debunne&lt;br&gt;&lt;code&gt;%3&lt;/code&gt;</source>

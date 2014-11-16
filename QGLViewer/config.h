@@ -6,7 +6,7 @@
 #ifndef QGLVIEWER_CONFIG_H
 #define QGLVIEWER_CONFIG_H
 
-#define QGLVIEWER_VERSION 0x020504
+#define QGLVIEWER_VERSION 0x020600
 
 // Needed for Qt < 4 (?)
 #ifndef QT_CLEAN_NAMESPACE
@@ -23,7 +23,7 @@ Error : libQGLViewer requires a minimum Qt version of 4.0
 // Win 32 DLL export macros
 #ifdef Q_OS_WIN32
 # ifndef M_PI
-#  define M_PI 3.14159265358979323846f
+#  define M_PI 3.14159265358979323846
 # endif
 # ifndef QGLVIEWER_STATIC
 #   ifdef CREATE_QGLVIEWER_DLL

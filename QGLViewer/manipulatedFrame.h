@@ -117,15 +117,15 @@ Q_SIGNALS:
 	//@{
 public Q_SLOTS:
 	/*! Defines the rotationSensitivity(). */
-	void setRotationSensitivity(float sensitivity) { rotationSensitivity_ = sensitivity; }
+	void setRotationSensitivity(qreal sensitivity) { rotationSensitivity_ = sensitivity; }
 	/*! Defines the translationSensitivity(). */
-	void setTranslationSensitivity(float sensitivity) { translationSensitivity_ = sensitivity; }
+	void setTranslationSensitivity(qreal sensitivity) { translationSensitivity_ = sensitivity; }
 	/*! Defines the spinningSensitivity(), in pixels per milliseconds. */
-	void setSpinningSensitivity(float sensitivity) { spinningSensitivity_ = sensitivity; }
+	void setSpinningSensitivity(qreal sensitivity) { spinningSensitivity_ = sensitivity; }
 	/*! Defines the wheelSensitivity(). */
-	void setWheelSensitivity(float sensitivity) { wheelSensitivity_ = sensitivity; }
+	void setWheelSensitivity(qreal sensitivity) { wheelSensitivity_ = sensitivity; }
 	/*! Defines the zoomSensitivity(). */
-	void setZoomSensitivity(float sensitivity) { zoomSensitivity_ = sensitivity; }
+	void setZoomSensitivity(qreal sensitivity) { zoomSensitivity_ = sensitivity; }
 
 public:
 	/*! Returns the influence of a mouse displacement on the ManipulatedFrame rotation.
@@ -136,7 +136,7 @@ public:
 
 	See also setRotationSensitivity(), translationSensitivity(), spinningSensitivity() and
 	wheelSensitivity(). */
-	float rotationSensitivity() const { return rotationSensitivity_; }
+	qreal rotationSensitivity() const { return rotationSensitivity_; }
 	/*! Returns the influence of a mouse displacement on the ManipulatedFrame translation.
 
 	Default value is 1.0. You should not have to modify this value, since with 1.0 the
@@ -155,7 +155,7 @@ public:
 
 	See also setTranslationSensitivity(), rotationSensitivity(), spinningSensitivity() and
 	wheelSensitivity(). */
-	float translationSensitivity() const { return translationSensitivity_; }
+	qreal translationSensitivity() const { return translationSensitivity_; }
 	/*! Returns the minimum mouse speed required (at button release) to make the ManipulatedFrame
 	  spin().
 
@@ -167,7 +167,7 @@ public:
 
 	See also setSpinningSensitivity(), translationSensitivity(), rotationSensitivity() and
 	wheelSensitivity(). */
-	float spinningSensitivity() const { return spinningSensitivity_; }
+	qreal spinningSensitivity() const { return spinningSensitivity_; }
 
 	/*! Returns the zoom sensitivity.
 
@@ -176,7 +176,7 @@ public:
 
 	See also setZoomSensitivity(), translationSensitivity(), rotationSensitivity() wheelSensitivity()
 	and spinningSensitivity(). */
-	float zoomSensitivity() const { return zoomSensitivity_; }
+	qreal zoomSensitivity() const { return zoomSensitivity_; }
 	/*! Returns the mouse wheel sensitivity.
 
 	Default value is 1.0. A higher value will make the wheel action more efficient (usually meaning
@@ -184,7 +184,7 @@ public:
 
 	See also setWheelSensitivity(), translationSensitivity(), rotationSensitivity() zoomSensitivity()
 	and spinningSensitivity(). */
-	float wheelSensitivity() const { return wheelSensitivity_; }
+	qreal wheelSensitivity() const { return wheelSensitivity_; }
 	//@}
 
 
@@ -262,7 +262,7 @@ public Q_SLOTS:
 
 #ifndef DOXYGEN
 protected:
-	Quaternion deformedBallQuaternion(int x, int y, float cx, float cy, const Camera* const camera);
+	Quaternion deformedBallQuaternion(int x, int y, qreal cx, qreal cy, const Camera* const camera);
 
 	QGLViewer::MouseAction action_;
 	Constraint* previousConstraint_; // When manipulation is without Contraint.
@@ -273,29 +273,29 @@ protected:
 
 	/*! Returns a screen scaled delta from event's position to prevPos_, along the
 		X or Y direction, whichever has the largest magnitude. */
-	float deltaWithPrevPos(QMouseEvent* const event, Camera* const camera) const;
+	qreal deltaWithPrevPos(QMouseEvent* const event, Camera* const camera) const;
 	/*! Returns a normalized wheel delta, proportionnal to wheelSensitivity(). */
-	float wheelDelta(const QWheelEvent* event) const;
+	qreal wheelDelta(const QWheelEvent* event) const;
 
 	// Previous mouse position (used for incremental updates) and mouse press position.
 	QPoint prevPos_, pressPos_;
 
 private:
-	void zoom(float delta, const Camera * const camera);
+	void zoom(qreal delta, const Camera * const camera);
 
 #endif // DOXYGEN
 
 private:
 	// Sensitivity
-	float rotationSensitivity_;
-	float translationSensitivity_;
-	float spinningSensitivity_;
-	float wheelSensitivity_;
-	float zoomSensitivity_;
+	qreal rotationSensitivity_;
+	qreal translationSensitivity_;
+	qreal spinningSensitivity_;
+	qreal wheelSensitivity_;
+	qreal zoomSensitivity_;
 
 	// Mouse speed and spinning
 	QTime last_move_time;
-	float mouseSpeed_;
+	qreal mouseSpeed_;
 	int delay_;
 	bool isSpinning_;
 	QTimer spinningTimer_;

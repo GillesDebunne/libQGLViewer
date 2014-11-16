@@ -1,7 +1,7 @@
 
 %define version_major 2
-%define version_minor 5
-%define version_revision 4
+%define version_minor 6
+%define version_revision 0
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -155,6 +155,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Mon Nov 17 2014 Gilles Debunne <contact@libQGLViewer.com> 2.6.0
+- The entire API now consistently uses the qreal (i.e double) type for floating point numbers.
+
 * Thu Nov 6 2014 Gilles Debunne <contact@libQGLViewer.com> 2.5.4
 - More minor compilation warning and error fixes.
 

@@ -10,15 +10,15 @@ StandardCamera::StandardCamera()
   orthoSize = 1.0;
 }
 
-float StandardCamera::zNear() const
+qreal StandardCamera::zNear() const
 {
   if (standard)
-	return 0.001f;
+	return 0.001;
   else
 	return Camera::zNear();
 }
 
-float StandardCamera::zFar() const
+qreal StandardCamera::zFar() const
 {
   if (standard)
 	return 1000.0;
@@ -29,9 +29,9 @@ float StandardCamera::zFar() const
 void StandardCamera::changeOrthoFrustumSize(int delta)
 {
   if (delta > 0)
-	orthoSize *= 1.1f;
+	orthoSize *= 1.1;
   else
-	orthoSize /= 1.1f;
+	orthoSize /= 1.1;
 }
 
 void StandardCamera::getOrthoWidthHeight(GLdouble &halfWidth, GLdouble &halfHeight) const

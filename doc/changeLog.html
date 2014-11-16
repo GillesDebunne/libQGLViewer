@@ -33,6 +33,16 @@
 <h1>Change Log</h1>
 
 
+<h2>Nov 17th 2014 - 2.6.0</h2>
+<b>Changes in the API</b>
+<ul>
+  <li>The entire API now consistently uses the <code>qreal</code> (i.e <code>double</code>) type for floating point numbers.<br/>
+  This should not break code compatibility since types will mostly get automatically converted.<br/>
+  Update your code if you use one of the <code>getX(qreal &amp; x)</code> methods, which take a reference as a parameter, which type needs to be changed to <code>qreal</code>.
+  </li>
+</ul>
+
+
 <h2>Nov 6th 2014 - 2.5.4</h2>
 <b>Bug fixes or improvements</b>
 <ul>

@@ -136,7 +136,7 @@ public:
 
 	Use setBackgroundColor() to define and activate a background color.
 
-	\attention Each QColor component is an integer ranging from 0 to 255. This differs from the float
+	\attention Each QColor component is an integer ranging from 0 to 255. This differs from the qreal
 	values used by \c glClearColor() which are in the 0.0-1.0 range. Default value is (51, 51, 51)
 	(dark gray). You may have to change foregroundColor() accordingly.
 
@@ -150,7 +150,7 @@ public:
 	This color is used when FPSIsDisplayed(), gridIsDrawn(), to display the camera paths when the
 	cameraIsEdited().
 
-	\attention Each QColor component is an integer in the range 0-255. This differs from the float
+	\attention Each QColor component is an integer in the range 0-255. This differs from the qreal
 	values used by \c glColor3f() which are in the range 0-1. Default value is (180, 180, 180) (light
 	gray).
 
@@ -181,7 +181,7 @@ public:
 
 	Default value is 1.0. This method is equivalent to camera()->sceneRadius(). See
 	setSceneRadius(). */
-	float sceneRadius() const { return camera()->sceneRadius(); }
+	qreal sceneRadius() const { return camera()->sceneRadius(); }
 	/*! Returns the scene center, defined in world coordinates.
 
 	See sceneRadius() for details.
@@ -197,7 +197,7 @@ public Q_SLOTS:
 
 		The camera() qglviewer::Camera::flySpeed() is set to 1% of this value by this method. Simple
 		wrapper around camera()->setSceneRadius(). */
-	virtual void setSceneRadius(float radius) { camera()->setSceneRadius(radius); }
+	virtual void setSceneRadius(qreal radius) { camera()->setSceneRadius(radius); }
 
 	/*! Sets the sceneCenter(), defined in world coordinates.
 
@@ -286,7 +286,7 @@ public Q_SLOTS:
 	//@{
 public:
 	/*! Returns the aspect ratio of the viewer's widget (width() / height()). */
-	float aspectRatio() const { return static_cast<float>(width())/static_cast<float>(height()); }
+	qreal aspectRatio() const { return width() / static_cast<qreal>(height()); }
 	/*! Returns the current averaged viewer frame rate.
 
 	This value is computed and averaged over 20 successive frames. It only changes every 20 draw()
@@ -297,7 +297,7 @@ public:
 
 	This value is meaningful only when draw() is regularly called, either using a \c QTimer, when
 	animationIsStarted() or when the camera is manipulated with the mouse.  */
-	float currentFPS() { return f_p_s_; }
+	qreal currentFPS() { return f_p_s_; }
 	/*! Returns \c true if the viewer is in fullScreen mode.
 
 	Default value is \c false. Set by setFullScreen() or toggleFullScreen().
@@ -345,20 +345,20 @@ private:
 	/*! @name Display methods */
 	//@{
 public:
-	static void drawArrow(float length=1.0f, float radius=-1.0f, int nbSubdivisions=12);
-	static void drawArrow(const qglviewer::Vec& from, const qglviewer::Vec& to, float radius=-1.0f, int nbSubdivisions=12);
-	static void drawAxis(float length=1.0f);
-	static void drawGrid(float size=1.0f, int nbSubdivisions=10);
+	static void drawArrow(qreal length=1.0, qreal radius=-1.0, int nbSubdivisions=12);
+	static void drawArrow(const qglviewer::Vec& from, const qglviewer::Vec& to, qreal radius=-1.0, int nbSubdivisions=12);
+	static void drawAxis(qreal length=1.0);
+	static void drawGrid(qreal size=1.0, int nbSubdivisions=10);
 
 	virtual void startScreenCoordinatesSystem(bool upward=false) const;
 	virtual void stopScreenCoordinatesSystem() const;
 
 	void drawText(int x, int y, const QString& text, const QFont& fnt=QFont());
 	void displayMessage(const QString& message, int delay=2000);
-	// void draw3DText(const qglviewer::Vec& pos, const qglviewer::Vec& normal, const QString& string, GLfloat height=0.1f);
+	// void draw3DText(const qglviewer::Vec& pos, const qglviewer::Vec& normal, const QString& string, GLfloat height=0.1);
 
 protected:
-	virtual void drawLight(GLenum light, float scale = 1.0f) const;
+	virtual void drawLight(GLenum light, qreal scale = 1.0) const;
 
 private:
 	void displayFPS();
@@ -479,7 +479,7 @@ public:
 	\note This value has no impact on the images produced in vectorial format. */
 	int snapshotQuality() { return snapshotQuality_; }
 
-	// Qt 2.3 does not support double default value parameters in slots.
+	// Qt 2.3 does not support qreal default value parameters in slots.
 	// Remove "Q_SLOTS" from the following line to compile with Qt 2.3
 public Q_SLOTS:
 	void saveSnapshot(bool automatic=true, bool overwrite=false);
@@ -506,7 +506,7 @@ private:
 	It then contains the current tiled region, which is used by startScreenCoordinatesSystem
 	to adapt the coordinate system. Not using it would result in a tiled drawing of the parts
 	that use startScreenCoordinatesSystem. Also used by scaledFont for same purposes. */
-	class TileRegion { public : double xMin, yMin, xMax, yMax, textScale; };
+	class TileRegion { public : qreal xMin, yMin, xMax, yMax, textScale; };
 #endif
 
 public:
@@ -535,7 +535,7 @@ public:
 			if (f.pixelSize() == -1)
 				f.setPointSizeF(f.pointSizeF() * tileRegion_->textScale);
 			else
-				f.setPixelSize(f.pixelSize() * tileRegion_->textScale);
+				f.setPixelSize(int(f.pixelSize() * tileRegion_->textScale));
 			return f;
 		}
 	}
@@ -554,9 +554,9 @@ public:
 
 	Use (0,0) to (bufferTextureMaxU(), bufferTextureMaxV()) texture coordinates to map the entire
 	texture on a quad. */
-	float bufferTextureMaxU() const { return bufferTextureMaxU_; }
+	qreal bufferTextureMaxU() const { return bufferTextureMaxU_; }
 	/*! Same as bufferTextureMaxU(), but for the v texture coordinate. */
-	float bufferTextureMaxV() const { return bufferTextureMaxV_; }
+	qreal bufferTextureMaxV() const { return bufferTextureMaxV_; }
 public Q_SLOTS:
 	void copyBufferToTexture(GLint internalFormat, GLenum format=GL_NONE);
 	//@}
@@ -888,35 +888,35 @@ public:
 	unsigned int shortcut(KeyboardAction action) const;
 #ifndef DOXYGEN
 	// QGLViewer 1.x
-	int keyboardAccelerator(KeyboardAction action) const;
-	Qt::Key keyFrameKey(int index) const;
+	unsigned int keyboardAccelerator(KeyboardAction action) const;
+	Qt::Key keyFrameKey(unsigned int index) const;
 	Qt::KeyboardModifiers playKeyFramePathStateKey() const;
 	// QGLViewer 2.0 without Qt4 support
 	Qt::KeyboardModifiers addKeyFrameStateKey() const;
 	Qt::KeyboardModifiers playPathStateKey() const;
 #endif
-	Qt::Key pathKey(int index) const;
+	Qt::Key pathKey(unsigned int index) const;
 	Qt::KeyboardModifiers addKeyFrameKeyboardModifiers() const;
 	Qt::KeyboardModifiers playPathKeyboardModifiers() const;
 
 public Q_SLOTS:
 	void setShortcut(KeyboardAction action, unsigned int key);
 #ifndef DOXYGEN
-	void setKeyboardAccelerator(KeyboardAction action, int key);
+	void setKeyboardAccelerator(KeyboardAction action, unsigned int key);
 #endif
-	void setKeyDescription(int key, QString description);
+	void setKeyDescription(unsigned int key, QString description);
 	void clearShortcuts();
 
 	// Key Frames shortcut keys
 #ifndef DOXYGEN
 	// QGLViewer 1.x compatibility methods
-	virtual void setKeyFrameKey(int index, int key);
-	virtual void setPlayKeyFramePathStateKey(int buttonState);
+	virtual void setKeyFrameKey(unsigned int index, int key);
+	virtual void setPlayKeyFramePathStateKey(unsigned int buttonState);
 	// QGLViewer 2.0 without Qt4 support
-	virtual void setPlayPathStateKey(int buttonState);
-	virtual void setAddKeyFrameStateKey(int buttonState);
+	virtual void setPlayPathStateKey(unsigned int buttonState);
+	virtual void setAddKeyFrameStateKey(unsigned int buttonState);
 #endif
-	virtual void setPathKey(int key, int index = 0);
+	virtual void setPathKey(int key, unsigned int index = 0);
 	virtual void setPlayPathKeyboardModifiers(Qt::KeyboardModifiers modifiers);
 	virtual void setAddKeyFrameKeyboardModifiers(Qt::KeyboardModifiers modifiers);
 	//@}
@@ -951,12 +951,12 @@ public:
 					   SCREEN_TRANSLATE, ZOOM_ON_REGION };
 
 #ifndef DOXYGEN
-	MouseAction mouseAction(int state) const;
-	int mouseHandler(int state) const;
+	MouseAction mouseAction(unsigned int state) const;
+	int mouseHandler(unsigned int state) const;
 	int mouseButtonState(MouseHandler handler, MouseAction action, bool withConstraint=true) const;
-	ClickAction clickAction(int state, bool doubleClick, Qt::MouseButtons buttonsBefore) const;
-	void getClickButtonState(ClickAction action, int& state, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const;
-	int wheelButtonState(MouseHandler handler, MouseAction action, bool withConstraint=true) const;
+	ClickAction clickAction(unsigned int state, bool doubleClick, Qt::MouseButtons buttonsBefore) const;
+	void getClickButtonState(ClickAction action, unsigned int & state, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const;
+	unsigned int wheelButtonState(MouseHandler handler, MouseAction action, bool withConstraint=true) const;
 #endif
 
 	MouseAction mouseAction(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button) const;
@@ -979,9 +979,9 @@ public:
 
 public Q_SLOTS:
 #ifndef DOXYGEN
-	void setMouseBinding(int state, MouseHandler handler, MouseAction action, bool withConstraint=true);
-	void setMouseBinding(int state, ClickAction action, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
-	void setMouseBindingDescription(int state, QString description, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
+	void setMouseBinding(unsigned int state, MouseHandler handler, MouseAction action, bool withConstraint=true);
+	void setMouseBinding(unsigned int state, ClickAction action, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
+	void setMouseBindingDescription(unsigned int state, QString description, bool doubleClick=false, Qt::MouseButtons buttonsBefore=Qt::NoButton);
 #endif
 
 	void setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButton buttons, MouseHandler handler, MouseAction action, bool withConstraint=true);
@@ -1001,8 +1001,8 @@ public Q_SLOTS:
 	int wheelHandler(Qt::KeyboardModifiers modifiers) const;
 
 	void setHandlerKeyboardModifiers(MouseHandler handler, Qt::KeyboardModifiers modifiers);
-	void setHandlerStateKey(MouseHandler handler, int buttonState);
-	void setMouseStateKey(MouseHandler handler, int buttonState);
+	void setHandlerStateKey(MouseHandler handler, unsigned int buttonState);
+	void setMouseStateKey(MouseHandler handler, unsigned int buttonState);
 #endif
 
 private:
@@ -1104,8 +1104,8 @@ private:
 	// C a m e r a
 	qglviewer::Camera* camera_;
 	bool cameraIsEdited_;
-	float previousCameraZClippingCoefficient_;
-	int previousPathId_; // Double key press recognition
+	qreal previousCameraZClippingCoefficient_;
+	unsigned int previousPathId_; // double key press recognition
 	void connectAllCameraKFIInterpolatedSignals(bool connection=true);
 
 	// C o l o r s
@@ -1129,7 +1129,7 @@ private:
 	QTime fpsTime_;
 	unsigned int fpsCounter_;
 	QString fpsString_;
-	float f_p_s_;
+	qreal f_p_s_;
 
 	// M e s s a g e s
 	QString message_;
@@ -1160,15 +1160,15 @@ private:
 	QString cameraPathKeysString() const;
 	QMap<KeyboardAction, QString> keyboardActionDescription_;
 	QMap<KeyboardAction, unsigned int> keyboardBinding_;
-	QMap<int, QString> keyDescription_;
+	QMap<unsigned int, QString> keyDescription_;
 
 	// K e y   F r a m e s   s h o r t c u t s
-	QMap<Qt::Key, int> pathIndex_;
+	QMap<Qt::Key, unsigned int> pathIndex_;
 	Qt::KeyboardModifiers addKeyFrameKeyboardModifiers_, playPathKeyboardModifiers_;
 
 	// B u f f e r   T e x t u r e
 	GLuint bufferTextureId_;
-	float bufferTextureMaxU_, bufferTextureMaxV_;
+	qreal bufferTextureMaxU_, bufferTextureMaxV_;
 	int bufferTextureWidth_, bufferTextureHeight_;
 	unsigned int previousBufferTextureFormat_;
 	int previousBufferTextureInternalFormat_;

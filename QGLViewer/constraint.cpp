@@ -32,7 +32,7 @@ void AxisPlaneConstraint::setTranslationConstraintDirection(const Vec& direction
 {
 	if ((translationConstraintType()!=AxisPlaneConstraint::FREE) && (translationConstraintType()!=AxisPlaneConstraint::FORBIDDEN))
 	{
-		const float norm = direction.norm();
+		const qreal norm = direction.norm();
 		if (norm < 1E-8)
 		{
 			qWarning("AxisPlaneConstraint::setTranslationConstraintDir: null vector for translation constraint");
@@ -55,7 +55,7 @@ void AxisPlaneConstraint::setRotationConstraintDirection(const Vec& direction)
 {
 	if ((rotationConstraintType()!=AxisPlaneConstraint::FREE) && (rotationConstraintType()!=AxisPlaneConstraint::FORBIDDEN))
 	{
-		float norm = direction.norm();
+		const qreal norm = direction.norm();
 		if (norm < 1E-8)
 		{
 			qWarning("AxisPlaneConstraint::setRotationConstraintDir: null vector for rotation constraint");

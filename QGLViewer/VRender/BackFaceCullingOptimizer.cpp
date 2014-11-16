@@ -14,10 +14,10 @@ void BackFaceCullingOptimizer::optimize(std::vector<PtrPrimitive>& primitives_ta
 	Polygone *P ;
 	int nb_culled = 0 ;
 
-	for(unsigned int i=0;i<primitives_tab.size();++i)
+	for(size_t i=0;i<primitives_tab.size();++i)
 		if((P = dynamic_cast<Polygone *>(primitives_tab[i])) != NULL)
 		{
-                        for(unsigned int j=0;j<P->nbVertices();++j)
+						for(unsigned int j=0;j<P->nbVertices();++j)
 				if(( (P->vertex(j+2) - P->vertex(j+1))^(P->vertex(j+1) - P->vertex(j))).z() > 0.0 )
 				{
 					delete primitives_tab[i] ;
@@ -30,7 +30,7 @@ void BackFaceCullingOptimizer::optimize(std::vector<PtrPrimitive>& primitives_ta
 	// Rule out gaps. This avoids testing for null primitives later.
 
 	int j=0 ;
-	for(unsigned int k=0;k<primitives_tab.size();++k)
+	for(size_t k=0;k<primitives_tab.size();++k)
 		if(primitives_tab[k] != NULL)
 			primitives_tab[j++] = primitives_tab[k] ;
 

@@ -150,11 +150,11 @@ public:
 	Frame(const Vec& position, const Quaternion& orientation);
 
 	void setPosition(const Vec& position);
-	void setPosition(float x, float y, float z);
+	void setPosition(qreal x, qreal y, qreal z);
 	void setPositionWithConstraint(Vec& position);
 
 	void setOrientation(const Quaternion& orientation);
-	void setOrientation(double q0, double q1, double q2, double q3);
+	void setOrientation(qreal q0, qreal q1, qreal q2, qreal q3);
 	void setOrientationWithConstraint(Quaternion& orientation);
 
 	void setPositionAndOrientation(const Vec& position, const Quaternion& orientation);
@@ -163,8 +163,8 @@ public:
 	Vec position() const;
 	Quaternion orientation() const;
 
-	void getPosition(float& x, float& y, float& z) const;
-	void getOrientation(double& q0, double& q1, double& q2, double& q3) const;
+	void getPosition(qreal& x, qreal& y, qreal& z) const;
+	void getOrientation(qreal& q0, qreal& q1, qreal& q2, qreal& q3) const;
 	//@}
 
 
@@ -177,7 +177,7 @@ public:
 	Use setPosition() to define the world coordinates position(). Use
 	setTranslationWithConstraint() to take into account the potential constraint() of the Frame. */
 	void setTranslation(const Vec& translation) { t_ = translation; Q_EMIT modified(); }
-	void setTranslation(float x, float y, float z);
+	void setTranslation(qreal x, qreal y, qreal z);
 	void setTranslationWithConstraint(Vec& translation);
 
 	/*! Set the current rotation Quaternion. See rotation() and the different Quaternion
@@ -191,7 +191,7 @@ public:
 	 constraint() of the Frame is not taken into account, use setRotationWithConstraint()
 	 instead. */
 	void setRotation(const Quaternion& rotation) { q_ = rotation; Q_EMIT modified(); }
-	void setRotation(double q0, double q1, double q2, double q3);
+	void setRotation(qreal q0, qreal q1, qreal q2, qreal q3);
 	void setRotationWithConstraint(Quaternion& rotation);
 
 	void setTranslationAndRotation(const Vec& translation, const Quaternion& rotation);
@@ -214,8 +214,8 @@ public:
 	/*! Returns the current Quaternion orientation. See setRotation(). */
 	Quaternion rotation() const { return q_; }
 
-	void getTranslation(float& x, float& y, float& z) const;
-	void getRotation(double& q0, double& q1, double& q2, double& q3) const;
+	void getTranslation(qreal& x, qreal& y, qreal& z) const;
+	void getRotation(qreal& q0, qreal& q1, qreal& q2, qreal& q3) const;
 	//@}
 
 public:
@@ -249,20 +249,20 @@ public:
 	void translate(const Vec& t);
 	// Some compilers complain about "overloading cannot distinguish from previous declaration"
 	// Simply comment out the following method and its associated implementation
-	void translate(float x, float y, float z);
-	void translate(float& x, float& y, float& z);
+	void translate(qreal x, qreal y, qreal z);
+	void translate(qreal& x, qreal& y, qreal& z);
 
 	void rotate(Quaternion& q);
 	void rotate(const Quaternion& q);
 	// Some compilers complain about "overloading cannot distinguish from previous declaration"
 	// Simply comment out the following method and its associated implementation
-	void rotate(double q0, double q1, double q2, double q3);
-	void rotate(double& q0, double& q1, double& q2, double& q3);
+	void rotate(qreal q0, qreal q1, qreal q2, qreal q3);
+	void rotate(qreal& q0, qreal& q1, qreal& q2, qreal& q3);
 
 	void rotateAroundPoint(Quaternion& rotation, const Vec& point);
 	void rotateAroundPoint(const Quaternion& rotation, const Vec& point);
 
-	void alignWithFrame(const Frame* const frame, bool move=false, float threshold=0.0f);
+	void alignWithFrame(const Frame* const frame, bool move=false, qreal threshold=0.0);
 	void projectOnLine(const Vec& origin, const Vec& direction);
 	//@}
 
@@ -276,12 +276,12 @@ public:
 	Vec coordinatesOfIn(const Vec& src, const Frame* const in) const;
 	Vec coordinatesOfFrom(const Vec& src, const Frame* const from) const;
 
-	void getCoordinatesOf(const float src[3], float res[3]) const;
-	void getInverseCoordinatesOf(const float src[3], float res[3]) const;
-	void getLocalCoordinatesOf(const float src[3], float res[3]) const;
-	void getLocalInverseCoordinatesOf(const float src[3], float res[3]) const;
-	void getCoordinatesOfIn(const float src[3], float res[3], const Frame* const in) const;
-	void getCoordinatesOfFrom(const float src[3], float res[3], const Frame* const from) const;
+	void getCoordinatesOf(const qreal src[3], qreal res[3]) const;
+	void getInverseCoordinatesOf(const qreal src[3], qreal res[3]) const;
+	void getLocalCoordinatesOf(const qreal src[3], qreal res[3]) const;
+	void getLocalInverseCoordinatesOf(const qreal src[3], qreal res[3]) const;
+	void getCoordinatesOfIn(const qreal src[3], qreal res[3], const Frame* const in) const;
+	void getCoordinatesOfFrom(const qreal src[3], qreal res[3], const Frame* const from) const;
 	//@}
 
 	/*! @name Coordinate system transformation of vectors */
@@ -314,12 +314,12 @@ public:
 	Vec transformOfIn(const Vec& src, const Frame* const in) const;
 	Vec transformOfFrom(const Vec& src, const Frame* const from) const;
 
-	void getTransformOf(const float src[3], float res[3]) const;
-	void getInverseTransformOf(const float src[3], float res[3]) const;
-	void getLocalTransformOf(const float src[3], float res[3]) const;
-	void getLocalInverseTransformOf(const float src[3], float res[3]) const;
-	void getTransformOfIn(const float src[3], float res[3], const Frame* const in) const;
-	void getTransformOfFrom(const float src[3], float res[3], const Frame* const from) const;
+	void getTransformOf(const qreal src[3], qreal res[3]) const;
+	void getInverseTransformOf(const qreal src[3], qreal res[3]) const;
+	void getLocalTransformOf(const qreal src[3], qreal res[3]) const;
+	void getLocalInverseTransformOf(const qreal src[3], qreal res[3]) const;
+	void getTransformOfIn(const qreal src[3], qreal res[3], const Frame* const in) const;
+	void getTransformOfFrom(const qreal src[3], qreal res[3], const Frame* const from) const;
 	//@}
 
 

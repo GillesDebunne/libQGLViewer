@@ -185,7 +185,7 @@ const GLdouble* Frame::worldMatrix() const
 		return matrix();
 }
 
-/*! float[4][4] parameter version of worldMatrix(). See also getMatrix() and matrix(). */
+/*! qreal[4][4] parameter version of worldMatrix(). See also getMatrix() and matrix(). */
 void Frame::getWorldMatrix(GLdouble m[4][4]) const
 {
 	const GLdouble* mat = worldMatrix();
@@ -194,7 +194,7 @@ void Frame::getWorldMatrix(GLdouble m[4][4]) const
 			m[i][j] = mat[i*4+j];
 }
 
-/*! float[16] parameter version of worldMatrix(). See also getMatrix() and matrix(). */
+/*! qreal[16] parameter version of worldMatrix(). See also getMatrix() and matrix(). */
 void Frame::getWorldMatrix(GLdouble m[16]) const
 {
 	const GLdouble* mat = worldMatrix();
@@ -211,7 +211,7 @@ void Frame::setFromMatrix(const GLdouble m[4][4])
 		return;
 	}
 
-	double rot[3][3];
+	qreal rot[3][3];
 	for (int i=0; i<3; ++i)
 	{
 		t_[i] = m[3][i] / m[3][3];
@@ -259,14 +259,14 @@ void Frame::setFromMatrix(const GLdouble m[16])
 //////////////////// SET AND GET LOCAL TRANSLATION AND ROTATION ///////////////////////////////
 
 
-/*! Same as setTranslation(), but with \p float parameters. */
-void Frame::setTranslation(float x, float y, float z)
+/*! Same as setTranslation(), but with \p qreal parameters. */
+void Frame::setTranslation(qreal x, qreal y, qreal z)
 {
 	setTranslation(Vec(x, y, z));
 }
 
 /*! Fill \c x, \c y and \c z with the translation() of the Frame. */
-void Frame::getTranslation(float& x, float& y, float& z) const
+void Frame::getTranslation(qreal& x, qreal& y, qreal& z) const
 {
 	const Vec t = translation();
 	x = t[0];
@@ -274,16 +274,16 @@ void Frame::getTranslation(float& x, float& y, float& z) const
 	z = t[2];
 }
 
-/*! Same as setRotation() but with \c float Quaternion parameters. */
-void Frame::setRotation(double q0, double q1, double q2, double q3)
+/*! Same as setRotation() but with \c qreal Quaternion parameters. */
+void Frame::setRotation(qreal q0, qreal q1, qreal q2, qreal q3)
 {
 	setRotation(Quaternion(q0, q1, q2, q3));
 }
 
 /*! The \p q are set to the rotation() of the Frame.
 
-See Quaternion::Quaternion(double, double, double, double) for details on \c q. */
-void Frame::getRotation(double& q0, double& q1, double& q2, double& q3) const
+See Quaternion::Quaternion(qreal, qreal, qreal, qreal) for details on \c q. */
+void Frame::getRotation(qreal& q0, qreal& q1, qreal& q2, qreal& q3) const
 {
 	const Quaternion q = rotation();
 	q0 = q[0];
@@ -318,15 +318,15 @@ void Frame::translate(Vec& t)
 	Q_EMIT modified();
 }
 
-/*! Same as translate(const Vec&) but with \c float parameters. */
-void Frame::translate(float x, float y, float z)
+/*! Same as translate(const Vec&) but with \c qreal parameters. */
+void Frame::translate(qreal x, qreal y, qreal z)
 {
 	Vec t(x,y,z);
 	translate(t);
 }
 
-/*! Same as translate(Vec&) but with \c float parameters. */
-void Frame::translate(float& x, float& y, float& z)
+/*! Same as translate(Vec&) but with \c qreal parameters. */
+void Frame::translate(qreal& x, qreal& y, qreal& z)
 {
 	Vec t(x,y,z);
 	translate(t);
@@ -360,8 +360,8 @@ void Frame::rotate(Quaternion& q)
 	Q_EMIT modified();
 }
 
-/*! Same as rotate(Quaternion&) but with \c float Quaternion parameters. */
-void Frame::rotate(double& q0, double& q1, double& q2, double& q3)
+/*! Same as rotate(Quaternion&) but with \c qreal Quaternion parameters. */
+void Frame::rotate(qreal& q0, qreal& q1, qreal& q2, qreal& q3)
 {
 	Quaternion q(q0,q1,q2,q3);
 	rotate(q);
@@ -371,8 +371,8 @@ void Frame::rotate(double& q0, double& q1, double& q2, double& q3)
 	q3 = q[3];
 }
 
-/*! Same as rotate(const Quaternion&) but with \c float Quaternion parameters. */
-void Frame::rotate(double q0, double q1, double q2, double q3)
+/*! Same as rotate(const Quaternion&) but with \c qreal Quaternion parameters. */
+void Frame::rotate(qreal q0, qreal q1, qreal q2, qreal q3)
 {
 	Quaternion q(q0,q1,q2,q3);
 	rotate(q);
@@ -426,8 +426,8 @@ void Frame::setPosition(const Vec& position)
 		setTranslation(position);
 }
 
-/*! Same as setPosition(), but with \c float parameters. */
-void Frame::setPosition(float x, float y, float z)
+/*! Same as setPosition(), but with \c qreal parameters. */
+void Frame::setPosition(qreal x, qreal y, qreal z)
 {
 	setPosition(Vec(x, y, z));
 }
@@ -467,7 +467,7 @@ void Frame::setTranslationAndRotation(const Vec& translation, const Quaternion& 
 
 
 /*! \p x, \p y and \p z are set to the position() of the Frame. */
-void Frame::getPosition(float& x, float& y, float& z) const
+void Frame::getPosition(qreal& x, qreal& y, qreal& z) const
 {
 	Vec p = position();
 	x = p.x;
@@ -488,8 +488,8 @@ void Frame::setOrientation(const Quaternion& orientation)
 		setRotation(orientation);
 }
 
-/*! Same as setOrientation(), but with \c float parameters. */
-void Frame::setOrientation(double q0, double q1, double q2, double q3)
+/*! Same as setOrientation(), but with \c qreal parameters. */
+void Frame::setOrientation(qreal q0, qreal q1, qreal q2, qreal q3)
 {
 	setOrientation(Quaternion(q0, q1, q2, q3));
 }
@@ -500,8 +500,8 @@ void Frame::setOrientation(double q0, double q1, double q2, double q3)
 
 /*! The \p q are set to the orientation() of the Frame.
 
-See Quaternion::Quaternion(double, double, double, double) for details on \c q. */
-void Frame::getOrientation(double& q0, double& q1, double& q2, double& q3) const
+See Quaternion::Quaternion(qreal, qreal, qreal, qreal) for details on \c q. */
+void Frame::getOrientation(qreal& q0, qreal& q1, qreal& q2, qreal& q3) const
 {
 	Quaternion o = orientation();
 	q0 = o[0];
@@ -757,50 +757,50 @@ Vec Frame::coordinatesOfIn(const Vec& src, const Frame* const in) const
 	return res;
 }
 
-////// float[3] versions
+////// qreal[3] versions
 
-/*! Same as coordinatesOf(), but with \c float parameters. */
-void Frame::getCoordinatesOf(const float src[3], float res[3]) const
+/*! Same as coordinatesOf(), but with \c qreal parameters. */
+void Frame::getCoordinatesOf(const qreal src[3], qreal res[3]) const
 {
 	const Vec r = coordinatesOf(Vec(src));
 	for (int i=0; i<3 ; ++i)
 		res[i] = r[i];
 }
 
-/*! Same as inverseCoordinatesOf(), but with \c float parameters. */
-void Frame::getInverseCoordinatesOf(const float src[3], float res[3]) const
+/*! Same as inverseCoordinatesOf(), but with \c qreal parameters. */
+void Frame::getInverseCoordinatesOf(const qreal src[3], qreal res[3]) const
 {
 	const Vec r = inverseCoordinatesOf(Vec(src));
 	for (int i=0; i<3 ; ++i)
 		res[i] = r[i];
 }
 
-/*! Same as localCoordinatesOf(), but with \c float parameters. */
-void Frame::getLocalCoordinatesOf(const float src[3], float res[3]) const
+/*! Same as localCoordinatesOf(), but with \c qreal parameters. */
+void Frame::getLocalCoordinatesOf(const qreal src[3], qreal res[3]) const
 {
 	const Vec r = localCoordinatesOf(Vec(src));
 	for (int i=0; i<3 ; ++i)
 		res[i] = r[i];
 }
 
-/*! Same as localInverseCoordinatesOf(), but with \c float parameters. */
-void Frame::getLocalInverseCoordinatesOf(const float src[3], float res[3]) const
+/*! Same as localInverseCoordinatesOf(), but with \c qreal parameters. */
+void Frame::getLocalInverseCoordinatesOf(const qreal src[3], qreal res[3]) const
 {
 	const Vec r = localInverseCoordinatesOf(Vec(src));
 	for (int i=0; i<3 ; ++i)
 		res[i] = r[i];
 }
 
-/*! Same as coordinatesOfIn(), but with \c float parameters. */
-void Frame::getCoordinatesOfIn(const float src[3], float res[3], const Frame* const in) const
+/*! Same as coordinatesOfIn(), but with \c qreal parameters. */
+void Frame::getCoordinatesOfIn(const qreal src[3], qreal res[3], const Frame* const in) const
 {
 	const Vec r = coordinatesOfIn(Vec(src), in);
 	for (int i=0; i<3 ; ++i)
 		res[i] = r[i];
 }
 
-/*! Same as coordinatesOfFrom(), but with \c float parameters. */
-void Frame::getCoordinatesOfFrom(const float src[3], float res[3], const Frame* const from) const
+/*! Same as coordinatesOfFrom(), but with \c qreal parameters. */
+void Frame::getCoordinatesOfFrom(const qreal src[3], qreal res[3], const Frame* const from) const
 {
 	const Vec r = coordinatesOfFrom(Vec(src), from);
 	for (int i=0; i<3 ; ++i)
@@ -898,50 +898,50 @@ Vec Frame::transformOfIn(const Vec& src, const Frame* const in) const
 	return res;
 }
 
-/////////////////  float[3] versions  //////////////////////
+/////////////////  qreal[3] versions  //////////////////////
 
-/*! Same as transformOf(), but with \c float parameters. */
-void Frame::getTransformOf(const float src[3], float res[3]) const
+/*! Same as transformOf(), but with \c qreal parameters. */
+void Frame::getTransformOf(const qreal src[3], qreal res[3]) const
 {
 	Vec r = transformOf(Vec(src));
 	for (int i=0; i<3 ; ++i)
 		res[i] = r[i];
 }
 
-/*! Same as inverseTransformOf(), but with \c float parameters. */
-void Frame::getInverseTransformOf(const float src[3], float res[3]) const
+/*! Same as inverseTransformOf(), but with \c qreal parameters. */
+void Frame::getInverseTransformOf(const qreal src[3], qreal res[3]) const
 {
 	Vec r = inverseTransformOf(Vec(src));
 	for (int i=0; i<3 ; ++i)
 		res[i] = r[i];
 }
 
-/*! Same as localTransformOf(), but with \c float parameters. */
-void Frame::getLocalTransformOf(const float src[3], float res[3]) const
+/*! Same as localTransformOf(), but with \c qreal parameters. */
+void Frame::getLocalTransformOf(const qreal src[3], qreal res[3]) const
 {
 	Vec r = localTransformOf(Vec(src));
 	for (int i=0; i<3 ; ++i)
 		res[i] = r[i];
 }
 
-/*! Same as localInverseTransformOf(), but with \c float parameters. */
-void Frame::getLocalInverseTransformOf(const float src[3], float res[3]) const
+/*! Same as localInverseTransformOf(), but with \c qreal parameters. */
+void Frame::getLocalInverseTransformOf(const qreal src[3], qreal res[3]) const
 {
 	Vec r = localInverseTransformOf(Vec(src));
 	for (int i=0; i<3 ; ++i)
 		res[i] = r[i];
 }
 
-/*! Same as transformOfIn(), but with \c float parameters. */
-void Frame::getTransformOfIn(const float src[3], float res[3], const Frame* const in) const
+/*! Same as transformOfIn(), but with \c qreal parameters. */
+void Frame::getTransformOfIn(const qreal src[3], qreal res[3], const Frame* const in) const
 {
 	Vec r = transformOfIn(Vec(src), in);
 	for (int i=0; i<3 ; ++i)
 		res[i] = r[i];
 }
 
-/*! Same as transformOfFrom(), but with \c float parameters. */
-void Frame::getTransformOfFrom(const float src[3], float res[3], const Frame* const from) const
+/*! Same as transformOfFrom(), but with \c qreal parameters. */
+void Frame::getTransformOfFrom(const qreal src[3], qreal res[3], const Frame* const from) const
 {
 	Vec r = transformOfFrom(Vec(src), from);
 	for (int i=0; i<3 ; ++i)
@@ -1030,10 +1030,10 @@ the referenceFrame()).
 
 The rotation (and translation when \p move is \c true) applied to the Frame are filtered by the
 possible constraint(). */
-void Frame::alignWithFrame(const Frame* const frame, bool move, float threshold)
+void Frame::alignWithFrame(const Frame* const frame, bool move, qreal threshold)
 {
 	Vec directions[2][3];
-	for (int d=0; d<3; ++d)
+	for (unsigned short d=0; d<3; ++d)
 	{
 		Vec dir((d==0)? 1.0 : 0.0, (d==1)? 1.0 : 0.0, (d==2)? 1.0 : 0.0);
 		if (frame)
@@ -1043,12 +1043,12 @@ void Frame::alignWithFrame(const Frame* const frame, bool move, float threshold)
 		directions[1][d] = inverseTransformOf(dir);
 	}
 
-	float maxProj = 0.0f;
-	float proj;
+	qreal maxProj = 0.0;
+	qreal proj;
 	unsigned short index[2];
 	index[0] = index[1] = 0;
-	for (int i=0; i<3; ++i)
-		for (int j=0; j<3; ++j)
+	for (unsigned short i=0; i<3; ++i)
+		for (unsigned short j=0; j<3; ++j)
 			if ( (proj=fabs(directions[0][i]*directions[1][j])) >= maxProj )
 			{
 				index[0] = i;
@@ -1059,11 +1059,11 @@ void Frame::alignWithFrame(const Frame* const frame, bool move, float threshold)
 	Frame old;
 	old=*this;
 
-	float coef = directions[0][index[0]] * directions[1][index[1]];
+	qreal coef = directions[0][index[0]] * directions[1][index[1]];
 	if (fabs(coef) >= threshold)
 	{
 		const Vec axis = cross(directions[0][index[0]], directions[1][index[1]]);
-		float angle = asin(axis.norm());
+		qreal angle = asin(axis.norm());
 		if (coef >= 0.0)
 			angle = -angle;
 		rotate(rotation().inverse() * Quaternion(axis, angle) * orientation());
@@ -1073,10 +1073,10 @@ void Frame::alignWithFrame(const Frame* const frame, bool move, float threshold)
 		Vec dir((d==0)? 1.0 : 0.0, (d==1)? 1.0 : 0.0, (d==2)? 1.0 : 0.0);
 		dir = inverseTransformOf(dir);
 
-		float max = 0.0f;
-		for (int i=0; i<3; ++i)
+		qreal max = 0.0;
+		for (unsigned short i=0; i<3; ++i)
 		{
-			float proj = fabs(directions[0][i]*dir);
+			qreal proj = fabs(directions[0][i]*dir);
 			if (proj > max)
 			{
 				index[0] = i;
@@ -1087,7 +1087,7 @@ void Frame::alignWithFrame(const Frame* const frame, bool move, float threshold)
 		if (max >= threshold)
 		{
 			const Vec axis = cross(directions[0][index[0]], dir);
-			float angle = asin(axis.norm());
+			qreal angle = asin(axis.norm());
 			if (directions[0][index[0]] * dir >= 0.0)
 				angle = -angle;
 			rotate(rotation().inverse() * Quaternion(axis, angle) * orientation());

@@ -177,9 +177,9 @@ PtrPrimitive ParserUtils::checkPolygon(Polygone *& P)
 	{
 		// On ne traite que le cas du triangle plat, vu qu'on est sur d'avoir un triangle
 
-		int n = P->nbVertices() ;
+		size_t n = P->nbVertices() ;
 
-		for(int i=0;i<n;++i)
+		for(size_t i=0;i<n;++i)
 			if( (P->vertex(i) - P->vertex((i+1)%n)).norm() > EGALITY_EPS)
 			{
 				Segment *pp = new Segment(P->sommet3DColor((i+1)%n),P->sommet3DColor((i+2)%n)) ;
@@ -206,10 +206,8 @@ PtrPrimitive ParserUtils::checkPolygon(Polygone *& P)
 
 void ParserUtils::print3DcolorVertex(GLint size, GLint * count, GLfloat * buffer)
 {
-	int i;
-
 	printf("  ");
-	for (i = 0; i < Feedback3DColor::sizeInBuffer(); i++)
+	for (size_t i = 0; i < Feedback3DColor::sizeInBuffer(); i++)
 	{
 		printf("%4.2f ", buffer[size - (*count)]);
 		*count = *count - 1;

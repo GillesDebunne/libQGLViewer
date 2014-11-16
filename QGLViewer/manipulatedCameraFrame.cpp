@@ -145,7 +145,7 @@ void ManipulatedCameraFrame::initFromDOMElement(const QDomElement& element)
 	{
 		if (child.tagName() == "ManipulatedCameraParameters")
 		{
-			setFlySpeed(DomUtils::floatFromDom(child, "flySpeed", flySpeed()));
+			setFlySpeed(DomUtils::qrealFromDom(child, "flySpeed", flySpeed()));
 			setRotatesAroundUpVector(DomUtils::boolFromDom(child, "rotatesAroundUpVector", false));
 			setZoomsOnPivotPoint(DomUtils::boolFromDom(child, "zoomsOnPivotPoint", false));
 
@@ -189,14 +189,14 @@ void ManipulatedCameraFrame::startAction(int ma, bool withConstraint)
 	}
 }
 
-void ManipulatedCameraFrame::zoom(float delta, const Camera * const camera) {
-	const float sceneRadius = camera->sceneRadius();
+void ManipulatedCameraFrame::zoom(qreal delta, const Camera * const camera) {
+	const qreal sceneRadius = camera->sceneRadius();
 	if (zoomsOnPivotPoint_) {
 		Vec direction = position() - camera->pivotPoint();
-		if (direction.norm() > 0.02f * sceneRadius || delta > 0.0f)
+		if (direction.norm() > 0.02 * sceneRadius || delta > 0.0)
 			translate(delta * direction);
 	} else {
-		const float coef = qMax(fabsf((camera->frame()->coordinatesOf(camera->pivotPoint())).z), 0.2f * sceneRadius);
+		const qreal coef = qMax(fabs((camera->frame()->coordinatesOf(camera->pivotPoint())).z), 0.2 * sceneRadius);
 		Vec trans(0.0, 0.0, -coef * delta);
 		translate(inverseTransformOf(trans));
 	}
@@ -216,7 +216,7 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 		case QGLViewer::TRANSLATE:
 		{
 			const QPoint delta = prevPos_ - event->pos();
-			Vec trans(static_cast<float>(delta.x()), static_cast<float>(-delta.y()), 0.0);
+			Vec trans(delta.x(), -delta.y(), 0.0);
 			// Scale to fit the screen mouse displacement
 			switch (camera->type())
 			{
@@ -283,8 +283,8 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 			Quaternion rot;
 			if (rotatesAroundUpVector_) {
 				// Multiply by 2.0 to get on average about the same speed as with the deformed ball
-				float dx = 2.0f * rotationSensitivity() * (prevPos_.x() - event->x()) / camera->screenWidth();
-				float dy = 2.0f * rotationSensitivity() * (prevPos_.y() - event->y()) / camera->screenHeight();
+				qreal dx = 2.0 * rotationSensitivity() * (prevPos_.x() - event->x()) / camera->screenWidth();
+				qreal dy = 2.0 * rotationSensitivity() * (prevPos_.y() - event->y()) / camera->screenHeight();
 				if (constrainedRotationIsReversed_) dx = -dx;
 				Vec verticalAxis = transformOf(sceneUpVector_);
 				rot = Quaternion(verticalAxis, dx) * Quaternion(Vec(1.0, 0.0, 0.0), dy);
@@ -303,7 +303,7 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 		{
 			Vec trans = camera->projectedCoordinatesOf(pivotPoint());
 
-			const float angle = atan2(event->y() - trans[1], event->x() - trans[0]) - atan2(prevPos_.y()-trans[1], prevPos_.x()-trans[0]);
+			const qreal angle = atan2(event->y() - trans[1], event->x() - trans[0]) - atan2(prevPos_.y()-trans[1], prevPos_.x()-trans[0]);
 
 			Quaternion rot(Vec(0.0, 0.0, 1.0), angle);
 			//#CONNECTION# These two methods should go together (spinning detection and activation)
@@ -316,7 +316,7 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 
 		case QGLViewer::ROLL:
 		{
-			const float angle = M_PI * (event->x() - prevPos_.x()) / camera->screenWidth();
+			const qreal angle = M_PI * (event->x() - prevPos_.x()) / camera->screenWidth();
 			Quaternion rot(Vec(0.0, 0.0, 1.0), angle);
 			rotate(rot);
 			setSpinningQuaternion(rot);
@@ -329,9 +329,9 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent* const event, Camera* co
 			Vec trans;
 			int dir = mouseOriginalDirection(event);
 			if (dir == 1)
-				trans.setValue(static_cast<float>(prevPos_.x() - event->x()), 0.0, 0.0);
+				trans.setValue(prevPos_.x() - event->x(), 0.0, 0.0);
 			else if (dir == -1)
-				trans.setValue(0.0, static_cast<float>(event->y() - prevPos_.y()), 0.0);
+				trans.setValue(0.0, event->y() - prevPos_.y(), 0.0);
 
 			switch (camera->type())
 			{
