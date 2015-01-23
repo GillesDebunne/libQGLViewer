@@ -5,7 +5,6 @@ SUBDIRS       = agora \
 		blobWar \
 		cornerAxis \
 		dvonn \
-		terrain \
 		textureViewer \
 		thumbnail
 
@@ -13,3 +12,4 @@ SUBDIRS       = agora \
 # 3dsViewer
 # eventRecorder
 # quarto
+# terrain
