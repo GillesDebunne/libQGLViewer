@@ -130,10 +130,10 @@ void Quaternion::setFromRotationMatrix(const float m[3][3])
 {
 	qWarning("setFromRotationMatrix now expects a double[3][3] parameter");
 
-	float mat[3][3];
+	qreal mat[3][3];
 	for (int i=0; i<3; ++i)
 		for (int j=0; j<3; ++j)
-			mat[i][j] = float(m[i][j]);
+			mat[i][j] = qreal(m[i][j]);
 
 	setFromRotationMatrix(mat);
 }

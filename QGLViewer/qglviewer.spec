@@ -1,7 +1,7 @@
 
 %define version_major 2
 %define version_minor 6
-%define version_revision 1
+%define version_revision 2
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -155,8 +155,11 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Fri Jan 23 2015 Gilles Debunne <contact@libQGLViewer.com> 2.6.2
+- Fix qreal issue in Quaternion::FromRotationMatrix().
+
 * Thu Jan 22 2015 Gilles Debunne <contact@libQGLViewer.com> 2.6.1
-- Bug fix in Camera::pointUnderPixel.
+- Bug fix in Camera::pointUnderPixel introduced by the switch to qreal.
 
 * Mon Nov 17 2014 Gilles Debunne <contact@libQGLViewer.com> 2.6.0
 - The entire API now consistently uses the qreal (i.e double) type for floating point numbers.

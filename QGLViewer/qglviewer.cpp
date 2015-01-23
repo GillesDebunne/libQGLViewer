@@ -367,7 +367,7 @@ void QGLViewer::postDraw()
 	color[0] = foregroundColor().red()   / 255.0f;
 	color[1] = foregroundColor().green() / 255.0f;
 	color[2] = foregroundColor().blue()  / 255.0f;
-	color[3] = 1.0;
+	color[3] = 1.0f;
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
@@ -3193,9 +3193,9 @@ void QGLViewer::drawArrow(qreal length, qreal radius, int nbSubdivisions)
 	const qreal coneRadiusCoef = 4.0 - 5.0 * head;
 
 	gluCylinder(quadric, radius, radius, length * (1.0 - head/coneRadiusCoef), nbSubdivisions, 1);
-	glTranslatef(0.0f, 0.0f, float(length * (1.0 - head)));
+	glTranslated(0.0, 0.0, length * (1.0 - head));
 	gluCylinder(quadric, coneRadiusCoef * radius, 0.0, head * length, nbSubdivisions, 1);
-	glTranslatef(0.0f, 0.0f, float(-length * (1.0 - head)));
+	glTranslated(0.0, 0.0, -length * (1.0 - head));
 }
 
 /*! Draws a 3D arrow between the 3D point \p from and the 3D point \p to, both defined in the
@@ -3205,7 +3205,7 @@ See drawArrow(qreal length, qreal radius, int nbSubdivisions) for details. */
 void QGLViewer::drawArrow(const Vec& from, const Vec& to, qreal radius, int nbSubdivisions)
 {
 	glPushMatrix();
-	glTranslatef(float(from[0]), float(from[1]), float(from[2]));
+	glTranslated(from[0], from[1], from[2]);
 	const Vec dir = to-from;
 	glMultMatrixd(Quaternion(Vec(0,0,1), dir).matrix());
 	QGLViewer::drawArrow(dir.norm(), radius, nbSubdivisions);

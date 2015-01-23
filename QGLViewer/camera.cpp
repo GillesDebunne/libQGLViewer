@@ -603,7 +603,7 @@ void Camera::getProjectionMatrix(GLdouble m[16]) const
 		m[i] = projectionMatrix_[i];
 }
 
-/*! Overloaded getProjectionMatrix(GLdouble m[16]) method using a \c qreal array instead. */
+/*! Overloaded getProjectionMatrix(GLdouble m[16]) method using a \c GLfloat array instead. */
 void Camera::getProjectionMatrix(GLfloat m[16]) const
 {
 	static GLdouble mat[16];
@@ -636,7 +636,7 @@ void Camera::getModelViewMatrix(GLdouble m[16]) const
 }
 
 
-/*! Overloaded getModelViewMatrix(GLdouble m[16]) method using a \c qreal array instead. */
+/*! Overloaded getModelViewMatrix(GLdouble m[16]) method using a \c GLfloat array instead. */
 void Camera::getModelViewMatrix(GLfloat m[16]) const
 {
 	static GLdouble mat[16];
@@ -667,7 +667,7 @@ void Camera::getModelViewProjectionMatrix(GLdouble m[16]) const
 	}
 }
 
-/*! Overloaded getModelViewProjectionMatrix(GLdouble m[16]) method using a \c qreal array instead. */
+/*! Overloaded getModelViewProjectionMatrix(GLdouble m[16]) method using a \c GLfloat array instead. */
 void Camera::getModelViewProjectionMatrix(GLfloat m[16]) const
 {
 	static GLdouble mat[16];
