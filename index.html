@@ -1,1 +1,131 @@
-<h2>libQGLViewer</h2>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <link href="qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+  <a class="qindex highlight" href="index.html">Home</a>
+  <a class="qindex" href="download.html">Download</a>
+  <a class="qindex" href="examples/index.html">Gallery</a>
+  <a class="qindex" href="refManual/hierarchy.html">Documentation</a>
+  <a class="qindex" href="developer.html">Developer</a>
+</div>
+
+<br/>
+
+<center>
+<table>
+ <tr>
+  <td rowspan="2"><img src="images/qglviewer.png" width="230" height="230" alt="QGLViewer"/></td>
+  <td valign="bottom"><h1>libQGLViewer</h1></td>
+ </tr>
+ <tr>
+  <td align="center" valign="top">
+   <a href="http://www.opengl.org"><img src="images/openGL.png" width="91" height="40" alt="openGL"/></a>
+   &nbsp; &nbsp; &nbsp; 
+   <a href="http://www.qtsoftware.com/"><img src="images/qt.png" width="38" height="40" alt="Qt"/></a>
+  </td>
+ </tr>
+</table>
+</center>
+
+
+<h2>Presentation</h2>
+
+libQGLViewer is a C++ library based on Qt that eases the creation of OpenGL 3D viewers.
+
+<p>
+It provides some of the typical 3D viewer functionalities, such as the possibility to move the
+camera using the mouse, which lacks in most of the other APIs. Other features include mouse
+manipulated frames, interpolated keyFrames, object selection, stereo display, screenshot saving and
+<a href="features.html">much more</a>. It can be used by OpenGL beginners as well as to create
+complex applications, being fully customizable and easy to extend.
+</p>
+
+Based on the Qt toolkit, it compiles on any architecture (Unix-Linux, Mac, Windows).
+Full <a href="refManual/hierarchy.html">reference documentation</a> and many <a
+href="examples/index.html">examples</a> are provided. libQGLViewer does <i>not</i> display 3D scenes
+in various formats, but it can be the base for the coding of such a viewer.
+
+<p>
+libQGLViewer uses <a href="dualLicensing.html">dual licensing</a>: it is
+freely available under the terms of the GNU-GPL license for open source software development, while
+commercial applications can apply for a <a href="commercial.html">commercial license</a>. 
+</p>
+
+
+
+<h2>Getting started</h2>
+<ul>
+<li><a href="download.html">Download</a> and install the library.</li>
+<li>Test the <a href="examples/index.html">examples</a>.</li>
+<li>Learn how to <a href="compilation.html">compile with libQGLViewer</a> and write your first program.</li>
+<li>For better coding, <a href="introduction.html">discover the principles</a> as well as the <a href="features.html">different features</a> of the library.</li>
+<li>Get familiar with the default <a href="mouse.html">mouse behavior</a> and the <a href="keyboard.html">keyboard shortcuts</a>.</li>
+<li>Read the <a href="faq.html">general FAQ</a>, the <a href="techFaq.html">technical FAQ</a> or <a href="mailto:contact@libqglviewer.com">send email</a> if you have questions.</li>
+</ul>
+
+
+
+
+<h2>Latest changes</h2>
+
+<table style="width:90%; margin-left:50px; border:1px solid #AAF; background-color:#DDE" cellspacing="8" cellpadding="8">
+
+
+<tr>
+  <td><b>Jan 22nd, 2015</b><br/><a href="changeLog.html">Version 2.6.2</a></td>
+  <td>Fix <code>qreal</code> issue in <code>Quaternion::FromRotationMatrix()</code>.</td>
+</tr>
+
+
+<tr>
+  <td><b>Jan 22nd, 2015</b><br/><a href="changeLog.html">Version 2.6.1</a></td>
+  <td>Bug fix in <code>Camera::pointUnderPixel()</code>.</td>
+</tr>
+
+
+<tr>
+  <td><b>Nov 17th, 2014</b><br/><a href="changeLog.html">Version 2.6.0</a></td>
+  <td>The entire API now consistently uses the <code>qreal</code> (i.e <code>double</code>) type for floating point numbers.</td>
+</tr>
+
+</table>
+
+<p>
+This project is referenced by the <a href="http://directory.fsf.org/libQGLViewer.html">FSF</a>, 
+<a href="http://freshmeat.net/projects/libqglviewer">FreshMeat</a>,
+<a href="http://savannah.gnu.org/projects/libqglviewer">Savannah</a>,
+<a href="http://freecode.com/projects/libqglviewer">Freecode</a>,
+<a href="http://www.kde-apps.org/content/show.php?content=18565">Kde-apps</a> and
+<a href="http://www.qt-apps.org/content/show.php/libQGLViewer?content=68720">Qt-Apps</a>.
+</p>
+
+Related pages : <a href="http://pyqglviewer.gforge.inria.fr/">PyQGLViewer page</a> (Python binding created by Fr&eacute;d&eacute;ric Boudon), <a href="http://tech.groups.yahoo.com/group/libQGLViewer">Yahoo Group</a>.
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="images/css.gif" alt="Valid CSS!" width="88" height="31"/></a>
+  <i>Last modified on Friday, June 12, 2015.</i> 
+</p>
+
+</body></html>

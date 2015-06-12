@@ -1,0 +1,876 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>QGLViewer - Archived ChangeLog</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="index.html">Home</a>
+ <a class="qindex" href="download.html">Download</a>
+ <a class="qindex" href="examples/index.html">Gallery</a>
+ <a class="qindex" href="refManual/hierarchy.html">Documentation</a>
+ <a class="qindex highlight" href="developer.html">Developer</a>
+</div>
+
+<h1>Archived Change Log</h1>
+
+This is the changeLog for libQGLViewer version 1.x. See also the <a href="changeLog.html">changeLog for
+versions 2.x</a>.
+
+<h2>April 28th, 2005 - 1.3.9-6</h2>
+
+<b>New features</b>
+<ul>
+ <li>A new <code>Camera::zClippingCoef()</code> method to define z clipping planes positions.</li>
+ <li>A new <code>mouseGrabberChanged</code> signal.</li>
+ <li>Some <a href="installWindows.html">hacks</a> allow a compilation with .NET and the free
+ Qt 2.3 version (thanks Lionel).</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li><code>Camera::pixelGLRatio()</code> made <code>const</code></li>
+ <li><code>QGLViewer::drawGrid</code> and <code>drawAxis()</code> made virtual.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li>Help window improved: new About button and custom bindings descriptions separated.</li>
+ <li>Problem with camera keyFrameInterpolator domElement fixed.</li>
+</ul>
+
+<h2>March 2nd, 2005 - 1.3.9-5</h2>
+
+<b>New features</b>
+<ul>
+ <li>A new <code>setStateFileName</code> method (default <code>stateFileName</code> is <code>.qglviewer.xml</code>, as before).</li>
+ <li>A new <code>helpWidget</code> method.</li>
+ <li>A <a href="http://ftp.debian.org/debian/pool/main/libq/libqglviewer/">Debian package</a> of the library is now available (thanks to Artur Czechowski).</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li><code>saveToFile</code> and <code>restoreFromFile</code> were renamed
+ <code>saveStateToFile</code> and <code>restoreStateFromFile</code>.<br/>
+ They no longer take file names as parameters, use <code>stateFileName</code> instead.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li>Version number saved in state files.</li>
+</ul>
+
+<h2>February 9th, 2005 - 1.3.9-4</h2>
+
+<b>New features</b>
+<ul>
+ <li><code>restoreFromFile()</code> now returns a <code>bool</code> that indicates restoration success.</li>
+ <li>A message is briefly displayed when one changes the camera displacement mode (using the <b>Space</b> key).</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li>Enabled text status (toggled using the <b>?</b> key) no longer saved in <code>.qglviewer.xml</code> file.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+  <li>Only the last saved camera position (or path) was restored from file (bug finder Xavier).</li> 
+  <li>Error message in <code>restoreFromFile()</code> with several viewers finally removed (bug finder Xavier).</li>
+  <li>Proper include file (with <code>QGLViewer/</code> prefix) in classes' documentation.</li> 
+</ul>
+
+<h2>January 13th, 2005 - 1.3.9-3</h2>
+
+<b>New features</b>
+<ul>
+ <li>New <a href="examples/contribs.html#terrain">terrain</a> and <a href="examples/contribs.html#dvonn">dvonn</a> cool examples.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li><code>setMouseBindingDescription</code> parameters reordered.</li>
+ <li><code>startScreenCoordinatesSystem</code> z mapping now ranges in [0.0, 1.0[ (was [1.0, -1.0]).</li>
+ <li>Frame alignment (left and right buttons double click) are now filtered by constraints.</li>
+ <li>Double click events are disabled in fly camera mode.</li>
+ <li><code>Vec::projectOnAxis()</code> no longer requires a normalized axis.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+  <li><code>Vec</code> values stored in a union to ensure proper memory allocation (bug finder Olivier).</li>
+  <li>Problem with vectorial rendering using several GL contexts fixed (bug finder Cyril).</li>
+  <li>Problem with <code>displayMessage()</code> that regularly called <code>updateGL</code> fixed (bug finder Stéphane).</li>
+  <li>No more error message when no <code>.qglviewer.xml</code> file is found in multi-viewer configuration.</li>
+  <li>Slightly modified <a href="examples/screenCoordSystem.html">screenCoordSystem</a> example.</li>
+  <li>Warning message when quickly deleting several times the same camera paths removed.</li>
+  <li>Double click properly handled by <code>ManipulatedFrame</code> when used as <code>MouseGrabber</code>.</li>
+  <li>Mouse events binded to no action are no longer displayed in mouse help tab.</li>
+  <li><code>Frame::setFromMatrix()</code> now expects an OpenGL format matrix.</li> 
+</ul>
+
+<h2>November 23rd, 2004 - 1.3.9-2</h2>
+<b>New features</b>
+<ul>
+ <li>New <code>QGLViewer::sizeHint()</code> method returns preferred viewer size (600x400).</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+  <li>Infinite loop when <code>displayMessage()</code> is called in <code>draw()</code> fixed.</li>
+  <li><code>EPSInterface.ui</code> version downgraded to 3.0.</li>
+  <li>Better <a href="examples/mouseGrabber.html">mouseGrabber</a> example.</li>
+  <li>Rounding problems in <code>Quaternion(from, to)</code> method fixed.</li>
+  <li>Viewers share their OpenGL contexts in the <a href="examples/multiView.html">multiView</a> example.</li>
+</ul>
+
+<h2>November 17th, 2004 - 1.3.9-1</h2>
+<b>New features</b>
+<ul>
+ <li>A <a href="installUnix.html#plugin">designer plugin</a> can be installed to ease user interfaces creation. Thanks Glen.</li>
+ <li>New <code>setSnapshotQuality()</code> method to tune snapshots' quality (and hence size).</li>
+ <li>New <code>displayMessage()</code> method, useful to give feedback to the user.</li>
+ <li>New <code>QGLViewer</code> constructor, that enables Open GL context sharing between several viewers (requires Qt &gt; 3.2).</li>
+ <li>New <code>saveSnapshot()</code> method, with a filename as parameter.</li>
+ <li>New <code>openSnapshotFormatDialog()</code> method to select snapshot format using a popup dialog.</li>
+ <li>New <code>drawFinished</code> signal, that can be connected to <code>saveSnapshot()</code> to create movies.</li>
+ <li>New <code>firstTime(), lastTime()</code> and <code>duration()</code> method in <code>KeyFrameInterpolator</code>.</li>
+ <li>New <code>aboutQGLViewer()</code> method displays libQGLViewer version and info.</li>
+ <li>New <code>Camera::setViewDirection()</code> method.</li>
+ <li>Several new examples:
+ <ul>
+  <li><a href="examples/multiSelect.html">multiSelect</a> illustrates multi-objects selection and features an area selection.</li>
+  <li>A <a href="examples/contribs.html">contribs</a> page describes so-called "contribution" more complex examples.</li>
+  <li><a href="examples/contribs.html#eventRecorder">eventRecorder</a> enables scenario recording and replay for movie creation.</li>
+  <li><a href="examples/contribs.html#backgroundImage">backgroundImage</a> displays a static backgroundImage in your viewer. Thanks Sylvain.</li>
+  <li><a href="examples/contribs.html#thumbnail">thumbnail</a> is a dual display illustration. Thanks Sylvain.</li>
+ </ul>
+ </li>
+ <li><code>SpinningFrame, ManipulatedFrame</code> and <code>ManipulatedCameraFrame</code> have copy constructors and = operators.</li>
+ <li><code>Vec</code> and <code>Quaternion</code> classes have a convenient explicit constructor from a <code>QDomElement</code>.</li>
+ <li>Full XML syntax checking in <code>initFromDOMElement()</code> functions.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li>New cleaned <code>domElement()</code> XML syntax. Incompatibilities will result in warnings at first start (or delete your old <code>.qglviewer.xml</code>).</li>
+ <li><code>foregroundColor()</code> and <code>backgroundColor()</code> use <code>QColor</code> instead of <code>Vec</code>. Attention, range is 0-255 instead of 0.0-1.0</li>
+ <li><code>setSelectRegionSize()</code> replaced by <code>setSelectRegionWidth()</code> and <code>setSelectRegionHeight()</code>.</li>
+ <li>Spurious <code>foregroundColor()</code> and <code>backgroundColor()</code> methods removed.</li>
+ <li>The <code>EXIT KeyboardAction</code> was renamed <code>EXIT_VIEWER</code> because of potential name conflict.</li>
+ <li><code>Vec::unit()</code> made <code>const</code>.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li>Adding or deleting a camera keyframe shortly displays a feedback message.</li>
+ <li>Default snapshot image quality was increased to 95 (see <code>setSnapshotQuality()</code>).</li>
+ <li>Camera holds its projection matrix, which makes <code>projectedCoordinatesOf()</code> faster and more versatile.</li>
+ <li>Crash with anti-aliased font with nVidia cards fixed (once again, but now for good).</li>
+ <li>Nicer help window, with colored lines and a header.</li>
+ <li><code>KeyFrameInterpolator</code> documentation mostly rewritten.</li>
+ <li><code>cwFiles</code> custom widget directory removed and replaced by a <code>qglviewer.cw</code> file.</li>
+ <li>Default <code>snapshotFormat()</code> set to the first one available (instead of JPEG).</li>
+ <li><code>mouseTracking</code> state no longer saved in (nor restored from) <code>.qglviewer.xml</code> file.</li>
+</ul>
+
+<h2>June 7th, 2004 - 1.3.8-3</h2>
+<b>Changes in the API</b>
+<ul>
+ <li><code>QAccel</code> abandoned : user defined key bindings have the priority.</li>
+ <li><code>setKeyboardAccelerator()</code> and <code>setKeyDescription()</code> take an <code>int</code> as parameter instead of a <code>QKeySequence</code>.</li>
+ <li><code>keyboardAccelerator()</code> logically returns an <code>int</code> accordingly.</li>
+ <li><code>Frame::referenceFrame()</code> (and related methods) are now <code>const</code>.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li>Subtle bug flawed mouse bindings (especially object selection).</li>
+ <li>Compilation successfully tested on SUN and IBM AIX (thanks Benjamin).</li>
+</ul>
+
+<h2>June 14th, 2004 - 1.3.8-2</h2>
+<b>New features</b>
+<ul>
+ <li>A new <a href="examples/contribs.html#anaglyph">anaglyph example</a>.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li>Patches for compilation on HP UX architecture (thanks Benjamin).</li>
+</ul>
+
+<h2>June 9th, 2004 - 1.3.8-1</h2>
+<b>New features</b>
+<ul>
+ <li>A new <code>setKeyDescription()</code> method to customize the help dialog.</li>
+ <li>A new <code>setMouseBindingDescription()</code> method to customize the help dialog.</li>
+ <li><code>Camera::projectedCoordinatesOf()</code> and similar methods have an additional optional <code>Frame</code> parameter.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li><code>ShortcutAction</code> enum renamed <code>KeyboardAction</code>.</li>
+ <li>New <code>MOVE_CAMERA</code> and <code>FLYSPEED</code> values added to the <code>KeyboardAction</code> enum, see <a href="keyboard.html">keyboard page</a>.</li>
+ <li><code>setShortcutKey()</code> and <code>setShortcutStateKey()</code> replaced by <code>setKeyboardAccelerator()</code>.</li>
+ <li><code>QGLViewer::shortcutBindingsString()</code> renamed <code>keyboardString()</code>.</li>
+ <li><code>QGLViewer::mouseBindingsString()</code> renamed <code>mouseString()</code>.</li>
+ <li><code>SpinningFrame::updateFrame()</code> renamed <code>spin()</code>.</li>
+ <li>Several functions made <code>const</code>.</li>
+ <li><code>QGLViewer::rootWidget()</code> removed, use <code>QWidget::topLevelWidget()</code> instead.</li>
+ <li><code>SCREEN_ROTATE_BOTTOM</code> renamed <code>ROLL</code>.</li>
+ <li>Asking for help window several times simply updates and shows instead of opening a new window.</li>
+ <li>Scene radius and center no longer saved and restored in <code>.qglviewer.xml</code>.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li>Web site design updated. New <a href="installUnix.html">Unix</a> and <a href="installWindows.html">Windows</a> installation pages.</li>
+ <li>New <code>KeyboardAction</code> added (<code>MOVE_CAMERA_LEFT, INCREASE_FLYSPEED, ...</code>.</li>
+ <li><code>ManipulatedFrame</code> didn't correctly take its <code>rotationCenter()</code> into account (bug finder Manu).</li>
+ <li><code>SpinningFrame::rotatesAroundPoint()</code> and <code>SpinningFrame::orientationIsFrozen()</code> were not documented.</li>
+ <li><code>Camera::setType()</code> changed zoom when called twice with ORTHO (bug finder Manu).</li>
+ <li><code>Shortcut</code> help window tab renamed <code>Keyboard</code>.</li>
+</ul>
+
+<h2>May 5th, 2004 - 1.3.7-1</h2>
+<b>New features</b>
+<ul>
+ <li>The object selection process has been simplified. Simply overload the drawWithNames() function
+ and get the resulting selection id with selectedName(). See the updated <a
+ href="examples/select.html">select examples</a> for a practical implementation.</li>
+ <li>Previous <code>select()</code> implementations still work.</li>
+ <li><code>Quaternion::inverseMatrix()</code> and associated similar methods.</li>
+ <li><code>Frame::inverse()</code> and associated similar methods.</li>
+ <li><code>Frame::inverseMatrix()</code> and associated similar methods.</li>
+ <li>A new <a href="examples/contribs.html#quarto">quarto example</a>.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li><code>QGLViewer::startAnimation()</code> has no more parameter.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li>The new Qt 3.2.2 version patches the anti-aliased font display on nVidia hardware that made drawText() crash.</li>
+ <li>The <a href="examples/index.html">examples</a> page is divided in three sections: basic, pedagogical and complex.</li>
+</ul>
+
+<h2>March 17th, 2004 - 1.3.6-2</h2>
+<b>New features</b>
+<ul>
+ <li>A new <code>Vec::unit()</code> method. Returns a unitary copy of a vector.</li>
+ <li><code>Camera::setAspectRatio()</code> function, useful when a Camera is used to create a shadow map.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li><code>Vec::normalize()</code> now returns the previous <i>norm</i> of the vector (instead of
+ normalized vector).</li>
+ <li>RPM now installs the documentation in <code>/usr/<b>local</b>/share/doc/QGLViewer</code>.</li>
+ <li>Tarred versions of the sources now available under <code>tar.<b>bz2</b></code> format.</li>
+ <li><code>make install</code> now also install the documentation (default path is <code>/usr/<b>local</b>/share/doc/QGLViewer</code>).</li>
+ <li>New <code>make</code> <a href="installUnix.html#linux">options</a> let you install separately the includes, the library and the documentation.</li>
+ <li>Examples autodetect if Qt is threaded or not and change link accordingly.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li>The Qt 2.3 version (free win32 Qt version) works (almost) completely.</li>
+ <li>Some typos in the documentation were fixed.</li>
+ <li>Patch for <code>&lt;&lt;</code> operator with gcc 2.96 (bug finder Ranjith).</li>
+</ul>
+
+<h2>February 3rd, 2004 - 1.3.6-1</h2>
+<b>New features</b>
+<ul>
+ <li>The mouse sensitivity can be tuned for <code>ManipulatedFrame</code> and <code>ManipulatedCameraFrame</code>.</li>
+ <li>The viewer window previous position is properly restored back, even for embedded widgets or in full screen mode.</li>
+ <li>The version and packaging date are added to all files, so that you know your current version.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li>The <code>spinned(), manipulated()</code> and <code>interpolated()</code> signals are no longer
+ connected to <b>all</b> the viewers <code>updateGL()</code> slots.<br/>
+ If you use several viewers, you should now explicitly make these connections.
+ See the signals' documentations for details.</li>
+ <li>The <code>ManipulatedFrame::mouseMotion</code> enum (ROTATE, ZOOM,...) is renamed <code>QGLViewer::mouseAction</code>.</li>
+ <li><code>drawText()</code> made <code>public</code>.</li>
+ <li>Deprecated <code>mouseStateKey(), Camera::mode(), ...</code> functions removed.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li>The <code>Quaternion(from,to)</code> constructor had a bug (bug finders Marc and Tanguy).</li>
+ <li><code>MouseGrabber</code> no longer activated when hovered while moving the camera or the <code>manipulatedFrame()</code>.</li>
+ <li>Calls to <code>updateGL()</code> limited to the strict minimum.</li>
+ <li><a href="faq.html">FAQ page</a> split in two, with a new <a href="techFaq.html">technical FAQ</a>.</li>
+</ul>
+
+<h2>December 24th, 2003 - 1.3.5-8</h2>
+<b>New features</b>
+<ul>
+ <li><code>startScreenCoordinatesSystem()</code> can set the origin in the lower <i>or</i> the upper left corner.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li>The <code>Camera::domElement()</code> syntax has been changed (previous
+ <code>.qglviewer.xml</code> files are not compatible).</li>
+ <li>The <code>TriangleSetConstraint</code> class has been removed from the main library and moved
+ in the <code>triSetConstraint</code> contrib example.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li>Problem with <code>MouseGrabber/ManipulatedFrame</code> wheel zoom fixed.</li>
+ <li><code>QGLViewer::saveToFileForAllViewers()</code> is back and called by Escape (problems with multiple viewers).</li>
+ <li>The <code>.qglviewer.xml</code> state file is saved even when the viewer is not a top level window.</li>
+ <li>A Qt bug with full screen has been patched so that viewers can start in full screen mode.</li>
+ <li>When pressing a key, display is updated only when required.</li>
+</ul>
+
+<h2>November 26th, 2003 - 1.3.5-7</h2>
+<b>New features</b>
+<ul>
+ <li>A new <code>ManipulatedFrame::ZOOM_ON_REGION</code> mouse action, binded to Shift + middle button.</li>
+ <li>The associated <code>Camera::fitScreenRegion()</code> function.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li><code>startScreenCoordinatesSystem</code> no longer disable lighting nor enables blending.</li>
+</ul>
+
+<h2>November 17th, 2003 - 1.3.5-6</h2>
+<b>New features</b>
+<ul>
+ <li>A <code>MouseGrabber::clearMouseGrabberPool()</code> function.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li>Problem with classes derived from <code>ManipulatedFrame</code> used as
+ <code>MouseGrabber</code> (bug finder Cyril).</li>
+ <li>Unclean old malloc removed from EPSRender code.</li>
+ <li><code>libQGLViewer135.obj</code> error message with Visual C++ removed.</li>
+</ul>
+
+<h2>November 7th, 2003 - 1.3.5-5</h2>
+<b>New features</b>
+<ul>
+ <li>A new <a href="examples/keyboardAndMouse.html"><code>keyboardAndMouse</code></a> example.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li><code>ManipulatedFrame</code> grabsMouse within a distance of 10 pixels (instead of 5).</li>
+ <li>Fly speed modification problem when using +/- fixed.</li>
+</ul>
+
+<h2>November 5th, 2003 - 1.3.5-4</h2>
+<b>New features</b>
+<ul>
+ <li><code>QGLViewer::setBackgroundColor(QColor)</code> added to prevent hidding the <code>QGLWidget</code> function.</li>
+ <li><code>QGLViewer::setForegroundColor(QColor)</code> added for consistency reasons.</li>
+ <li>A new <a href="examples/keyboardAndMouse.html"><code>keyboardAndMouse</code></a> example.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li>Patch for <code>QTextEdit</code> with Qt 2.3.</li>
+</ul>
+
+<h2>October 24th, 2003 - 1.3.5-3</h2>
+<b>Bug fixes or improvements</b>
+<ul>
+ <li>The nVidia bug with anti-aliased fonts has been patched.</li>
+</ul>
+
+
+<h2>October 22nd, 2003 - 1.3.5-2</h2>
+<b>New features</b>
+<ul>
+ <li>Help window now has a keyboard and a mouse tabs.</li>
+ <li><code>QGLViewer::mouseBindingsString()</code> and <code>QGLViewer::shortcutBindingsString()</code> functions.</li>
+ <li>Tested on Windows Visual 6 (Qt 2.3) and with MS .NET (Qt 3.2).</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li><code>ManipulatedFrame</code> associated state key are no longer considered when they are manipulated as <code>MouseGrabber</code>.</li>
+ <li><code>QGLViewer::ZOOM_OUT</code> renamed <code>QGLViewer::ZOOM_TO_FIT</code>.</li>
+ <li><code>QGLViewer::CENTER_AS_RAP</code> renamed <code>QGLViewer::RAP_IS_CENTER</code>.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li><code>ManipulatedFrame</code> can now correctly be used as mouse grabbers (see the <a href="examples/keyFrames.html">keyFrames example</a>).</li>
+ <li><code>displayZBuffer</code> problem with <code>glRasterPos</code> fixed..</li>
+ <li><code>displayFPS</code> correctly handles application default font size.</li>
+</ul>
+
+
+<h2>October 2nd, 2003 - 1.3.5-1</h2>
+<b>New features</b>
+<ul>
+ <li><code>Glut</code> no longer needed if your Qt version is at least 3.1.</li>
+ <li><code>QGLViewer::drawText</code> can use different <code>QFont</code>.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li><code>QGLViewer::drawText()</code> has changed :
+  <ul>
+   <li><code>QGLWidget::renderText()</code> is used instead of GLUT (no longer needed) if your Qt version is at least 3.1.</li>
+   <li>Parameter list differs : now uses <code>QString</code> and <code>QFont</code>.</li>
+   <li>Function is no longer <code>const</code> since it calls <code>makeCurrent</code>.</li>
+  </ul>
+ </li>
+ <li><code>draw3DText()</code> does not work anymore (because of Qt's text rendering). Use
+ <code>QGLWidget::renderText()</code> instead.</li>
+ <li>The following functions now have their origin in the <b>upper</b> left corner :
+  <ul>
+   <li><code>QGLViewer::startScreenCoordinatesSystem()</code>.</li>
+   <li><code>Camera::projectedCoordinatesOf()</code>.</li>
+   <li><code>Camera::unprojectedCoordinatesOf()</code>.</li>
+   <li><code>MouseGrabber::checkIfGrabsMouse()</code>.</li>
+  </ul>
+ </li>
+ <li><code>Camera::setFOVToFitScene()</code> is clamped to M_PI/2.0.</li>
+ <li>The examples now <code>#include "<b>QGLViewer/</b>qglviewer.h"</code>.</li>
+ <li>The <code>src</code> directory has subsequently been renamed <code>QGLViewer</code>.</li>
+</ul>
+
+
+<h2>September 24th, 2003 - 1.3.4-2</h2>
+<b>New features</b>
+<ul>
+ <li><code>Camera::getViewport</code> function.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li><code>drawNeeded()</code> is emitted before each call to draw() (it was no longer the case if you chose to override draw()).</li>
+ <li><code>ZOOM_OUT</code> default mouse binding changed. See <a href="mouse.html">mouse page</a>.</li>
+ <li>Wheel bindings now also modified by <code>setMouseStateKey().</code>.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li>Segmentation fault when exiting fixed.</li>
+ <li>Frustum modification minimized when switching between PERSPECTIVE and ORTHO camera type.</li>
+ <li>Disabled shortcuts no longer appear in help window.</li>
+ <li>Missing includes on specific linux architecture were added.</li>
+ <li>Missing display update when using <code>fastDraw()</code> fixed.</li>
+ <li>Position and size of the window properly saved and restored when QGLViewer is a part of an other QWidget.</li>
+ <li>Camera now correctly handles <code>KeyFrameInterpolator</code> indexes out of range (bug finder Xadeck).</li>
+ <li>No more erroneous <code>initializeGL()</code> message when several viewers are used (bug finder Franck).</li>
+</ul>
+
+
+<h2>July 16th, 2003 - 1.3.4-1</h2>
+<b>New features</b>
+<ul>
+ <li>Mouse bindings can entirely be customized. See <a href="mouse.html">mouse page</a>.</li>
+ <li>Double simple click action removed. See <a href="mouse.html">mouse page</a> for new bindings.</li>
+ <li><code>setMouseBinding, setWheelBinding</code> mouse customization functions.</li>
+ <li>The <code>select</code> function is back ! Simply overload. Shift-LeftButton by default.</li>
+ <li><code>QGLViewer::closeEvent()</code> saves the current viewer state to file.</li>
+ <li>QGLViewer icon added to the web pages.</li>
+ <li>A <code>Frame::alignOnAxis()</code> function.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li><code>setMouseStateKey()</code> has been modified to fit with <code>setMouseBinding()</code>. Read its documentation.</li>
+ <li>The <code>ManipulatedCameraFrame::Mode</code> enum and all <code>mode</code> functions are removed.</li>
+ <li>The <code>mouseBehavior</code> enum is replaced by <code>mouseHandler</code>.</li>
+ <li>The <code>mouseStateKey</code> removed and replaced by <code>setMouseBinding</code>.</li>
+ <li><code>QGLViewer::saveToFileForAllViewers()</code> removed as <code>saveToFile</code> is now called in <code>closeEvent</code>.</li>
+ <li><code>Camera::setRevolveAroundPointToSceneCenter()</code> function removed.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li>Zooms is not too slow when close to scene center.</li>
+</ul>
+
+
+<h2>June 27th, 2003 - 1.3.3-1</h2>
+<b>New features</b>
+<ul>
+ <li>Doxygen search engine added to the reference manual.</li>
+ <li><code>set<i>XXX</i>WithConstraint()</code> functions in <code>Frame</code>.</li>
+ <li>A <code>finished</code> signal in <code>KeyFrameInterpolator</code>.</li>
+ <li>Z-buffer can be displayed with shortcut <b>Z</b> (thanks Sylvain).</li>
+ <li>A <code>Quaternion::randomOrientation()</code> static function.</li>
+ <li>The Max OS X version of Qt is now free ! <a href="http://trolltech.com/downloads">Download</a> the latest version.</li>
+ <li>The gcc 2.96 version of the rpm in no longer maintained. You need to compile it from the <code>.src.rpm</code> file.</li>
+</ul>
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li><code>KeyFrameInterpolators</code> now enforce frame constraints.</li>
+ <li>Easier compilation with darwin on mac architectures and on Linux Debian.</li>
+ <li><code>QGLViewer::drawLight()</code> made <code>const</code> and has an optional scale.</li>
+ <li><code>updateGL()</code> no longer called in <code>QGLViewer::keyPressEvent()</code> when the key is not handled.</li>
+</ul>
+
+
+<h2>June 1st, 2003 - 1.3.2-3</h2>
+<b>Bug fixes or improvements</b>
+<ul>
+ <li><code>Camera::horizontalFieldOfView()</code> fixed. Previous value was flawed.</li>
+</ul>
+
+<h2>April 17th, 2003 - 1.3.2-2</h2>
+<b>Changes in the API</b>
+<ul>
+ <li>The <code>rpm</code> installs the library in <code>/usr/<b>local</b></code>, as does a <code>make install</code>. The examples now compile with no manual tweaking.</li>
+ <li>Easier compilation with Qt 2.3. See the <a href="installWindows.html">installation page</a> for details.</li>
+</ul>
+
+<h2>April 17th, 2003 - 1.3.2-1</h2>
+<b>New features</b>
+<ul>
+ <li>A new <code>helpString()</code> function used by <code>help()</code>.</li>
+ <li>A <code>Qt::QMessageBox</code> is now used to display <code>help()</code>.</li>
+ <li>A <code>Camera::getViewDirection()</code> with <code>float</code> parameters.</li>
+ <li>Windows compilation now creates a <code>DLL</code>.</li>
+ <li>A <code>Camera::setFOVToFitScene()</code> function.</li>
+ <li><code>cout</code> and <code>cerr</code> replaced by <code>QMessageBox</code> and <code>qWarning</code>.</li>
+ <li><code>QGLViewer::message()</code> removed.</li>
+ <li>A new <code>QGLViewer::snapshotCounter()</code> makes <code>saveSnapshot()</code> faster in <code>automatic</code> mode.</li>
+ <li><code>QGLViewer::saveSnapshot()</code> has an <code>overwrite</code> parameter.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+ <li><code>Camera::zoomOutToFitScene() and zoomOnPixel()</code> become <code>Camera::interpolateToFitScene() and interpolateToZoomOnPixel()</code>.</li>
+ <li><code>QGLViewer::setShortcutKey</code> takes an optional stateKey parameter.</li>
+ <li><code>Camera::setSceneRadius</code> and <code>setSceneCenter</code> become <code>public</code>.</li>
+</ul>
+
+
+<b>Bug fixes or improvements</b>
+<ul>
+ <li><code>Camera::fitSphere()</code> fixed (bug finder Sylvain).</li>
+</ul>
+
+<h2>April 10th, 2003 - 1.3.1-1</h2>
+<b>New features</b>
+<ul>
+<li><code>setForegroundColor()</code> and <code>setBackgroundColor()</code> functions.</li>
+<li><code>ManipulatedFrame</code> inherits <code>MouseGrabber</code>. See the <a href="examples/mouseGrabber.html">example</a>.</li>
+<li>A <code>ManipulatedFrame::spinningSensitivity()</code> function.</li>
+<li>A <code>setSceneBoundingBox()</code> with <code>float[3]</code> parameters.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+<li>In <code>MouseGrabber</code>, <code>checkIfActive()</code> and others become <code>checkIfGrabsMouse, ...</code>.</li>
+<li>A new <code>ManipulatedCameraFrame</code> class merges specific <code>ManipulatedFrame</code> camera behavior.</li>
+<li><code>Camera::mouseDoubleClickEvent()</code> and <code>Camera::adaptFrameState()</code> removed.</li>
+</ul>
+
+<b>Bug fixes or improvement</b>
+<ul>
+<li>Camera <code>zNear() and zFar()</code> are more tightly (a factor 2) set from <code>sceneRadius()</code>.</li>
+<li>Camera <code>zNear() and zFar()</code> are changed to display path when <code>cameraPathIsEdited()</code>.</li>
+<li>A <code>#define QGLVIEWER_VERSION 0x010301</code> added. Allows <code>#if QGLVIEWER_VERSION &lt; Ox010300 ... #endif</code> conditional code.</li>
+<li><code>make install</code> creates links to libraries instead of copies.</li>
+<li><code>Quaternion</code> internal representation switched from <code>float</code> to <code>double</code> because of precision problems with very small rotations (bug finder Christof).</li>
+</ul>
+
+
+<h2>March 26th, 2003 - 1.3.0-1</h2>
+<b>New features</b>
+<ul>
+<li>A new <code>MouseGrabber</code> class for even more interactive applications. See the <a href="examples/mouseGrabber.html">example</a></li>
+<li>Code was modified so that it compiles with the Qt 2.3 version (win32 free version).<br/>
+Screenshot saving is not supported with Qt 2.3.</li>
+<li><code>QGLViewer.setCamera()</code> lets you switch between different cameras in your viewer.</li>
+<li><code>restoreFromFile()</code> and <code>saveToFile()</code> now also accept a directory as an argument.</li>
+<li>A <code>QGLViewerPool()</code> holds all the QGLViewers, and <code>QGLViewerIndex()</code> identifies a viewer.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+<li><code>viewer.camera</code> and <code>camera.frame</code> are now pointers. Use <code>viewer.camera()</code> and <code>camera()->frame()</code> instead.</li>
+<li><code>manipulatedFrame()</code> are now manipulated with the Control key instead of Alt.</li>
+<li><code>saveToFile()</code> and <code>restoreFromFile()</code> removed from constructor/destructor.<br/>
+Call <code>restoreFromFile()</code> in your <code>init()</code> function if you want to restore previous state.<br/>
+<code>saveToFile()</code> is called when you quit your application (default key is Escape). See also <code>saveToFileForAllViewers()</code>.</li>
+<li><code>Camera::saveCurrentPOV()</code> and <code>restorePOV()</code> removed. Use <code>addKeyFrame()</code> and <code>playKeyFramePath()</code> instead.</li>
+<li>Control+F<i>x</i> is replaced by Alt+double press F<i>x</i> to delete a camera KeyFrame path.<br/>
+<code>deleteKeyFrameStateKey()</code> and associated functions are removed.</li>
+<li><code>Camera::getProjectionMatrix()</code> and <code>getModelViewMatrix()</code> are now public.<br/>
+Use these <code>camera()->get...Matrix()</code> instead of the ones in QGLViewer, which have been removed.</li>
+<li><code>Camera::fieldOfView()</code> in radians instead of degrees.</li>
+<li>The <code>ShortcutAction</code> names used in <code>setShortcutKey()</code> were uppercased to prevent name conflicts.</li>
+</ul>
+
+<b>Bug fixes or improvement</b>
+<ul>
+<li>Most of the documentation was updated. Detailed descriptions and more code examples were added.</li>
+<li><code>pixelGLRatio()</code> fixed and now correct in ORTHO camera mode.</li>
+<li>Frame and Camera translation follow mouse in ORTHO mode.</li>
+<li><code>fitSphere()</code> fixed in ORTHO camera mode.</li>
+</ul>
+
+<h2>March 19th, 2003 - 1.2.9-3</h2>
+<b>Bug fixes or improvement</b>
+<ul>
+<li><code>revolveAroundPoint()</code> no longer moves in ORTHO mode.</li>
+<li>Special key (Esc, Return, Space...) displayed properly in <code>help()</code></li>
+<li>rpm are created with the debugged gcc 3-2-2. Optimizations now available.</li>
+</ul>
+
+<h2>March 5th, 2003 - 1.2.9-2</h2>
+<b>Bug fixes or improvement</b>
+<ul>
+<li>Slerp interpolation debugged.</li>
+<li><code>Quaternion::log()</code> and <code>exp()</code> more robust.</li>
+<li><code>distanceToSceneCenter()</code> changed so that <code>zNear()</code> and <code>zFar()</code> handle tight <code>sceneRadius()</code>.</li>
+<li><code>revolveAroundPoint</code> was not fixed on screen with an ORTHO camera (bug finder Christof).</li>
+</ul>
+
+<h2>February 26th, 2003 - 1.2.9-1</h2>
+<b>New features</b>
+<ul>
+<li>A new <code>SpinningFrame</code> class, between <code>Frame</code> and <code>ManipulatedFrame</code>.
+See the example.</li>
+<li><code>QGLViewer::setSceneBoundingBox()</code> function.</li>
+<li><code>Quaternion::log()</code> and <code>Quaternion::exp()</code> functions.</li>
+<li><code>Quaternion::slerp()</code> and <code>Quaternion::squad()</code> static members.</li>
+<li>A new <a href="examples/multiView.html"><code>MultiView example</code></a>.</li>
+<li>Double click is handled for <code>ManipulatedFrame</code> as for <code>Camera</code>.</li>
+<li><code>Frame::getMatrix()</code> and <code>Quaternion::getMatrix()</code> with double[16] parameters.</li>
+<li>A <code>Frame::rotatesAroundPoint()</code> function.</li>
+</ul>
+
+<b>Bug fixes or improvement</b>
+<ul>
+<li><code>Camera</code> no longer has a default <code>referenceFrame()</code>.</li>
+<li>Orientations interpolation now based on slerps in <code>KeyFrameInterpolator</code>.</li>
+<li>Successful compilation on Linux Debian distribution, with gcc 2.95 and 3.2.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+<li>Default install directory for <code>make install</code> and RPM becomes <code>/usr/<b>local</b></code>.<br/>
+You should remove the previous files when you install this version (with <code>rm</code> or <code>rpm -e libQGLViewer*</code>).</li>
+<li><code>make install</code> installs include files in <code>INCLUDE_DIR/<b>QGLViewer</b></code>.</li>
+<li><code>SpinningFrame, KeyFrameInterpolator and ManipulatedFrame</code> update signals are automatically connected to all viewers.</li>
+<li><code>Camera::setSceneBoundingBox()</code> also set the <code>sceneCenter()</code>.</li>
+<li><code>Camera::setConstraint()</code> removed. Use <code>camera.frame.setConstraint()</code> instead.</li>
+<li><code>Camera::zoomOutFromPixel()</code> replaced by <code>zoomOutToFitScene()</code>.</li>
+<li><code>ManipulatedFrame::alignWithAxis()</code> replaced by <code>Frame::alignWithFrame()</code>.</li>
+<li><code>QGLViewer::convertClickToLine()</code> moved in <code>Camera</code> and takes <code>int</code>.</li>
+</ul>
+
+<h2>January 30th, 2003 - 1.2.8-3</h2>
+<b>New features</b>
+<ul>
+<li>A convenient <code>Camera::pixelGLRatio()</code> function</li>
+</ul>
+
+<b>Bug fixes or improvement</b>
+<ul>
+<li>Minor changes in the trackball behavior.</li>
+<li>Visual feedback when a double simple click is used to change the revolveAroundPoint().</li>
+<li><code>std::min</code> patched for windows compilation</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+<li><code>QGLViewer::help()</code> becomes a public method.</li>
+</ul>
+
+<h2>January 22nd, 2003 - 1.2.8-2</h2>
+
+<b>Bug fixes or improvement</b>
+<ul>
+<li>The <code>PLANE</code> constraint type can no longer be used for rotations.</li>
+<li>A <code>KeyFrameInterpolator</code> used to crash if the path was deleted while interpolating (bug finder Sylvain).</li>
+<li><code>drawAxis()</code> and <code>drawGrid()</code> no longer save the openGL state.<br/>
+    <code>postDraw()</code>, that call them does it instead.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+<li><code>Camera::loadProjectionMatrix()</code> and <code>Camera::loadModelViewMatrix()</code> are no longer protected.</li>
+</ul>
+
+<h2>January 15th, 2003 - Version 1.2.8</h2>
+<b>New features</b>
+<ul>
+<li>A <a href="examples/contribs.html#textureViewer">textureViewer</a> pedagogical example shows how to map textures with OpenGL.</li>
+<li><code>Camera::pointUnderPixel(x,y)</code> to convert from screen to 3D coordinates.</li>
+<li>New cool trackball functionalities, see <a href="mouse.html">mouse page</a> for details.</li>
+<li>In Camera : <code>setSceneBoundingBox(), zoomOnPixel(), viewDirection()</code>.</li>
+<li>The <a href="refManual/classqglviewer_1_1ManipulatedFrame.html"><code>ManipulatedFrame</code></a> now has a <code>rotationSensitivity()</code>
+and a <code>translationSensitivity()</code>.</li>
+</ul>
+
+<b>Bug fixes or improvement</b>
+<ul>
+<li><code>Camera::lookAt()</code> preserves the horizon.</li>
+<li><code>Camera::fitSphere()</code> no longer modifies the orientation.</li>
+<li>The <code>ManipulatedFrame</code> bug was (finally) identified...and not fixed. See the AxisPlaneConstraint() man page for details.</li>
+<li>There used to be a problem in the displayed FPS when the manipulatedFrame was changed (bug finder Sylvain).</li>
+<li>There was a Quaternion drift. They are now re-normalized (bug finder Stéphane).</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+<li>The <code>SPECIAL</code> mouse behavior disappears. See the <a href="mouse.html">mouse page</a>.</li>
+<li>The <code>select()</code> function is removed. Overload <code>mousePressEvent()</code> to
+implement selection, see the <a href="examples/select.html">select example</a>.</li>
+</ul>
+
+
+<h2>December 14th, 2002 - Version 1.2.7-2</h2>
+<b>New features</b>
+<ul>
+<li><code>QGLViewer::currentFPS()</code> returns the current frame rate.</li>
+<li><code>QGLViewer::setSnapshotFormat()</code> and <code>QGLViewer::snapshotFormat()</code>.</li>
+<li><code>Quaternion::matrix()</code> to use Quaternions as openGL 4x4 matrices.</li>
+<li><code>QGLViewer::draw3DText()</code> to draw text in 3D, see the draw3DText example.</li>
+</ul>
+
+<b>Bug fixes or improvement</b>
+<ul>
+<li>Frame spinning threshold was flawed. Unwanted spins should no longer occur.</li>
+<li>Camera translation is inferred from <code>revolveAroundPoint()</code>. Should fix problems with small objects in large scene.</li>
+<li><code>libGLcore</code> has been removed from the rpm dependencies.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+<li><code>QGLViewer::saveSnapshot()</code> has only one parameter.</li>
+</ul>
+
+<h2>December 4th, 2002 - Version 1.2.7</h2>
+<b>New features</b>
+<ul>
+<li><code>KeyFrameInterpolator</code> class. See the <a href="examples/keyFrames.html"><code>keyFrames</code></a> examples.</li>
+<li>Key Frames can be used to define a camera path. Binded on F1-12 (see <a href="keyboard.html">keyboard</a> page).</li>
+<li>Snapshot can be saved in EPS, PS and XFIG vectorial format (thanks Cyril).</li>
+<li>Gestion of a QGLViewer pool. See <code>QGLViewer::updateGLForAllViewers()</code> and <code>QGLViewer::connectSignalToAllViewers()</code>.</li>
+<li>The complete QGLViewer state can be saved and restored in XML format (see <code>saveToFile()</code> and <code>restoreFromFile()</code>. All classes implement <code>domElement()</code> and <code>initFromDOMElement()</code>.</li>
+<li><code>Quaternion::inverse()</code> and <code>Quaternion::invert()</code> : two separated methods (thanks Dominique).</li>
+<li><code>Frame::modified()</code> signal is now emitted when a frame is modified.</li>
+<li><code>const</code> versions of <code>Frame::translate()</code> and <code>Frame::rotate()</code>.</li>
+<li><code>Camera::setCameraFromProjectionMatrix()</code> (thanks Sylvain).</li>
+<li>+/- change camera fly speed. Arrows move the camera.</li>
+<li>designer cw files (custom widget) are distributed with the library (in <code>include_dir/cwFiles</code>).</li>
+</ul>
+
+<b>Bug fixes or improvement</b>
+<ul>
+<li>Float trigonometric function removed : now compile on Mac OS X architecture.</li>
+<li><code>QGLViewer::startScreenCoordinatesSystem()</code> was flawed, now ok. See the <a href="examples/screenCoordSystem.html">screenCoordSystem</a> example.</li>
+<li>The different slots (<code>toggleDisplayFPS(), toggleDrawAxis()...</code>) now call <code>updateGL()</code>. The qt bug that prevented it was patched.</li>
+<li>REVOLVE trackball orientation no longer depends on the mouse path.</li>
+<li><code>Vec</code> class slightly modified (some const removed and normalize() returns a ref).</li>
+<li><code>Quaternion::axis()</code> and <code>Quaternion::angle()</code> now respect the 0-pi specification.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+<li>Most of the "Display of visual hints" functions' names were changed. See the <a href="refManual/classQGLViewer.html"><code>QGLViewer</code></a> documentation.</li>
+<li><code>Camera::setRevolveAroundPoint()</code> is replaced by <code>Camera::seamlesslySetRevolveAroundPoint()</code>.</li>
+<li><code>QGLViewer::animationPeriod()</code> replaces <code>QGLViewer::animationInterval()</code>.</li>
+<li><code>Camera::aspect()</code> and <code>QGLViewer::aspect()</code> are now named <code>aspectRatio()</code>.</li>
+<li><code>Quaternion::setAxisAndAngle()</code> becomes <code>Quaternion::setAxisAngle()</code>.</li>
+<li>MouseBehavior enum is uppercased : { CAMERA, FRAME, SPECIAL } (see <code>QGLViewer::setMouseStateKey()</code> and <code>mouseStateKey()</code>).</li>
+<li>Exit2 shortcut key ('Q') removed. Exit key (Escape) remains.</li>
+</ul>
+
+
+<h2>September 10th, 2002 - Version 1.2.6</h2>
+<b>New features</b>
+<ul>
+<li>The entire library and the examples now use the threaded version of QT.</li>
+<li>Pressing the left and middle mouse button together rotates the scene around an axis orthogonal to the screen.</li>
+<li><code>Camera::setUpVector()</code> function.</li>
+<li><code>Camera::setOrientation(theta, phi)</code> : an other easy way to position the camera.</li>
+<li><code>Frame::getMatrix(), Frame::getWorldMatrix(), Frame::worldMatrix()</code> : new matrix expressions of a frame transformation.</li>
+<li>FullScreen mode now set the parent window (if any) in full screen mode.</li>
+<li><code>Frame::transformOf()</code> and similar functions to convert vectors between frames.</li>
+<li>In FLY mode (see <code>Camera::setMode()</code>), a double click changes fly speed. See <a href="mouse.html">mouse</a> page.</li>
+</ul>
+
+<b>Bug fixes or improvement</b>
+<ul>
+<li><code>QGLViewer::drawLight()</code> polished. See the <a href="examples/drawLight.html">drawLight</a> example.</li>
+<li><code>Quaternion::setFromRotationMatrix</code> fixed. Was completely flawed (thanks Sylvain). </li>
+<li><code>Camera::setOrientation</code> fixed. It used to change the camera position too because of the complex camera frame setup (web page to come). <code>setPosition</code> and <code>setOrientation</code> can now be used in any order. See also <code>setOrientation(theta,phi)</code> in the NEW section.</li>
+<li><code>Frame::setConstraint()</code> now supports a NULL pointer, which intuitively results in no constraint.</li>
+<li><code>Camera::FLY mode</code> changed to maintain the horizon.</li>
+<li><code>Quaternion(from, to)</code> had a problem with angles > pi/2 and null vectors.</li>
+</ul>
+
+
+<b>Changes in the API</b>
+<ul>
+<li><code>QGLViewer::setDisplayText</code> becomes <code>QGLViewer::setEnableText</code>
+(idem for <code>QGLViewer::toggleEnableText()</code> and <code>QGLViewer::isTextEnabled()</code>).
+It controls whether <code>QGLViewer::drawText()</code> actually draws text
+or not (default is yes).
+Convenient to remove all the displayed text with a single shortcut ('?' by default).</li>
+<li><code>Frame::setRotationAxisAngle()</code>, <code>Frame::setOrientationAxisAngle()</code> now take angles expressed in radians instead of degrees.</li>
+<li>FullScreen mode shortcut key changed to Alt-Return, to fit the windows standard..</li>
+<li><code>Frame::orientationOf()</code> is replaced by Frame::transformOf().</li>
+</ul>
+
+<h2>Mardi 21 Juillet - Version 1.2.5</h2>
+<b>New features</b>
+<ul>
+<li>Stereo display available. See the stereoViewer example.</li>
+<li>A <code>startScreenCoordinatesSystem()</code> function that allows to directly draw in screen coordinates.</li>
+<li>A new <code>help()</code> function. Key Binding 'H'. Complete default behavior.</li>
+<li>First RPM release, some cleanup, web pages updated.</li>
+<li>Web pages will now be in english, so that they can be shared on the web. Maintaining two versions is really too much work.</li>
+</ul>
+
+<b>Changes in the API</b>
+<ul>
+<li>Text drawing is done using <code>drawText()</code> directly in <code>draw()</code>.</li>
+<li>Key shortcut are no longer defined by static variables. They can be tuned using <code>setShortcutKey()</code> and <code>setShortcutStateKey()</code>
+See also <code>setMouseStateKey(), setSavePOVShortcutKey(),...</code>.</li>
+</ul>
+
+<br/><br/>
+
+Please send any comment, suggestion or problem by <a href="mailto:contact@libqglviewer.com">e-mail</a>.
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="images/css.gif" alt="Valid CSS!" width="88" height="31"/></a>
+  <i>Last modified on Friday, June 12, 2015.</i>
+</p>
+
+</body></html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>QGLViewer - Technical FAQ</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+  <a class="qindex" href="index.html">Home</a>
+  <a class="qindex" href="download.html">Download</a>
+  <a class="qindex" href="examples/index.html">Gallery</a>
+  <a class="qindex" href="refManual/hierarchy.html">Documentation</a>
+  <a class="qindex highlight" href="developer.html">Developer</a>
+</div>
+
+<h1>QGLViewer - Technical FAQ</h1>
+<center>See also the <a href="faq.html">General FAQ</a></center>
+
+<div class="summary">
+<b><a href="#black-screen">&raquo;&raquo;</a></b> &nbsp; The black screen is back !<br/>
+<b><a href="#stillstrange">&raquo;&raquo;</a></b> &nbsp; It still looks strange<br/>
+<b><a href="#manipulatedFrame">&raquo;&raquo;</a></b> &nbsp; What is a ManipulatedFrame ?<br/>
+<b><a href="#framehier">&raquo;&raquo;</a></b> &nbsp; What are Frame hierarchies ?<br/>
+<b><a href="#severalmanip">&raquo;&raquo;</a></b> &nbsp; How can I use several ManipulatedFrame ?<br/>
+<b><a href="#mousegrabbers">&raquo;&raquo;</a></b> &nbsp; What are MouseGrabbers ?<br/>
+<b><a href="#mouseevents">&raquo;&raquo;</a></b> &nbsp; How are mouse events interpreted ?<br/>
+<b><a href="#mousekey">&raquo;&raquo;</a></b> &nbsp; How can I redefine the mouse/keyboard behavior ?<br/>
+<b><a href="#multiselect">&raquo;&raquo;</a></b> &nbsp; How can I select/move/edit several objects ?<br/>
+<b><a href="#severalviewers">&raquo;&raquo;</a></b> &nbsp; How can I use several viewers ?<br/>
+<b><a href="#makeCurrent">&raquo;&raquo;</a></b> &nbsp; I use several viewers and textures/display lists are screwed up !<br/>
+<b><a href="#framerate">&raquo;&raquo;</a></b> &nbsp; How can I measure my application frame rate ?<br/>
+<b><a href="#notextdisplayed">&raquo;&raquo;</a></b> &nbsp; Why is there no FPS/text displayed ?<br/>
+<b><a href="#init">&raquo;&raquo;</a></b> &nbsp; My <code>init()</code> function is never called !<br/>
+<b><a href="#text">&raquo;&raquo;</a></b> &nbsp; What are these strange characters at the bottom of the screen ?<br/>
+<b><a href="#worldlight">&raquo;&raquo;</a></b> &nbsp; How can I define a world positioned light ?<br/>
+</div>
+
+<a name="black-screen"></a>
+<h2>The black screen is back !</h2>
+"I copy-pasted my code in your <code>draw()</code> function, and the screen remains black. I hate OpenGL !"
+<br/>
+The classical OpenGL black screen is not supported by libQGLViewer. There are two
+possible reasons for your problem, as detailed in the <a href="introduction.html">introduction</a>:
+<ul>
+<li><i>The World coordinate system</i>: when you start drawing in <code>draw</code>, you are in the
+<i>world coordinate system</i>: a fixed coordinate system, that is viewed by a moving camera. This
+is different (but much more intuitive) from the standard camera-centered OpenGL coordinate
+system. To make it simple: the camera displacement and its associated projection matrix are handled by libQGLViewer, so
+simply remove any camera related matrix multiplication from the beginning of your
+<code>draw()</code> function.</li>
+
+<li><i>The sceneRadius</i>: unlike lower level OpenGL APIs, libQGLViewer needs to have few
+informations on <i>what</i> is displayed. Namely, you need to provide an estimation of your scene
+radius (expressed in OpenGL units), and your scene center (if different from the world origin).
+With these informations, libQGLViewer will be able to position the camera such that the entire scene
+is visible, making black screens ancient history. See the <a
+href="introduction.html#sceneRadius">introduction</a> for details.</li>
+</ul>
+
+Press 'A' to display the world axis and double click the mouse middle button to make the camera fit
+the scene. You should at least see the axis and can start debugging from there with basic drawing code.
+
+<a name="stillstrange"></a>
+<h2>It still looks strange</h2>
+If your are still unable to get the results you had before porting to libQGLViewer, check that your
+<code>init</code> function sets the default OpenGL state with <code>glEnable(GL_LIGHTING, GL_FOG,
+...)</code> as you did before.
+
+<p>
+Also note that libQGLViewer slightly changes the default OpenGL
+state (see the <code>QGLViewer::initializeGL()</code> documentation): <code>GL_LIGHTING</code>, 
+<code>GL_LIGHT0</code>, <code>GL_DEPTHTEST</code> and <code>GL_COLORMATERIAL</code> are enabled.
+Disable them in your <code>init()</code> method if desired.
+</p>
+
+<a name="manipulatedFrame"></a>
+<h2>What is a ManipulatedFrame ?</h2>
+A <a href="refManual/classqglviewer_1_1ManipulatedFrame.html"><code>ManipulatedFrame</code></a> is a
+Frame (position and orientation in 3D) that can directly be moved with the mouse. It is used to move
+objects in your scene, see the <a href="examples/manipulatedFrame.html">ManipulatedFrame example</a>.
+
+<a name="framehier"></a>
+<h2>What are Frame hierarchies ?</h2>
+The <a href="refManual/classqglviewer_1_1Frame.html"><code>Frame</code></a> class represents a
+position and orientation in 3D. These frames can be organized in a tree hierarchy and convenient
+conversion functions are provided. The OpenGL code should reflect this organization, as is detailed
+in the <a href="refManual/classqglviewer_1_1Frame.html#_details">Frame detailed description</a>.
+
+<a name="severalmanip"></a>
+<h2>How can I use several ManipulatedFrame ?</h2>
+Simply create several <code>ManipulatedFrame</code> (typically stored in a <code>vector</code>) and use <code>setManipulatedFrame()</code> to
+decide which of them is active at a given time. See the <a href="examples/luxo.html">Luxo
+example</a> for an illustration.
+
+<a name="mousegrabbers"></a>
+<h2>What are MouseGrabbers ?</h2>
+<a href="refManual/classqglviewer_1_1MouseGrabber.html">MouseGrabber</a> is an empty interface for
+any object that may grab the mouse focus. They are usually 2D or 3D objects, located on screen and that react 
+when the mouse hover over them. Being very generic, many usages are possible, opening the way to innovating
+reactive user interfaces. See the <a
+href="refManual/classqglviewer_1_1MouseGrabber.html">MouseGrabber documentation for an example</a>.
+
+<p>
+Note that a <code>ManipulatedFrame</code> is actually a <code>MouseGrabber</code>: the frame can be directly manipulated when the mouse goes close to its origin. See the <a
+href="examples/mouseGrabber.html">MouseGrabber example</a> for an illustration.
+</p>
+
+<a name="mouseevents"></a>
+<h2>How are mouse events interpreted ?</h2>
+The mouse events are sent to three possible receivers: the camera, the <code>manipulatedFrame</code>
+or a <code>MouseGrabber</code>, depending on the context. By default, events are send to the camera.
+With a specific state key (default is the <code>Control</code> key), it is the <code>manipulatedFrame</code>
+that receives the mouse events. Finally, the <code>mouseGrabber</code> grabs mouse focus when its
+<code>MouseGrabber::grabsMouse()</code> method returns <code>true</code> (typically when the mouse
+hovers). All this can of course be customized (see the <a href="mouse.html">mouse page</a>).
+
+<a name="mousekey"></a>
+<h2>How can I redefine the mouse/keyboard behavior ?</h2>
+See the <a href="mouse.html">mouse</a> and <a href="keyboard.html">keyboard</a> pages. The <a
+href="examples/keyboardAndMouse.html">keyboardAndMouse example</a> illustrates this in details.
+
+<a name="multiselect"></a>
+<h2>How can I select/move/edit several objects ?</h2>
+See the <a href="examples/multiSelect.html">multiSelect example</a> for a multiple selection implementation. The selected objects can then be manipulated (or edited) as a group.
+
+<a name="severalviewers"></a>
+<h2>How can I use several viewers ?</h2>
+Simply create them, as in the <a href="examples/multiView.html">multiView example</a>.
+
+<p>
+You may have to connect additional signals to synchronize viewers' displays. A <a
+href="refManual/classqglviewer_1_1ManipulatedFrame.html"><code>ManipulatedFrame</code></a> displayed
+by several viewers should typically have its <code>manipulated</code> signal connected to the other
+viewers' <code>updateGL()</code> slots.
+</p>
+
+The different viewers can share their OpenGL contexts. See the <code>QGLViewer</code> constructors'
+documentations and the <a href="examples/multiView.html">multiView example</a>.
+
+<a name="makeCurrent"></a>
+<h2>I use several viewers and textures/display list are screwed up</h2>
+If your viewers do not share their OpenGL context, you have to make sure that the appropriate
+context is active when a viewer is drawn: call <code>makeCurrent()</code> to do this. This is
+automatically done by the normal refresh loop.
+
+<a name="framerate"></a>
+<h2>How can I measure my application frame rate ?</h2>
+Press the <code>F</code> key to toggle the frame rate display. It is computed as an average over 30
+frames. Since the display is updated only when needed, the frame rate is valid only when you display
+in a loop (such as when you move the camera with the mouse).
+
+<p>
+If you want to know the maximum possible frame rate of your machine on a given scene, you should
+<code>setAnimationPeriod(0)</code> and turn on the animation (by pressing <code>Enter</code>). The
+display will then be updated as quickly as possible, and the frame rate will be meaningful.
+</p>
+
+<a name="notextdisplayed"></a>
+<h2>Why is there no FPS/text displayed ?</h2>
+
+Qt has problems to display text in OpenGL on some architectures. This has been solved in Qt 3.3 and
+there is a patch in the code for previous versions. However, disable font antialiasing using
+<code>qtconfig</code> to fix this if needed.
+
+<a name="init"></a>
+<h2>My <code>init()</code> function is never called !</h2>
+First reason : you overloaded <code>initializeGL()</code>. Bad idea since it is this function that
+calls <code>init()</code> in QGLViewer. Move your code to <code>init()</code> and remove your
+<code>initializeGL()</code> overloading.
+<p>
+Second reason : you call <code>updateGL()</code> in your constructor, even indirectly. This calls
+<code>init()</code>, but at that point, virtual functions are not defined and it is the
+<code>QGLViewer::init()</code> that is called. Move all OpenGL specific code out of the constructor
+to put it in <code>init()</code>.
+</p>
+
+<a name="text"></a>
+<h2>What are these strange characters at the bottom of the screen ?</h2>
+The <code>renderText</code> method uses display lists to display characters. If you use more than
+2000 display lists, they may overlap. See the <code>drawText</code> documentation.
+
+<a name="worldlight"></a>
+<h2>How can I define a world positioned light ?</h2>
+A QGLViewer uses the default OpenGL light setup: <code>GL_LIGHT0</code> is on and placed at (0,0,0) in the
+camera coordinate system. To place a light in your scene, use <code>glLight</code> as if
+you were drawing an object: the current modelView matrix is applied. The following code places a
+light in the world coordinate system:
+<pre>
+void Viewer::draw()
+{
+  // ModelView represents the world coordinate system at the beginning of draw()
+  static const GLfloat pos[4] = {1.5, 0.0, 0.0, 1.0};
+  glLightfv(GL_LIGHT0, GL_POSITION, pos);
+  static const GLfloat spotDir[3] = {-1.0, 0.0, 0.0};
+  glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, spotDir);
+
+  // rest of the drawing code...
+  }
+</pre>
+See also the <a href="examples/cameraLight.html">cameraLight example</a> that makes the camera act as a spot light.
+
+<p>
+Other questions can be sent by <a href="mailto:contact@libqglviewer.com">e-mail</a>
+and will be added to this page. See also the <a href="faq.html">General FAQ</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="images/css.gif" alt="Valid CSS!" width="88" height="31"/></a>
+  <i>Last modified on Friday, June 12, 2015.</i>
+</p>
+
+</body></html>

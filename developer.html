@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>QGLViewer - Developer's page</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+  <a class="qindex" href="index.html">Home</a>
+  <a class="qindex" href="download.html">Download</a>
+  <a class="qindex" href="examples/index.html">Gallery</a>
+  <a class="qindex" href="refManual/hierarchy.html">Documentation</a>
+  <a class="qindex highlight" href="developer.html">Developer</a>
+</div>
+
+<h1>libQGLViewer - Developer</h1>
+
+<div class="summary">
+<b>&raquo;</b> <a href="changeLog.html">ChangeLog</a><br/>
+<b>&raquo;</b> <a href="faq.html">General</a> and <a href="techFaq.html">Technical</a> FAQ<br/>
+</div>
+
+
+<h2>Get on board !</h2>
+<p>
+libQGLViewer is distributed under the terms of the GNU-GPL license. The entire source code is
+available for <a href="download.html">download</a>, and can freely be edited. If you want to
+contribute to the project, just send me an <a href="mailto:contact@libqglviewer.com">e-mail</a> with your code and an explanation, I'll do the merge.
+</p>
+
+<p>
+Please do not hesitate to ask me if you are unsure about what the library does, why things are coded
+as they are, which features are in the todo list and which are not scheduled.
+</p>
+
+<h2>Bugs</h2>
+<ul>
+<li>A double right button click should center the scene but actually brings the camera to the origin.<br/>
+ This is a gcc 3.3.3 bug: uncomment a <code>cout</code> in projectOnAxis or compile in debug mode to solve it.</li>
+<li>No other bug is currently reported.
+<a href="mailto:contact@libqglviewer.com">Send a bug report</a> if you find one.</li>
+</ul>
+
+<h2>Todo list for next release</h2>
+<ul>
+<li>Smarter updates using cached values and dirty flags.</li>
+</ul>
+
+<h2>Future Works</h2>
+<ul>
+<li>keyboard accelerator and mouse bindings editor.</li>
+<li>Emulate three mouse buttons on Mac architecture.</li>
+<li>KFI : smarter update with pointer, problem at first point. optimal update using sender()</li>
+<li>KeyFrameInterpolator : closedPath, deleteKF, insertKF.</li>
+<li>KeyFrameInterpolator should propose an easy-in easy-out option</li>
+<li>GLU (Un)project buffer : better performance</li>
+<li>Shift Fx : smooth transition.</li>
+<li>add a drawFrameHierarchy.</li>
+</ul>
+
+<h2>Intricate problems that need further investigation</h2>
+<ul>
+<li>Save to File problem : closeEvent and so on, embedded widgets, WDestructiveClose</li>
+<li>select with inverted backface culling : test with glut</li>
+</ul>
+
+<h2>New examples</h2>
+<ul>
+<li>triSetConstraint as a contrib example (needs debug ?)</li>
+<li>Planetarium to illustrate frame hierarchy.</li>
+<li>Shadow maps</li>
+<li>Corner axis</li>
+<li>OpenMesh Viewer</li>
+<li>HUD with painter</li>
+</ul>
+
+<h2>Long term</h2>
+<ul>
+<li>Port to wxWidgets, FOX, glut, gtk</li>
+<li>KeyFrame path editor.</li>
+<li>Overlays ??</li>
+</ul>
+
+<h2>Ideas</h2>
+<ul>
+<li>Mouse cursors according to mode.</li>
+<li>Rename the axis.</li>
+<li>Class state output as a stream. QPROPERTY ?</li>
+</ul>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="images/css.gif" alt="Valid CSS!" width="88" height="31"/></a>
+  <i>Last modified on Friday, June 12, 2015.</i>
+</p>
+
+</body></html>
