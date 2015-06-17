@@ -24,5 +24,10 @@ contains( QT_VERSION, "^3.*" ) {
 
 DISTFILES *= ../BlobWarBoards/*.bwb
 
+# Since we use gluCylinder
+!macx|darwin-g++ {
+	QMAKE_LIBS_OPENGL *= -lGLU
+}
+
 include( ../../../examples.pri )
 

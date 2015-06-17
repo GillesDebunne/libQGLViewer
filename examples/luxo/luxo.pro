@@ -17,4 +17,9 @@ TARGET   = luxo
 HEADERS  = luxo.h
 SOURCES  = luxo.cpp main.cpp
 
+# Since we use gluCylinder
+!macx|darwin-g++ {
+    QMAKE_LIBS_OPENGL *= -lGLU
+}
+
 include( ../examples.pri )

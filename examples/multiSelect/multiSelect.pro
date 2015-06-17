@@ -17,4 +17,9 @@ TARGET   = multiSelect
 HEADERS  = multiSelect.h manipulatedFrameSetConstraint.h object.h
 SOURCES  = multiSelect.cpp manipulatedFrameSetConstraint.cpp object.cpp main.cpp
 
+# Since we use gluCylinder
+!macx|darwin-g++ {
+	QMAKE_LIBS_OPENGL *= -lGLU
+}
+
 include( ../examples.pri )
