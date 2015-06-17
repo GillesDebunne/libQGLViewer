@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer frameTransform example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Gallery</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The frameTransform example</h1>
+
+<center>
+  <img src="../images/frameTransform.jpg" width="330" height="228" alt="frameTransform"/>
+</center>
+
+<p>
+ Coordinate transformation between different Frames.
+</p>
+<p>
+ This example illustrates the camera and world coordinate systems relationship. The position of the
+ camera in the world coordinate system is printed from <code>camera()->position()</code>.
+ Symmetrically, the position of the world origin is given in the camera coordinate system by
+ <code>camera()->cameraCoordinatesOf(0,0,0)</code>.
+</p>
+<p>
+ Three sets of lines (red, green, blue) are drawn. They have different starting points, but common
+ end points, located on a circle in the XY plane.
+</p>
+<p>
+ All the red lines start from the camera position, and will hence always be aligned with the
+ viewing direction, making them invisible.
+</p>
+<p>
+ The green lines starting points' positions are determined from the camera coordinate system, using
+ <code>camera()->worldCoordinatesOf()</code>. As a result, these points will seem to be fixed on
+ the screen, even when the camera is moved
+</p>
+<p>
+ Finally, the blue lines are classically defined in the world coordinate system, and will move with
+ the camera.
+</p>
+<p>
+ Beautiful Moire pattern can be obtained with a proper rotation.
+</p>
+<h2>frameTransform.h</h2>
+<pre>
+#include &lt;QGLViewer/qglviewer.h&gt;
+
+class Viewer : public QGLViewer
+{
+protected :
+  virtual void draw();
+  virtual void init();
+  virtual QString helpString() const;
+};
+</pre>
+
+
+<h2>frameTransform.cpp</h2>
+<pre>
+#include "frameTransform.h"
+
+using namespace std;
+using namespace qglviewer; // Vec
+
+void Viewer::init()
+{
+  restoreStateFromFile();
+
+  setSceneRadius(1.5);
+  showEntireScene();
+  setAxisIsDrawn();
+  glDisable(GL_LIGHTING);
+
+  help();
+}
+
+void Viewer::draw()
+{
+  // Draws line sets (red, green, blue) with different origins, but with a common
+  // end point, located on a circle in the XY plane.
+  const float nbLines = 50.0;
+
+  glBegin(GL_LINES);
+
+  for (float i=0; i&lt;nbLines; ++i)
+    {
+      float angle = 2.0*M_PI*i/nbLines;
+
+      glColor3f(0.8f, 0.2f, 0.2f);
+      // These lines will never be seen as they are always aligned with the viewing direction.
+      glVertex3fv(camera()-&gt;position());
+      glVertex3f (cos(angle), sin(angle), 0.0);
+
+      glColor3f(0.2f, 0.8f, 0.2f);
+      // World Coordinates are infered from the camera, and seem to be immobile in the screen.
+      glVertex3fv(camera()-&gt;worldCoordinatesOf(Vec(.3*cos(angle), .3*sin(angle), -2.0)));
+      glVertex3f (cos(angle), sin(angle), 0.0);
+
+      glColor3f(0.2f, 0.2f, 0.8f);
+      // These lines are defined in the world coordinate system and will move with the camera.
+      glVertex3f(1.5*cos(angle), 1.5*sin(angle), -1.0);
+      glVertex3f(cos(angle), sin(angle), 0.0);
+    }
+  glEnd();
+
+  // Here, the camera position in world coord. system  is camera()-&gt;position().
+  // The world origin position in camera frame can be obtained from camera()-&gt;cameraCoordinatesOf(Vec(0.0, 0.0, 0.0))
+}
+
+QString Viewer::helpString() const
+{
+  QString text("&lt;h2&gt;F r a m e T r a n s f o r m&lt;/h2&gt;");
+  text += "This example illustrates how easy it is to switch between the camera and ";
+  text += "the world coordinate systems using the &lt;i&gt;camera()-&gt;cameraCoordinatesOf()&lt;/i&gt; ";
+  text += "and &lt;i&gt;camera::worldCoordinatesOf()&lt;/i&gt; functions.&lt;br&gt;&lt;br&gt;";
+  text += "You can create your own hierarchy of local coordinates systems and each of ";
+  text += "them can be manipulated with the mouse (see the &lt;i&gt;manipulatedFrame&lt;/i&gt; and &lt;i&gt;luxo&lt;/i&gt; examples). ";
+  text += "Standard functions allow you to convert from any local frame to any other, ";
+  text += "the world/camera conversion presented here simply being an illustration.&lt;br&gt;&lt;br&gt;";
+  text += "See &lt;i&gt;examples/frameTransform.html&lt;/i&gt; for an explanation of the meaning of these weird lines.";
+  return text;
+}
+
+</pre>
+
+
+<h2>main.cpp</h2>
+<pre>
+#include "frameTransform.h"
+#include &lt;qapplication.h&gt;
+
+int main(int argc, char** argv)
+{
+  QApplication application(argc,argv);
+
+  Viewer viewer;
+
+  viewer.setWindowTitle("frameTransform");
+
+  viewer.show();
+
+  return application.exec();
+}
+</pre>
+
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>

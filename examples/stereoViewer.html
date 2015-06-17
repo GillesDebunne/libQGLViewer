@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer stereoViewer example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Gallery</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The stereoViewer example</h1>
+
+<center>
+  <img src="../images/stereoViewer.jpg" width="330" height="228" alt="stereoViewer"/>
+</center>
+
+<p>
+ Simply press <code>S</code> to toggle stereo display (if supported).
+</p>
+<p>
+ This is a simple stereo application inspired from <a href="simpleViewer.html">simpleViewer</a>.
+ The constructor is called with a QFormat stereo option to enable stereo. Press <code>S</code>
+ to toggle stereo display.
+</p>
+<h2>stereoViewer.h</h2>
+<pre>
+#include &lt;QGLViewer/qglviewer.h&gt;
+
+class Viewer : public QGLViewer
+{
+protected :
+  virtual void draw();
+  virtual void init();
+  virtual QString helpString() const;
+};
+</pre>
+
+
+<h2>stereoViewer.cpp</h2>
+<pre>
+#include "stereoViewer.h"
+#include &lt;qapplication.h&gt;
+#include &lt;math.h&gt;
+
+using namespace std;
+
+void Viewer::init()
+{
+  restoreStateFromFile();
+
+  // Activate the stereo display. Press 'S' to toggle.
+  setStereoDisplay(true);
+
+  help();
+}
+
+QString Viewer::helpString() const
+{
+  QString text("&lt;h2&gt;S t e r e o V i e w e r&lt;/h2&gt;");
+  text += "You can display in stereo with no change to your application, provided that your hardware supports stereo display.&lt;br&gt;&lt;br&gt;";
+  
+  text += "If you get a &lt;b&gt;Stereo not supported on this display&lt;/b&gt; error message, check that ";
+  text += "your machine supports stereo (search for quad-buffer in &lt;i&gt;glxinfo&lt;/i&gt; and find stereo glasses !).&lt;br&gt;&lt;br&gt;";
+  
+  text += "You can then toggle the stereo display by pressing &lt;b&gt;S&lt;/b&gt; in any application.";
+  return text;
+}
+
+void Viewer::draw()
+{
+  // Draws a spiral
+  const float nbSteps = 200.0;
+  glBegin(GL_QUAD_STRIP);
+  for (float i=0; i&lt;nbSteps; ++i)
+    {
+      float ratio = i/nbSteps;
+      float angle = 21.0*ratio;
+      float c = cos(angle);
+      float s = sin(angle);
+      float r1 = 1.0 - 0.8*ratio;
+      float r2 = 0.8 - 0.8*ratio;
+      float alt = ratio - 0.5;
+      const float nor = 0.5;
+      const float up = sqrt(1.0-nor*nor);
+      glColor3f(1.0-ratio, 0.2f , ratio);
+      glNormal3f(nor*c, up, nor*s);
+      glVertex3f(r1*c, alt, r1*s);
+      glVertex3f(r2*c, alt+0.05f, r2*s);
+    }
+  glEnd();
+
+  return;
+}
+</pre>
+
+
+<h2>main.cpp</h2>
+<pre>
+#include "stereoViewer.h"
+#include &lt;qapplication.h&gt;
+
+int main(int argc, char** argv)
+{
+  QApplication application(argc,argv);
+
+  // Set the default OpenGL format with stereo capabilities.
+  // An alternative is to pass this parameter to the QGLWidget constructor.
+  QGLFormat format;
+  format.setStereo(true);
+  QGLFormat::setDefaultFormat(format);
+
+  Viewer viewer;
+
+  viewer.setWindowTitle("stereoViewer");
+
+  viewer.show();
+
+  return application.exec();
+}
+</pre>
+
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>

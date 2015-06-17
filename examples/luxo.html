@@ -1,0 +1,387 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer luxo example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Gallery</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The luxo example</h1>
+
+<center>
+  <img src="../images/luxo.jpg" width="330" height="228" alt="luxo"/>
+</center>
+
+<p>
+ A more complex example that combines <code>ManipulatedFrames</code>, selection and constraints.
+</p>
+<p>
+ This example illustrates different functions of the viewer. It displays a famous luxo lamp
+ (Pixar) that can be interactively manipulated with the mouse. It illustrates the use of several
+ <code>ManipulatedFrames</code> in the same scene.
+</p>
+<p>
+ Shift click on any part of the lamp to select it, and then move it with the mouse. To move the
+ camera select the background or press the <code>Control</code> key (default modifier keys are switched).
+</p>
+<p>
+ A simpler object selection example is given in <a href="select.html"><code>select</code></a>.<br/>
+ A simpler frame displacement example is given in <a href="manipulatedFrame.html"><code>manipulatedFrame</code></a>.<br/>
+ A simpler constrained frame example is given in <a href="constrainedFrame.html"><code>constrainedFrame</code></a>.<br/>
+</p>
+<p>
+ Since we use gluCylinder
+</p>
+<h2>luxo.h</h2>
+<pre>
+#include &lt;QGLViewer/qglviewer.h&gt;
+
+class Luxo
+{
+public :
+  Luxo();
+
+  void draw(bool names=false);
+
+  qglviewer::ManipulatedFrame* frame(unsigned short i) { return frame_[i]; }
+  void setSelectedFrameNumber(unsigned short nb) { selected = nb; }
+
+private :
+  // The four articulations of the lamp
+  qglviewer::ManipulatedFrame* frame_[4];
+  // Used to draw the selected element in a different color
+  unsigned short selected;
+
+  void drawCone(float zMin, float zMax, float r1, float r2, int nbSub);
+  void drawBase();
+  void drawArm();
+  void drawCylinder();
+  void setColor(unsigned short nb);
+  void drawHead();
+};
+
+
+class Viewer : public QGLViewer
+{
+protected :
+  virtual void draw();
+  virtual void init();
+  virtual void drawWithNames();
+  virtual void postSelection(const QPoint&amp; point);
+  virtual QString helpString() const;
+
+  void initSpotLight();
+
+private :
+  Luxo luxo;
+};
+
+</pre>
+
+
+<h2>luxo.cpp</h2>
+<pre>
+#include "luxo.h"
+#include &lt;math.h&gt;
+
+#include &lt;QGLViewer/manipulatedCameraFrame.h&gt;
+
+using namespace qglviewer;
+using namespace std;
+
+//////////////////////////////////  V i e w e r  ////////////////////////////////////////
+
+QString Viewer::helpString() const
+{
+  QString text("&lt;h2&gt;L u x o  ©&lt;/h2&gt;");
+  text += "This example illustrates several functionnalities of QGLViewer, ";
+  text += "showing how easy it is to create a moderately complex application.&lt;br&gt;&lt;br&gt;";
+  text += "The famous luxo lamp (©Pixar) can interactively be manipulated ";
+  text += "with the mouse. &lt;b&gt;Shift&lt;/b&gt; left click on an a part of the lamp to select it, ";
+  text += "and then move it with the mouse. Press the &lt;b&gt;Alt&lt;/b&gt; key or select the background ";
+  text += "to move the camera instead.&lt;br&gt;&lt;br&gt;";
+  text += "A simpler object selection example is given in the &lt;i&gt;select&lt;/i&gt; example. ";
+  text += "A simpler frame displacement example is available in &lt;i&gt;manipulatedFrame&lt;/i&gt; and ";
+  text += "a simpler constrained frame example is illustrated in &lt;i&gt;constrainedFrame&lt;/i&gt;. ";
+  text += "See &lt;i&gt;multiSelect&lt;/i&gt; for a multi-object selection example.&lt;br&gt;&lt;br&gt;";
+  text += "Feel free to use this code as the starting point of a multiple frame manipulation application.";
+  return text;
+}
+
+void Viewer::initSpotLight()
+{
+  glMatrixMode(GL_MODELVIEW);
+  glEnable(GL_LIGHT1);
+  glLoadIdentity();
+
+  // Light default parameters
+  GLfloat spot_dir[3]       = {0.0, 0.0, 1.0};
+  GLfloat light_ambient[4]  = {0.5, 0.5, 0.5, 1.0};
+  GLfloat light_specular[4] = {1.0, 1.0, 1.0, 1.0};
+  GLfloat light_diffuse[4]  = {3.0, 3.0, 1.0, 1.0};
+
+  glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_dir);
+  glLightf( GL_LIGHT1, GL_SPOT_EXPONENT,  3.0);
+  glLightf( GL_LIGHT1, GL_SPOT_CUTOFF,    50.0);
+  glLightf( GL_LIGHT1, GL_CONSTANT_ATTENUATION, 0.5);
+  glLightf( GL_LIGHT1, GL_LINEAR_ATTENUATION, 1.0);
+  glLightf( GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 1.5);
+  glLightfv(GL_LIGHT1, GL_AMBIENT,  light_ambient);
+  glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular);
+  glLightfv(GL_LIGHT1, GL_DIFFUSE,  light_diffuse);
+}
+
+void Viewer::init()
+{
+  restoreStateFromFile();
+
+  // Make camera the default manipulated frame.
+  setManipulatedFrame( camera()-&gt;frame() );
+
+  setMouseBinding(Qt::AltModifier, Qt::LeftButton, QGLViewer::CAMERA, QGLViewer::ROTATE);
+  setMouseBinding(Qt::AltModifier, Qt::RightButton, QGLViewer::CAMERA, QGLViewer::TRANSLATE);
+  setMouseBinding(Qt::AltModifier, Qt::MidButton, QGLViewer::CAMERA, QGLViewer::ZOOM);
+  setWheelBinding(Qt::AltModifier, QGLViewer::CAMERA, QGLViewer::ZOOM);
+
+  setMouseBinding(Qt::NoModifier, Qt::LeftButton, QGLViewer::FRAME, QGLViewer::ROTATE);
+  setMouseBinding(Qt::NoModifier, Qt::RightButton, QGLViewer::FRAME, QGLViewer::TRANSLATE);
+  setMouseBinding(Qt::NoModifier, Qt::MidButton, QGLViewer::FRAME, QGLViewer::ZOOM);
+  setWheelBinding(Qt::NoModifier, QGLViewer::FRAME, QGLViewer::ZOOM);
+
+  initSpotLight();
+
+  help();
+}
+
+void Viewer::draw()
+{
+  luxo.draw();
+
+  // Draw the ground
+  glColor3f(0.4f, 0.4f, 0.4f);
+  const float nbPatches = 100;
+  glNormal3f(0.0,0.0,1.0);
+  for (int j=0; j&lt;nbPatches; ++j)
+	{
+	  glBegin(GL_QUAD_STRIP);
+	  for (int i=0; i&lt;=nbPatches; ++i)
+	{
+	  glVertex2f((2*i/nbPatches-1.0), (2*j/nbPatches-1.0));
+	  glVertex2f((2*i/nbPatches-1.0), (2*(j+1)/nbPatches-1.0));
+	}
+	  glEnd();
+	}
+}
+
+void Viewer::drawWithNames()
+{
+  // Render scene with objects ids
+  luxo.draw(true);
+}
+
+void Viewer::postSelection(const QPoint&amp;)
+{
+  if (selectedName() == -1)
+	{
+	  // Camera will be the default frame is no object is selected.
+	  setManipulatedFrame( camera()-&gt;frame() );
+	  luxo.setSelectedFrameNumber(4); // dummy value meaning camera
+	}
+  else
+	{
+	  setManipulatedFrame(luxo.frame(selectedName()));
+	  luxo.setSelectedFrameNumber(selectedName());
+	}
+}
+
+//////////////////////////////////  L u x o ////////////////////////////////////////
+
+Luxo::Luxo()
+{
+  for (unsigned short i=0; i&lt;4; ++i)
+	{
+	  frame_[i] = new ManipulatedFrame();
+
+	  // Creates a hierarchy of frames.
+	  if (i&gt;0)
+	frame(i)-&gt;setReferenceFrame(frame(i-1));
+	}
+
+  // Initialize frames
+  frame(1)-&gt;setTranslation(Vec(0.0, 0.0, 0.08f)); // Base height
+  frame(2)-&gt;setTranslation(Vec(0.0, 0.0, 0.5f));  // Arm length
+  frame(3)-&gt;setTranslation(Vec(0.0, 0.0, 0.5f));  // Arm length
+
+  frame(1)-&gt;setRotation(Quaternion(Vec(1.0,0.0,0.0), 0.6));
+  frame(2)-&gt;setRotation(Quaternion(Vec(1.0,0.0,0.0), -2.0));
+  frame(3)-&gt;setRotation(Quaternion(Vec(1.0,-0.3f,0.0), -1.7));
+
+  // Set frame constraints
+  WorldConstraint* baseConstraint = new WorldConstraint();
+  baseConstraint-&gt;setTranslationConstraint(AxisPlaneConstraint::PLANE, Vec(0.0,0.0,1.0));
+  baseConstraint-&gt;setRotationConstraint(AxisPlaneConstraint::AXIS, Vec(0.0,0.0,1.0));
+  frame(0)-&gt;setConstraint(baseConstraint);
+
+  LocalConstraint* XAxis = new LocalConstraint();
+  XAxis-&gt;setTranslationConstraint(AxisPlaneConstraint::FORBIDDEN,  Vec(0.0,0.0,0.0));
+  XAxis-&gt;setRotationConstraint   (AxisPlaneConstraint::AXIS, Vec(1.0,0.0,0.0));
+  frame(1)-&gt;setConstraint(XAxis);
+  frame(2)-&gt;setConstraint(XAxis);
+
+  LocalConstraint* headConstraint = new LocalConstraint();
+  headConstraint-&gt;setTranslationConstraint(AxisPlaneConstraint::FORBIDDEN, Vec(0.0,0.0,0.0));
+  frame(3)-&gt;setConstraint(headConstraint);
+
+  // Means camera is selected.
+  selected = 4;
+}
+
+void Luxo::draw(bool names)
+{
+  // Luxo's local frame
+  glPushMatrix();
+  glMultMatrixd(frame(0)-&gt;matrix());
+
+  if (names) glPushName(0);
+  setColor(0);
+  drawBase();
+  if (names) glPopName();
+
+  if (names) glPushName(1);
+  glMultMatrixd(frame(1)-&gt;matrix());
+  setColor(1);
+  drawCylinder();
+  drawArm();
+  if (names) glPopName();
+
+  if (names) glPushName(2);
+  glMultMatrixd(frame(2)-&gt;matrix());
+  setColor(2);
+  drawCylinder();
+  drawArm();
+  if (names) glPopName();
+
+  if (names) glPushName(3);
+  glMultMatrixd(frame(3)-&gt;matrix());
+  setColor(3);
+  drawHead();
+  if (names) glPopName();
+
+  // Add light
+  const GLfloat pos[4] = {0.0, 0.0, 0.0, 1.0};
+  glLightfv(GL_LIGHT1, GL_POSITION, pos);
+  const GLfloat spot_dir[3]  = {0.0, 0.0, 1.0};
+  glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_dir);
+  glPopMatrix();
+}
+
+void Luxo::drawBase()
+{
+  drawCone(0.0, 0.03f, 0.15f, 0.15f, 30);
+  drawCone(0.03f, 0.05f, 0.15f, 0.13f, 30);
+  drawCone(0.05f, 0.07f, 0.13f, 0.01f, 30);
+  drawCone(0.07f, 0.09f, 0.01f, 0.01f, 10);
+}
+
+void Luxo::drawArm()
+{
+  glTranslatef(0.02f, 0.0, 0.0);
+  drawCone(0.0, 0.5f, 0.01f, 0.01f, 10);
+  glTranslatef(-0.04f, 0.0, 0.0);
+  drawCone(0.0, 0.5f, 0.01f, 0.01f, 10);
+  glTranslatef(0.02f, 0.0, 0.0);
+}
+
+void Luxo::drawHead()
+{
+  drawCone(-0.02f, 0.06f, 0.04f, 0.04f, 30);
+  drawCone(0.06f, 0.15f, 0.04f, 0.17f, 30);
+  drawCone(0.15f, 0.17f, 0.17f, 0.17f, 30);
+}
+
+void Luxo::drawCylinder()
+{
+  glPushMatrix();
+  glRotatef(90, 0.0, 1.0, 0.0);
+  drawCone(-0.05f, 0.05f, 0.02f, 0.02f, 20);
+  glPopMatrix();
+}
+
+void Luxo::setColor(unsigned short nb)
+{
+  if (nb == selected)
+	glColor3f(0.9f, 0.9f, 0.0);
+  else
+	glColor3f(0.9f, 0.9f, 0.9f);
+}
+
+// Draws a truncated cone aligned with the Z axis.
+void Luxo::drawCone(float zMin, float zMax, float r1, float r2, int nbSub)
+{
+  static GLUquadric* quadric = gluNewQuadric();
+
+  glTranslatef(0.0, 0.0, zMin);
+  gluCylinder(quadric, r1, r2, zMax-zMin, nbSub, 1);
+  glTranslatef(0.0, 0.0, -zMin);
+}
+
+</pre>
+
+
+<h2>main.cpp</h2>
+<pre>
+#include "luxo.h"
+#include &lt;qapplication.h&gt;
+
+int main(int argc, char** argv)
+{
+  QApplication application(argc,argv);
+
+  Viewer viewer;
+
+  viewer.setWindowTitle("luxo");
+
+  viewer.show();
+
+  return application.exec();
+}
+</pre>
+
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>

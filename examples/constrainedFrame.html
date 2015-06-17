@@ -1,0 +1,323 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer constrainedFrame example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Gallery</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The constrainedFrame example</h1>
+
+<center>
+  <img src="../images/constrainedFrame.jpg" width="330" height="228" alt="constrainedFrame"/>
+</center>
+
+<p>
+ Constraints can limit the translation and/or rotation of a (Manipulated)Frame.
+</p>
+<p>
+ Try the different possible constraints using the T (translate) and R (rotate) keys. G and D change
+ the constraint directions. Press Space to change the coordinate system (World, Camera or Local)
+ which defines the constraint directions.
+</p>
+<p>
+ Press the Control key while moving the mouse to move the camera.
+</p>
+<h2>constrainedFrame.h</h2>
+<pre>
+#include &lt;QGLViewer/qglviewer.h&gt;
+
+class Viewer : public QGLViewer
+{
+protected:
+  virtual void init();
+  virtual void draw();
+  virtual QString helpString() const;
+  virtual void keyPressEvent(QKeyEvent *);
+
+  void displayText();
+  void displayType(const qglviewer::AxisPlaneConstraint::Type type, const int x, const int y, const char c);
+  void displayDir(const unsigned short dir, const int x, const int y, const char c);
+
+private:
+  int transDir;
+  int rotDir;
+
+  qglviewer::ManipulatedFrame* frame;
+
+  static qglviewer::AxisPlaneConstraint::Type nextTranslationConstraintType(const qglviewer::AxisPlaneConstraint::Type&amp; type);
+  static qglviewer::AxisPlaneConstraint::Type nextRotationConstraintType(const qglviewer::AxisPlaneConstraint::Type&amp; type);
+
+  void changeConstraint();
+  qglviewer::AxisPlaneConstraint* constraints[3];
+  unsigned short activeConstraint;
+};
+</pre>
+
+
+<h2>constrainedFrame.cpp</h2>
+<pre>
+#include "constrainedFrame.h"
+
+#include &lt;QKeyEvent&gt;
+#include &lt;QGLViewer/manipulatedCameraFrame.h&gt;
+
+using namespace qglviewer;
+using namespace std;
+
+AxisPlaneConstraint::Type Viewer::nextTranslationConstraintType(const AxisPlaneConstraint::Type&amp; type)
+{
+  switch (type)
+	{
+	case AxisPlaneConstraint::FREE  : return AxisPlaneConstraint::PLANE; break;
+	case AxisPlaneConstraint::PLANE : return AxisPlaneConstraint::AXIS;  break;
+	case AxisPlaneConstraint::AXIS  : return AxisPlaneConstraint::FORBIDDEN;  break;
+	case AxisPlaneConstraint::FORBIDDEN : return AxisPlaneConstraint::FREE; break;
+	default : return AxisPlaneConstraint::FREE;
+	}
+}
+
+AxisPlaneConstraint::Type Viewer::nextRotationConstraintType(const AxisPlaneConstraint::Type&amp; type)
+{
+  switch (type)
+	{
+	case AxisPlaneConstraint::FREE  : return AxisPlaneConstraint::AXIS; break;
+	case AxisPlaneConstraint::AXIS  : return AxisPlaneConstraint::FORBIDDEN;  break;
+	case AxisPlaneConstraint::PLANE :
+	case AxisPlaneConstraint::FORBIDDEN : return AxisPlaneConstraint::FREE; break;
+	default : return AxisPlaneConstraint::FREE;
+	}
+}
+
+void Viewer::changeConstraint()
+{
+  unsigned short previous = activeConstraint;
+  activeConstraint = (activeConstraint+1)%3;
+
+  constraints[activeConstraint]-&gt;setTranslationConstraintType(constraints[previous]-&gt;translationConstraintType());
+  constraints[activeConstraint]-&gt;setTranslationConstraintDirection(constraints[previous]-&gt;translationConstraintDirection());
+  constraints[activeConstraint]-&gt;setRotationConstraintType(constraints[previous]-&gt;rotationConstraintType());
+  constraints[activeConstraint]-&gt;setRotationConstraintDirection(constraints[previous]-&gt;rotationConstraintDirection());
+
+  frame-&gt;setConstraint(constraints[activeConstraint]);
+}
+
+void Viewer::init()
+{
+  constraints[0] = new LocalConstraint();
+  constraints[1] = new WorldConstraint();
+  constraints[2] = new CameraConstraint(camera());
+
+  transDir = 0; // X direction
+  rotDir   = 0; // X direction
+  activeConstraint = 0;
+
+  frame = new ManipulatedFrame();
+  setManipulatedFrame(frame);
+  frame-&gt;setConstraint(constraints[activeConstraint]);
+
+  setMouseBinding(Qt::AltModifier, Qt::LeftButton, QGLViewer::CAMERA, QGLViewer::ROTATE);
+  setMouseBinding(Qt::AltModifier, Qt::RightButton, QGLViewer::CAMERA, QGLViewer::TRANSLATE);
+  setMouseBinding(Qt::AltModifier, Qt::MidButton, QGLViewer::CAMERA, QGLViewer::ZOOM);
+  setWheelBinding(Qt::AltModifier, QGLViewer::CAMERA, QGLViewer::ZOOM);
+
+  setMouseBinding(Qt::NoModifier, Qt::LeftButton, QGLViewer::FRAME, QGLViewer::ROTATE);
+  setMouseBinding(Qt::NoModifier, Qt::RightButton, QGLViewer::FRAME, QGLViewer::TRANSLATE);
+  setMouseBinding(Qt::NoModifier, Qt::MidButton, QGLViewer::FRAME, QGLViewer::ZOOM);
+  setWheelBinding(Qt::NoModifier, QGLViewer::FRAME, QGLViewer::ZOOM);
+
+  setMouseBinding(Qt::ShiftModifier, Qt::LeftButton, QGLViewer::FRAME, QGLViewer::ROTATE, false);
+  setMouseBinding(Qt::ShiftModifier, Qt::RightButton, QGLViewer::FRAME, QGLViewer::TRANSLATE, false);
+  setMouseBinding(Qt::ShiftModifier, Qt::MidButton, QGLViewer::FRAME, QGLViewer::ZOOM, false);
+  setWheelBinding(Qt::ShiftModifier, QGLViewer::FRAME, QGLViewer::ZOOM, false);
+
+  setAxisIsDrawn();
+
+  setKeyDescription(Qt::Key_G, "Change translation constraint direction");
+  setKeyDescription(Qt::Key_D, "Change rotation constraint direction");
+  setKeyDescription(Qt::Key_Space, "Change constraint reference");
+  setKeyDescription(Qt::Key_T, "Change translation constraint type");
+  setKeyDescription(Qt::Key_R, "Change rotation constraint type");
+
+  restoreStateFromFile();
+  help();
+}
+
+void Viewer::draw()
+{
+  glMultMatrixd(frame-&gt;matrix());
+  drawAxis(0.4f);
+  const float scale = 0.3f;
+  glScalef(scale, scale, scale);
+
+  const float nbSteps = 200.0;
+  glBegin(GL_QUAD_STRIP);
+  for (float i=0; i&lt;nbSteps; ++i)
+	{
+	  float ratio = i/nbSteps;
+	  float angle = 21.0*ratio;
+	  float c = cos(angle);
+	  float s = sin(angle);
+	  float r1 = 1.0 - 0.8*ratio;
+	  float r2 = 0.8 - 0.8*ratio;
+	  float alt = ratio - 0.5;
+	  const float nor = .5;
+	  const float up = sqrt(1.0-nor*nor);
+	  glColor3f(1-ratio, 0.2f , ratio);
+	  glNormal3f(nor*c*scale, up*scale, nor*s*scale);
+	  glVertex3f(r1*c, alt, r1*s);
+	  glVertex3f(r2*c, alt+0.05, r2*s);
+	}
+  glEnd();
+
+  displayText();
+}
+
+void Viewer::keyPressEvent(QKeyEvent *e)
+{
+  switch (e-&gt;key())
+	{
+	case Qt::Key_G : transDir = (transDir+1)%3; break;
+	case Qt::Key_D : rotDir   = (rotDir+1)%3;   break;
+	case Qt::Key_Space: changeConstraint();     break;
+	case Qt::Key_T :
+	  constraints[activeConstraint]-&gt;setTranslationConstraintType(nextTranslationConstraintType(constraints[activeConstraint]-&gt;translationConstraintType()));
+	  break;
+	case Qt::Key_R :
+	  constraints[activeConstraint]-&gt;setRotationConstraintType(nextRotationConstraintType(constraints[activeConstraint]-&gt;rotationConstraintType()));
+	  break;
+	default:
+	  QGLViewer::keyPressEvent(e);
+	}
+
+  Vec dir(0.0,0.0,0.0);
+  dir[transDir] = 1.0;
+  constraints[activeConstraint]-&gt;setTranslationConstraintDirection(dir);
+
+  dir = Vec(0.0,0.0,0.0);
+  dir[rotDir] = 1.0;
+  constraints[activeConstraint]-&gt;setRotationConstraintDirection(dir);
+
+  updateGL();
+}
+
+void Viewer::displayType(const AxisPlaneConstraint::Type type, const int x, const int y, const char c)
+{
+  QString text;
+  switch (type)
+	{
+	case AxisPlaneConstraint::FREE:  text = QString("FREE (%1)").arg(c);  break;
+	case AxisPlaneConstraint::PLANE: text = QString("PLANE (%1)").arg(c); break;
+	case AxisPlaneConstraint::AXIS:  text = QString("AXIS (%1)").arg(c); break;
+	case AxisPlaneConstraint::FORBIDDEN: text = QString("FORBIDDEN (%1)").arg(c); break;
+	}
+  drawText(x, y, text);
+}
+
+void Viewer::displayDir(const unsigned short dir, const int x, const int y, const char c)
+{
+  QString text;
+  switch (dir)
+	{
+	case 0: text = QString("X (%1)").arg(c); break;
+	case 1: text = QString("Y (%1)").arg(c); break;
+	case 2: text = QString("Z (%1)").arg(c); break;
+	}
+  drawText(x, y, text);
+}
+
+void Viewer::displayText()
+{
+  qglColor(foregroundColor());
+  glDisable(GL_LIGHTING);
+  drawText(10, height()-30, "TRANSLATION :");
+  displayDir(transDir, 190, height()-30, 'G');
+  displayType(constraints[activeConstraint]-&gt;translationConstraintType(), 10, height()-60, 'T');
+
+  drawText(width()-220,height()-30, "ROTATION");
+  displayDir(rotDir, width()-100, height()-30, 'D');
+  displayType(constraints[activeConstraint]-&gt;rotationConstraintType(), width()-220, height()-60, 'R');
+
+  switch (activeConstraint)
+	{
+	case 0 : drawText(20,20, "Constraint direction defined w/r to LOCAL (SPACE)"); break;
+	case 1 : drawText(20,20, "Constraint direction defined w/r to WORLD (SPACE)"); break;
+	case 2 : drawText(20,20, "Constraint direction defined w/r to CAMERA (SPACE)"); break;
+	}
+  glEnable(GL_LIGHTING);
+}
+
+QString Viewer::helpString() const
+{
+  QString text("&lt;h2&gt;C o n s t r a i n e d F r a m e&lt;/h2&gt;");
+  text += "A manipulated frame can be constrained in its displacement.&lt;br&gt;&lt;br&gt;";
+  text += "Try the different translation (press &lt;b&gt;G&lt;/b&gt; and &lt;b&gt;T&lt;/b&gt;) and rotation ";
+  text += "(&lt;b&gt;D&lt;/b&gt; and &lt;b&gt;R&lt;/b&gt;) constraints while moving the frame with the mouse.&lt;br&gt;&lt;br&gt;";
+  text += "The constraints can be defined with respect to various coordinates";
+  text += "systems : press &lt;b&gt;Space&lt;/b&gt; to switch.&lt;br&gt;&lt;br&gt;";
+  text += "Press the &lt;b&gt;Alt&lt;/b&gt; key while moving the mouse to move the camera.&lt;br&gt;";
+  text += "Press the &lt;b&gt;Shift&lt;/b&gt; key to temporally disable the constraint.&lt;br&gt;&lt;br&gt;";
+  text += "You can easily define your own constraints to create a specific frame behavior.";
+  return text;
+}
+
+</pre>
+
+
+<h2>main.cpp</h2>
+<pre>
+#include "constrainedFrame.h"
+#include &lt;qapplication.h&gt;
+
+int main(int argc, char** argv)
+{
+  QApplication application(argc,argv);
+
+  Viewer viewer;
+
+  viewer.setWindowTitle("constrainedFrame");
+
+  viewer.show();
+
+  return application.exec();
+}
+</pre>
+
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>

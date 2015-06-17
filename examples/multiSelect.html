@@ -1,0 +1,471 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer multiSelect example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Gallery</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The multiSelect example</h1>
+
+<center>
+  <img src="../images/multiSelect.jpg" width="330" height="228" alt="multiSelect"/>
+</center>
+
+<p>
+ Customized <code>select()</code> function that enables the selection of several objects.
+</p>
+<p>
+ Object selection is preformed using the left mouse button. Press <b>Shift</b> to add objects to
+ the selection, and <b>Alt</b> to remove objects from the selection.
+</p>
+<p>
+ Individual objects (click on them) as well as rectangular regions (click and drag mouse) can be
+ selected. To do this, the selection region size is modified and the <code>endSelection()</code>
+ function has been overloaded so that <i>all</i> the objects of the region are taken into account
+ (the default implementation only selects the closest object).
+</p>
+<p>
+ The selected objects can then be manipulated by pressing the <b>Control</b> key. Other set
+ operations (parameter edition, deletion...) can also easily be applied to the selected objects.
+</p>
+<p>
+ Since we use gluCylinder
+</p>
+<h2>multiSelect.h</h2>
+<pre>
+#include "QGLViewer/qglviewer.h"
+#include "object.h"
+
+class Viewer : public QGLViewer
+{
+public:
+  Viewer();
+
+protected :
+  virtual void draw();
+  virtual void init();
+  virtual QString helpString() const;
+
+  // Selection functions
+  virtual void drawWithNames();
+  virtual void endSelection(const QPoint&amp;);
+
+  // Mouse events functions
+  virtual void mousePressEvent(QMouseEvent *e);
+  virtual void mouseMoveEvent(QMouseEvent *e);
+  virtual void mouseReleaseEvent(QMouseEvent *e);
+
+private :
+  void startManipulation();
+  void drawSelectionRectangle() const;
+  void addIdToSelection(int id);
+  void removeIdFromSelection(int id);
+
+  // Current rectangular selection
+  QRect rectangle_;
+
+  // Different selection modes
+  enum SelectionMode { NONE, ADD, REMOVE };
+  SelectionMode selectionMode_;
+
+  QList&lt;Object*&gt; objects_;
+  QList&lt;int&gt; selection_;
+};
+</pre>
+
+
+<h2>multiSelect.cpp</h2>
+<pre>
+#include "multiSelect.h"
+#include "manipulatedFrameSetConstraint.h"
+
+#include &lt;QGLViewer/manipulatedFrame.h&gt;
+
+#include &lt;QMouseEvent&gt;
+
+using namespace qglviewer;
+
+Viewer::Viewer()
+{
+	selectionMode_ = NONE;
+
+	// Fill the scene with objects positionned on a regular grid.
+	// Consider increasing selectBufferSize() if you use more objects.
+	const int nb = 10;
+	for (int i=-nb; i&lt;=nb; ++i)
+		for (int j=-nb; j&lt;=nb; ++j)
+		{
+			Object* o = new Object();
+			o-&gt;frame.setPosition(Vec(i/float(nb), j/float(nb), 0.0));
+			objects_.append(o);
+		}
+}
+
+void Viewer::init()
+{
+  // A ManipulatedFrameSetConstraint will apply displacements to the selection
+  setManipulatedFrame(new ManipulatedFrame());
+  manipulatedFrame()-&gt;setConstraint(new ManipulatedFrameSetConstraint());
+
+  // Used to display semi-transparent relection rectangle
+  glBlendFunc(GL_ONE, GL_ONE);
+
+  restoreStateFromFile();
+  help();
+}
+
+QString Viewer::helpString() const
+{
+  QString text("&lt;h2&gt;m u l t i S e l e c t &lt;/h2&gt;");
+  text += "This example illustrates an application of the &lt;code&gt;select()&lt;/code&gt; function that ";
+  text += "enables the selection of several objects.&lt;br&gt;&lt;br&gt;";
+  text += "Object selection is preformed using the left mouse button. Press &lt;b&gt;Shift&lt;/b&gt; to add objects ";
+  text += "to the selection, and &lt;b&gt;Alt&lt;/b&gt; to remove objects from the selection.&lt;br&gt;&lt;br&gt;";
+  text += "Individual objects (click on them) as well as rectangular regions (click and drag mouse) can be selected. ";
+  text += "To do this, the selection region size is modified and the &lt;code&gt;endSelection()&lt;/code&gt; function ";
+  text += "has been overloaded so that &lt;i&gt;all&lt;/i&gt; the objects of the region are taken into account ";
+  text += "(the default implementation only selects the closest object).&lt;br&gt;&lt;br&gt;";
+  text += "The selected objects can then be manipulated by pressing the &lt;b&gt;Control&lt;/b&gt; key. ";
+  text += "Other set operations (parameter edition, deletion...) can also easily be applied to the selected objects.";
+  return text;
+}
+
+
+//  D r a w i n g   f u n c t i o n
+
+void Viewer::draw()
+{
+  // Draws selected objects only.
+  glColor3f(0.9f, 0.3f, 0.3f);
+	for (QList&lt;int&gt;::const_iterator it=selection_.begin(), end=selection_.end(); it != end; ++it)
+	  objects_.at(*it)-&gt;draw();
+
+  // Draws all the objects. Selected ones are not repainted because of GL depth test.
+  glColor3f(0.8f, 0.8f, 0.8f);
+  for (int i=0; i&lt;int(objects_.size()); i++)
+	objects_.at(i)-&gt;draw();
+
+  // Draws manipulatedFrame (the set's rotation center)
+  if (manipulatedFrame()-&gt;isManipulated())
+	{
+	  glPushMatrix();
+	  glMultMatrixd(manipulatedFrame()-&gt;matrix());
+	  drawAxis(0.5);
+	  glPopMatrix();
+	}
+
+  // Draws rectangular selection area. Could be done in postDraw() instead.
+  if (selectionMode_ != NONE)
+	drawSelectionRectangle();
+}
+
+
+//   C u s t o m i z e d   m o u s e   e v e n t s
+
+void Viewer::mousePressEvent(QMouseEvent* e)
+{
+	// Start selection. Mode is ADD with Shift key and TOGGLE with Alt key.
+	rectangle_ = QRect(e-&gt;pos(), e-&gt;pos());
+
+	if ((e-&gt;button() == Qt::LeftButton) &amp;&amp; (e-&gt;modifiers() == Qt::ShiftModifier))
+		selectionMode_ = ADD;
+	else
+		if ((e-&gt;button() == Qt::LeftButton) &amp;&amp; (e-&gt;modifiers() == Qt::AltModifier))
+			selectionMode_ = REMOVE;
+		else
+		{
+			if (e-&gt;modifiers() == Qt::ControlModifier)
+				startManipulation();
+			QGLViewer::mousePressEvent(e);
+		}
+}
+
+void Viewer::mouseMoveEvent(QMouseEvent* e)
+{
+  if (selectionMode_ != NONE)
+	{
+	  // Updates rectangle_ coordinates and redraws rectangle
+	  rectangle_.setBottomRight(e-&gt;pos());
+	  updateGL();
+	}
+  else
+	QGLViewer::mouseMoveEvent(e);
+}
+
+void Viewer::mouseReleaseEvent(QMouseEvent* e)
+{
+  if (selectionMode_ != NONE)
+	{
+	  // Actual selection on the rectangular area.
+	  // Possibly swap left/right and top/bottom to make rectangle_ valid.
+	  rectangle_ = rectangle_.normalized();
+	  // Define selection window dimensions
+	  setSelectRegionWidth(rectangle_.width());
+	  setSelectRegionHeight(rectangle_.height());
+	  // Compute rectangle center and perform selection
+	  select(rectangle_.center());
+	  // Update display to show new selected objects
+	  updateGL();
+	}
+  else
+	QGLViewer::mouseReleaseEvent(e);
+}
+
+
+//   C u s t o m i z e d   s e l e c t i o n   p r o c e s s
+
+void Viewer::drawWithNames()
+{
+  for (int i=0; i&lt;int(objects_.size()); i++)
+	{
+	  glPushName(i);
+	  objects_.at(i)-&gt;draw();
+	  glPopName();
+	}
+}
+
+void Viewer::endSelection(const QPoint&amp;)
+{
+  // Flush GL buffers
+  glFlush();
+
+  // Get the number of objects that were seen through the pick matrix frustum. Reset GL_RENDER mode.
+  GLint nbHits = glRenderMode(GL_RENDER);
+
+  if (nbHits &gt; 0)
+	{
+	  // Interpret results : each object created 4 values in the selectBuffer().
+	  // (selectBuffer())[4*i+3] is the id pushed on the stack.
+	  for (int i=0; i&lt;nbHits; ++i)
+	switch (selectionMode_)
+	  {
+	  case ADD    : addIdToSelection((selectBuffer())[4*i+3]); break;
+	  case REMOVE : removeIdFromSelection((selectBuffer())[4*i+3]);  break;
+	  default : break;
+	  }
+	}
+  selectionMode_ = NONE;
+}
+
+void Viewer::startManipulation()
+{
+  Vec averagePosition;
+  ManipulatedFrameSetConstraint* mfsc = (ManipulatedFrameSetConstraint*)(manipulatedFrame()-&gt;constraint());
+  mfsc-&gt;clearSet();
+
+  for (QList&lt;int&gt;::const_iterator it=selection_.begin(), end=selection_.end(); it != end; ++it)
+	{
+	  mfsc-&gt;addObjectToSet(objects_[*it]);
+	  averagePosition += objects_[*it]-&gt;frame.position();
+	}
+
+  if (selection_.size() &gt; 0)
+	manipulatedFrame()-&gt;setPosition(averagePosition / selection_.size());
+}
+
+
+//   S e l e c t i o n   t o o l s
+
+void Viewer::addIdToSelection(int id)
+{
+  if (!selection_.contains(id))
+	selection_.push_back(id);
+}
+
+void Viewer::removeIdFromSelection(int id)
+{
+  selection_.removeAll(id);
+}
+
+void Viewer::drawSelectionRectangle() const
+{
+  startScreenCoordinatesSystem();
+  glDisable(GL_LIGHTING);
+  glEnable(GL_BLEND);
+
+  glColor4f(0.0, 0.0, 0.3f, 0.3f);
+  glBegin(GL_QUADS);
+  glVertex2i(rectangle_.left(),  rectangle_.top());
+  glVertex2i(rectangle_.right(), rectangle_.top());
+  glVertex2i(rectangle_.right(), rectangle_.bottom());
+  glVertex2i(rectangle_.left(),  rectangle_.bottom());
+  glEnd();
+
+  glLineWidth(2.0);
+  glColor4f(0.4f, 0.4f, 0.5f, 0.5f);
+  glBegin(GL_LINE_LOOP);
+  glVertex2i(rectangle_.left(),  rectangle_.top());
+  glVertex2i(rectangle_.right(), rectangle_.top());
+  glVertex2i(rectangle_.right(), rectangle_.bottom());
+  glVertex2i(rectangle_.left(),  rectangle_.bottom());
+  glEnd();
+
+  glDisable(GL_BLEND);
+  glEnable(GL_LIGHTING);
+  stopScreenCoordinatesSystem();
+}
+</pre>
+
+
+<h2>manipulatedFrameSetConstraint.h</h2>
+<pre>
+#include "QGLViewer/constraint.h"
+#include "object.h"
+
+class ManipulatedFrameSetConstraint : public qglviewer::Constraint
+{
+public:
+	void clearSet();
+	void addObjectToSet(Object* o);
+
+	virtual void constrainTranslation(qglviewer::Vec &amp;translation, qglviewer::Frame *const frame);
+	virtual void constrainRotation(qglviewer::Quaternion &amp;rotation, qglviewer::Frame *const frame);
+
+private :
+	QList&lt;Object*&gt; objects_;
+};
+</pre>
+
+
+<h2>object.h</h2>
+<pre>
+#ifndef OBJECT_H_
+#define OBJECT_H_
+
+#include "QGLViewer/frame.h"
+
+class Object
+{
+public :
+  void draw() const;
+  qglviewer::Frame frame;
+};
+
+#endif // OBJECT_H_
+</pre>
+
+
+<h2>main.cpp</h2>
+<pre>
+#include "multiSelect.h"
+#include &lt;qapplication.h&gt;
+
+int main(int argc, char** argv)
+{
+  QApplication application(argc,argv);
+
+  Viewer viewer;
+
+  viewer.setWindowTitle("multiSelect");
+
+  viewer.show();
+
+  return application.exec();
+}
+</pre>
+
+
+<h2>manipulatedFrameSetConstraint.cpp</h2>
+<pre>
+#include "manipulatedFrameSetConstraint.h"
+#include "QGLViewer/frame.h"
+
+using namespace qglviewer;
+
+void ManipulatedFrameSetConstraint::clearSet()
+{
+	objects_.clear();
+}
+
+void ManipulatedFrameSetConstraint::addObjectToSet(Object* o)
+{
+	objects_.append(o);
+}
+
+void ManipulatedFrameSetConstraint::constrainTranslation(qglviewer::Vec &amp;translation, Frame *const)
+{
+	for (QList&lt;Object*&gt;::iterator it=objects_.begin(), end=objects_.end(); it != end; ++it)
+		(*it)-&gt;frame.translate(translation);
+}
+
+void ManipulatedFrameSetConstraint::constrainRotation(qglviewer::Quaternion &amp;rotation, Frame *const frame)
+{
+	// A little bit of math. Easy to understand, hard to guess (tm).
+	// rotation is expressed in the frame local coordinates system. Convert it back to world coordinates.
+	const Vec worldAxis = frame-&gt;inverseTransformOf(rotation.axis());
+	const Vec pos = frame-&gt;position();
+	const float angle = rotation.angle();
+
+	for (QList&lt;Object*&gt;::iterator it=objects_.begin(), end=objects_.end(); it != end; ++it)
+	{
+		// Rotation has to be expressed in the object local coordinates system.
+		Quaternion qObject((*it)-&gt;frame.transformOf(worldAxis), angle);
+		(*it)-&gt;frame.rotate(qObject);
+
+		// Comment these lines only rotate the objects
+		Quaternion qWorld(worldAxis, angle);
+		// Rotation around frame world position (pos)
+		(*it)-&gt;frame.setPosition(pos + qWorld.rotate((*it)-&gt;frame.position() - pos));
+	}
+}
+</pre>
+
+
+<h2>object.cpp</h2>
+<pre>
+#include &lt;qgl.h&gt;
+#include "object.h"
+
+using namespace qglviewer;
+
+void Object::draw() const
+{
+  static GLUquadric* quad = gluNewQuadric();
+
+  glPushMatrix();
+  glMultMatrixd(frame.matrix());
+  gluSphere(quad, 0.03, 10, 6);
+  gluCylinder(quad, 0.03, 0.0, 0.09, 10, 1);
+  glPopMatrix();
+}
+</pre>
+
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>

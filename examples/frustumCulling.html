@@ -1,0 +1,368 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer frustumCulling example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Gallery</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The frustumCulling example</h1>
+
+<center>
+  <img src="../images/frustumCulling.jpg" width="330" height="228" alt="frustumCulling"/>
+</center>
+
+<p>
+ Frustum culling using <code>getFrustumPlanesCoefficients</code>.
+</p>
+<p>
+ A hierarchical octree structure is clipped against a camera's frustum clipping planes, obtained
+ using <code>getFrustumPlanesCoefficients</code>. A second viewer displays an external view of the
+ scene that exhibits the clipping (using <code>drawCamera()</code> to display the frustum).
+</p>
+<p>
+ This frustum culling implementation is quite naive. Many optimisation techniques are available in
+ the litterature.
+</p>
+<h2>frustumCulling.h</h2>
+<pre>
+#include &lt;QGLViewer/qglviewer.h&gt;
+
+class CullingCamera;
+
+class Viewer : public QGLViewer
+{
+public:
+  void setCullingCamera(const CullingCamera* const cc) { cullingCamera = cc; }
+  
+protected:
+  virtual void draw();
+  virtual void init();
+  virtual QString helpString() const;
+
+private:
+  const CullingCamera* cullingCamera;
+};
+</pre>
+
+
+<h2>frustumCulling.cpp</h2>
+<pre>
+#include "frustumCulling.h"
+#include "cullingCamera.h"
+#include "box.h"
+
+using namespace qglviewer;
+
+void Viewer::draw()
+{
+  Box::Root-&gt;drawIfAllChildrenAreVisible(cullingCamera);
+
+  if (cullingCamera == camera())
+    // Main viewer computes its plane equation
+    cullingCamera-&gt;computeFrustumPlanesEquations();
+  else
+    {
+      // Observer viewer draws cullingCamera
+      glLineWidth(4.0);
+      glColor4f(1.0, 1.0, 1.0, 0.5);
+      cullingCamera-&gt;draw();
+    }
+}
+
+void Viewer::init()
+{
+  // Restore previous viewer state.
+  restoreStateFromFile();
+
+  if (cullingCamera != camera())
+    {
+      // Observer viewer configuration
+      glEnable(GL_BLEND);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      help();
+    }
+  
+  glDisable(GL_LIGHTING);
+}
+
+QString Viewer::helpString() const
+{
+  QString text("&lt;h2&gt;F r u s t u m C u l l i n g&lt;/h2&gt;");
+
+  text += "A hierarchical octree structure is clipped against the camera's frustum clipping planes, obtained ";
+  text += "using &lt;code&gt;getFrustumPlanesCoefficients&lt;/code&gt;. A second viewer uses &lt;code&gt;drawCamera()&lt;/code&gt; to ";
+  text += "display an external view of the first viewer's camera.&lt;br&gt;&lt;br&gt;";
+
+  text += "This frustum culling implementation is quite naive. Many optimisation techniques are available in ";
+  text += "the litterature.";
+
+  return text;
+}
+</pre>
+
+
+<h2>box.h</h2>
+<pre>
+#include &lt;QGLViewer/camera.h&gt;
+
+class CullingCamera;
+
+// An Axis Aligned Bounding Box octree hierarchy element.
+class Box
+{
+public:
+  Box(const qglviewer::Vec&amp; P1, const qglviewer::Vec&amp; P2) : p1(P1), p2(P2) {};
+
+  void draw() const;
+  void drawIfAllChildrenAreVisible(const CullingCamera* camera) const;
+  void buildBoxHierarchy(int l);
+
+  // Lazy static member, so that it is shared by viewers
+  static Box* Root;
+  
+private:
+  qglviewer::Vec p1, p2;
+  Box* child[8];
+  int level;
+};
+</pre>
+
+
+<h2>cullingCamera.h</h2>
+<pre>
+#include &lt;QGLViewer/camera.h&gt;
+
+class CullingCamera : public qglviewer::Camera
+{
+public:
+
+  void computeFrustumPlanesEquations() const { getFrustumPlanesCoefficients(planeCoefficients); }
+
+  float distanceToFrustumPlane(int index, const qglviewer::Vec&amp; pos) const;
+  bool sphereIsVisible(const qglviewer::Vec&amp; center, float radius) const;
+  bool aaBoxIsVisible(const qglviewer::Vec&amp; p1, const qglviewer::Vec&amp; p2, bool* entirely=NULL) const;
+  
+private:
+  // F r u s t u m   p l a n e s
+  mutable GLdouble planeCoefficients[6][4];
+};
+</pre>
+
+
+<h2>box.cpp</h2>
+<pre>
+#include "box.h"
+#include "cullingCamera.h"
+
+using namespace std;
+using namespace qglviewer;
+
+// Static member initialization
+Box* Box::Root;
+
+void Box::draw() const
+{
+  glColor3f(0.3*level, 0.2f, 1.0-0.3*level);
+  glLineWidth(level+1);
+
+  glBegin(GL_LINE_STRIP);
+  glVertex3fv(Vec(p1.x, p1.y, p1.z));
+  glVertex3fv(Vec(p1.x, p2.y, p1.z));
+  glVertex3fv(Vec(p2.x, p2.y, p1.z));
+  glVertex3fv(Vec(p2.x, p1.y, p1.z));
+  glVertex3fv(Vec(p1.x, p1.y, p1.z));
+  glVertex3fv(Vec(p1.x, p1.y, p2.z));
+  glVertex3fv(Vec(p1.x, p2.y, p2.z));
+  glVertex3fv(Vec(p2.x, p2.y, p2.z));
+  glVertex3fv(Vec(p2.x, p1.y, p2.z));
+  glVertex3fv(Vec(p1.x, p1.y, p2.z));
+  glEnd();
+
+  glBegin(GL_LINES);
+  glVertex3fv(Vec(p1.x, p2.y, p1.z));
+  glVertex3fv(Vec(p1.x, p2.y, p2.z));
+  glVertex3fv(Vec(p2.x, p2.y, p1.z));
+  glVertex3fv(Vec(p2.x, p2.y, p2.z));
+  glVertex3fv(Vec(p2.x, p1.y, p1.z));
+  glVertex3fv(Vec(p2.x, p1.y, p2.z));
+  glEnd();
+}
+
+void Box::buildBoxHierarchy(int l)
+{
+  level = l;
+  const Vec middle = (p1+p2) / 2.0;
+  for (unsigned int i=0; i&lt;8; ++i)
+    {
+      // point in one of the 8 box corners
+      const Vec point((i&amp;4)?p1.x:p2.x, (i&amp;2)?p1.y:p2.y, (i&amp;1)?p1.z:p2.z);
+      if (level &gt; 0)
+	{
+	  child[i] = new Box(point, middle);
+	  child[i]-&gt;buildBoxHierarchy(level-1);
+	}
+      else
+	child[i] = NULL;
+    }
+}
+
+void Box::drawIfAllChildrenAreVisible(const CullingCamera* camera) const
+{
+  static bool* entirely = new bool;
+
+  if (camera-&gt;aaBoxIsVisible(p1, p2, entirely)) {
+    if (*entirely)
+      draw();
+    else
+      if (child[0])
+	for (int i=0; i&lt;8; ++i)
+	  child[i]-&gt;drawIfAllChildrenAreVisible(camera);
+      else
+	draw();
+  }
+}
+</pre>
+
+
+<h2>cullingCamera.cpp</h2>
+<pre>
+#include "cullingCamera.h"
+
+using namespace qglviewer;
+
+float CullingCamera::distanceToFrustumPlane(int index, const Vec&amp; pos) const
+{
+  return pos * Vec(planeCoefficients[index]) - planeCoefficients[index][3];
+}
+
+bool CullingCamera::sphereIsVisible(const Vec&amp; center, float radius) const
+{
+  for (int i=0; i&lt;6; ++i)
+    if (distanceToFrustumPlane(i, center) &gt; radius)
+      return false;
+  return true;
+}
+
+bool CullingCamera::aaBoxIsVisible(const Vec&amp; p1, const Vec&amp; p2, bool* entirely) const
+{
+  bool allInForAllPlanes = true;
+  for (int i=0; i&lt;6; ++i)
+    {
+      bool allOut = true;
+      for (unsigned int c=0; c&lt;8; ++c)
+	{
+	  const Vec pos((c&amp;4)?p1.x:p2.x, (c&amp;2)?p1.y:p2.y, (c&amp;1)?p1.z:p2.z);
+	  if (distanceToFrustumPlane(i, pos) &gt; 0.0)
+	    allInForAllPlanes = false;
+	  else
+	    allOut = false;
+	}
+
+      // The eight points are on the outside side of this plane
+      if (allOut)
+	return false;
+    }
+
+  if (entirely)
+    // Entirely visible : the eight points are on the inside side of the 6 planes
+    *entirely = allInForAllPlanes;
+
+  // Too conservative, but tangent cases are too expensive to detect
+  return true;
+}
+</pre>
+
+
+<h2>main.cpp</h2>
+<pre>
+#include "frustumCulling.h"
+#include "cullingCamera.h"
+#include "box.h"
+
+#include &lt;QApplication&gt;
+#include &lt;QGLViewer/manipulatedCameraFrame.h&gt;
+
+using namespace qglviewer;
+
+int main(int argc, char** argv)
+{
+	QApplication application(argc,argv);
+
+	// Create octree AABBox hierarchy
+	const qglviewer::Vec p(1.0, 0.7f, 1.3f);
+	Box::Root = new Box(-p, p);
+	Box::Root-&gt;buildBoxHierarchy(4);
+
+	// Instantiate the two viewers.
+	Viewer viewer, observer;
+
+	// Give v a cullingCamera;
+	Camera* c = viewer.camera();
+	CullingCamera* cc = new CullingCamera();
+	viewer.setCamera(cc);
+	delete c;
+
+	// Both viewers share the culling camera
+	viewer.setCullingCamera(cc);
+	observer.setCullingCamera(cc);
+
+	// Place observer
+	observer.setSceneRadius(10.0);
+	observer.camera()-&gt;setViewDirection(qglviewer::Vec(0.0, -1.0, 0.0));
+	observer.showEntireScene();
+
+	// Make sure every culling Camera movement updates the outer viewer
+	QObject::connect(viewer.camera()-&gt;frame(), SIGNAL(manipulated()), &amp;observer, SLOT(updateGL()));
+	QObject::connect(viewer.camera()-&gt;frame(), SIGNAL(spun()), &amp;observer, SLOT(updateGL()));
+
+
+	viewer.setWindowTitle("frustumCulling");
+	observer.setWindowTitle("scene observer");
+
+	// Show the viewers' windows.
+	viewer.show();
+	observer.show();
+
+	return application.exec();
+}
+</pre>
+
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>

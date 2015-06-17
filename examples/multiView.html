@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer multiView example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Gallery</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The multiView example</h1>
+
+<center>
+  <img src="../images/multiView.jpg" width="330" height="228" alt="multiView"/>
+</center>
+
+<p>
+ A multi-view application, with constrained camera displacements.
+</p>
+<p>
+ Four viewers are created, each displaying the same scene. The camera displacements are constrained
+ for three of the viewers to create the classical top, front, side views. The last viewer is a
+ classical 3D viewer.
+</p>
+<p>
+ Note that the four viewers share the same OpenGL context.
+</p>
+<h2>multiView.h</h2>
+<pre>
+#include &lt;QGLViewer/qglviewer.h&gt;
+
+class Scene
+{
+public:
+  void draw() const;
+};
+
+
+class Viewer : public QGLViewer
+{
+public:
+  Viewer(const Scene* const s, int type, QWidget* parent, const QGLWidget* shareWidget=NULL);
+
+protected :
+  virtual void draw();
+
+private:
+  const Scene* const scene_;
+};
+
+</pre>
+
+
+<h2>multiView.cpp</h2>
+<pre>
+#include "multiView.h"
+
+#include &lt;QGLViewer/manipulatedCameraFrame.h&gt;
+
+using namespace qglviewer;
+using namespace std;
+
+Viewer::Viewer(const Scene* const s, int type, QWidget* parent, const QGLWidget* shareWidget)
+  : QGLViewer(parent, shareWidget), scene_(s)
+{
+  setAxisIsDrawn();
+  setGridIsDrawn();
+
+  if (type &lt; 3)
+	{
+	  // Move camera according to viewer type (on X, Y or Z axis)
+	  camera()-&gt;setPosition(Vec((type==0)? 1.0 : 0.0, (type==1)? 1.0 : 0.0, (type==2)? 1.0 : 0.0));
+	  camera()-&gt;lookAt(sceneCenter());
+
+	  camera()-&gt;setType(Camera::ORTHOGRAPHIC);
+	  camera()-&gt;showEntireScene();
+
+	  // Forbid rotation
+	  WorldConstraint* constraint = new WorldConstraint();
+	  constraint-&gt;setRotationConstraintType(AxisPlaneConstraint::FORBIDDEN);
+	  camera()-&gt;frame()-&gt;setConstraint(constraint);
+	}
+
+  restoreStateFromFile();
+}
+
+void Viewer::draw()
+{
+  scene_-&gt;draw();
+}
+
+// Draws a spiral
+void Scene::draw() const
+{
+  const float nbSteps = 200.0;
+  glBegin(GL_QUAD_STRIP);
+  for (float i=0; i&lt;nbSteps; ++i)
+	{
+	  float ratio = i/nbSteps;
+	  float angle = 21.0*ratio;
+	  float c = cos(angle);
+	  float s = sin(angle);
+	  float r1 = 1.0 - 0.8f*ratio;
+	  float r2 = 0.8f - 0.8f*ratio;
+	  float alt = ratio - 0.5f;
+	  const float nor = 0.5f;
+	  const float up = sqrt(1.0-nor*nor);
+	  glColor3f(1.0-ratio, 0.2f , ratio);
+	  glNormal3f(nor*c, up, nor*s);
+	  glVertex3f(r1*c, alt, r1*s);
+	  glVertex3f(r2*c, alt+0.05f, r2*s);
+	}
+  glEnd();
+}
+</pre>
+
+
+<h2>main.cpp</h2>
+<pre>
+#include "multiView.h"
+#include &lt;qapplication.h&gt;
+#include &lt;qsplitter.h&gt;
+
+int main(int argc, char** argv)
+{
+  QApplication application(argc,argv);
+
+  // Create Splitters
+  QSplitter *hSplit  = new QSplitter(Qt::Vertical);
+  QSplitter *vSplit1 = new QSplitter(hSplit);
+  QSplitter *vSplit2 = new QSplitter(hSplit);
+
+  // Create the scene
+  Scene* s = new Scene();
+
+  // Instantiate the viewers.
+  Viewer side  (s,0,vSplit1);
+  Viewer top   (s,1,vSplit1, &amp;side);
+  Viewer front (s,2,vSplit2, &amp;side);
+  Viewer persp (s,3,vSplit2, &amp;side);
+
+
+  hSplit-&gt;setWindowTitle("multiView");
+
+  // Set main QSplitter as the main widget.
+  hSplit-&gt;show();
+
+  return application.exec();
+}
+</pre>
+
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>

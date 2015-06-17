@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer screenCoordSystem example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Gallery</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The screenCoordSystem example</h1>
+
+<center>
+  <img src="../images/screenCoordSystem.jpg" width="330" height="228" alt="screenCoordSystem"/>
+</center>
+
+<p>
+ A saucers control viewer that illustrates the screen coordinate system feature.
+</p>
+<p>
+ Use <code>startScreenCoordinatesSystem()</code> and <code>stopScreenCoordinatesSystem()</code> to
+ set this mode. Once this mode has been activated in <code>draw()</code>, the X,Y coordinates
+ correspond to the pixel units (origin in the lower left corner). Combined with the
+ <code>camera()->projectedCoordinatesOf()</code>, this feature enable the mix of 2D and 3D drawing.
+</p>
+<p>
+ In this example, the arrows that designate the saucers seem to be attached to the object. Of
+ course, such 2D drawing could have been computed in 3D, but this implies complex geometric
+ computations to make the arrow always face the camera and this method is much simpler.
+</p>
+<p>
+ Since we use gluCylinder
+</p>
+<h2>screenCoordSystem.h</h2>
+<pre>
+#include &lt;QGLViewer/qglviewer.h&gt;
+#include &lt;qcolor.h&gt;
+
+class Viewer : public QGLViewer
+{
+protected :
+  virtual void init();
+  virtual void draw();
+  virtual QString helpString() const;
+
+private :
+  void drawSaucer() const;
+
+  static const int nbSaucers = 10;
+  qglviewer::Frame saucerPos[nbSaucers];
+  QColor saucerColor[nbSaucers];
+};
+</pre>
+
+
+<h2>screenCoordSystem.cpp</h2>
+<pre>
+#include "screenCoordSystem.h"
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt; // RAND_MAX
+
+using namespace qglviewer;
+using namespace std;
+
+void Viewer::init()
+{
+  for (int i=0; i&lt;nbSaucers; i++)
+    {
+      Vec pos;
+      pos.x = rand() / static_cast&lt;float&gt;(RAND_MAX) - 0.5;
+      pos.y = rand() / static_cast&lt;float&gt;(RAND_MAX) - 0.5;
+      pos.z = rand() / static_cast&lt;float&gt;(RAND_MAX) - 0.5;
+
+      Quaternion ori(Vec(static_cast&lt;float&gt;(rand()) / RAND_MAX,
+			  static_cast&lt;float&gt;(rand()) / RAND_MAX,
+			  static_cast&lt;float&gt;(rand()) / RAND_MAX),
+		      rand() / static_cast&lt;float&gt;(RAND_MAX) * M_PI);
+
+      saucerPos[i].setPosition(pos);
+      saucerPos[i].setOrientation(ori);
+
+      saucerColor[i].setRgb(int(255.0 * rand() / static_cast&lt;float&gt;(RAND_MAX)),
+			    int(255.0 * rand() / static_cast&lt;float&gt;(RAND_MAX)),
+			    int(255.0 * rand() / static_cast&lt;float&gt;(RAND_MAX)));
+    }
+
+  restoreStateFromFile();
+  help();
+}
+
+QString Viewer::helpString() const
+{
+  QString text("&lt;h2&gt;S c r e e n C o o r d S y s t e m&lt;/h2&gt;");
+  text += "This example illustrates the &lt;i&gt;startScreenCoordinatesSystem()&lt;/i&gt; function ";
+  text += "which enables a GL drawing directly into the screen coordinate system.&lt;br&gt;&lt;br&gt;";
+  text += "The arrows are drawned using this method. The screen projection coordinates ";
+  text += "of the objects is determined using &lt;code&gt;camera()-&gt;projectedCoordinatesOf()&lt;/code&gt;, ";
+  text += "thus &lt;i&gt;attaching&lt;/i&gt; the 2D arrows to 3D objects.";
+  return text;
+}
+
+void Viewer::drawSaucer() const
+{
+  static GLUquadric* quadric = gluNewQuadric();
+
+  glTranslatef(0.0, 0.0, -0.014f);
+  gluCylinder(quadric, 0.015, 0.03, 0.004, 32, 1);
+  glTranslatef(0.0, 0.0, 0.004f);
+  gluCylinder(quadric, 0.03, 0.04, 0.01, 32, 1);
+  glTranslatef(0.0, 0.0, 0.01f);
+  gluCylinder(quadric, 0.05, 0.03, 0.02, 32, 1);
+  glTranslatef(0.0, 0.0, 0.02f);
+  gluCylinder(quadric, 0.03, 0.0, 0.003, 32, 1);
+  glTranslatef(0.0, 0.0, -0.02f);
+}
+
+void Viewer::draw()
+{
+  static Vec proj[nbSaucers];
+
+  int i;
+  // Draw 3D flying saucers
+  for (i=0; i&lt;nbSaucers; i++)
+    {
+      glPushMatrix();
+      glMultMatrixd(saucerPos[i].matrix());
+      qglColor(saucerColor[i]);
+      drawSaucer();
+      glPopMatrix();
+    }
+
+  // Draw the arrows
+  qglColor(foregroundColor());
+  startScreenCoordinatesSystem();
+  for (i=0; i&lt;nbSaucers; i++)
+    {
+      glBegin(GL_POLYGON);
+      proj[i] = camera()-&gt;projectedCoordinatesOf(saucerPos[i].position());
+      // The small z offset makes the arrow slightly above the saucer, so that it is always visible
+      glVertex3fv(proj[i] + Vec(-55, 0, -0.001f));
+      glVertex3fv(proj[i] + Vec(-17,-5, -0.001f));
+      glVertex3fv(proj[i] + Vec( -5, 0, -0.001f));
+      glVertex3fv(proj[i] + Vec(-17, 5, -0.001f));
+      glEnd();
+    }
+  stopScreenCoordinatesSystem();
+
+  // Draw text id
+  glDisable(GL_LIGHTING);
+  for (i=0; i&lt;nbSaucers; i++)
+    drawText(int(proj[i].x)-62, int(proj[i].y)+4, QString::number(i));
+  glEnable(GL_LIGHTING);
+}
+
+
+</pre>
+
+
+<h2>main.cpp</h2>
+<pre>
+#include "screenCoordSystem.h"
+#include &lt;qapplication.h&gt;
+
+int main(int argc, char** argv)
+{
+  QApplication application(argc,argv);
+
+  Viewer viewer;
+
+  viewer.setWindowTitle("screenCoordSystem");
+
+  viewer.show();
+
+  return application.exec();
+}
+</pre>
+
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>

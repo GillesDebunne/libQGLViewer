@@ -1,0 +1,299 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer mouseGrabber example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Gallery</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The mouseGrabber example</h1>
+
+<center>
+  <img src="../images/mouseGrabber.jpg" width="330" height="228" alt="mouseGrabber"/>
+</center>
+
+<p>
+ <code>MouseGrabber</code>s enable complex mouse interaction.
+</p>
+<p>
+ A <code>MouseGrabber</code> is an abstract class which defines objects that are sensitive to the
+ mouse. When activated, they grab the mouse events. Possible applications are interactive 2D or 3D
+ GUI, object auto-selection, auto drop-down menu and much more.
+</p>
+<p>
+ <code>ManipulatedFrame</code> are indeed <code>MouseGrabbers</code> as is illustrated here. Simply
+ hover on a spiral to automatically "select" it. Mouse events will then be grabbed by the
+ associated <code>ManipulatedFrame</code>, which can be moved without any key press or GUI
+ interaction. Useful to easily manipulate scene objects. Note that by default, a
+ <code>ManipulatedFrame</code> grabs the mouse when the cursor is close enough to its
+ <code>position()</code>. You may want to overload the <code>checkIfGrabsMouse()</code> function to
+ define a more complex grabbing test.
+</p>
+<p>
+ That's what is done in the <code>CameraPathPlayer</code> class, which is associated to a Camera
+ keyFrame paths or position. It is displayed as a text on the left hand side of the window (when
+ its associated path is defined). It reacts to mouse hovering and clicking the text will play
+ (resp. restore) the Camera path (resp. position).
+</p>
+<h2>mouseGrabber.h</h2>
+<pre>
+#include &lt;QGLViewer/qglviewer.h&gt;
+#include &lt;QGLViewer/mouseGrabber.h&gt;
+#include &lt;QGLViewer/manipulatedFrame.h&gt;
+
+class CameraPathPlayer : public qglviewer::MouseGrabber
+{
+public:
+  CameraPathPlayer(int nb) : pathNb(nb) {}
+  void checkIfGrabsMouse(int x, int y, const qglviewer::Camera* const camera);
+  int yPos() { return 25*pathNb; }
+
+protected:
+  void mousePressEvent(QMouseEvent* const, qglviewer::Camera* const camera) { camera-&gt;playPath(pathNb); }
+
+private:
+  int pathNb;
+};
+
+
+class Spiral
+{
+public:
+  void draw() const;
+  void setPosition(const qglviewer::Vec&amp; pos) { mf_.setPosition(pos); };
+
+private:
+  qglviewer::ManipulatedFrame mf_;
+};
+
+
+class Viewer : public QGLViewer
+{
+protected :
+  virtual void init();
+  virtual void draw();
+  virtual QString helpString() const;
+
+  void displayPlayers();
+  void updatePlayers();
+
+private:
+  CameraPathPlayer** player_;
+  int nbPlayers_;
+  QList&lt;Spiral&gt; spiral_;
+};
+</pre>
+
+
+<h2>mouseGrabber.cpp</h2>
+<pre>
+#include "mouseGrabber.h"
+
+#include &lt;QGLViewer/manipulatedFrame.h&gt;
+
+using namespace qglviewer;
+using namespace std;
+
+void CameraPathPlayer::checkIfGrabsMouse(int x, int y, const Camera* const)
+{
+  // Rectangular activation array - May have to be tune depending on your default font size
+  setGrabsMouse((x &lt; 80) &amp;&amp; (y&lt;yPos()) &amp;&amp; ((yPos()-y) &lt; 16));
+}
+
+void Viewer::displayPlayers()
+{
+  for (int i=0; i&lt;nbPlayers_; ++i)
+	{
+	  CameraPathPlayer* cpp = player_[i];
+	  if (cpp)
+	{
+	  QString s;
+	  if (cpp-&gt;grabsMouse())
+		{
+		  glColor3f(1,1,1);
+		  if (camera()-&gt;keyFrameInterpolator(i)-&gt;numberOfKeyFrames() &gt; 1)
+		s = "Play path F" + QString::number(i);
+		  else
+		s = "Restore pos F" + QString::number(i);
+		}
+	  else
+		{
+		  glColor3f(0.6f, 0.6f, 0.6f);
+		  if (camera()-&gt;keyFrameInterpolator(i)-&gt;numberOfKeyFrames() &gt; 1)
+		s = "Path F" + QString::number(i);
+		  else
+		s = "Pos F" + QString::number(i);
+		}
+	  drawText(10, cpp-&gt;yPos()-3, s);
+	}
+	}
+}
+
+
+void Viewer::updatePlayers()
+{
+  for (int i=0; i&lt;nbPlayers_; ++i)
+	{
+	  // Check if CameraPathPlayer is still valid
+	  if ((player_[i]) &amp;&amp; (!camera()-&gt;keyFrameInterpolator(i)))
+	{
+	  delete player_[i];
+	  player_[i] = NULL;
+	}
+	  // Or add it if needed
+	  if ((camera()-&gt;keyFrameInterpolator(i)) &amp;&amp; (!player_[i]))
+	player_[i] = new CameraPathPlayer(i);
+	}
+}
+
+
+void Viewer::init()
+{
+  // Absolutely needed for MouseGrabber
+  setMouseTracking(true);
+
+  // In order to make the manipulatedFrame displacements clearer
+  setAxisIsDrawn();
+
+  // Initialize the CameraPathPlayer MouseGrabber array
+  nbPlayers_ = 12;
+  player_ = new CameraPathPlayer*[nbPlayers_];
+  for (int i=0; i&lt;nbPlayers_; ++i)
+	player_[i] = NULL;
+
+  // Create a scene with several spirals.
+  const int nbSpirals = 7;
+  for (int i = -nbSpirals/2; i&lt;=nbSpirals/2; ++i)
+	{
+	  Spiral s;
+	  s.setPosition(Vec(1.8f*i/nbSpirals, 0.0, 0.0));
+	  spiral_.push_back(s);
+	}
+
+  restoreStateFromFile();
+
+  help();
+}
+
+
+void Viewer::draw()
+{
+  for (QList&lt;Spiral&gt;::const_iterator it=spiral_.begin(), end=spiral_.end(); it != end; ++it)
+	(*it).draw();
+
+  updatePlayers();
+  glDisable(GL_LIGHTING);
+  displayPlayers();
+  glEnable(GL_LIGHTING);
+}
+
+
+QString Viewer::helpString() const
+{
+  QString text("&lt;h2&gt;M o u s e G r a b b e r &lt;/h2&gt;");
+  text += "This example illustrates the use of &lt;i&gt;MouseGrabber&lt;/i&gt;, which is an abstract ";
+  text += "class for objects that react (usually when the mouse hovers over them).&lt;br&gt;&lt;br&gt;";
+  text += "Define new camera paths (or positions) using &lt;b&gt;Alt&lt;/b&gt;+[&lt;b&gt;F1&lt;/b&gt;-&lt;b&gt;F12&lt;/b&gt;]. ";
+  text += "New &lt;i&gt;MouseGrabbers&lt;/i&gt; are then created and displayed in the upper left corner. ";
+  text += "Note how they react when the mouse hovers, and click them to play the associated path.&lt;br&gt;&lt;br&gt;";
+  text += "&lt;i&gt;ManipulatedFrame&lt;/i&gt;, such as the ones which define the spirals' positions, are ";
+  text += "also &lt;i&gt;MouseGrabbers&lt;/i&gt;. When the mouse is close to the spiral center, the &lt;i&gt;ManipulatedFrame&lt;/i&gt; ";
+  text += "will grab to mouse click (as if the &lt;b&gt;Control&lt;/b&gt; key was pressed). This is very convenient ";
+  text += "to intuitively move scene objects (such as lights) without any key or GUI interaction.&lt;br&gt;&lt;br&gt;";
+  text += "Note that &lt;code&gt;setMouseTracking()&lt;/code&gt; must be enabled to use &lt;i&gt;MouseGrabbers&lt;/i&gt;.";
+  return text;
+}
+
+void Spiral::draw() const
+{
+  glPushMatrix();
+  glMultMatrixd(mf_.matrix());
+
+  // Draw a spiral
+  const float nbSteps = 100.0;
+  glBegin(GL_QUAD_STRIP);
+  for (float i=0; i&lt;nbSteps; ++i)
+	{
+	  float ratio = i/nbSteps;
+	  float angle = 21.0*ratio;
+	  float c = cos(angle);
+	  float s = sin(angle);
+	  float r1 = 0.2 - 0.15*ratio;
+	  float r2 = 0.16 - 0.15*ratio;
+	  float alt = 0.2f * (ratio - 0.5);
+	  const float nor = .5;
+	  const float up = sqrt(1.0-nor*nor);
+
+	  if (mf_.grabsMouse())
+	glColor3f(1-ratio, 0.8f , ratio/2.0);
+	  else
+	glColor3f(1-ratio, 0.2f , ratio);
+
+	  glNormal3f(nor*c, up, nor*s);
+	  glVertex3f(r1*c, alt, r1*s);
+	  glVertex3f(r2*c, alt+0.01, r2*s);
+	}
+  glEnd();
+
+  glPopMatrix();
+}
+</pre>
+
+
+<h2>main.cpp</h2>
+<pre>
+#include "mouseGrabber.h"
+#include &lt;qapplication.h&gt;
+
+int main(int argc, char** argv)
+{
+  QApplication application(argc,argv);
+
+  Viewer viewer;
+
+  viewer.setWindowTitle("mouseGrabber");
+
+  viewer.show();
+
+  return application.exec();
+}
+</pre>
+
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>

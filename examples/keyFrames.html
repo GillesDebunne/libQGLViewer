@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer keyFrames example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Gallery</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The keyFrames example</h1>
+
+<center>
+  <img src="../images/keyFrames.jpg" width="330" height="228" alt="keyFrames"/>
+</center>
+
+<p>
+ The <code>KeyFrameInterpolator</code> test example.
+</p>
+<p>
+ KeyFrameInterpolator smoothly interpolate their attached Frame over time on a path defined by
+ Frames. The interpolation can be started/stopped/reset, played in loop, played at a different
+ speed, etc...
+</p>
+<p>
+ In this examples, the path is defined by four ManipulatedFrame which all can be moved with the
+ mouse. The interpolating path is updated accordingly.
+</p>
+<p>
+ The path and the interpolating axis are drawn using KeyFrameInterpolator::drawPath().
+</p>
+<p>
+ By default, the Camera holds 12 KeyFrameInterpolator, binded to the F1-12 keys. Use Alt-Fx to
+ define a new keyFrame for path x, and simply press Fx to play/pause the path x. See the <a
+ href="../keyboard.html">keyboard</a> page for details.
+</p>
+<h2>keyFrames.h</h2>
+<pre>
+#include &lt;QGLViewer/qglviewer.h&gt;
+
+class Viewer : public QGLViewer
+{
+public :
+  Viewer();
+
+protected :
+  virtual void draw();
+  virtual void keyPressEvent(QKeyEvent *e);
+  virtual QString helpString() const;
+
+private :
+  qglviewer::ManipulatedFrame** keyFrame_;
+  qglviewer::KeyFrameInterpolator kfi_;
+  const int nbKeyFrames;
+  int currentKF_;
+};
+</pre>
+
+
+<h2>keyFrames.cpp</h2>
+<pre>
+#include "keyFrames.h"
+
+#include &lt;QKeyEvent&gt;
+#include &lt;QGLViewer/manipulatedFrame.h&gt;
+
+using namespace qglviewer;
+using namespace std;
+
+Viewer::Viewer()
+  : nbKeyFrames(4)
+{
+  restoreStateFromFile();
+
+  // myFrame is the Frame that will be interpolated.
+  Frame* myFrame = new Frame();
+
+  // Set myFrame as the KeyFrameInterpolator interpolated Frame.
+  kfi_.setFrame(myFrame);
+  kfi_.setLoopInterpolation();
+
+  // An array of manipulated (key) frames.
+  keyFrame_ = new ManipulatedFrame*[nbKeyFrames];
+
+  // Create an initial path
+  for (int i=0; i&lt;nbKeyFrames; i++)
+	{
+	  keyFrame_[i] = new ManipulatedFrame();
+	  keyFrame_[i]-&gt;setPosition(-1.0 + 2.0*i/(nbKeyFrames-1), 0.0, 0.0);
+	  kfi_.addKeyFrame(keyFrame_[i]);
+	}
+
+  currentKF_ = 0;
+  setManipulatedFrame(keyFrame_[currentKF_]);
+
+  // Enable direct frame manipulation when the mouse hovers.
+  setMouseTracking(true);
+
+  setKeyDescription(Qt::Key_Plus, "Increases interpolation speed");
+  setKeyDescription(Qt::Key_Minus, "Decreases interpolation speed");
+  setKeyDescription(Qt::Key_Left, "Selects previous key frame");
+  setKeyDescription(Qt::Key_Right, "Selects next key frame");
+  setKeyDescription(Qt::Key_Return, "Starts/stops interpolation");
+
+  help();
+
+  connect(&amp;kfi_, SIGNAL(interpolated()), SLOT(updateGL()));
+  kfi_.startInterpolation();
+}
+
+QString Viewer::helpString() const
+{
+  QString text("&lt;h2&gt;K e y F r a m e s&lt;/h2&gt;");
+  text += "A &lt;i&gt;KeyFrameInterpolator&lt;/i&gt; holds an interpolated path defined by key frames. ";
+  text += "It can then smoothly make its associed frame follow that path. Key frames can interactively be manipulated, even ";
+  text += "during interpolation.&lt;br&gt;&lt;br&gt;";
+  text += "Note that the camera holds 12 such keyFrameInterpolators, binded to F1-F12. Press &lt;b&gt;Alt+Fx&lt;/b&gt; to define new key ";
+  text += "frames, and then press &lt;b&gt;Fx&lt;/b&gt; to make the camera follow the path. Press &lt;b&gt;C&lt;/b&gt; to visualize these paths.&lt;br&gt;&lt;br&gt;";
+  text += "&lt;b&gt;+/-&lt;/b&gt; changes the interpolation speed. Negative values are allowed.&lt;br&gt;&lt;br&gt;";
+  text += "&lt;b&gt;Return&lt;/b&gt; starts-stops the interpolation.&lt;br&gt;&lt;br&gt;";
+  text += "Use the left and right arrows to change the manipulated KeyFrame. ";
+  text += "Press &lt;b&gt;Control&lt;/b&gt; to move it or simply hover over it.";
+  return text;
+}
+
+void Viewer::keyPressEvent(QKeyEvent *e)
+{
+  switch (e-&gt;key())
+	{
+	case Qt::Key_Left :
+	  currentKF_ = (currentKF_+nbKeyFrames-1) % nbKeyFrames;
+	  setManipulatedFrame(keyFrame_[currentKF_]);
+	  updateGL();
+	  break;
+	case Qt::Key_Right :
+	  currentKF_ = (currentKF_+1) % nbKeyFrames;
+	  setManipulatedFrame(keyFrame_[currentKF_]);
+	  updateGL();
+	  break;
+	case Qt::Key_Return :
+	  kfi_.toggleInterpolation();
+	  break;
+	case Qt::Key_Plus :
+	  kfi_.setInterpolationSpeed(kfi_.interpolationSpeed()+0.25);
+	  break;
+	case Qt::Key_Minus :
+	  kfi_.setInterpolationSpeed(kfi_.interpolationSpeed()-0.25);
+	  break;
+	// case Qt::Key_C :
+	  // kfi_.setClosedPath(!kfi_.closedPath());
+	  // break;
+	default:
+	  QGLViewer::keyPressEvent(e);
+	}
+}
+
+void Viewer::draw()
+{
+  // Draw interpolated frame
+  glPushMatrix();
+  glMultMatrixd(kfi_.frame()-&gt;matrix());
+  drawAxis(0.3f);
+  glPopMatrix();
+
+  kfi_.drawPath(5, 10);
+
+  for (int i=0; i&lt;nbKeyFrames; ++i)
+	{
+	  glPushMatrix();
+	  glMultMatrixd(kfi_.keyFrame(i).matrix());
+
+	  if ((i == currentKF_) || (keyFrame_[i]-&gt;grabsMouse()))
+	drawAxis(0.4f);
+	  else
+	drawAxis(0.2f);
+
+	  glPopMatrix();
+	}
+}
+</pre>
+
+
+<h2>main.cpp</h2>
+<pre>
+#include "keyFrames.h"
+#include &lt;qapplication.h&gt;
+
+int main(int argc, char** argv)
+{
+  QApplication application(argc,argv);
+
+  Viewer viewer;
+
+  viewer.setWindowTitle("keyFrames");
+
+  viewer.show();
+
+  return application.exec();
+}
+</pre>
+
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>

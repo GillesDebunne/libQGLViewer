@@ -1,0 +1,306 @@
+<h1>The contribution examples</h1>
+
+The following examples do not directly illustrate a functionality of the library. Some are very
+simple while others are much more involved. Feel free to browse the files and to cut and paste. Only
+a short description is here given, the different source code are available in the
+<code>examples/contribs</code> directory.
+
+<a name="3dsViewer"></a>
+<h2 style="border-top:2px solid #CCC; margin:0; margin-top:20px; padding-left:20px;">3dsViewer</h2>
+<table>
+<tr>
+  <td><img src="../images/3dsViewer.jpg" width="330" height="228" alt="3dsViewer"/></td>
+<td>
+<p>
+ The LGPL lib3ds library is used to load and display a 3ds scene.
+</p>
+<p>
+ You need to install the lib3ds library (version 1.2) in order to compile this file.
+ See <a href="http://lib3ds.sourceforge.net/">http://lib3ds.sourceforge.net/</a>.
+</p>
+<p>
+ The current version (Version 1.2, Dec 2002) of the lib3ds library is flawed and results in :
+ <pre>3dsViewer.cpp:62: `lib3ds_file_bounding_box' undeclared (first use this function)</pre>
+</p>
+<p>
+ A patched version is available on the <a href="../installUnix.html">Unix installation page</a>.
+ You can alternately add this line in the file that uses <code>lib3ds_file_bounding_box()</code>
+ (or in <code>lib3ds/file.h</code>) :
+ <pre>extern "C" { LIB3DSAPI void lib3ds_file_bounding_box(Lib3dsFile *file, Lib3dsVector min, Lib3dsVector max); }</pre>
+</p>
+<p>
+ This example is simply a translation of a lib3ds example. Although it uses display lists, the
+ rendering speed does not seem to be as good as with other 3ds libraries (10 factor speed up). Note
+ however that this is due to the lib3ds library and not QGLViewer.
+</p>
+<p>
+ Press '<b>L</b>' (load) to load a new 3DS scene.
+</p>
+
+</td>
+</tr></table>
+
+<a name="agora"></a>
+<h2 style="border-top:2px solid #CCC; margin:0; margin-top:20px; padding-left:20px;">agora</h2>
+<table>
+<tr>
+  <td><img src="../images/agora.jpg" width="330" height="228" alt="agora"/></td>
+<td>
+<p>
+ Implementation of the game of <i>Agora</i>.
+</p>
+<p>
+ <i>Agora</i> is a strategy game for two players. The code is rather complex and
+ can be divided in two parts : a QGLViewer implementation for the viewer and an artificial
+ intelligence that allows you to play against the computer.
+</p>
+<p>
+ You should find the rules of the game on the web. Questions relative to the artificial
+ intelligence implementation should be asked to <code>Jean-Guillaume dot Dumas at imag dot fr</code>.
+</p>
+<p>
+ Computer player programs are expected to take three parameters: a board file name, an allowed
+ time (expressed in milliseconds and which sign determines which player is to play) and the
+ remaining number of moves before the game is declared over. The output should be the x,y coordinates of
+ the start and end positions of the move to play.
+</p>
+
+</td>
+</tr></table>
+
+<a name="anaglyph"></a>
+<h2 style="border-top:2px solid #CCC; margin:0; margin-top:20px; padding-left:20px;">anaglyph</h2>
+<table>
+<tr>
+  <td><img src="../images/anaglyph.jpg" width="330" height="228" alt="anaglyph"/></td>
+<td>
+<p>
+ Displays a scene in pseudo-stereo using anaglyph.
+</p>
+<p>
+ The anaglyph stereo mode displays simultaneously two colored views of the scene. You need to wear
+ glasses with colored lenses (here red and blue) to view the stereo image. Each eye then sees the
+ associated view, creating the stereo illusion.
+</p>
+<p>
+ All that is needed is to use the <code>loadModelViewMatrixStereo()</code> and
+ <code>loadProjectionMatrixStereo()</code> camera functions to set appropriate
+ <code>GL_MODELVIEW</code> and <code>GL_PROJECTION</code> matrices.
+</p>
+
+</td>
+</tr></table>
+
+<a name="backgroundImage"></a>
+<h2 style="border-top:2px solid #CCC; margin:0; margin-top:20px; padding-left:20px;">backgroundImage</h2>
+<table>
+<tr>
+  <td><img src="../images/backgroundImage.jpg" width="330" height="228" alt="backgroundImage"/></td>
+<td>
+<p>
+ Displays a background image in the viewer.
+</p>
+<p>
+ This example is derived from the <a href="#textureViewer">textureViewer</a> example. It displays a
+ background image in the viewer using a texture. The texture is simply mapped to a quad, drawn before
+ the rest of the scene. The depth buffer is flushed after the drawing.
+ <code>startScreenCoordinatesSystem()</code> enables an easy pixel coordinate placement of the
+ quad.
+</p>
+<p>
+ This example was created by Sylvain Paris. Thanks to him.
+</p>
+
+</td>
+</tr></table>
+
+<a name="blobWar"></a>
+<h2 style="border-top:2px solid #CCC; margin:0; margin-top:20px; padding-left:20px;">blobWar</h2>
+<table>
+<tr>
+  <td><img src="../images/blobWar.jpg" width="330" height="228" alt="blobWar"/></td>
+<td>
+<p>
+ Implementation of the game of <i>BlobWar</i>.
+</p>
+<p>
+ <i>BlobWar</i> is a strategy game for two players. The rules are available in the help menu. The
+ two players can be human or computer.
+</p>
+<p>
+ Computer player programs are expected to take two parameters: a board file name and an allowed
+ time (which sign determines which player is to play). The output should be the x,y coordinates of
+ the start and end positions of the move to play.
+</p>
+<p>
+ A naive greedy AI program is provided in the AI directory.
+</p>
+
+</td>
+</tr></table>
+
+<a name="cornerAxis"></a>
+<h2 style="border-top:2px solid #CCC; margin:0; margin-top:20px; padding-left:20px;">cornerAxis</h2>
+<table>
+<tr>
+  <td><img src="../images/cornerAxis.jpg" width="330" height="228" alt="cornerAxis"/></td>
+<td>
+<p>
+ Displays a world axis in the lower-left corner of the window.
+</p>
+<p>
+ A world axis representation is drawn in the lower left corner, so that one always sees how the scene is oriented.
+</p>
+<p>
+ The axis is drawn in <code>postDraw()</code> with appropriate ortho camera parameters.
+ <code>glViewport</code> and <code>glScissor</code> are used to restrict the drawing area.
+</p>
+<p>
+ This example is very similar to the thumbnail example.
+</p>
+
+</td>
+</tr></table>
+
+<a name="dvonn"></a>
+<h2 style="border-top:2px solid #CCC; margin:0; margin-top:20px; padding-left:20px;">dvonn</h2>
+<table>
+<tr>
+  <td><img src="../images/dvonn.jpg" width="330" height="228" alt="dvonn"/></td>
+<td>
+<p>
+ Implementation of the game of <i>Dvonn</i>.
+</p>
+<p>
+ <i>Dvonn</i> is a very good strategy game for two players. See the Help menu for complete rules.
+ Consider buying the game if you liked it. It is quite cheap and really nicer than this version.
+</p>
+<p>
+ See the <a href="http://www.gipf.com/dvonn/index.html">GIPF project web page</a> for details.
+</p>
+<p>
+ This example was created by Xavier Decoret.
+</p>
+
+</td>
+</tr></table>
+
+<a name="eventRecorder"></a>
+<h2 style="border-top:2px solid #CCC; margin:0; margin-top:20px; padding-left:20px;">eventRecorder</h2>
+<table>
+<tr>
+  <td><img src="../images/eventRecorder.jpg" width="330" height="228" alt="eventRecorder"/></td>
+<td>
+<p>
+ Records a scenario that can be replayed and converted into a movie.
+</p>
+<p>
+ An <code>EventRecorder</code> is associated to a <code>QGLViewer</code>. When the
+ <code>EventRecorder</code> <code>isRecording()</code>, the different events that are sent to the
+ qglviewer() are recorded in an internal data structure. The EventRecorder then can replay these
+ events with an identical timing in order to reproduce the recorded scenario. Snapshots can
+ optionally be captured during playback, and the resulting image series can be converted into a
+ movie.
+</p>
+
+</td>
+</tr></table>
+
+<a name="quarto"></a>
+<h2 style="border-top:2px solid #CCC; margin:0; margin-top:20px; padding-left:20px;">quarto</h2>
+<table>
+<tr>
+  <td><img src="../images/quarto.jpg" width="330" height="228" alt="quarto"/></td>
+<td>
+<p>
+ A simulation of the game of Quarto.
+</p>
+<p>
+ See the <code>rules.txt</code> file for explanations.
+</p>
+<p>
+ This program was originally coded by Matthieu Richard.
+</p>
+
+</td>
+</tr></table>
+
+<a name="terrain"></a>
+<h2 style="border-top:2px solid #CCC; margin:0; margin-top:20px; padding-left:20px;">terrain</h2>
+<table>
+<tr>
+  <td><img src="../images/terrain.jpg" width="330" height="228" alt="terrain"/></td>
+<td>
+<p>
+ A random fractal terrain with trees, animated water, sky and shadows.
+</p>
+<p>
+ This example was created by Serigne Sow and Joerg Liebelt. It features a textured quadtrees
+ fractal terrain, which resolution is dynamically updated depending on the camera position.
+</p>
+<p>
+ Acknowledgments to Stefan Roettger for his article <i>Real-Time Generation of Continuous Levels of
+ Detail for Height Fields</i>.
+</p>
+
+</td>
+</tr></table>
+
+<a name="textureViewer"></a>
+<h2 style="border-top:2px solid #CCC; margin:0; margin-top:20px; padding-left:20px;">textureViewer</h2>
+<table>
+<tr>
+  <td><img src="../images/textureViewer.jpg" width="330" height="228" alt="textureViewer"/></td>
+<td>
+<p>
+ Loads an image file and texture maps a polygon with it.
+</p>
+<p>
+ Pedagogical example that shows how to apply a texture on a 3D object.
+ Inspired from the Qt texture example.
+</p>
+<p>
+ The Qt <code>QImage</code> class and its <code>convertToGLFormat()</code> function are used to
+ load any image format. The image is included in a larger image whose dimensions are powers of two.
+ This is not required if your hardware supports the GL_TEXTURE_RECTANGLE extension. Feel free to
+ cut and paste.
+</p>
+
+</td>
+</tr></table>
+
+<a name="thumbnail"></a>
+<h2 style="border-top:2px solid #CCC; margin:0; margin-top:20px; padding-left:20px;">thumbnail</h2>
+<table>
+<tr>
+  <td><img src="../images/thumbnail.jpg" width="330" height="228" alt="thumbnail"/></td>
+<td>
+<p>
+ Displays an alternative 3D view in a corner thumbnail.
+</p>
+<p>
+ This example shows how a thumbnail can be inserted in a corner of the viewer to display an
+ alternative display. This can be useful for data structure inspection, different rendering (as
+ illustrated here) or debugging. It uses <code>glViewport</code> and <code>glScissor</code> to
+ restrict the drawing area.
+</p>
+<p>
+ This example was created by Sylvain Paris.
+</p>
+
+</td>
+</tr></table>
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>

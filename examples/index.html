@@ -1,0 +1,258 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer thumbnail example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Gallery</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+
+<h1>libQGLViewer examples</h1>
+
+<div class="summary">
+<b><a href="#introduction">&raquo;&raquo;</a></b> &nbsp; Introduction<br/>
+<b><a href="#basic">&raquo;&raquo;</a></b> &nbsp; Basic examples<br/>
+<b><a href="#pedagogical">&raquo;&raquo;</a></b> &nbsp; Pedagogical examples<br/>
+<b><a href="#complex">&raquo;&raquo;</a></b> &nbsp; More complex examples<br/>
+</div>
+
+
+<a name="introduction"></a>
+<h2>Introduction</h2>
+
+Many pedagogical examples illustrate some of the functionalities of the viewer and are provided for
+understanding and cut and paste. They were not designed to be impressive, but to demonstrate what can
+be achieved with few lines of code.
+
+<p>
+One should first try the <a href="#basic">basic examples</a> listed below and read the <a href="../introduction.html">introduction page</a> to understand
+the philosophy of the library. See also the <a href="../compilation.html">compilation with libQGLViewer</a> page to learn how to create your first program.
+</p>
+
+<a name="basic"></a>
+<h2>Basic examples</h2>
+
+<table style="margin:auto;" cellpadding="2" cellspacing="12">
+  <tr>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="simpleViewer.html"><img src="../images/simpleViewer.jpg" width="330" height="228" alt="simpleViewer"/><br/>
+      <b>simpleViewer</b></a><br/> The simplest application example: 20 lines of code and yet all the power !
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="manipulatedFrame.html"><img src="../images/manipulatedFrame.jpg" width="330" height="228" alt="manipulatedFrame"/><br/>
+      <b>manipulatedFrame</b></a><br/> A <code>ManipulatedFrame</code> can be moved with the mouse in the scene.
+    </td>
+  </tr>
+  <tr>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="select.html"><img src="../images/select.jpg" width="330" height="228" alt="select"/><br/>
+      <b>select</b></a><br/> Selection of scene objects using <code>select()</code> and an GL_SELECT render mode.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="keyboardAndMouse.html"><img src="../images/keyboardAndMouse.jpg" width="330" height="228" alt="keyboardAndMouse"/><br/>
+      <b>keyboardAndMouse</b></a><br/> Shows how to customize your keyboard and mouse bindings.
+    </td>
+  </tr>
+</table>
+
+
+<a name="pedagogical"></a>
+<h2>Pedagogical examples</h2>
+<table style="margin:auto;" cellpadding="2" cellspacing="12">
+  <tr>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="animation.html"><img src="../images/animation.jpg" width="330" height="228" alt="animation"/><br/>
+      <b>animation</b></a><br/> The <code>animate()</code> function illustrated by a water particle simulation.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="callback.html"><img src="../images/callback.jpg" width="330" height="228" alt="callback"/><br/>
+      <b>callback</b></a><br/> Using the Qt signal-slot mechanism to connect a QGLViewer to your scene.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="cameraLight.html"><img src="../images/cameraLight.jpg" width="330" height="228" alt="cameraLight"/><br/>
+      <b>cameraLight</b></a><br/> This example shows how to position a GL_LIGHT on the camera.
+    </td>
+  </tr>
+  <tr>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="clippingPlane.html"><img src="../images/clippingPlane.jpg" width="330" height="228" alt="clippingPlane"/><br/>
+      <b>clippingPlane</b></a><br/> A clipping plane is manipulated using a ManipulatedFrame
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="constrainedCamera.html"><img src="../images/constrainedCamera.jpg" width="330" height="228" alt="constrainedCamera"/><br/>
+      <b>constrainedCamera</b></a><br/> Constraints applied on the Camera Frame to limit its translation and/or rotation.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="constrainedFrame.html"><img src="../images/constrainedFrame.jpg" width="330" height="228" alt="constrainedFrame"/><br/>
+      <b>constrainedFrame</b></a><br/> Constraints can limit the translation and/or rotation of a (Manipulated)Frame.
+    </td>
+  </tr>
+  <tr>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="drawLight.html"><img src="../images/drawLight.jpg" width="330" height="228" alt="drawLight"/><br/>
+      <b>drawLight</b></a><br/> The <code>drawLight()</code> function is a light debugging tool.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="fastDraw.html"><img src="../images/fastDraw.jpg" width="330" height="228" alt="fastDraw"/><br/>
+      <b>fastDraw</b></a><br/> The <code>fastDraw()</code> function enables interactivity even with large scenes.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="frameTransform.html"><img src="../images/frameTransform.jpg" width="330" height="228" alt="frameTransform"/><br/>
+      <b>frameTransform</b></a><br/> Coordinate transformation between different Frames.
+    </td>
+  </tr>
+  <tr>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="frustumCulling.html"><img src="../images/frustumCulling.jpg" width="330" height="228" alt="frustumCulling"/><br/>
+      <b>frustumCulling</b></a><br/> Frustum culling using <code>getFrustumPlanesCoefficients</code>.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="interface.html"><img src="../images/interface.jpg" width="330" height="228" alt="interface"/><br/>
+      <b>interface</b></a><br/> Adding a graphical user interface around a <code>QGLViewer</code>.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="keyFrames.html"><img src="../images/keyFrames.jpg" width="330" height="228" alt="keyFrames"/><br/>
+      <b>keyFrames</b></a><br/> The <code>KeyFrameInterpolator</code> test example.
+    </td>
+  </tr>
+  <tr>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="luxo.html"><img src="../images/luxo.jpg" width="330" height="228" alt="luxo"/><br/>
+      <b>luxo</b></a><br/> A more complex example that combines <code>ManipulatedFrames</code>, selection and constraints.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="mouseGrabber.html"><img src="../images/mouseGrabber.jpg" width="330" height="228" alt="mouseGrabber"/><br/>
+      <b>mouseGrabber</b></a><br/> <code>MouseGrabber</code>s enable complex mouse interaction.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="multiSelect.html"><img src="../images/multiSelect.jpg" width="330" height="228" alt="multiSelect"/><br/>
+      <b>multiSelect</b></a><br/> Customized <code>select()</code> function that enables the selection of several objects.
+    </td>
+  </tr>
+  <tr>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="multiView.html"><img src="../images/multiView.jpg" width="330" height="228" alt="multiView"/><br/>
+      <b>multiView</b></a><br/> A multi-view application, with constrained camera displacements.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="overpainting.html"><img src="../images/overpainting.jpg" width="330" height="228" alt="overpainting"/><br/>
+      <b>overpainting</b></a><br/> Mixing OpenGL (3D) and QPainter (2D) drawing in the same viewer.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="screenCoordSystem.html"><img src="../images/screenCoordSystem.jpg" width="330" height="228" alt="screenCoordSystem"/><br/>
+      <b>screenCoordSystem</b></a><br/> A saucers control viewer that illustrates the screen coordinate system feature.
+    </td>
+  </tr>
+  <tr>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="standardCamera.html"><img src="../images/standardCamera.jpg" width="330" height="228" alt="standardCamera"/><br/>
+      <b>standardCamera</b></a><br/> A 'standard' Camera with fixed near and far planes.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="stereoViewer.html"><img src="../images/stereoViewer.jpg" width="330" height="228" alt="stereoViewer"/><br/>
+      <b>stereoViewer</b></a><br/> Simply press <code>S</code> to toggle stereo display (if supported).
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+
+<a name="complex"></a>
+<h2>More complex examples</h2>
+<table style="margin:auto;" cellpadding="2" cellspacing="12">
+  <tr>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="contribs.html#3dsViewer"><img src="../images/3dsViewer.jpg" width="330" height="228" alt="3dsViewer"/><br/>
+      <b>3dsViewer</b></a><br/> The LGPL lib3ds library is used to load and display a 3ds scene.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="contribs.html#agora"><img src="../images/agora.jpg" width="330" height="228" alt="agora"/><br/>
+      <b>agora</b></a><br/> Implementation of the game of <i>Agora</i>.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="contribs.html#anaglyph"><img src="../images/anaglyph.jpg" width="330" height="228" alt="anaglyph"/><br/>
+      <b>anaglyph</b></a><br/> Displays a scene in pseudo-stereo using anaglyph.
+    </td>
+  </tr>
+  <tr>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="contribs.html#backgroundImage"><img src="../images/backgroundImage.jpg" width="330" height="228" alt="backgroundImage"/><br/>
+      <b>backgroundImage</b></a><br/> Displays a background image in the viewer.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="contribs.html#blobWar"><img src="../images/blobWar.jpg" width="330" height="228" alt="blobWar"/><br/>
+      <b>blobWar</b></a><br/> Implementation of the game of <i>BlobWar</i>.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="contribs.html#cornerAxis"><img src="../images/cornerAxis.jpg" width="330" height="228" alt="cornerAxis"/><br/>
+      <b>cornerAxis</b></a><br/> Displays a world axis in the lower-left corner of the window.
+    </td>
+  </tr>
+  <tr>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="contribs.html#dvonn"><img src="../images/dvonn.jpg" width="330" height="228" alt="dvonn"/><br/>
+      <b>dvonn</b></a><br/> Implementation of the game of <i>Dvonn</i>.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="contribs.html#eventRecorder"><img src="../images/eventRecorder.jpg" width="330" height="228" alt="eventRecorder"/><br/>
+      <b>eventRecorder</b></a><br/> Records a scenario that can be replayed and converted into a movie.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="contribs.html#quarto"><img src="../images/quarto.jpg" width="330" height="228" alt="quarto"/><br/>
+      <b>quarto</b></a><br/> A simulation of the game of Quarto.
+    </td>
+  </tr>
+  <tr>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="contribs.html#terrain"><img src="../images/terrain.jpg" width="330" height="228" alt="terrain"/><br/>
+      <b>terrain</b></a><br/> A random fractal terrain with trees, animated water, sky and shadows.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="contribs.html#textureViewer"><img src="../images/textureViewer.jpg" width="330" height="228" alt="textureViewer"/><br/>
+      <b>textureViewer</b></a><br/> Loads an image file and texture maps a polygon with it.
+    </td>
+    <td style='border:2px solid #aaaacc' align="center">
+      <a href="contribs.html#thumbnail"><img src="../images/thumbnail.jpg" width="330" height="228" alt="thumbnail"/><br/>
+      <b>thumbnail</b></a><br/> Displays an alternative 3D view in a corner thumbnail.
+    </td>
+  </tr>
+</table>
+
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer keyboardAndMouse example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Gallery</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The keyboardAndMouse example</h1>
+
+<center>
+  <img src="../images/keyboardAndMouse.jpg" width="330" height="228" alt="keyboardAndMouse"/>
+</center>
+
+<p>
+ Shows how to customize your keyboard and mouse bindings.
+</p>
+<p>
+ Use <code>setShortcut()</code> to change <b>standard</b> action bindings (axis, grid or fps
+ display, exit...).
+</p>
+<p>
+ Use <code>setMouseBinding()</code> and <code>setWheelBinding()</code> to change <b>standard</b> action
+ mouse bindings (camera rotation, translation, object selection...).
+</p>
+<p>
+ If you want to define <b>new</b> keyboard shortcuts, overload <code>keyPressEvent()</code> and
+ bind your own new actions. Use setKeyDescription() to add your shortcuts in the help window.
+</p>
+<p>
+ To define <b>new</b> mouse actions, overload <code>mouse(Press|Move|Release)Event</code>. See the
+ <code>mouseMoveEvent()</code> documentation for an example. Overload
+ <code>setMouseBindingDescription()</code> to update the help window binding tab.
+</p>
+<h2>keyboardAndMouse.h</h2>
+<pre>
+#include &lt;QGLViewer/qglviewer.h&gt;
+
+class Viewer : public QGLViewer
+{
+public:
+  Viewer() : wireframe_(false), flatShading_(false) {};
+
+protected :
+  virtual void draw();
+  virtual void init();
+  virtual void keyPressEvent(QKeyEvent *e);
+  virtual void mousePressEvent(QMouseEvent* e);
+
+  virtual QString helpString() const;
+
+private :
+  bool wireframe_, flatShading_;
+};
+</pre>
+
+
+<h2>keyboardAndMouse.cpp</h2>
+<pre>
+#include "keyboardAndMouse.h"
+
+#include &lt;QMenu&gt;
+#include &lt;QKeyEvent&gt;
+#include &lt;QMouseEvent&gt;
+#include &lt;QMap&gt;
+#include &lt;QCursor&gt;
+
+#include &lt;math.h&gt;
+
+using namespace std;
+
+// Draws a spiral
+void Viewer::draw()
+{
+  const float nbSteps = 80.0;
+
+  glBegin(GL_QUAD_STRIP);
+  for (float i=0; i&lt;nbSteps; ++i)
+	{
+	  float ratio = i/nbSteps;
+	  float angle = 21.0*ratio;
+	  float c = cos(angle);
+	  float s = sin(angle);
+	  float r1 = 1.0 - 0.8*ratio;
+	  float r2 = 0.8 - 0.8*ratio;
+	  float alt = ratio - 0.5;
+	  const float nor = .5;
+	  const float up = sqrt(1.0-nor*nor);
+	  glColor3f(fabs(c), 0.2f, fabs(s));
+	  glNormal3f(nor*c, up, nor*s);
+	  glVertex3f(r1*c, alt, r1*s);
+	  glVertex3f(r2*c, alt+0.05, r2*s);
+	}
+  glEnd();
+}
+
+void Viewer::init()
+{
+  // Restore previous viewer state.
+  restoreStateFromFile();
+
+
+  /////////////////////////////////////////////////////
+  //       Keyboard shortcut customization           //
+  //      Changes standard action key bindings       //
+  /////////////////////////////////////////////////////
+
+  // Define 'Control+Q' as the new exit shortcut (default was 'Escape')
+  setShortcut(EXIT_VIEWER, Qt::CTRL+Qt::Key_Q);
+
+  // Set 'Control+F' as the FPS toggle state key.
+  setShortcut(DISPLAY_FPS, Qt::CTRL+Qt::Key_F);
+
+  // Disable draw grid toggle shortcut (default was 'G')
+  setShortcut(DRAW_GRID, 0);
+
+
+  // Add custom key description (see keyPressEvent).
+  setKeyDescription(Qt::Key_W, "Toggles wire frame display");
+  setKeyDescription(Qt::Key_F, "Toggles flat shading display");
+
+
+  /////////////////////////////////////////////////////
+  //         Mouse bindings customization            //
+  //     Changes standard action mouse bindings      //
+  /////////////////////////////////////////////////////
+
+  // Left and right buttons together make a camera zoom : emulates a mouse third button if needed.
+  setMouseBinding(Qt::Key_Z, Qt::NoModifier, Qt::LeftButton, CAMERA, ZOOM);
+
+  // Disable previous TRANSLATE mouse binding (and remove it from help mouse tab).
+  setMouseBinding(Qt::NoModifier, Qt::RightButton, NO_CLICK_ACTION);
+
+  setMouseBinding(Qt::ControlModifier | Qt::ShiftModifier, Qt::RightButton, SELECT);
+  setWheelBinding(Qt::AltModifier, CAMERA, MOVE_FORWARD);
+  setMouseBinding(Qt::AltModifier, Qt::LeftButton, CAMERA, TRANSLATE);
+
+  // Add custom mouse bindings description (see mousePressEvent())
+  setMouseBindingDescription(Qt::NoModifier, Qt::RightButton, "Opens a camera path context menu");
+
+  // Display the help window. The help window tabs are automatically updated when you define new
+  // standard key or mouse bindings (as is done above). Custom bindings descriptions are added using
+  // setKeyDescription() and setMouseBindingDescription().
+  help();
+}
+
+
+///////////////////////////////////////////////
+//      Define new key bindings : F &amp; W      //
+///////////////////////////////////////////////
+
+void Viewer::keyPressEvent(QKeyEvent *e)
+{
+  // Get event modifiers key
+  const Qt::KeyboardModifiers modifiers = e-&gt;modifiers();
+
+  // A simple switch on e-&gt;key() is not sufficient if we want to take state key into account.
+  // With a switch, it would have been impossible to separate 'F' from 'CTRL+F'.
+  // That's why we use imbricated if...else and a "handled" boolean.
+  bool handled = false;
+  if ((e-&gt;key()==Qt::Key_W) &amp;&amp; (modifiers==Qt::NoButton))
+	{
+	  wireframe_ = !wireframe_;
+	  if (wireframe_)
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	  else
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	  handled = true;
+	  updateGL();
+	}
+  else
+	if ((e-&gt;key()==Qt::Key_F) &amp;&amp; (modifiers==Qt::NoButton))
+	  {
+	flatShading_ = !flatShading_;
+	if (flatShading_)
+	  glShadeModel(GL_FLAT);
+	else
+	  glShadeModel(GL_SMOOTH);
+	handled = true;
+	updateGL();
+	  }
+  // ... and so on with other else/if blocks.
+
+  if (!handled)
+	QGLViewer::keyPressEvent(e);
+}
+
+
+///////////////////////////////////////////////////////////
+//             Define new mouse bindings                 //
+//   A camera viewpoint menu binded on right button      //
+///////////////////////////////////////////////////////////
+
+void Viewer::mousePressEvent(QMouseEvent* e)
+{
+  if ((e-&gt;button() == Qt::RightButton) &amp;&amp; (e-&gt;modifiers() == Qt::NoButton))
+	{
+	  QMenu menu( this );
+	  menu.addAction("Camera positions");
+	  menu.addSeparator();
+	  QMap&lt;QAction*, int&gt; menuMap;
+
+	  bool atLeastOne = false;
+	  // We only test the 20 first indexes. This is a limitation.
+	  for (unsigned short i=0; i&lt;20; ++i)
+	if (camera()-&gt;keyFrameInterpolator(i))
+	  {
+		atLeastOne = true;
+		QString text;
+		if (camera()-&gt;keyFrameInterpolator(i)-&gt;numberOfKeyFrames() == 1)
+		  text = "Position "+QString::number(i);
+		else
+		  text = "Path "+QString::number(i);
+
+		menuMap[menu.addAction(text)] = i;
+	  }
+
+	  if (!atLeastOne)
+	{
+	  menu.addAction("No position defined");
+	  menu.addAction("Use to Alt+Fx to define one");
+	}
+
+	  QAction* action = menu.exec(e-&gt;globalPos());
+
+	  if (atLeastOne &amp;&amp; action)
+		  camera()-&gt;playPath(menuMap[action]);
+	}
+  else
+	QGLViewer::mousePressEvent(e);
+}
+
+QString Viewer::helpString() const
+{
+  QString text("&lt;h2&gt;K e y b o a r d A n d M o u s e&lt;/h2&gt;");
+  text += "This example illustrates the mouse and key bindings customization.&lt;br&gt;&lt;br&gt;";
+  text += "Use &lt;code&gt;setShortcut()&lt;/code&gt; to change standard action key bindings (display of axis, grid or fps, exit shortcut...).&lt;br&gt;&lt;br&gt;";
+  text += "Use &lt;code&gt;setMouseBinding()&lt;/code&gt; and &lt;code&gt;setWheelBinding()&lt;/code&gt; to change standard action mouse bindings ";
+  text += "(camera rotation, translation, object selection...).&lt;br&gt;&lt;br&gt;";
+  text += "If you want to define &lt;b&gt;new&lt;/b&gt; key or mouse actions, overload &lt;code&gt;keyPressEvent()&lt;/code&gt; and/or ";
+  text += "&lt;code&gt;mouse(Press|Move|Release)Event()&lt;/code&gt; to define and bind your own new actions. ";
+  text += "Use &lt;code&gt;setKeyDescription()&lt;/code&gt; and &lt;code&gt;setMouseBindingDescription()&lt;/code&gt; to add a description of your bindings in the help window.&lt;br&gt;&lt;br&gt;";
+  text += "In this example, we defined the &lt;b&gt;F&lt;/b&gt; and &lt;b&gt;W&lt;/b&gt; keys and the right mouse button opens a popup menu. ";
+  text += "See the keyboard and mouse tabs in this help window for the complete bindings description.&lt;br&gt;&lt;br&gt;";
+  text += "By the way, exit shortcut has been binded to &lt;b&gt;Ctrl+Q&lt;/b&gt;.";
+  return text;
+}
+
+</pre>
+
+
+<h2>main.cpp</h2>
+<pre>
+#include "keyboardAndMouse.h"
+#include &lt;qapplication.h&gt;
+
+int main(int argc, char** argv)
+{
+  QApplication application(argc,argv);
+
+  Viewer viewer;
+
+  viewer.setWindowTitle("keyboardAndMouse");
+
+  viewer.show();
+
+  return application.exec();
+}
+</pre>
+
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>

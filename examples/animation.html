@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer animation example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Gallery</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The animation example</h1>
+
+<center>
+  <img src="../images/animation.jpg" width="330" height="228" alt="animation"/>
+</center>
+
+<p>
+ The <code>animate()</code> function illustrated by a water particle simulation.
+</p>
+<p>
+ When animation is activated (the Return key toggles animation), the <code>animate()</code> and
+ then the <code>draw()</code> functions are called in an infinite loop.
+</p>
+<p>
+ You can tune the frequency of your animation (default is 25Hz) using
+ <code>setAnimationInterval()</code>. The frame rate will then be fixed, provided that your
+ animation loop function is fast enough.
+</p>
+<h2>animation.h</h2>
+<pre>
+#include &lt;QGLViewer/qglviewer.h&gt;
+
+class Particle
+{
+public :
+  Particle();
+
+  void init();
+  void draw();
+  void animate();
+
+private :
+  qglviewer::Vec speed_, pos_;
+  int age_, ageMax_;
+};
+
+
+class Viewer : public QGLViewer
+{
+protected :
+  virtual void draw();
+  virtual void init();
+  virtual void animate();
+  virtual QString helpString() const;
+
+private:
+  int nbPart_;
+  Particle* particle_;
+};
+
+</pre>
+
+
+<h2>animation.cpp</h2>
+<pre>
+#include "animation.h"
+#include &lt;math.h&gt;
+#include &lt;stdlib.h&gt; // RAND_MAX
+
+using namespace qglviewer;
+using namespace std;
+
+///////////////////////   V i e w e r  ///////////////////////
+void Viewer::init()
+{
+  restoreStateFromFile();
+  glDisable(GL_LIGHTING);
+  nbPart_ = 2000;
+  particle_ = new Particle[nbPart_];
+  glPointSize(3.0);
+  setGridIsDrawn();
+  help();
+  startAnimation();
+}
+
+void Viewer::draw()
+{
+  glBegin(GL_POINTS);
+  for (int i=0; i&lt;nbPart_; i++)
+    particle_[i].draw();
+  glEnd();
+}
+
+void Viewer::animate()
+{
+  for (int i=0; i&lt;nbPart_; i++)
+    particle_[i].animate();
+}
+
+QString Viewer::helpString() const
+{
+  QString text("&lt;h2&gt;A n i m a t i o n&lt;/h2&gt;");
+  text += "Use the &lt;i&gt;animate()&lt;/i&gt; function to implement the animation part of your ";
+  text += "application. Once the animation is started, &lt;i&gt;animate()&lt;/i&gt; and &lt;i&gt;draw()&lt;/i&gt; ";
+  text += "are called in an infinite loop, at a frequency that can be fixed.&lt;br&gt;&lt;br&gt;";
+  text += "Press &lt;b&gt;Return&lt;/b&gt; to start/stop the animation.";
+  return text;
+}
+
+///////////////////////   P a r t i c l e   ///////////////////////////////
+
+Particle::Particle()
+{
+  init();
+}
+
+void Particle::animate()
+{
+  speed_.z -= 0.05f;
+  pos_ += 0.1f * speed_;
+
+  if (pos_.z &lt; 0.0)
+    {
+      speed_.z = -0.8*speed_.z;
+      pos_.z = 0.0;
+    }
+
+  if (++age_ == ageMax_)
+    init();
+}
+
+void Particle::draw()
+{
+  glColor3f(age_/(float)ageMax_, age_/(float)ageMax_, 1.0);
+  glVertex3fv(pos_);
+}
+
+
+void Particle::init()
+{
+  pos_ = Vec(0.0, 0.0, 0.0);
+  float angle = 2.0 * M_PI * rand() / RAND_MAX;
+  float norm  = 0.04 * rand() / RAND_MAX;
+  speed_ = Vec(norm*cos(angle), norm*sin(angle), rand() / static_cast&lt;float&gt;(RAND_MAX) );
+  age_ = 0;
+  ageMax_ = 50 + static_cast&lt;int&gt;(100.0 * rand() / RAND_MAX);
+}
+
+</pre>
+
+
+<h2>main.cpp</h2>
+<pre>
+#include "animation.h"
+#include &lt;qapplication.h&gt;
+
+int main(int argc, char** argv)
+{
+  QApplication application(argc,argv);
+
+  Viewer viewer;
+
+  viewer.setWindowTitle("animation");
+
+  viewer.show();
+
+  return application.exec();
+}
+</pre>
+
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>

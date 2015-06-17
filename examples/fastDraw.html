@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer fastDraw example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Gallery</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The fastDraw example</h1>
+
+<center>
+  <img src="../images/fastDraw.jpg" width="330" height="228" alt="fastDraw"/>
+</center>
+
+<p>
+ The <code>fastDraw()</code> function enables interactivity even with large scenes.
+</p>
+<p>
+ This example demonstrates the use of the <code>fastDraw()</code> function, which
+ is called when the camera is manipulated. This function can be used to display a
+ simplified version of the scene and is usefull for displaying very complex scene,
+ while keeping an interactive camera motion.
+</p>
+<h2>fastDraw.h</h2>
+<pre>
+#include &lt;QGLViewer/qglviewer.h&gt;
+
+class Viewer : public QGLViewer
+{
+protected:
+  virtual void init();
+  virtual void draw();
+  virtual void fastDraw();
+  virtual QString helpString() const;
+};
+</pre>
+
+
+<h2>fastDraw.cpp</h2>
+<pre>
+#include "fastDraw.h"
+
+using namespace std;
+using namespace qglviewer;
+
+void Viewer::init()
+{
+  // Increase the material shininess, so that the difference between
+  // the two versions of the spiral is more visible.
+  glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0);
+  GLfloat specular_color[4] = { 0.8f, 0.8f, 0.8f, 1.0 };
+  glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,  specular_color);
+
+  restoreStateFromFile();
+  help();
+}
+
+static void drawSpiral(bool simplified = false)
+{
+  int nbSteps = 600;
+  int nbSub = 50;
+  if (simplified)
+    {
+      nbSteps = 60;
+      nbSub = 2;
+    }
+
+  for (float n=0; n&lt;nbSub; ++n)
+    {
+      glBegin(GL_QUAD_STRIP);
+      for (float i=0.0; i&lt;nbSteps; ++i)
+	{
+	  float ratio = i/nbSteps;
+	  float angle = 21.0*ratio;
+	  float radius = 1.0 - 0.5*ratio;
+
+	  Vec center(radius*cos(angle), ratio-0.5, radius*sin(angle));
+
+	  for (unsigned short j=0; j&lt;2; ++j)
+	    {
+	      float delta = 3.0*(n+j)/nbSub;
+	      Vec shift(cos(angle)*cos(delta), sin(delta), sin(angle)*cos(delta));
+
+	      glColor3f(1-ratio, (n+j)/nbSub , ratio);
+	      glNormal3fv(shift);
+	      glVertex3fv(center+0.2f*shift);
+	    }
+	}
+      glEnd();
+    }
+}
+
+void Viewer::draw()
+{
+  drawSpiral();
+}
+
+void Viewer::fastDraw()
+{
+  drawSpiral(true);
+}
+
+QString Viewer::helpString() const
+{
+  QString text("&lt;h2&gt;F a s t D r a w&lt;/h2&gt;");
+  text += "The &lt;code&gt;fastDraw()&lt;/code&gt; function is called instead of &lt;code&gt;draw()&lt;/code&gt; when the camera ";
+  text += "is manipulated. Providing such a simplified version of &lt;code&gt;draw()&lt;/code&gt; allows for interactive ";
+  text += "frame rates when the camera is moved, even for very complex scenes.";
+  return text;
+}
+</pre>
+
+
+<h2>main.cpp</h2>
+<pre>
+#include "fastDraw.h"
+#include &lt;qapplication.h&gt;
+
+int main(int argc, char** argv)
+{
+  QApplication application(argc,argv);
+
+  Viewer viewer;
+
+  viewer.setWindowTitle("fastDraw");
+
+  viewer.show();
+
+  return application.exec();
+}
+</pre>
+
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>

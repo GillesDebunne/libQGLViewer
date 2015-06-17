@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer select example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Gallery</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The select example</h1>
+
+<center>
+  <img src="../images/select.jpg" width="330" height="228" alt="select"/>
+</center>
+
+<p>
+ Selection of scene objects using <code>select()</code> and an GL_SELECT render mode.
+</p>
+<p>
+ Use the <code>select()</code> callback function to implement your object selection function. This
+ examples is based on a generic GL_SELECT implementation that can easily be cut and pasted in your
+ applications.
+</p>
+<p>
+ Analytic intersection computations are also possible once the screen coordinates have be converted
+ to a half line using <code>convertClickToLine()</code>. Make a selection and then move the camera
+ to see a representation of the intersection line.
+</p>
+<h2>select.h</h2>
+<pre>
+#include &lt;QGLViewer/qglviewer.h&gt;
+
+class Viewer : public QGLViewer
+{
+protected :
+  virtual void draw();
+  virtual void drawWithNames();
+  virtual void postSelection(const QPoint&amp; point);
+  virtual void init();
+  virtual QString helpString() const;
+
+private :
+  qglviewer::Vec orig, dir, selectedPoint;
+};
+</pre>
+
+
+<h2>select.cpp</h2>
+<pre>
+#include "select.h"
+#include &lt;qmessagebox.h&gt;
+#include &lt;math.h&gt;
+
+using namespace std;
+
+static void drawSpiral(const bool specialColor = false)
+{
+  const float nbSteps = 100.0;
+  glBegin(GL_QUAD_STRIP);
+  for (float i=0; i&lt;nbSteps; ++i)
+    {
+      float ratio = i/nbSteps;
+      float angle = 21.0*ratio;
+      float c = cos(angle);
+      float s = sin(angle);
+      float r1 = 0.5 - 0.3*ratio;
+      float r2 = 0.3 - 0.3*ratio;
+      float alt = ratio - 0.5;
+      const float nor = .5;
+      const float up = sqrt(1.0-nor*nor);
+      if (specialColor)
+	glColor3f(1.0-ratio, 0.8f , ratio/2.0);
+      else
+	glColor3f(1.0-ratio, 0.2f, ratio);
+      glNormal3f(nor*c, nor*s, up);
+      glVertex3f(r2*c, r2*s, alt+0.05f);
+      glVertex3f(r1*c, r1*s, alt);
+    }
+  glEnd();
+}
+
+void Viewer::drawWithNames()
+{
+  // Draw spirals, pushing a name (id) for each of them
+  const int nb = 10;
+  for (int i=0; i&lt;nb; ++i)
+    {
+      glPushMatrix();
+      glTranslatef(cos(2.0*i*M_PI/nb), sin(2.0*i*M_PI/nb), 0.);
+
+      glPushName(i);
+      drawSpiral();
+      glPopName();
+
+      glPopMatrix();
+    }
+}
+
+void Viewer::postSelection(const QPoint&amp; point)
+{
+  // Compute orig and dir, used to draw a representation of the intersecting line
+  camera()-&gt;convertClickToLine(point, orig, dir);
+
+  // Find the selectedPoint coordinates, using camera()-&gt;pointUnderPixel().
+  bool found;
+  selectedPoint = camera()-&gt;pointUnderPixel(point, found);
+  selectedPoint -= 0.01f*dir; // Small offset to make point clearly visible.
+  // Note that "found" is different from (selectedObjectId()&gt;=0) because of the size of the select region.
+
+  if (selectedName() == -1)
+    QMessageBox::information(this, "No selection",
+			     "No object selected under pixel " + QString::number(point.x()) + "," + QString::number(point.y()));
+  else
+    QMessageBox::information(this, "Selection",
+			     "Spiral number " + QString::number(selectedName()) + " selected under pixel " +
+			     QString::number(point.x()) + "," + QString::number(point.y()));
+}
+
+void Viewer::init()
+{
+  restoreStateFromFile();
+
+  glLineWidth(3.0);
+  glPointSize(10.0);
+
+  help();
+}
+
+void Viewer::draw()
+{
+  // Draw ten spirals
+  const int nb = 10;
+  for (int i=0; i&lt;nb; ++i)
+    {
+      glPushMatrix();
+      glTranslatef(cos(2.0*i*M_PI/nb), sin(2.0*i*M_PI/nb), 0.0);
+      drawSpiral(i == selectedName());
+      glPopMatrix();
+    }
+
+  // Draw the intersection line
+  glBegin(GL_LINES);
+  glVertex3fv(orig);
+  glVertex3fv(orig + 100.0*dir);
+  glEnd();
+
+  // Draw (approximated) intersection point on selected object
+  if (selectedName() &gt;= 0)
+    {
+      glColor3f(0.9f, 0.2f, 0.1f);
+      glBegin(GL_POINTS);
+      glVertex3fv(selectedPoint);
+      glEnd();
+    }
+}
+
+QString Viewer::helpString() const
+{
+  QString text("&lt;h2&gt;S e l e c t&lt;/h2&gt;");
+  text += "Left click while pressing the &lt;b&gt;Shift&lt;/b&gt; key to select an object of the scene.&lt;br&gt;&lt;br&gt;";
+  text += "A line is drawn between the selected point and the camera selection position. ";
+  text += "using &lt;i&gt;convertClickToLine()&lt;/i&gt;, a useful function for analytical intersections.&lt;br&gt;&lt;br&gt;";
+  text += "To add object selection in your viewer, all you need to do is to define the &lt;i&gt;drawWithNames&lt;/i&gt; function. ";
+  text += "It gives a name to each selectable object and selection is then performed using the OpenGL &lt;i&gt;GL_SELECT&lt;/i&gt; render mode.&lt;br&gt;&lt;br&gt;";
+  text += "Feel free to cut and paste this implementation in your own applications.";
+  return text;
+}
+</pre>
+
+
+<h2>main.cpp</h2>
+<pre>
+#include "select.h"
+#include &lt;qapplication.h&gt;
+
+int main(int argc, char** argv)
+{
+  QApplication application(argc,argv);
+
+  Viewer viewer;
+
+  viewer.setWindowTitle("select");
+
+  viewer.show();
+
+  return application.exec();
+}
+</pre>
+
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>

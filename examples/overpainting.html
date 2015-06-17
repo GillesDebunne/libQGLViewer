@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer overpainting example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Gallery</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The overpainting example</h1>
+
+<center>
+  <img src="../images/overpainting.jpg" width="330" height="228" alt="overpainting"/>
+</center>
+
+<p>
+ Mixing OpenGL (3D) and QPainter (2D) drawing in the same viewer.
+</p>
+<p>
+ A semi-transparent eounded square is painted in 2D using a QPainter on top of a classical 3D OpenGL rendering.
+ Useful to add 2D objects (annotations, menus, head-up display) to your viewers.
+</p>
+<p>
+ Inspired from the Qt's overpainting example. Note that this functionnality is only available with Qt 4.
+</p>
+<h2>viewer.h</h2>
+<pre>
+#include &lt;QGLViewer/qglviewer.h&gt;
+
+class QPaintEvent;
+class QPainter;
+
+class Viewer : public QGLViewer
+{
+public :
+  Viewer(QWidget* parent = 0);
+
+protected :
+  virtual void draw();
+  virtual void init();
+  void drawOverpaint(QPainter *painter);
+
+  virtual void paintGL() { update(); };
+  virtual void paintEvent(QPaintEvent *event);
+  // Could be overloaded to defer final initializations
+  //virtual void showEvent(QShowEvent *event);
+
+  virtual QString helpString() const;
+};
+</pre>
+
+
+<h2>main.cpp</h2>
+<pre>
+#include "viewer.h"
+#include &lt;qapplication.h&gt;
+
+int main(int argc, char** argv)
+{
+  QApplication application(argc,argv);
+  Viewer viewer;
+
+  viewer.setWindowTitle("overpainting");
+
+  viewer.show();
+  return application.exec();
+}
+</pre>
+
+
+<h2>viewer.cpp</h2>
+<pre>
+#include "viewer.h"
+
+#include &lt;QPainter&gt;
+
+using namespace std;
+
+#ifndef GL_MULTISAMPLE
+#define GL_MULTISAMPLE  0x809D
+#endif
+
+Viewer::Viewer(QWidget* parent)
+: QGLViewer(QGLFormat(QGL::SampleBuffers), parent) {
+  setAttribute(Qt::WA_NoSystemBackground);
+}
+
+void Viewer::drawOverpaint(QPainter *painter) {
+	painter-&gt;save();
+    painter-&gt;translate(width()/2, height()/2);
+	QRadialGradient radialGrad(QPointF(-40, -40), 100);
+	radialGrad.setColorAt(0, QColor(255, 255, 255, 100));
+	radialGrad.setColorAt(1, QColor(200, 200, 0, 100)); 
+    painter-&gt;setBrush(QBrush(radialGrad));
+	painter-&gt;drawRoundRect(-100, -100, 200, 200);
+    painter-&gt;restore();
+}
+
+// Draws a spiral
+void Viewer::draw()
+{
+  const float nbSteps = 200.0;
+
+  glBegin(GL_QUAD_STRIP);
+  for (int i=0; i&lt;nbSteps; ++i)
+    {
+      const float ratio = i/nbSteps;
+      const float angle = 21.0*ratio;
+      const float c = cos(angle);
+      const float s = sin(angle);
+      const float r1 = 1.0 - 0.8f*ratio;
+      const float r2 = 0.8f - 0.8f*ratio;
+      const float alt = ratio - 0.5f;
+      const float nor = 0.5f;
+      const float up = sqrt(1.0-nor*nor);
+      glColor3f(1.0-ratio, 0.2f , ratio);
+      glNormal3f(nor*c, up, nor*s);
+      glVertex3f(r1*c, alt, r1*s);
+      glVertex3f(r2*c, alt+0.05f, r2*s);
+    }
+  glEnd();
+}
+
+void Viewer::init()
+{
+  restoreStateFromFile();
+  help();
+}
+
+void Viewer::paintEvent(QPaintEvent *event)
+{
+    Q_UNUSED(event)
+    QPainter painter;
+    painter.begin(this);
+    painter.setRenderHint(QPainter::Antialiasing);
+
+    // Save current OpenGL state
+    glPushAttrib(GL_ALL_ATTRIB_BITS);
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+
+    // Reset OpenGL parameters
+    glShadeModel(GL_SMOOTH);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_MULTISAMPLE);
+    static GLfloat lightPosition[4] = { 1.0, 5.0, 5.0, 1.0 };
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+    qglClearColor(backgroundColor());
+	
+    // Classical 3D drawing, usually performed by paintGL().
+    preDraw();
+    draw();
+    postDraw();
+    // Restore OpenGL state
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glPopAttrib();
+
+    drawOverpaint(&amp;painter);
+
+    painter.end();
+}
+
+QString Viewer::helpString() const
+{
+  QString text("&lt;h2&gt;O v e r p a i n t&lt;/h2&gt;");
+  text += "This example shows how to mix the 2D QPainter drawing with regular 3D in an OpenGL QGLViewer.&lt;br&gt;";
+  text += "The &lt;code&gt;paintEvent&lt;/code&gt; method is overloaded to interleave the two drawing codes.";
+  return text;
+}
+
+</pre>
+
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>

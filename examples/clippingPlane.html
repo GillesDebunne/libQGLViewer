@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer clippingPlane example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Gallery</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The clippingPlane example</h1>
+
+<center>
+  <img src="../images/clippingPlane.jpg" width="330" height="228" alt="clippingPlane"/>
+</center>
+
+<p>
+ A clipping plane is manipulated using a ManipulatedFrame
+</p>
+<p>
+ The standard OpenGL <i>GL_CLIP_PLANE</i> feature is used to add an additionnal clipping
+ plane in the scene, which position and orientation are set by a <b>ManipulatedFrame</b>.
+</p>
+<p>
+ Hold the <b>Control</b> key pressed down while using the mouse to modify the plane orientation (left button)
+ and position (right button) and to interactively see the clipped result.
+</p>
+<p>
+ Since the plane equation is defined with respect to the current modelView matrix, a constant equation (normal
+ along the Z axis) can be used since we transformed the coordinates system using the <b>matrix()</b> method.
+</p>
+<h2>clippingPlane.h</h2>
+<pre>
+#include &lt;QGLViewer/qglviewer.h&gt;
+
+class Viewer : public QGLViewer
+{
+protected :
+  virtual void draw();
+  virtual void init();
+  virtual QString helpString() const;
+};
+</pre>
+
+
+<h2>clippingPlane.cpp</h2>
+<pre>
+#include "clippingPlane.h"
+#include "QGLViewer/manipulatedFrame.h"
+
+using namespace std;
+using namespace qglviewer;
+
+// Draws a spiral
+void Viewer::draw()
+{
+  const float nbSteps = 200.0;
+
+  glBegin(GL_QUAD_STRIP);
+  for (int i=0; i&lt;nbSteps; ++i)
+	{
+	  const float ratio = i/nbSteps;
+	  const float angle = 21.0*ratio;
+	  const float c = cos(angle);
+	  const float s = sin(angle);
+	  const float r1 = 1.0 - 0.8f*ratio;
+	  const float r2 = 0.8f - 0.8f*ratio;
+	  const float alt = ratio - 0.5f;
+	  const float nor = 0.5f;
+	  const float up = sqrt(1.0-nor*nor);
+	  glColor3f(1.0-ratio, 0.2f , ratio);
+	  glNormal3f(nor*c, up, nor*s);
+	  glVertex3f(r1*c, alt, r1*s);
+	  glVertex3f(r2*c, alt+0.05f, r2*s);
+	}
+  glEnd();
+
+
+  glPushMatrix();
+  glMultMatrixd(manipulatedFrame()-&gt;matrix());
+  // Since the Clipping Plane equation is multiplied by the current modelView, we can define a
+  // constant equation (plane normal along Z and passing by the origin) since we are here in the
+  // manipulatedFrame coordinates system (we glMultMatrixd() with the manipulatedFrame matrix()).
+  static const GLdouble equation[] = { 0.0, 0.0, 1.0, 0.0 };
+  glClipPlane(GL_CLIP_PLANE0, equation);
+
+  // Draw a plane representation: Its normal...
+  glColor3f(0.8f, 0.8f, 0.8f);
+  drawArrow(0.4f, 0.015f);
+  // ...and a quad (with a slightly shifted z so that it is not clipped).
+  glBegin(GL_QUADS);
+  glVertex3f(-1.0, -1.0, 0.001f);
+  glVertex3f(-1.0,  1.0, 0.001f);
+  glVertex3f( 1.0,  1.0, 0.001f);
+  glVertex3f( 1.0, -1.0, 0.001f);
+  glEnd();
+  glPopMatrix();
+}
+
+void Viewer::init()
+{
+  // Restore previous viewer state.
+  restoreStateFromFile();
+
+  // Opens help window
+  help();
+
+  // The ManipulatedFrame will be used to position the clipping plane
+  setManipulatedFrame(new ManipulatedFrame());
+
+  // Enable plane clipping
+  glEnable(GL_CLIP_PLANE0);
+}
+
+QString Viewer::helpString() const
+{
+  QString text("&lt;h2&gt;C l i p p i n g P l a n e&lt;/h2&gt;");
+  text += "The standard OpenGL &lt;i&gt;GL_CLIP_PLANE&lt;/i&gt; feature is used to add an additionnal clipping ";
+  text += "plane in the scene, which position and orientation are set by a &lt;b&gt;ManipulatedFrame&lt;/b&gt;.&lt;br&gt;&lt;br&gt;";
+  text += "Hold the &lt;b&gt;Control&lt;/b&gt; key pressed down while using the mouse to modify the plane orientation (left button) ";
+  text += "and position (right button) and to interactively see the clipped result.&lt;br&gt;&lt;br&gt;";
+  text += "Since the plane equation is defined with respect to the current modelView matrix, a constant equation (normal";
+  text += "along the Z axis) can be used since we transformed the coordinates system using the &lt;b&gt;matrix()&lt;/b&gt; method.";
+
+  return text;
+}
+</pre>
+
+
+<h2>main.cpp</h2>
+<pre>
+#include "clippingPlane.h"
+#include &lt;qapplication.h&gt;
+
+int main(int argc, char** argv)
+{
+  // Read command lines arguments.
+  QApplication application(argc,argv);
+
+  // Instantiate the viewer.
+  Viewer viewer;
+
+  viewer.setWindowTitle("clippingPlane");
+
+  // Make the viewer window visible on screen.
+  viewer.show();
+
+  // Run main loop.
+  return application.exec();
+}
+</pre>
+
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>

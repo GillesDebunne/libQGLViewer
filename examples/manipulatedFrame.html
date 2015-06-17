@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer manipulatedFrame example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Gallery</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The manipulatedFrame example</h1>
+
+<center>
+  <img src="../images/manipulatedFrame.jpg" width="330" height="228" alt="manipulatedFrame"/>
+</center>
+
+<p>
+ A <code>ManipulatedFrame</code> can be moved with the mouse in the scene.
+</p>
+<p>
+ A ManipulatedFrame converts mouse gestures into Frame displacements. Adding two lines of code will
+ allow you to move any object of your scene using the mouse. The button bindings of the
+ ManipulatedFrame are the same as for the camera. Spinning is possible.
+</p>
+<p>
+ The frame is drawn at its position using a <code>glMultMatrix</code> of the frame associated
+ matrix(). This matrix is changed when the mouse moves, thus changing the position of the frame.
+</p>
+<h2>manipulatedFrame.h</h2>
+<pre>
+#include &lt;QGLViewer/qglviewer.h&gt;
+
+class Viewer : public QGLViewer
+{
+protected :
+  virtual void init();
+  virtual void draw();
+  virtual QString helpString() const;
+};
+</pre>
+
+
+<h2>manipulatedFrame.cpp</h2>
+<pre>
+#include "manipulatedFrame.h"
+#include &lt;math.h&gt;
+
+#include &lt;QGLViewer/manipulatedFrame.h&gt;
+
+using namespace qglviewer;
+using namespace std;
+
+static void drawSpiral()
+{
+  const float nbSteps = 200.0;
+  glBegin(GL_QUAD_STRIP);
+  for (float i=0; i&lt;nbSteps; ++i)
+	{
+	  float ratio = i/nbSteps;
+	  float angle = 21.0*ratio;
+	  float c = cos(angle);
+	  float s = sin(angle);
+	  float r1 = 1.0 - 0.8*ratio;
+	  float r2 = 0.8 - 0.8*ratio;
+	  float alt = ratio - 0.5;
+	  const float nor = .5;
+	  const float up = sqrt(1.0-nor*nor);
+	  glColor3f(1.0-ratio, 0.2f , ratio);
+	  glNormal3f(nor*c, up, nor*s);
+	  glVertex3f(r1*c, alt, r1*s);
+	  glVertex3f(r2*c, alt+0.05, r2*s);
+	}
+  glEnd();
+}
+
+void Viewer::init()
+{
+	setMouseBinding(Qt::AltModifier, Qt::LeftButton, QGLViewer::CAMERA, QGLViewer::ROTATE);
+	setMouseBinding(Qt::AltModifier, Qt::RightButton, QGLViewer::CAMERA, QGLViewer::TRANSLATE);
+	setMouseBinding(Qt::AltModifier, Qt::MidButton, QGLViewer::CAMERA, QGLViewer::ZOOM);
+	setWheelBinding(Qt::AltModifier, QGLViewer::CAMERA, QGLViewer::ZOOM);
+
+	setMouseBinding(Qt::NoModifier, Qt::LeftButton, QGLViewer::FRAME, QGLViewer::ROTATE);
+	setMouseBinding(Qt::NoModifier, Qt::RightButton, QGLViewer::FRAME, QGLViewer::TRANSLATE);
+	setMouseBinding(Qt::NoModifier, Qt::MidButton, QGLViewer::FRAME, QGLViewer::ZOOM);
+	setWheelBinding(Qt::NoModifier, QGLViewer::FRAME, QGLViewer::ZOOM);
+
+#ifdef GL_RESCALE_NORMAL  // OpenGL 1.2 Only...
+  glEnable(GL_RESCALE_NORMAL);
+#endif
+
+  // Make sure the manipulatedFrame is not easily clipped by the zNear and zFar planes
+  setSceneRadius(30);
+  camera()-&gt;fitSphere(Vec(0,0,0), 1);
+
+  // Add a manipulated frame to the viewer.
+  // If you are not "using namespace qglqglviewer", you need
+  // to specify: new qglviewer::ManipulatedFrame().
+  setManipulatedFrame(new ManipulatedFrame());
+
+  help();
+  restoreStateFromFile();
+}
+
+void Viewer::draw()
+{
+  // Here we are in the world coordinate system. Draw unit size axis.
+  drawAxis();
+
+  // Save the current model view matrix (not needed here in fact)
+  glPushMatrix();
+
+  // Multiply matrix to get in the frame coordinate system.
+  glMultMatrixd(manipulatedFrame()-&gt;matrix());
+
+  // Scale down the drawings
+  glScalef(0.3f, 0.3f, 0.3f);
+
+  // Draw an axis using the QGLViewer static function
+  drawAxis();
+
+  // Draws a frame-related spiral.
+  drawSpiral();
+
+  // Restore the original (world) coordinate system
+  glPopMatrix();
+}
+
+QString Viewer::helpString() const
+{
+  QString text("&lt;h2&gt;M a n i p u l a t e d F r a m e&lt;/h2&gt;");
+  text += "A &lt;i&gt;ManipulatedFrame&lt;/i&gt; converts mouse gestures into &lt;i&gt;Frame&lt;/i&gt; displacements. ";
+  text += "In this example, such an object defines the position of the spiral that can hence be manipulated.&lt;br&gt;&lt;br&gt;";
+  text += "Adding two lines of code will then allow you to move the objects of ";
+  text += "your scene using the mouse. The button bindings of the &lt;i&gt;ManipulatedFrame&lt;/i&gt; ";
+  text += "are the same than for the camera. Spinning is possible.&lt;br&gt;&lt;br&gt;";
+  text += "Default key bindings have been changed in this example : press &lt;b&gt;Alt&lt;/b&gt; ";
+  text += "while moving the mouse to move the camera instead of the ManipulatedFrame.";
+  return text;
+}
+
+</pre>
+
+
+<h2>main.cpp</h2>
+<pre>
+#include "manipulatedFrame.h"
+#include &lt;qapplication.h&gt;
+
+int main(int argc, char** argv)
+{
+  QApplication application(argc,argv);
+
+  Viewer viewer;
+
+  viewer.setWindowTitle("manipulatedFrame");
+
+  viewer.show();
+
+  return application.exec();
+}
+</pre>
+
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>libQGLViewer interface example</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <link href="../qglviewer.css" rel="stylesheet" type="text/css" />
+  <link rel="shortcut icon" href="../images/qglviewer.ico" type="image/x-icon" />
+  <link rel="icon" href="../images/qglviewer.icon.png" type="image/png" />
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-23223012-2']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+
+<div class="banner">
+ <a class="qindex" href="../index.html">Home</a>
+ <a class="qindex" href="../download.html">Download</a>
+ <a class="qindex highlight" href="index.html">Gallery</a>
+ <a class="qindex" href="../refManual/hierarchy.html">Documentation</a>
+ <a class="qindex" href="../developer.html">Developer</a>
+</div>
+
+<h1>The interface example</h1>
+
+<center>
+  <img src="../images/interface.jpg" width="330" height="228" alt="interface"/>
+</center>
+
+<p>
+ Adding a graphical user interface around a <code>QGLViewer</code>.
+</p>
+<p>
+ Qt's <code>designer</code> has been used to create a very simple interface example, described by a
+ <code>.ui</code> user interface description file.
+</p>
+<p>
+ Install the QGLViewer designer plugin so that the QGLViewer appears in the designer's widgets
+ tabs. You can then connect signals and slots to and from the viewer. The viewer is fully
+ functional and can be manipulated when you test your interface in <code>designer</code>.
+</p>
+<p>
+ The plugin code is in the <code>designerPlugin</code> directory. Start from there to create
+ plugins for the classes you will derive from QGLViewer. Select your architecture in the <a
+ href="../download.html">download page</a> for details on the plugin compilation and installation.
+</p>
+<p>
+ Here we use three slots and three signals (axis, grid and fps) to connect to and from the
+ interface and the viewer.
+</p>
+<h2>interface.h</h2>
+<pre>
+#include &lt;QGLViewer/qglviewer.h&gt;
+
+class Viewer : public QGLViewer
+{
+public :
+  Viewer(QWidget *parent);
+
+protected :
+  virtual void draw();
+  virtual QString helpString() const;
+};
+</pre>
+
+
+<h2>interface.cpp</h2>
+<pre>
+#include "interface.h"
+#include &lt;math.h&gt;
+
+// Constructor must call the base class constructor.
+Viewer::Viewer(QWidget *parent)
+	: QGLViewer(parent)
+{
+  restoreStateFromFile();
+  help();
+}
+
+void Viewer::draw()
+{
+  // Draws a spiral
+  const float nbSteps = 200.0;
+  glBegin(GL_QUAD_STRIP);
+  for (float i=0; i&lt;nbSteps; ++i)
+	{
+	  float ratio = i/nbSteps;
+	  float angle = 21.0*ratio;
+	  float c = cos(angle);
+	  float s = sin(angle);
+	  float r1 = 1.0 - 0.8*ratio;
+	  float r2 = 0.8 - 0.8*ratio;
+	  float alt = ratio - 0.5;
+	  const float nor = .5;
+	  const float up = sqrt(1.0-nor*nor);
+	  glColor3f(1.0-ratio, 0.2f , ratio);
+	  glNormal3f(nor*c, up, nor*s);
+	  glVertex3f(r1*c, alt, r1*s);
+	  glVertex3f(r2*c, alt+0.05, r2*s);
+	}
+  glEnd();
+}
+
+QString Viewer::helpString() const
+{
+  QString text("&lt;h2&gt;I n t e r f a c e&lt;/h2&gt;");
+  text += "A GUI can be added to a QGLViewer widget using Qt's &lt;i&gt;Designer&lt;/i&gt;. Signals and slots ";
+  text += "can then be connected to and from the viewer.&lt;br&gt;&lt;br&gt;";
+  text += "You can install the QGLViewer designer plugin to make the QGLViewer appear as a ";
+  text += "standard Qt widget in the Designer's widget tabs. See installation pages for details.";
+  return text;
+}
+</pre>
+
+
+<h2>main.cpp</h2>
+<pre>
+#include &lt;qapplication.h&gt;
+
+#include "ui_viewerInterface.h"
+
+class ViewerInterface : public QDialog, public Ui::Dialog
+{
+public:
+	ViewerInterface() { setupUi(this); }
+};
+
+int main(int argc, char** argv)
+{
+  QApplication application(argc,argv);
+
+  ViewerInterface vi;
+
+  vi.setWindowTitle("interface");
+
+  vi.show();
+
+  return application.exec();
+}
+</pre>
+
+
+
+<p>
+  Back to the <a href="index.html">examples main page</a>.
+</p>
+
+<p>
+  <a href="http://validator.w3.org/check/referer"><img src="../images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="../images/css.gif" width="88" height="31" alt="Valid CSS!"/></a>
+<i>Last modified on Wednesday, June 17, 2015.</i>
+</p>
+
+</body>
+</html>
