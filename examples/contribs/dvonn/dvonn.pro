@@ -23,5 +23,10 @@ contains( QT_VERSION, "^3.*" ) {
   FORMS += dvonnwindow.ui
 }
 
+# Since we use gluBuild2DMipmaps
+!macx|darwin-g++ {
+    QMAKE_LIBS_OPENGL *= -lGLU
+}
+
 include( ../../examples.pri )
 
