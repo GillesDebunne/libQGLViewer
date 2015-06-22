@@ -13,7 +13,6 @@ libNameVersion="$libName-$version"
 tmpDir="/tmp/$libNameVersion"
 QGLViewerRootDir=$(pwd)
 echo $QGLViewerRootDir > /tmp/QGLViewerRootDir
-wwwTarGZ="www.tar.gz"
 allTarGZ="$libNameVersion-all.tar.gz"
 
 cd $QGLViewerRootDir
@@ -21,9 +20,6 @@ cd $QGLViewerRootDir
 DOS2UNIX="" #"dos2unix -o -q"
 UNIX2DOS="" #"unix2dos -o -q"
 DOXYGEN=$(which doxygen)
-
-# echo "$0 disabled for security"
-# exit
 
 function error
 {
@@ -49,12 +45,7 @@ rm -rf $WebDir/examples $WebDir/images $WebDir/refManual
 
 tar xzf $allTarGZ
 
-tar xzf $wwwTarGZ
-cp -r doc/* $WebDir
-rm -rf doc $wwwTarGZ
-
 mv $libNameVersion.tar.gz $libNameVersion.zip libqglviewer*$version*.deb $libName*$version*.rpm $WebDir/$SrcDir
-
 
 cd $WebDir
 
@@ -72,8 +63,6 @@ fi # Fin option web
 
 
 
-
-test -d /tmp || error "Run with web option on dzsrv-linux."
 
 
 function checkGrep()
@@ -313,7 +302,7 @@ function makeDistExample()
 
 cd examples
 
-SOURCES="examples.pro qglviewer.rc qglviewer.ico release.pri contribs/contribs.pro"
+SOURCES="examples.pro qglviewer.rc qglviewer.ico examples.pri contribs/contribs.pro"
 TARGET="examples"
 makeDist
 
@@ -414,39 +403,6 @@ cd examples
 $QGLViewerRootDir/examples/makeDist || error "Error in examples' makeDist"
 cd - > /dev/null
 
-
-########### Filter example .pro include release
-echo -n " pro"
-sed s:"#VERSION_MAJOR#":"$version_major":g examples/release.pri > /tmp/release.filtered
-sed s:"#VERSION#":"$version":g /tmp/release.filtered > examples/release.pri
-
-function replaceIncludeRelease()
-{
-  #echo "replaceInclude sur $PRO"
-  path="\.\."
-  dir=$(dirname $(dirname $PRO))
-  while [[ $dir != "." ]]
-  do
-    dir=$(dirname $dir)
-    path="$path/\.\."
-  done
-  
-  rcpath=$(echo $path | sed s%"/\\\.\\\."%""%)
-
-  if [[ $(grep "^include.*examples.pri" $PRO) ]]
-  then
-    grep -v "^include.*examples.pri" $PRO > /tmp/proPatched.tmp
-    sed s%"\.\./\.\."%"$path"% examples/release.pri | sed s%"\.\./qglviewer.rc"%"$rcpath/qglviewer.rc"% > /tmp/release.pri
-    cat /tmp/proPatched.tmp /tmp/release.pri > $PRO
-  fi
-}
-
-for PRO in $(find . -type f -name '*.pro')
-do
-  replaceIncludeRelease
-done
-
-rm examples/release.pri
 
 ########### Add GPL warnings
 echo -n " copyright"
@@ -595,29 +551,10 @@ cd $tmpDir
 ############################################################
 ############            Packages                ############
 ############################################################
-echo "todo : statsDownload"
-#cp ../statsDownload/downloads.png ../statsDownload/examples.png $WebDir/images
-
 echo -n "Packaging   : "
 
 export LC_ALL="C"
 export LANGUAGE="C"
-
-echo -n "web"
-tar czf ../$wwwTarGZ doc
-
-rm doc/index.fr.html
-
-# Now remove search engine, not used in packages (since it requires php)
-# No longer used in recent doxygen versions
-#rm doc/refManual/search.php doc/refManual/search.idx
-
-#for f in `ls doc/refManual/*.html`
-#do
-# awk '/<form/ {s=1;next} /\/form/ {s=0;next} { if (s==0) {print;}} ' $f > $f.tmp
-# mv $f.tmp $f
-#done
-
 
 # Tar 
 echo -n " tar"
@@ -664,194 +601,4 @@ fi
 cd ..
 zip -qr $libNameVersion.zip $libNameVersion
 
-
-
-echo 
-echo "Stop packaging on mac, no rpm or deb created."
-echo "Creating $allTarGZ to update web site"
-tar czf $allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip
-echo "scp /tmp/$allTarGZ debunne@www.libqglviewer.com:"
-#echo "scp /tmp/$wwwTarGZ debunne@www.libqglviewer.com:"
-echo ""
-echo "ssh debunne@www.libqglviewer.com"
-echo "tar xzf $allTarGZ"
-echo "mv $libNameVersion.tar.gz $libNameVersion.zip ~/www/src/"
-echo "tar xzf $wwwTarGZ && \cp -rf doc/* ~/www && rm -rf doc"
-echo "rm www.tar.gz $allTarGZ"
-exit
-
-echo -n " rpm"
-
-# Checking RPM configuration
-rpmDir=`grep '^%_topdir' $HOME/.rpmmacros | awk '{print $2}'`
-rpmTmpDir=`grep '^%_tmppath' $HOME/.rpmmacros | awk '{print $2}'`
-#rpmFindReq=`grep '^%__find_requires' $HOME/.rpmmacros | awk '{print $2}'`
-
-for dir in SRPMS RPMS SPECS SOURCES BUILD
-do
-  if [ ! -d $rpmDir/$dir ]
-  then
-    echo " - RPM dir ($rpmDir/$dir) not found - Aborting"
-    exit
-  fi
-done
-
-if [ ! -d $rpmTmpDir ]
-then
-  mkdir -p $rpmTmpDir
-fi
-
-#if [ ! -f $rpmFindReq ]
-#then
-#  echo " - RPM find requires ($rpmFindReq) not found - Aborting"
-#  exit
-#fi
- 
-# Create RPM
-cp -f $libNameVersion.tar.gz $rpmDir/SOURCES
-cp -f $QGLViewerRootDir/QGLViewer/qglviewer.spec $rpmDir/SPECS/$libNameVersion.spec
-cd $rpmDir/SPECS/
-#echo " - RPM build... (see /tmp/QGLViewer.rpmbuild)"
-rpmbuild -ba $libNameVersion.spec >& /tmp/QGLViewer.rpmbuild
-if [ $? != 0 ]
-then
-  echo "Problem in RPM creation - Abort"
-  exit
-fi
-
-mv $rpmDir/RPMS/i386/$libNameVersion-1.i386.rpm $tmpDir/../$libNameVersion.i386.rpm
-mv $rpmDir/RPMS/i386/$libName-devel-$version-1.i386.rpm $tmpDir/../$libName-devel-$version.i386.rpm
-mv $rpmDir/SRPMS/$libNameVersion-1.src.rpm $tmpDir/../$libNameVersion.src.rpm
-
-
-
-
-
-echo -n " deb"
-cd $tmpDir/..
-rm -rf debian ; mkdir debian ; cd debian
-
-sudo alien ../$libNameVersion.i386.rpm ../$libName-devel-$version.i386.rpm > /dev/null
-cp libqglviewer-devel_$version-2_i386.deb ../libqglviewer-devel_${version}_i386.deb
-cp libqglviewer_$version-2_i386.deb ../libqglviewer_${version}_i386.deb
-cd ..
-
-
-
-echo -n " installer"
-
 echo
-
-#tar czf $allTarGZ $libNameVersion.tar.gz $wwwTarGZ $libNameVersion.zip $libName*$version*.rpm libqglviewer*$version*.deb
-
-echo
-exit
-
-
-
-
-
-
-
-
-
-
-##################################################################
-############       Create example binaries            ############
-##################################################################
-echo " - Creating Linux binary examples"
-exName="$libName-examples-linux"
-exDir="$tmpDir/../$exName"
-test -d $exDir || mkdir $exDir
-rm -f $exDir/*
-
-cp $rpmDir/BUILD/$libNameVersion/QGLViewer/libQGLViewer.so.2 $exDir
-cp /usr/lib/libstdc++.so.5 $exDir
-
-BIN_EXAMPLES="simpleViewer manipulatedFrame luxo select animation"
-cd $rpmDir/BUILD/$libNameVersion/examples
-for e in $BIN_EXAMPLES
-do
-  echo "   = $e"
-  cd $e
-  qmake INCLUDE_DIR=../.. LIB_DIR=../../QGLViewer >& /dev/null
-  make > /dev/null
-  cp $e $exDir
-  cd - > /dev/null
-done
-
-cd $exDir
-for f in `ls`
-do
-  strip $f
-done
-
-echo "These are Linux pre-compiled versions of some libQGLViewer examples." > readme.txt
-echo >> readme.txt
-echo "These examples were compiled on a Fedora Core 2 using Qt 3.3.3." >> readme.txt
-echo "Rebuild from the sources to fit your configuration and for optimal results." >> readme.txt
-echo >> readme.txt
-echo "You have to add the current directory to your LD_LIBRARY_PATH in order to run the examples:" >> readme.txt
-echo "> export LD_LIBRARY_PATH=.:\$LD_LIBRARY_PATH (if you use bash)" >> readme.txt
-echo " (or use \"setenv LD_LIBRARY_PATH .:\$LD_LIBRARY_PATH\" with [t]csh)" >> readme.txt
-echo >> readme.txt
-echo "Note that these examples are not designed to be impressive by themselves." >> readme.txt
-echo "What is impressive is that the library enables their creation with only few tens of lines of code !" >> readme.txt
-
-cd ..
-tar -czf $exName.tar.gz $exName
-
-
-
-
-
-
-
-
-
-
-
-
-##################################################################
-############            Update web site               ############
-##################################################################
-echo " - Updating web site"
-
-
-cp -f $tarName $rpmDir/SRPMS/$libNameVersion-1.src.rpm $libNameVersion.zip $WebDir/src
-
-# No more distribution prefix. Add libstdc++ if needed.
-archExt="tar.gz"
-cp -f $exName.tar.gz $WebDir/src/$exName.$archExt
-
-for i in "i586" "i486" "i386"
-do
-  if [ -f $rpmDir/RPMS/$i/$libNameVersion-1.$i.rpm ]
-  then
-      ix86=$i
-      break
-  fi
-done
-
-if [ ! -f $rpmDir/RPMS/$ix86/$libNameVersion-1.$ix86.rpm ]
-then
-    echo "Unable to find ix86 dir in $rpmDir/RPMS/"
-else
-    cp -f $rpmDir/RPMS/$ix86/$libNameVersion-1.$ix86.rpm $WebDir/src/$libNameVersion.i586.rpm
-    cp -f $rpmDir/RPMS/$ix86/$libName-devel-$version-1.$ix86.rpm $WebDir/src/$libName-devel-$version.i586.rpm
-fi
-
-exit
-
-
-if [ $1 == "win" ]
-then
-  echo "Creating release-win.pri"
-  sed s:"#VERSION_MAJOR#":"$version_major":g examples/release.pri | sed s:"../../":"../":g | sed s:"LIBS \*= ":"LIBS *= ../":g > examples/release-win.pri
-  exit
-fi
-
-
-
-echo "Unrecognized option: $@"
-
