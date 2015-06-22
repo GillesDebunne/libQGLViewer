@@ -1,7 +1,7 @@
 
 %define version_major 2
 %define version_minor 6
-%define version_revision 2
+%define version_revision 3
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -155,6 +155,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Tue Jun 23 2015 Gilles Debunne <contact@libQGLViewer.com> 2.6.3
+- Build library in QGLViewer directory. Simplified examples.pri.
+
 * Fri Jan 23 2015 Gilles Debunne <contact@libQGLViewer.com> 2.6.2
 - Fix qreal issue in Quaternion::FromRotationMatrix().
 
