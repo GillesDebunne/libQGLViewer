@@ -155,7 +155,7 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
-* Tue Jun 23 2015 Gilles Debunne <contact@libQGLViewer.com> 2.6.3
+* Thu Jul 16 2015 Gilles Debunne <contact@libQGLViewer.com> 2.6.3
 - Build library in QGLViewer directory. Simplified examples.pri.
 
 * Fri Jan 23 2015 Gilles Debunne <contact@libQGLViewer.com> 2.6.2
