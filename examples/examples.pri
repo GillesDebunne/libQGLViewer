@@ -74,6 +74,10 @@ win32 {
 	# Seems to be needed for Visual Studio with Intel compiler
 	DEFINES *= WIN32
 
+	# Use native OpenGL drivers with Qt5.5
+	# No longer implicit since the ANGLE driver is now an alternative
+	LIBS += -lopengl32 -lglu32
+
 	isEmpty( QGLVIEWER_STATIC ) {
 		LIBS *= -L$${LIB_DIR} -lQGLViewer2
 	} else {

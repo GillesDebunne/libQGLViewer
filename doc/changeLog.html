@@ -33,10 +33,11 @@
 <h1>Change Log</h1>
 
 
-<h2>Jun 23rd 2015 - 2.6.3</h2>
+<h2>Jul 16th 2015 - 2.6.3</h2>
 <b>Bug fixes or improvements</b>
 <ul>
-  <li>The library is now always built in the <code>QGLViewer</code> directory. The examples' pro files are simplified and more versatile.</li>
+  <li>Add dependency to native OpenGL drivers on Windows platform. No longer implicit since ANGLE is an alternative in Qt 5.5 (thanks Andrea and Laurent).</li>
+  <li>The library is now always built in the <code>QGLViewer</code> directory. The examples' pro files are simplified and more robust.</li>
   <li>Add some <code>libGlu</code> dependency in examples that rely on it (thanks Brice).</li>
 </ul>
 

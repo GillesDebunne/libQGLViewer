@@ -250,6 +250,10 @@ win32 {
 
 	CONFIG *= embed_manifest_dll
 
+	# Use native OpenGL drivers with Qt5.5
+	# No longer implicit since the ANGLE driver is now an alternative
+	LIBS += -lopengl32 -lglu32
+
 	# TP : C++ source code
 	# GR : Enables run-time type information (RTTI).
 	# Zi : Generates complete debugging information (removed)
