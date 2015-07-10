@@ -33,6 +33,15 @@
 <h1>Change Log</h1>
 
 
+<h2>Jul 16th 2015 - 2.6.3</h2>
+<b>Bug fixes or improvements</b>
+<ul>
+  <li>Add dependency to native OpenGL drivers on Windows platform. No longer implicit since ANGLE is an alternative in Qt 5.5 (thanks Andrea and Laurent).</li>
+  <li>The library is now always built in the <code>QGLViewer</code> directory. The examples' pro files are simplified and more robust.</li>
+  <li>Add some <code>libGlu</code> dependency in examples that rely on it (thanks Brice).</li>
+</ul>
+
+
 <h2>Jan 23nd 2015 - 2.6.2</h2>
 <b>Bug fixes or improvements</b>
 <ul>
@@ -647,7 +656,7 @@ Please send any comment, suggestion or problem by <a href="mailto:contact@libqgl
 <p>
   <a href="http://validator.w3.org/check/referer"><img src="images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
   <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="images/css.gif" alt="Valid CSS!" width="88" height="31"/></a>
-  <i>Last modified on Friday, June 12, 2015.</i>
+  <i>Last modified on Friday, July 10, 2015.</i>
 </p>
 
 </body></html>

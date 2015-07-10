@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QtHelpProject version="1.0">
-  <namespace>com.libqglviewer.2.6.2</namespace>
+  <namespace>com.libqglviewer.2.6.3</namespace>
   <virtualFolder>doc</virtualFolder>
   <filterSection>
     <filterAttribute>doxygen</filterAttribute>
     <toc>
-      <section title="libQGLViewer Version 2.6.2" ref="index.html">
+      <section title="libQGLViewer Version 2.6.3" ref="index.html">
         <section title="Namespaces">
           <section title="Namespace List" ref="namespaces.html">
             <section title="qglviewer" ref="namespaceqglviewer.html" />
