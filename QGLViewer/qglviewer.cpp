@@ -3575,7 +3575,7 @@ while (!child.isNull())
 if (child.tagName() == "Light")
 {
 if (child.hasAttribute("state"))
-setLightOn(child.attribute("state").lower() == "on");
+setLightOn(child.attribute("state").toLower() == "on");
 
 // Assumes there is only one child. Otherwise you need to parse child's children recursively.
 QDomElement lf = child.firstChild().toElement();
