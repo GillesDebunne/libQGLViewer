@@ -56,7 +56,7 @@ public:
 
 #ifndef DOXYGEN
 	Vec revolveAroundPoint() const { qWarning("revolveAroundPoint() is deprecated, use pivotPoint() instead"); return  pivotPoint(); }
-	void setRevolveArountPoint(const Vec& point) { qWarning("setRevolveAroundPoint() is deprecated, use setPivotPoint() instead"); setPivotPoint(point); }
+	void setRevolveAroundPoint(const Vec& point) { qWarning("setRevolveAroundPoint() is deprecated, use setPivotPoint() instead"); setPivotPoint(point); }
 #endif
 	//@}
 
