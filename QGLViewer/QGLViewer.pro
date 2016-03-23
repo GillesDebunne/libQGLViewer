@@ -200,7 +200,7 @@ unix {
 # --  M a c O S X  --
 # -------------------
 macx|darwin-g++ {
-	# This setting creates a Mac framework. Comment out this line to create a dylib instead.
+	# Default setting creates a Mac framework. Comment out this line to create a dylib instead.
 	!staticlib: CONFIG *= lib_bundle
 
 	include.files *= qglviewer.icns

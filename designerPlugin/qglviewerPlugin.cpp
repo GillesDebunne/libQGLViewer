@@ -1,6 +1,11 @@
 #include "qglviewerPlugin.h"
 #include <QGLViewer/qglviewer.h>
-#include <QtDesigner/qdesignerexportwidget.h>
+
+#if QT_VERSION >= 0x050000
+#  include <QtUiPlugin/qdesignerexportwidget.h>
+#else
+#  include <QtDesigner/qdesignerexportwidget.h>
+#endif
 
 // This code generates a QGLViewer designer plugin for Qt version 4 or more.
 
@@ -62,7 +67,7 @@ QGLViewerPlugin::QGLViewerPlugin(QObject *parent)
 {
   initialized = false;
 }
-  
+
 QString QGLViewerPlugin::includeFile() const
 {
   // ------------------------------------------------- //
@@ -75,17 +80,17 @@ bool QGLViewerPlugin::isContainer() const
 {
   return false;
 }
-  
+
 bool QGLViewerPlugin::isInitialized() const
 {
   return initialized;
 }
-  
+
 QString QGLViewerPlugin::codeTemplate() const
 {
   return QString("See the QGLViewer simpleViewer example.");
 }
-  
+
 QString QGLViewerPlugin::domXml() const
 {
   // ----------------------------------------------------------- //
@@ -216,4 +221,3 @@ Q_EXPORT_PLUGIN2(QGLViewerPlugin, QGLViewerPlugin)
 // ------------- //
 // You're done ! //
 // ------------- //
-

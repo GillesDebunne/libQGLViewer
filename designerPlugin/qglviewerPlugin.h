@@ -1,4 +1,8 @@
-#include <QtDesigner/QDesignerCustomWidgetInterface>
+#if QT_VERSION >= 0x050000
+#  include <QtUiPlugin/QDesignerCustomWidgetInterface>
+#else
+#  include <QtDesigner/QDesignerCustomWidgetInterface>
+#endif
 
 #include <QtCore/qplugin.h>
 #include <QtGui/QIcon>
