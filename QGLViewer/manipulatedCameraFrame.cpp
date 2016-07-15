@@ -196,7 +196,8 @@ void ManipulatedCameraFrame::zoom(qreal delta, const Camera * const camera) {
 		if (direction.norm() > 0.02 * sceneRadius || delta > 0.0)
 			translate(delta * direction);
 	} else {
-		const qreal coef = qMax(fabs((camera->frame()->coordinatesOf(camera->pivotPoint())).z), 0.2 * sceneRadius);
+		const qreal coef = qMax(fabs((camera->frame()->coordinatesOf(camera->pivotPoint())).z),
+                                        qreal(0.2) * sceneRadius);
 		Vec trans(0.0, 0.0, -coef * delta);
 		translate(inverseTransformOf(trans));
 	}
