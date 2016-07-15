@@ -134,8 +134,8 @@ public:
 	}
 
 #ifndef DOXYGEN
-	/*! This method is deprecated since version 2.0. Use operator const double* instead. */
-	const double* address() const { qWarning("Vec::address() is deprecated, use operator const double* instead."); return operator const double*(); }
+	/*! This method is deprecated since version 2.0. Use operator const qreal* instead. */
+	const qreal* address() const { qWarning("Vec::address() is deprecated, use operator const qreal* instead."); return operator const qreal*(); }
 #endif
 
 	/*! Conversion operator returning the memory address of the vector.
@@ -146,7 +146,7 @@ public:
   glNormal3dv(normal);
   glVertex3dv(pos);
   \endcode */
-	operator const double*() const {
+	operator const qreal*() const {
 #ifdef QGLVIEWER_UNION_NOT_SUPPORTED
 		return &x;
 #else
@@ -156,8 +156,8 @@ public:
 
 	/*! Non const conversion operator returning the memory address of the vector.
 
-  Useful to pass a Vec to a method that requires and fills a \c double*, as provided by certain libraries. */
-	operator double*() {
+  Useful to pass a Vec to a method that requires and fills a \c qreal*, as provided by certain libraries. */
+	operator qreal*() {
 #ifdef QGLVIEWER_UNION_NOT_SUPPORTED
 		return &x;
 #else
