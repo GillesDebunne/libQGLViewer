@@ -126,18 +126,6 @@ void Quaternion::setFromRotationMatrix(const qreal m[3][3])
 }
 
 #ifndef DOXYGEN
-void Quaternion::setFromRotationMatrix(const float m[3][3])
-{
-	qWarning("setFromRotationMatrix now expects a double[3][3] parameter");
-
-	qreal mat[3][3];
-	for (int i=0; i<3; ++i)
-		for (int j=0; j<3; ++j)
-			mat[i][j] = qreal(m[i][j]);
-
-	setFromRotationMatrix(mat);
-}
-
 void Quaternion::setFromRotatedBase(const Vec& X, const Vec& Y, const Vec& Z)
 {
 	qWarning("setFromRotatedBase is deprecated, use setFromRotatedBasis instead");

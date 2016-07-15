@@ -104,7 +104,6 @@ public:
 	{ q[0]=q0;    q[1]=q1;    q[2]=q2;    q[3]=q3; }
 
 #ifndef DOXYGEN
-	void setFromRotationMatrix(const float m[3][3]);
 	void setFromRotatedBase(const Vec& X, const Vec& Y, const Vec& Z);
 #endif
 	void setFromRotationMatrix(const qreal m[3][3]);
