@@ -20,7 +20,7 @@ contains( _PRO_FILE_PWD_, ".*designerPlugin$" ) {
 }
 contains( _PRO_FILE_PWD_, ".*/contribs/.+/.+" ) {
 	ROOT_DIRECTORY = ../../../..
-} else {	
+} else {
 	contains( _PRO_FILE_PWD_, ".*/contribs/.+" ) {
 		ROOT_DIRECTORY = ../../..
 	}
@@ -33,6 +33,7 @@ LIB_DIR = $${ROOT_DIRECTORY}/QGLViewer
 INCLUDEPATH *= $${INCLUDE_DIR}
 DEPENDPATH  *= $${INCLUDE_DIR}
 
+
 unix {
 	CONFIG -= debug debug_and_release
 	CONFIG *= release
@@ -40,7 +41,7 @@ unix {
 	isEmpty( QGLVIEWER_STATIC ) {
 		# The absolute path where the library or framework was found
 		LIB_DIR_ABSOLUTE_PATH = $$dirname(PWD)/QGLViewer
-		
+
 		macx|darwin-g++ {
 			# Use install_name_tool to set the absolute path of the lib in the executable
 			exists( $${LIB_DIR_ABSOLUTE_PATH}/QGLViewer.framework ) {
@@ -69,8 +70,6 @@ unix {
 
 
 win32 {
-	CONFIG *= debug_and_release
-
 	# Seems to be needed for Visual Studio with Intel compiler
 	DEFINES *= WIN32
 
@@ -79,13 +78,20 @@ win32 {
 	LIBS += -lopengl32 -lglu32
 
 	isEmpty( QGLVIEWER_STATIC ) {
-		LIBS *= -L$${LIB_DIR} -lQGLViewer2
+		CONFIG(debug, debug|release) {
+			LIBS *= -L$${LIB_DIR} -lQGLViewerd2
+		} else {
+			LIBS *= -L$${LIB_DIR} -lQGLViewer2
+		}
 	} else {
 		DEFINES *= QGLVIEWER_STATIC
-		LIBS *= $${LIB_DIR}/libQGLViewer2.a
+		CONFIG(debug, debug|release) {
+			LIBS *= $${LIB_DIR}/libQGLViewerd2.a
+		} else {
+			LIBS *= $${LIB_DIR}/libQGLViewer2.a
+		}
 	}
 }
-
 
 
 # Application icon
