@@ -9,7 +9,8 @@ TARGET = QGLViewer
 VERSION = 2.6.3
 CONFIG *= qt opengl warn_on shared thread create_prl rtti no_keywords
 
-QGL_HEADERS = qglviewer.h \
+QGL_HEADERS = \
+	  qglviewer.h \
 	  camera.h \
 	  manipulatedFrame.h \
 	  manipulatedCameraFrame.h \
@@ -22,7 +23,8 @@ QGL_HEADERS = qglviewer.h \
 	  domUtils.h \
 	  config.h
 
-SOURCES = qglviewer.cpp \
+SOURCES = \
+	  qglviewer.cpp \
 	  camera.cpp \
 	  manipulatedFrame.cpp \
 	  manipulatedCameraFrame.cpp \
@@ -42,7 +44,7 @@ TRANSLATIONS = qglviewer_fr.ts
 
 QT *= xml opengl
 
-contains ( $$[QT_VERSION], "^5.*" ) {
+equals (QT_MAJOR_VERSION, 5) {
 	QT *= gui widgets
 }
 
@@ -147,6 +149,15 @@ unix {
 		# GLU is part of the OpenGL framework
 	} else {
 		QMAKE_LIBS_OPENGL *= -lGLU
+
+		isEmpty( NO_QT_VERSION_SUFFIX ) {
+			equals (QT_MAJOR_VERSION, 4) {
+				TARGET = $$join(TARGET,,,-qt4)
+			}
+			equals (QT_MAJOR_VERSION, 5) {
+				TARGET = $$join(TARGET,,,-qt5)
+			}
+		}
 	}
 
 	MOC_DIR = .moc

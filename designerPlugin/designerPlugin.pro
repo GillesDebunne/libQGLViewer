@@ -5,7 +5,7 @@ TARGET  = qglviewerplugin
 
 QT_VERSION=$$[QT_VERSION]
 
-!contains( QT_VERSION, "^3.*" ) {
+!equals (QT_MAJOR_VERSION, 3) {
   isEmpty( PREFIX ) {
     PREFIX=$$[QT_INSTALL_PLUGINS]
   } else {
@@ -26,12 +26,12 @@ INSTALLS += target
 HEADERS = qglviewerPlugin.h
 SOURCES = qglviewerPlugin.cpp
 
-contains( QT_VERSION, "^5.*" ) {
+equals (QT_MAJOR_VERSION, 5) {
   QT *= designer
   CONFIG *= release
   OTHER_FILES += designerplugindescription.json
 } else {
-  contains( QT_VERSION, "^4.*" ) {
+  equals (QT_MAJOR_VERSION, 4) {
     CONFIG *= designer release
   } else {
     HEADERS = qglviewerPlugin.Qt3.h

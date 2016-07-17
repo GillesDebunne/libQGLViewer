@@ -69,11 +69,11 @@ qmake -spec macx-g++
 make
 </pre>
 
-See the <a href="#linux">Linux section</a> for details and install paths customization. 
+See the <a href="#linux">Linux section</a> for details and install paths customization.
 
 <h3>Next steps</h3>
 
-Once the library is compiled, you can <a href="compilation.html#mac">compile the examples</a>. 
+Once the library is compiled, you can <a href="compilation.html#mac">compile the examples</a>.
 
 <p>
 Install the <a href="#plugin">libQGLViewer designer plugin</a> to
@@ -224,7 +224,7 @@ The following files are installed (you need root privileges to <code>install</co
 Optional <code>qmake</code> parameters let you customize your <code>make install</code> target installation directories:
 </p>
 <pre>
-qmake [PREFIX=...] [INCLUDE_DIR=...] [LIB_DIR=...] [DOC_DIR=...] [QGLVIEWER_STATIC=yes]
+qmake [PREFIX=...] [INCLUDE_DIR=...] [LIB_DIR=...] [DOC_DIR=...] [QGLVIEWER_STATIC=yes] [NO_QT_VERSION_SUFFIX=yes]
 </pre>
 
 A typical usage would be <code>qmake PREFIX=$HOME</code>. Default values are:
@@ -263,7 +263,7 @@ easily create user interfaces that integrate a QGLViewer using designer.
 
 Qt is probably already installed on your machine, or available on your distribution's repository.
 You may however have to install the <code>dev</code> development package.
-You can also directly <a href="http://qt.nokia.com/downloads">download it</a>. 
+You can also directly <a href="http://qt.nokia.com/downloads">download it</a>.
 
 <p>
 Try to compile a simple Qt example and check the
@@ -313,11 +313,11 @@ Widgets</code> tab:
 
 <p>
  &nbsp; &nbsp; &nbsp; &nbsp; <img src="images/designerplugin.jpg" width="638" height="222" alt="Designer plugin" />
-</p> 
+</p>
 
 When added to your interface, the widget displays the standard spiral, which can be manipulated when
 you test it. All the viewers' signals and slots are available and can be connected to your
-interface. 
+interface.
 
 <p>
 Edit the <code>qglviewerPlugin</code> code as indicated to create a similar designer plugin for your
@@ -353,9 +353,9 @@ as explained in the Qt installation sections above.
 <!--
 <p>
 With Qt version 3, an alternative to this plugin is to add a "Custom Widget" using the <i>Tools/Custom</i>
-designer menu. <i>Load Descriptions...</i> and to provide the <code>qglviewer.cw</code> custom widget 
+designer menu. <i>Load Descriptions...</i> and to provide the <code>qglviewer.cw</code> custom widget
 description file, located in the QGLViewer header files directory. You can then set the header file path to
-your customized QGLViewer and add your own signals and slots to the description. 
+your customized QGLViewer and add your own signals and slots to the description.
 </p>
 -->
 
@@ -424,6 +424,6 @@ encounter specific installation problems.
   <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="images/css.gif" alt="Valid CSS!" width="88" height="31"/></a>
   <i>Last modified on #DATE#.</i>
 </p>
-    
+
 </body>
 </html>
