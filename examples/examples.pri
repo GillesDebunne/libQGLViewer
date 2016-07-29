@@ -52,12 +52,21 @@ unix {
 				LIBS *= -L$${LIB_DIR} -lQGLViewer
 			}
 		} else {
+            isEmpty( NO_QT_VERSION_SUFFIX ) {
+                equals (QT_MAJOR_VERSION, 4) {
+                    LIB_NAME = QGLViewer-qt4
+                }
+                equals (QT_MAJOR_VERSION, 5) {
+                    LIB_NAME = QGLViewer-qt5
+                }
+            }
+
 			isEmpty(QMAKE_LFLAGS_RPATH) {
 				!plugin:QMAKE_LFLAGS += -Wl,-rpath,$${LIB_DIR_ABSOLUTE_PATH}
 			} else {
 				!plugin:QMAKE_RPATHDIR *= $${LIB_DIR_ABSOLUTE_PATH}
 			}
-			LIBS *= -L$${LIB_DIR} -lQGLViewer
+			LIBS *= -L$${LIB_DIR} -l$${LIB_NAME}
 		}
 	} else {
 		LIBS *= $${LIB_DIR}/libQGLViewer.a
