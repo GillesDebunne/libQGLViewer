@@ -7,7 +7,7 @@ void Viewer::draw()
 {
 	// Place light at camera position
 	const Vec cameraPos = camera()->position();
-	const GLfloat pos[4] = {cameraPos[0], cameraPos[1], cameraPos[2], 1.0};
+	const GLfloat pos[4] = {(float)cameraPos[0], (float)cameraPos[1], (float)cameraPos[2], 1.0f};
 	glLightfv(GL_LIGHT1, GL_POSITION, pos);
 
 	// Orientate light along view direction

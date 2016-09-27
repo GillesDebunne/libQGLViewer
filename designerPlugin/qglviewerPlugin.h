@@ -1,3 +1,5 @@
+#include <qglobal.h>
+
 #if QT_VERSION >= 0x050000
 #  include <QtUiPlugin/QDesignerCustomWidgetInterface>
 #else
