@@ -216,6 +216,9 @@ macx|darwin-g++ {
 
 	include.files *= qglviewer.icns
 
+    # Or whatever exists in /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
+    QMAKE_MAC_SDK = macosx10.12
+
 	lib_bundle {
 		FRAMEWORK_HEADERS.version = Versions
 		# Should be $$replace(TRANSLATIONS, .ts, .qm), but 'replace' is only available in Qt 4.3

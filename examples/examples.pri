@@ -77,6 +77,10 @@ unix {
 	OBJECTS_DIR = .obj
 }
 
+macx|darwin-g++ {
+    # Or whatever exists in /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
+    QMAKE_MAC_SDK = macosx10.12
+}
 
 win32 {
 	# Seems to be needed for Visual Studio with Intel compiler
