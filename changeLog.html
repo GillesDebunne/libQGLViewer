@@ -33,6 +33,17 @@
 <h1>Change Log</h1>
 
 
+<h2>Jul 16th 2016 - 2.6.4</h2>
+<b>Bug fixes or improvements</b>
+<ul>
+  <li>Add a <code>-qt4</code> or <code>-qt5</code> suffix to library file name on Linux. Fixes #18 (thanks Laurent).</li>
+  <li>Edit the .pro of the examples to support the debug version of the library on Windows. Fixes #23 (thanks naubry).</li>
+  <li><code>contribs</code> examples no longer build by default. Relied on deprecated GL calls (Fixes #31)</li>
+  <li>Add <code>QMAKE_MAC_SDK</code> to fix compilation on Mac with recent XCode versions</li>
+  <li>Fix compilation errors on ARMv7, when `qreal` is defined to `float` (Pull request from lrineau)</li>
+</ul>
+
+
 <h2>Jul 16th 2015 - 2.6.3</h2>
 <b>Bug fixes or improvements</b>
 <ul>
@@ -72,7 +83,7 @@
 <ul>
   <li>Remove <code>libGLU</code> dependency on Mac since it conflicts with Yosemite (thanks Hae-Jeong, Federico).</li>
   <li>Fix compilation flags and include warning for Windows compilation (thanks Alexandre, David).</li>
-  <li>Fix switch between camera's observer and fly modes (thanks Björn).</li>
+  <li>Fix switch between camera's observer and fly modes (thanks BjÃ¶rn).</li>
 </ul>
 
 
@@ -331,7 +342,7 @@
 
 <b>Changes in the API</b>
 <ul>
- <li>A deleted <code>QGLViewer</code> is no longer removed from the <code>QGLViewerPool</code> (a <code>null</code> replaces it) 
+ <li>A deleted <code>QGLViewer</code> is no longer removed from the <code>QGLViewerPool</code> (a <code>null</code> replaces it)
 in order to preserve viewer's indexes (used by <code>stateFileName</code>) (bug finder Gianluca).</li>
  <li>Unix install no longer features a static version of the library.</li>
 </ul>
@@ -365,7 +376,7 @@ in order to preserve viewer's indexes (used by <code>stateFileName</code>) (bug 
 <h2>January 31st 2007- 2.2.5</h2>
 <b>Bug fixes or improvements</b>
 <ul>
- <li>1 pixel shift in <code>Camera::pointUnderPixel()</code> fixed (bug finder Aurélien).</li>
+ <li>1 pixel shift in <code>Camera::pointUnderPixel()</code> fixed (bug finder AurÃ©lien).</li>
  <li>Included file naming changed to follow Qt4 conventions (suggester Maxime).</li>
  <li>Lighting disabled for text drawing in the <code>screenCoordSystem</code> example (bug finder Greg).</li>
  <li>Documentation switched to doxygen 1.5 tab style (bug finder Xavier).</li>
@@ -467,7 +478,7 @@ in order to preserve viewer's indexes (used by <code>stateFileName</code>) (bug 
 <b>Bug fixes or improvements</b>
 <ul>
  <li>Bug in <code>KeyFrameInterpolator</code> path drawing fixed (bug finder Manuel).</li>
- <li><code>Quaternion(from, to)</code> bug fixed for colinear vectors (bug finder Aurélien).</li>
+ <li><code>Quaternion(from, to)</code> bug fixed for colinear vectors (bug finder AurÃ©lien).</li>
  <li><code>Quaternion::setFromRotationMatrix</code> patched and made more robust.</li>
  <li>Camera's <code>zClippingCoefficient</code> correctly restored when <code>cameraIsEdited</code>.</li>
  <li><code>Frame::initFromDOMElement</code> normalizes the orientation.</li>
@@ -483,12 +494,12 @@ in order to preserve viewer's indexes (used by <code>stateFileName</code>) (bug 
 <b>Changes in the API</b>
 <ul>
 <li><code>snapshotFilename</code> renamed <code>snapshotFile<b>N</b>ame</code> (uppercased 'N').</li>
-<li>When negative, the <code>snapshotCounter</code> is not appended to <code>snapshotFileName</code> in automatic mode.</li> 
+<li>When negative, the <code>snapshotCounter</code> is not appended to <code>snapshotFileName</code> in automatic mode.</li>
 </ul>
 
 <b>Bug fixes or improvements</b>
 <ul>
- <li><code>saveSnapshot(fileName)</code> no longer opens a file dialog (bug finder Jürgen).</li>
+ <li><code>saveSnapshot(fileName)</code> no longer opens a file dialog (bug finder Juergen).</li>
 </ul>
 
 
@@ -656,7 +667,7 @@ Please send any comment, suggestion or problem by <a href="mailto:contact@libqgl
 <p>
   <a href="http://validator.w3.org/check/referer"><img src="images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
   <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="images/css.gif" alt="Valid CSS!" width="88" height="31"/></a>
-  <i>Last modified on Friday, July 10, 2015.</i>
+  <i>Last modified on Tuesday, September 27, 2016.</i>
 </p>
 
 </body></html>
