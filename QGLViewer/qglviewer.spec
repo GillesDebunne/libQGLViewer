@@ -1,7 +1,7 @@
 
 %define version_major 2
 %define version_minor 6
-%define version_revision 3
+%define version_revision 4
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -155,6 +155,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Tue Sep 27 2016 Gilles Debunne <contact@libQGLViewer.com> 2.6.4
+- Fix ARM build, remove contribs examples' compilation.
+
 * Thu Jul 16 2015 Gilles Debunne <contact@libQGLViewer.com> 2.6.3
 - Build library in QGLViewer directory. Simplified examples.pri.
 

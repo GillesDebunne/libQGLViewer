@@ -38,6 +38,9 @@
 <ul>
   <li>Add a <code>-qt4</code> or <code>-qt5</code> suffix to library file name on Linux. Fixes #18 (thanks Laurent).</li>
   <li>Edit the .pro of the examples to support the debug version of the library on Windows. Fixes #23 (thanks naubry).</li>
+  <li><code>contribs</code> examples no longer build by default. Relied on deprecated GL calls (Fixes #31)</li>
+  <li>Add <code>QMAKE_MAC_SDK</code> to fix compilation on Mac with recent XCode versions</li>
+  <li>Fix compilation errors on ARMv7, when `qreal` is defined to `float` (Pull request from lrineau)</li>
 </ul>
 
 
