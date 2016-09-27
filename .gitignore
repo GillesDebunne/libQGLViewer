@@ -15,3 +15,5 @@ examples/contribs/agora/Viewer/ui_computerPlayerInterface.h
 examples/contribs/blobWar/Viewer/ui_blobWarWindow.h
 examples/contribs/blobWar/Viewer/ui_computerPlayerInterface.h
 examples/contribs/dvonn/ui_dvonnwindow.h
+QGLViewer/QGLViewer.framework/
+
