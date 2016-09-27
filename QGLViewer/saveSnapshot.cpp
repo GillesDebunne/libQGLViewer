@@ -321,7 +321,7 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
 	qreal zNear = camera()->zNear();
 	qreal zFar = camera()->zFar();
 
-	QGLdouble xMin, yMin;
+	qreal xMin, yMin;
 	bool expand = imageInterface->expandFrustum->isChecked();
 	if (camera()->type() == qglviewer::Camera::PERSPECTIVE)
 		if ((expand && (newAspectRatio>aspectRatio)) || (!expand && (newAspectRatio<aspectRatio)))
@@ -336,7 +336,10 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
 		}
 	else
 	{
-		camera()->getOrthoWidthHeight(xMin, yMin);
+        GLdouble width, height;
+        camera()->getOrthoWidthHeight(width, height);
+        xMin = qreal(width);
+        yMin = qreal(height);
 		if ((expand && (newAspectRatio>aspectRatio)) || (!expand && (newAspectRatio<aspectRatio)))
 			xMin = newAspectRatio * yMin;
 		else
