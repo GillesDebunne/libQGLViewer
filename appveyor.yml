@@ -1,0 +1,29 @@
+environment:
+  CONFIG: Release
+  B_NAME: Win32
+  QTDIR: C:\Qt\5.4\msvc2013_opengl 
+
+# Operating system (build VM template)
+os: Visual Studio 2015
+
+
+# scripts that are called at very beginning, before repo cloning
+init:
+  # Print environment info
+  - msbuild /version
+  - set PATH=%QTDIR%\bin;%PATH%
+
+# scripts that run after cloning repository
+install:
+
+before_build:
+  - cd C:\projects\libqglviewer\QGLViewer
+  - qmake -t vclib QGLViewer.pro -spec win32-msvc2013 -o  qglviewer.vcxproj
+
+build_script:
+  - cd C:\projects\libqglviewer\QGLViewer
+  - msbuild /m /p:Configuration=%CONFIG% /p:Platform=%B_NAME% qglviewer.vcxproj 
+
+test: off
+deploy: off
+
