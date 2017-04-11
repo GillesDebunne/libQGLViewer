@@ -91,7 +91,7 @@ DvonnViewer::advanceFadeOut()
 	fadeAlpha_ = 0.0f;
 	fadeGhosts_ = NULL;
   }
-  updateGL();
+  update();
 }
 void
 DvonnViewer::fadeOut(const Board::Ghosts* g)
@@ -112,7 +112,7 @@ DvonnViewer::advanceAnimateMove()
 	animateT_ = -1.0f;
 	Q_EMIT requested(animateMove_);
   }
-  updateGL();
+  update();
 }
 void
 DvonnViewer::animateMove(Game::Move m)
@@ -144,7 +144,7 @@ DvonnViewer::advanceAnimateScore()
 	scoreT_ = -1.0f;
 	Q_EMIT requested(scoreMove_);
   }
-  updateGL();
+  update();
 }
 void
 DvonnViewer::animateScore()
@@ -196,7 +196,7 @@ DvonnViewer::stopAllAnimations()
   scoreTimer_->stop();
   scoreT_ = -1.0f;
 
-  updateGL();
+  update();
 }
 void
 DvonnViewer::setGame(Game* g)
@@ -207,13 +207,13 @@ void
 DvonnViewer::toggleTexture(bool b)
 {
   drawer_->toggleTexture(b);
-  updateGL();
+  update();
 }
 void
 DvonnViewer::toggleLight(bool b)
 {
   useLight_ = b;
-  updateGL();
+  update();
 }
 void
 DvonnViewer::toggleShowPossible(bool b)
@@ -225,31 +225,31 @@ DvonnViewer::toggleShowPossible(bool b)
   {
 	possDests_ = game_->possibleDestinations(srcPicked_);
   }
-  updateGL();
+  update();
 }
 void
 DvonnViewer::toggleShowStatus(bool b)
 {
   showStatus_ = b;
-  updateGL();
+  update();
 }
 void
 DvonnViewer::toggleShowLabels(bool b)
 {
   showLabels_ = b;
-  updateGL();
+  update();
 }
 void
 DvonnViewer::toggleShowAnimation(bool b)
 {
   showAnimation_ = b;
-  updateGL();
+  update();
 }
 void
 DvonnViewer::toggleDragToPlay(bool b)
 {
   dragToPlay_ = b;
-  updateGL();
+  update();
 }
 // I n i t i a l i z a t i o n   f u n c t i o n s //
 void
@@ -568,7 +568,7 @@ DvonnViewer::mousePressEvent(QMouseEvent* e)
 	  piecePicked_ = false;
 	}
 	  }
-	  updateGL();
+      update();
 	}
 	else // phase == MovePhase
 	{
@@ -603,7 +603,7 @@ DvonnViewer::mousePressEvent(QMouseEvent* e)
 	}
 	commitDstPicked();
 	  }
-	  updateGL();
+      update();
 	}
   }
   else QGLViewer::mousePressEvent(e);
@@ -625,7 +625,7 @@ DvonnViewer::mouseMoveEvent(QMouseEvent* e)
 	  {
 	selectionMode_ = 2;
 	select(e);
-	updateGL();
+    update();
 	  }
 	}
 	else // phase == MovePhase
@@ -641,7 +641,7 @@ DvonnViewer::mouseMoveEvent(QMouseEvent* e)
 	  selectionMode_ = 5;
 	  select(e);
 	}
-	updateGL();
+    update();
 	  }
 	}
   }
@@ -674,7 +674,7 @@ DvonnViewer::commitDstPicked()
 	  Player p = game_->theOnePlaying();
 	  Q_EMIT requested(Game::Placement(game_->phase() == RedPlacementPhase?Red:colorOf(p),
 			 dstPicked_.stackCoord()));
-	  updateGL();
+      update();
 	}
   }
   else // phase == MovePhase
@@ -690,7 +690,7 @@ DvonnViewer::commitDstPicked()
   srcPicked_ = Board::ConstStackHandle::null();
   setMouseTracking(false);
 
-  updateGL();
+  update();
 }
 void
 DvonnViewer::keyPressEvent(QKeyEvent* e)

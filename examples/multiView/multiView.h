@@ -10,7 +10,7 @@ public:
 class Viewer : public QGLViewer
 {
 public:
-  Viewer(const Scene* const s, int type, QWidget* parent, const QGLWidget* shareWidget=NULL);
+  Viewer(const Scene* const s, int type, QWidget* parent, const QOpenGLWidget* shareWidget=NULL);
 
 protected :
   virtual void draw();

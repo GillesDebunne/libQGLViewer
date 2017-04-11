@@ -373,7 +373,7 @@ Drawer::drawStatus(const Board::ConstStackHandle& s,QGLViewer* v) const
   glPushMatrix();
   translateTo(s.stackCoord(),s->height()*pieceH+pieceH/2.0f);
   glColor3f(1.0f,1.0f,0.0f);
-  v->renderText(0.5f*caseD,0.5f*caseD,0.0f,QString("%1").arg(s.stackStatus()));
+  v->renderText(0.5f*caseD,0.5f*caseD,QString("%1").arg(s.stackStatus()), QFont());
   glPopMatrix();
   endTexture();
 }

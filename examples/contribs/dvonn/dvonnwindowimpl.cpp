@@ -118,7 +118,7 @@ DvonnWindowImpl::load()
   gameRandomlyMoveStackAction->setEnabled(game_->phase() == MovePhase);
   gameUndoAction->setEnabled(false);
   gameRedoAction->setEnabled(false);
-  dvonnViewer->updateGL();
+  dvonnViewer->update();
   updateStatusBar();
 }
 void
@@ -183,7 +183,7 @@ DvonnWindowImpl::newGame()
     gameRandomlyMoveStackAction->setEnabled(false);
     gameUndoAction->setEnabled(false);
     gameRedoAction->setEnabled(false);
-    dvonnViewer->updateGL();
+    dvonnViewer->update();
     startAnimScoreTimer_->stop();
     updateStatusBar();
   }
@@ -202,7 +202,7 @@ DvonnWindowImpl::randomlyFinishPlacement()
   gameRandomlyMoveStackAction->setEnabled(true);
   gameUndoAction->setEnabled(true);
   gameRedoAction->setEnabled(false);
-  dvonnViewer->updateGL();
+  dvonnViewer->update();
   updateStatusBar();
 }
 void
@@ -216,7 +216,7 @@ DvonnWindowImpl::randomlyMoveStack()
     gameRandomlyMoveStackAction->setEnabled(!game_->isOver());
     gameUndoAction->setEnabled(true);
     gameRedoAction->setEnabled(false);
-    dvonnViewer->updateGL();
+    dvonnViewer->update();
   }
   updateStatusBar();
 }
@@ -228,7 +228,7 @@ DvonnWindowImpl::play(dvonn::Game::Placement p)
   gameRandomlyMoveStackAction->setEnabled(game_->phase() == MovePhase);
   gameUndoAction->setEnabled(true);
   gameRedoAction->setEnabled(false);
-  dvonnViewer->updateGL();
+  dvonnViewer->update();
   updateStatusBar();
 }
 void
@@ -241,7 +241,7 @@ DvonnWindowImpl::play(dvonn::Game::Move m)
   gameRandomlyMoveStackAction->setEnabled(game_->phase() == MovePhase);
   gameUndoAction->setEnabled(true);
   gameRedoAction->setEnabled(false);
-  dvonnViewer->updateGL();
+  dvonnViewer->update();
   updateStatusBar();
   if (game_->isOver())
   {
@@ -267,7 +267,7 @@ DvonnWindowImpl::undo()
   gameRedoAction->setEnabled(true);
   dvonnViewer->stopAllAnimations();
   startAnimScoreTimer_->stop();
-  dvonnViewer->updateGL();
+  dvonnViewer->update();
   updateStatusBar();
 }
 void
@@ -279,7 +279,7 @@ DvonnWindowImpl::redo()
   gameUndoAction->setEnabled(true);
   gameRedoAction->setEnabled(game_->canRedo());
   dvonnViewer->stopAllAnimations();
-  dvonnViewer->updateGL();
+  dvonnViewer->update();
   updateStatusBar();
 }
 void
