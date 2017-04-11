@@ -120,7 +120,7 @@ void Viewer::keyPressEvent(QKeyEvent *e)
   dir[rotDir] = 1.0;
   constraints[activeConstraint]->setRotationConstraintDirection(dir);
 
-  updateGL();
+  update();
 }
 
 void Viewer::displayType(const AxisPlaneConstraint::Type type, const int x, const int y, const char c)
@@ -150,7 +150,7 @@ void Viewer::displayDir(const unsigned short dir, const int x, const int y, cons
 
 void Viewer::displayText()
 {
-  qglColor(foregroundColor());
+  glColor4f(foregroundColor().redF(), foregroundColor().greenF(), foregroundColor().blueF(), foregroundColor().alphaF());
   glDisable(GL_LIGHTING);
   drawText(10,height()-30, "TRANSLATION :");
   displayDir(transDir, 190, height()-30, 'G');

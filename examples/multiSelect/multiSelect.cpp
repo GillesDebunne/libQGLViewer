@@ -108,7 +108,7 @@ void Viewer::mouseMoveEvent(QMouseEvent* e)
 	{
 	  // Updates rectangle_ coordinates and redraws rectangle
 	  rectangle_.setBottomRight(e->pos());
-	  updateGL();
+      update();
 	}
   else
 	QGLViewer::mouseMoveEvent(e);
@@ -127,7 +127,7 @@ void Viewer::mouseReleaseEvent(QMouseEvent* e)
 	  // Compute rectangle center and perform selection
 	  select(rectangle_.center());
 	  // Update display to show new selected objects
-	  updateGL();
+      update();
 	}
   else
 	QGLViewer::mouseReleaseEvent(e);

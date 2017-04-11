@@ -18,12 +18,14 @@
 # include <QImage>
 # include <QDir>
 # include <QUrl>
+# include <QGLContext>
 
 using namespace std;
 using namespace qglviewer;
 
 // Static private variable
 QList<QGLViewer*> QGLViewer::QGLViewerPool_;
+
 
 
 /*! \mainpage
@@ -135,22 +137,22 @@ the associated documentation.
 
 If the \p shareWidget parameter points to a valid \c QGLWidget, the QGLViewer will share the OpenGL
 context with \p shareWidget (see isSharing()). */
-QGLViewer::QGLViewer(QWidget* parent, const QGLWidget* shareWidget, Qt::WindowFlags flags)
-	: QGLWidget(parent, shareWidget, flags)
+QGLViewer::QGLViewer(QWidget* parent, const QOpenGLWidget* shareWidget, Qt::WindowFlags flags)
+    : QOpenGLWidget(parent, flags)
 { defaultConstructor(); }
 
 /*! Same as QGLViewer(), but a \c QGLContext can be provided so that viewers share GL contexts, even
 with \c QGLContext sub-classes (use \p shareWidget otherwise). */
-QGLViewer::QGLViewer(QGLContext *context, QWidget* parent, const QGLWidget* shareWidget, Qt::WindowFlags flags)
-	: QGLWidget(context, parent, shareWidget, flags)
+QGLViewer::QGLViewer(QOpenGLContext *context, QWidget* parent, const QOpenGLWidget* shareWidget, Qt::WindowFlags flags)
+    : QOpenGLWidget(parent, flags)
 { defaultConstructor(); }
 
 /*! Same as QGLViewer(), but a specific \c QGLFormat can be provided.
 
 This is for instance needed to ask for a stencil buffer or for stereo display (as is illustrated in
 the <a href="../examples/stereoViewer.html">stereoViewer example</a>). */
-QGLViewer::QGLViewer(const QGLFormat& format, QWidget* parent, const QGLWidget* shareWidget, Qt::WindowFlags flags)
-	: QGLWidget(format, parent, shareWidget, flags)
+QGLViewer::QGLViewer(const QGLFormat &format, QWidget* parent, const QOpenGLWidget* shareWidget, Qt::WindowFlags flags)
+    : QOpenGLWidget(parent, flags)
 { defaultConstructor(); }
 #endif // QT3_SUPPORT
 
@@ -342,7 +344,12 @@ void QGLViewer::postDraw()
 #endif
 
 	glDisable(GL_COLOR_MATERIAL);
-	qglColor(foregroundColor());
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+    glColor4f(foregroundColor().redF(), foregroundColor().greenF(), foregroundColor().blueF(), foregroundColor().alphaF());
+#else
+    qglColor(foregroundColor());
+#endif
+
 
 	if (cameraIsEdited())
 		camera()->drawAllPaths();
@@ -685,6 +692,30 @@ void QGLViewer::drawLight(GLenum light, qreal scale) const
 	}
 }
 
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+void QGLViewer::renderText(double x, double y, const QString &str, const QFont &font = QFont() ) {
+    // Identify x and y locations to render text within widget
+    int height = this->height();
+    GLdouble textPosX = 0, textPosY = 0, textPosZ = 0;
+    //project(x, y, 0.0, &textPosX, &textPosY, &textPosZ);
+    textPosY = height - textPosY; // y is inverted
+
+    // Retrieve last OpenGL color to use as a font color
+    GLdouble glColor[4];
+    glGetDoublev(GL_CURRENT_COLOR, glColor);
+    QColor fontColor = QColor(glColor[0], glColor[1], glColor[2], glColor[3]);
+
+    // Render text
+    QPainter painter(this);
+    painter.setPen(fontColor);
+    painter.setFont(font);
+    painter.drawText(textPosX, textPosY, str);
+    painter.end();
+
+}
+
+#endif
+
 
 /*! Draws \p text at position \p x, \p y (expressed in screen coordinates pixels, origin in the
 upper left corner of the widget).
@@ -899,7 +930,7 @@ void QGLViewer::closeEvent(QCloseEvent *e)
 
 	// #CONNECTION# Also done for EXIT_VIEWER in keyPressEvent().
 	saveStateToFile();
-	QGLWidget::closeEvent(e);
+    QOpenGLWidget::closeEvent(e);
 }
 
 /*! Simple wrapper method: calls \c select(event->pos()).
@@ -2176,7 +2207,7 @@ If you overload this method, first call the inherited method. Also called when t
 created, before its first display. */
 void QGLViewer::resizeGL(int width, int height)
 {
-	QGLWidget::resizeGL(width, height);
+    QOpenGLWidget::resizeGL(width, height);
 	glViewport( 0, 0, GLint(width), GLint(height) );
 	camera()->setScreenWidthAndHeight(this->width(), this->height());
 }

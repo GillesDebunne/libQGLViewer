@@ -37,7 +37,7 @@ public Q_SLOTS:
   
   // D i s p l a y   m e n u
   void toggleAnimation(bool on) { animatePlays_ = on; }
-  void toggleDisplayPossibleMoves(bool on) { displayPossibleMoves_ = on; updateGL(); }
+  void toggleDisplayPossibleMoves(bool on) { displayPossibleMoves_ = on; update(); }
 
   // H e l p   m e n u
   void displayRules();
