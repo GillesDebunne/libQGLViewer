@@ -146,7 +146,7 @@ void Viewer::keyPressEvent(QKeyEvent *e)
       break;
     case Qt::Key_B :
       background_ = !background_;
-      updateGL();
+      update();
       break;
     default: QGLViewer::keyPressEvent(e);
     }

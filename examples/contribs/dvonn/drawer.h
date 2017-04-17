@@ -24,7 +24,7 @@ namespace dvonn
     void toggleTexture(bool);
     void drawPieces(const Board::ConstStackHandle&) const;
     void draw(const Board::ConstStackHandle&) const;
-    void drawStatus(const Board::ConstStackHandle&,QGLViewer* v) const;
+    void drawStatus(const Board::ConstStackHandle&, QGLViewer *v) const;
     void drawComplement(bool showLabels) const;
     void drawWhitePiecePools(const Board&,bool lastTransparent) const;
     void drawBlackPiecePools(const Board&,bool lastTransparent) const;

@@ -67,13 +67,13 @@ void Viewer::draw()
     {
       glPushMatrix();
       glMultMatrixd(saucerPos[i].matrix());
-      qglColor(saucerColor[i]);
+      glColor4f(saucerColor[i].redF(), saucerColor[i].greenF(), saucerColor[i].blueF(), saucerColor[i].alphaF());
       drawSaucer();
       glPopMatrix();
     }
 
   // Draw the arrows
-  qglColor(foregroundColor());
+  glColor4f(foregroundColor().redF(), foregroundColor().greenF(), foregroundColor().blueF(), foregroundColor().alphaF());
   startScreenCoordinatesSystem();
   for (i=0; i<nbSaucers; i++)
     {
