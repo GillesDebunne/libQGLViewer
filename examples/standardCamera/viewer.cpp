@@ -87,7 +87,7 @@ void Viewer::wheelEvent(QWheelEvent *e)
   {
 	((StandardCamera*)camera())->changeOrthoFrustumSize(e->delta());
 	Q_EMIT cameraChanged();
-	updateGL();
+    update();
   }
   else
 	QGLViewer::wheelEvent(e);

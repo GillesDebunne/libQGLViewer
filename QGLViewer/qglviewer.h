@@ -6,6 +6,7 @@
 #include <QMap>
 #include <QClipboard>
 #include <QTime>
+#include <QGL>
 
 class QTabWidget;
 
@@ -37,7 +38,7 @@ callback mechanism). See the <a href="../examples/callback.html">callback exampl
 complete implementation.
 
 \nosubgrouping */
-class QGLVIEWER_EXPORT QGLViewer : public QGLWidget
+class QGLVIEWER_EXPORT QGLViewer : public QOpenGLWidget
 {
 	Q_OBJECT
 
@@ -59,9 +60,9 @@ public:
 
 #else
 
-	explicit QGLViewer(QWidget* parent=0, const QGLWidget* shareWidget=0, Qt::WindowFlags flags=0);
-	explicit QGLViewer(QGLContext *context, QWidget* parent=0, const QGLWidget* shareWidget=0, Qt::WindowFlags flags=0);
-	explicit QGLViewer(const QGLFormat& format, QWidget* parent=0, const QGLWidget* shareWidget=0, Qt::WindowFlags flags=0);
+    explicit QGLViewer(QWidget* parent=0, const QOpenGLWidget* shareWidget=0, Qt::WindowFlags flags=0);
+    explicit QGLViewer(QOpenGLContext *context, QWidget* parent=0, const QOpenGLWidget* shareWidget=0, Qt::WindowFlags flags=0);
+    explicit QGLViewer(const QGLFormat& format, QWidget* parent=0, const QOpenGLWidget* shareWidget=0, Qt::WindowFlags flags=0);
 #endif
 
 	virtual ~QGLViewer();
@@ -160,12 +161,15 @@ public:
 	QColor foregroundColor() const { return foregroundColor_; }
 public Q_SLOTS:
 	/*! Sets the backgroundColor() of the viewer and calls \c qglClearColor(). See also
-		setForegroundColor(). */
-	void setBackgroundColor(const QColor& color) { backgroundColor_=color; qglClearColor(color); }
-	/*! Sets the foregroundColor() of the viewer, used to draw visual hints. See also setBackgroundColor(). */
+        setForegroundColor(). */
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+    void setBackgroundColor(const QColor& color) { backgroundColor_=color; glClearColor(color.redF(), color.greenF(), color.blueF(), color.alphaF()); }
+#else
+    void setBackgroundColor(const QColor& color) { backgroundColor_=color; qglClearColor(color); }
+#endif
+    /*! Sets the foregroundColor() of the viewer, used to draw visual hints. See also setBackgroundColor(). */
 	void setForegroundColor(const QColor& color) { foregroundColor_ = color; }
 	//@}
-
 
 	/*! @name Scene dimensions */
 	//@{
@@ -557,6 +561,10 @@ public:
 	qreal bufferTextureMaxU() const { return bufferTextureMaxU_; }
 	/*! Same as bufferTextureMaxU(), but for the v texture coordinate. */
 	qreal bufferTextureMaxV() const { return bufferTextureMaxV_; }
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+    void renderText(double x, double y, const QString &str, const QFont &font);
+#endif
+
 public Q_SLOTS:
 	void copyBufferToTexture(GLint internalFormat, GLenum format=GL_NONE);
 	//@}

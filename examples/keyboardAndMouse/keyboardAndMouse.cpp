@@ -107,7 +107,7 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 	  else
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	  handled = true;
-	  updateGL();
+      update();
 	}
   else
 	if ((e->key()==Qt::Key_F) && (modifiers==Qt::NoButton))
@@ -118,7 +118,7 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 	else
 	  glShadeModel(GL_SMOOTH);
 	handled = true;
-	updateGL();
+    update();
 	  }
   // ... and so on with other else/if blocks.
 

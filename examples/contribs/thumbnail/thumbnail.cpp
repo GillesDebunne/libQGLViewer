@@ -92,7 +92,7 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 {
   switch (e->key())
     {
-    case Qt::Key_T : thumbnail_ = !thumbnail_; updateGL(); break;
+    case Qt::Key_T : thumbnail_ = !thumbnail_; update(); break;
     default        : QGLViewer::keyPressEvent(e);
     }
 }

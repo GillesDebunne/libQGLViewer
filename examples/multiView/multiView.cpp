@@ -5,7 +5,7 @@
 using namespace qglviewer;
 using namespace std;
 
-Viewer::Viewer(const Scene* const s, int type, QWidget* parent, const QGLWidget* shareWidget)
+Viewer::Viewer(const Scene* const s, int type, QWidget* parent, const QOpenGLWidget* shareWidget)
   : QGLViewer(parent, shareWidget), scene_(s)
 {
   setAxisIsDrawn();

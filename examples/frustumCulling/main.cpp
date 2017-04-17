@@ -35,8 +35,8 @@ int main(int argc, char** argv)
 	observer.showEntireScene();
 
 	// Make sure every culling Camera movement updates the outer viewer
-	QObject::connect(viewer.camera()->frame(), SIGNAL(manipulated()), &observer, SLOT(updateGL()));
-	QObject::connect(viewer.camera()->frame(), SIGNAL(spun()), &observer, SLOT(updateGL()));
+    QObject::connect(viewer.camera()->frame(), SIGNAL(manipulated()), &observer, SLOT(update()));
+    QObject::connect(viewer.camera()->frame(), SIGNAL(spun()), &observer, SLOT(update()));
 
 
 	viewer.setWindowTitle("frustumCulling");

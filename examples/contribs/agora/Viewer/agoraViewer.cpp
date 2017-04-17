@@ -58,7 +58,7 @@ displayPossibleMoves_(true), animatePlays_(false/*true*/), animationStep_(0)
 {
 	kfi_ = new KeyFrameInterpolator(new Frame());
 
-	QObject::connect(kfi_, SIGNAL(interpolated()), this, SLOT(updateGL()));
+    QObject::connect(kfi_, SIGNAL(interpolated()), this, SLOT(update()));
 	QObject::connect(kfi_, SIGNAL(endReached()), this, SLOT(simplePlay()));
 
 	undoTimer_ = new QTimer();
@@ -289,7 +289,7 @@ void AgoraViewer::play(const Move& m)
 void AgoraViewer::simplePlay()
 {
 	board_->play(currentMove_);
-	updateGL();
+    update();
 	playNextMove();
 }
 
@@ -521,7 +521,7 @@ void AgoraViewer::redo()
 void AgoraViewer::finalizeUndoRedo()
 {
 	selectedPiece_ = -1;
-	updateGL();
+    update();
 #if QT_VERSION < 0x040000
 	undoTimer_->start(1000, true);
 #else

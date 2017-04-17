@@ -43,7 +43,7 @@ Viewer::Viewer()
 
   help();
 
-  connect(&kfi_, SIGNAL(interpolated()), SLOT(updateGL()));
+  connect(&kfi_, SIGNAL(interpolated()), SLOT(update()));
   kfi_.startInterpolation();
 }
 
@@ -69,12 +69,12 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 	case Qt::Key_Left :
 	  currentKF_ = (currentKF_+nbKeyFrames-1) % nbKeyFrames;
 	  setManipulatedFrame(keyFrame_[currentKF_]);
-	  updateGL();
+      update();
 	  break;
 	case Qt::Key_Right :
 	  currentKF_ = (currentKF_+1) % nbKeyFrames;
 	  setManipulatedFrame(keyFrame_[currentKF_]);
-	  updateGL();
+      update();
 	  break;
 	case Qt::Key_Return :
 	  kfi_.toggleInterpolation();

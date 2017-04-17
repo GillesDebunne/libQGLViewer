@@ -172,7 +172,7 @@ void drawVectorial(void* param)
 class ProgressDialog
 {
 public:
-	static void showProgressDialog(QGLWidget* parent);
+    static void showProgressDialog(QOpenGLWidget* parent);
 	static void updateProgress(float progress, const QString& stepString);
 	static void hideProgressDialog();
 
@@ -182,7 +182,7 @@ private:
 
 QProgressDialog* ProgressDialog::progressDialog = NULL;
 
-void ProgressDialog::showProgressDialog(QGLWidget* parent)
+void ProgressDialog::showProgressDialog(QOpenGLWidget* parent)
 {
 	progressDialog = new QProgressDialog(parent);
 	progressDialog->setWindowTitle("Image rendering progress");
@@ -218,7 +218,7 @@ public: VRenderInterface(QWidget *parent) : QDialog(parent) { setupUi(this); }
 
 // Pops-up a vectorial output option dialog box and save to fileName
 // Returns -1 in case of Cancel, 0 for success and (todo) error code in case of problem.
-static int saveVectorialSnapshot(const QString& fileName, QGLWidget* widget, const QString& snapshotFormat)
+static int saveVectorialSnapshot(const QString& fileName, QOpenGLWidget* widget, const QString& snapshotFormat)
 {
 	static VRenderInterface* VRinterface = NULL;
 
@@ -422,7 +422,7 @@ bool QGLViewer::saveImageSnapshot(const QString& fileName)
 			// ProgressDialog::hideProgressDialog();
 			// qApp->processEvents();
 
-			QImage snapshot = grabFrameBuffer(true);
+            QImage snapshot = QOpenGLWidget::grabFramebuffer();
 
 			// ProgressDialog::showProgressDialog(this);
 			// ProgressDialog::updateProgress(count / (qreal)(nbX*nbY),
@@ -579,7 +579,7 @@ QImage QGLViewer::frameBufferSnapshot()
 	// We grab the frame buffer before, even if it might be not necessary (vectorial rendering).
 	// The problem could not be reproduced on a simple example to submit a Qt bug.
 	// However, only grabs the backgroundImage in the eponym example. May come from the driver.
-	return grabFrameBuffer(true);
+    return QOpenGLWidget::grabFramebuffer();
 }
 
 /*! Same as saveSnapshot(), except that it uses \p fileName instead of snapshotFileName().

@@ -1,6 +1,7 @@
 #include "viewer.h"
 
 #include <QPainter>
+#include <QGL>
 
 using namespace std;
 
@@ -78,8 +79,8 @@ void Viewer::paintEvent(QPaintEvent *event)
     glEnable(GL_MULTISAMPLE);
     static GLfloat lightPosition[4] = { 1.0, 5.0, 5.0, 1.0 };
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-    qglClearColor(backgroundColor());
-	
+    glClearColor(backgroundColor().redF(), backgroundColor().greenF(), backgroundColor().blueF(), backgroundColor().alphaF());
+
     // Classical 3D drawing, usually performed by paintGL().
     preDraw();
     draw();
