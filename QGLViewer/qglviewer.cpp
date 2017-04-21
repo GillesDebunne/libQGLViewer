@@ -344,12 +344,7 @@ void QGLViewer::postDraw()
 #endif
 
 	glDisable(GL_COLOR_MATERIAL);
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
     glColor4f(foregroundColor().redF(), foregroundColor().greenF(), foregroundColor().blueF(), foregroundColor().alphaF());
-#else
-    qglColor(foregroundColor());
-#endif
-
 
 	if (cameraIsEdited())
 		camera()->drawAllPaths();
@@ -693,7 +688,7 @@ void QGLViewer::drawLight(GLenum light, qreal scale) const
 }
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
-void QGLViewer::renderText(double x, double y, const QString &str, const QFont &font = QFont() ) {
+void QGLViewer::renderText(int x, int y, const QString &str, const QFont &font = QFont() ) {
     // Identify x and y locations to render text within widget
     int height = this->height();
     GLdouble textPosX = 0, textPosY = 0, textPosZ = 0;
