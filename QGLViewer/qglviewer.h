@@ -162,11 +162,7 @@ public:
 public Q_SLOTS:
 	/*! Sets the backgroundColor() of the viewer and calls \c qglClearColor(). See also
         setForegroundColor(). */
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
     void setBackgroundColor(const QColor& color) { backgroundColor_=color; glClearColor(color.redF(), color.greenF(), color.blueF(), color.alphaF()); }
-#else
-    void setBackgroundColor(const QColor& color) { backgroundColor_=color; qglClearColor(color); }
-#endif
     /*! Sets the foregroundColor() of the viewer, used to draw visual hints. See also setBackgroundColor(). */
 	void setForegroundColor(const QColor& color) { foregroundColor_ = color; }
 	//@}
@@ -562,7 +558,7 @@ public:
 	/*! Same as bufferTextureMaxU(), but for the v texture coordinate. */
 	qreal bufferTextureMaxV() const { return bufferTextureMaxV_; }
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
-    void renderText(double x, double y, const QString &str, const QFont &font);
+    void renderText(int x, int y, const QString &str, const QFont &font);
 #endif
 
 public Q_SLOTS:
