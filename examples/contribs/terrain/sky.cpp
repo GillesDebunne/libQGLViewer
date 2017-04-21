@@ -1,6 +1,6 @@
 // TP OpenGL: Joerg Liebelt, Serigne Sow
 #include "sky.h"
-
+#include <QGLWidget>
 
 bool SKY::LoadTexture( int side, const QString& filename )
 {
