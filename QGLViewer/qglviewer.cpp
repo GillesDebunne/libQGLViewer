@@ -47,86 +47,86 @@ See the project main page for details on the project and installation steps. */
 
 void QGLViewer::defaultConstructor()
 {
-	// Test OpenGL context
-	// if (glGetString(GL_VERSION) == 0)
-	// qWarning("Unable to get OpenGL version, context may not be available - Check your configuration");
+  // Test OpenGL context
+  // if (glGetString(GL_VERSION) == 0)
+  // qWarning("Unable to get OpenGL version, context may not be available - Check your configuration");
 
-	int poolIndex = QGLViewer::QGLViewerPool_.indexOf(NULL);
-	setFocusPolicy(Qt::StrongFocus);
+  int poolIndex = QGLViewer::QGLViewerPool_.indexOf(NULL);
+  setFocusPolicy(Qt::StrongFocus);
 
-	if (poolIndex >= 0)
-		QGLViewer::QGLViewerPool_.replace(poolIndex, this);
-	else
-		QGLViewer::QGLViewerPool_.append(this);
+  if (poolIndex >= 0)
+    QGLViewer::QGLViewerPool_.replace(poolIndex, this);
+  else
+    QGLViewer::QGLViewerPool_.append(this);
 
-	camera_ = new Camera();
-	setCamera(camera());
+  camera_ = new Camera();
+  setCamera(camera());
 
-	setDefaultShortcuts();
-	setDefaultMouseBindings();
+  setDefaultShortcuts();
+  setDefaultMouseBindings();
 
-	setSnapshotFileName(tr("snapshot", "Default snapshot file name"));
-	initializeSnapshotFormats();
-	setSnapshotCounter(0);
-	setSnapshotQuality(95);
+  setSnapshotFileName(tr("snapshot", "Default snapshot file name"));
+  initializeSnapshotFormats();
+  setSnapshotCounter(0);
+  setSnapshotQuality(95);
 
-	fpsTime_.start();
-	fpsCounter_     = 0;
-	f_p_s_          = 0.0;
-	fpsString_      = tr("%1Hz", "Frames per seconds, in Hertz").arg("?");
-	visualHint_     = 0;
-	previousPathId_	= 0;
-	// prevPos_ is not initialized since pos() is not meaningful here.
-	// It will be set when setFullScreen(false) is called after setFullScreen(true)
+  fpsTime_.start();
+  fpsCounter_     = 0;
+  f_p_s_          = 0.0;
+  fpsString_      = tr("%1Hz", "Frames per seconds, in Hertz").arg("?");
+  visualHint_     = 0;
+  previousPathId_	= 0;
+  // prevPos_ is not initialized since pos() is not meaningful here.
+  // It will be set when setFullScreen(false) is called after setFullScreen(true)
 
-	// #CONNECTION# default values in initFromDOMElement()
-	manipulatedFrame_ = NULL;
-	manipulatedFrameIsACamera_ = false;
-	mouseGrabberIsAManipulatedFrame_ = false;
-	mouseGrabberIsAManipulatedCameraFrame_ = false;
-	displayMessage_ = false;
-	connect(&messageTimer_, SIGNAL(timeout()), SLOT(hideMessage()));
-	messageTimer_.setSingleShot(true);
-	helpWidget_ = NULL;
-	setMouseGrabber(NULL);
+  // #CONNECTION# default values in initFromDOMElement()
+  manipulatedFrame_ = NULL;
+  manipulatedFrameIsACamera_ = false;
+  mouseGrabberIsAManipulatedFrame_ = false;
+  mouseGrabberIsAManipulatedCameraFrame_ = false;
+  displayMessage_ = false;
+  connect(&messageTimer_, SIGNAL(timeout()), SLOT(hideMessage()));
+  messageTimer_.setSingleShot(true);
+  helpWidget_ = NULL;
+  setMouseGrabber(NULL);
 
-	setSceneRadius(1.0);
-	showEntireScene();
-	setStateFileName(".qglviewer.xml");
+  setSceneRadius(1.0);
+  showEntireScene();
+  setStateFileName(".qglviewer.xml");
 
-	// #CONNECTION# default values in initFromDOMElement()
-	setAxisIsDrawn(false);
-	setGridIsDrawn(false);
-	setFPSIsDisplayed(false);
-	setCameraIsEdited(false);
-	setTextIsEnabled(true);
-	setStereoDisplay(false);
-	// Make sure move() is not called, which would call initializeGL()
-	fullScreen_ = false;
-	setFullScreen(false);
+  // #CONNECTION# default values in initFromDOMElement()
+  setAxisIsDrawn(false);
+  setGridIsDrawn(false);
+  setFPSIsDisplayed(false);
+  setCameraIsEdited(false);
+  setTextIsEnabled(true);
+  setStereoDisplay(false);
+  // Make sure move() is not called, which would call initializeGL()
+  fullScreen_ = false;
+  setFullScreen(false);
 
-	animationTimerId_ = 0;
-	stopAnimation();
-	setAnimationPeriod(40); // 25Hz
+  animationTimerId_ = 0;
+  stopAnimation();
+  setAnimationPeriod(40); // 25Hz
 
-	selectBuffer_ = NULL;
-	setSelectBufferSize(4*1000);
-	setSelectRegionWidth(3);
-	setSelectRegionHeight(3);
-	setSelectedName(-1);
+  selectBuffer_ = NULL;
+  setSelectBufferSize(4*1000);
+  setSelectRegionWidth(3);
+  setSelectRegionHeight(3);
+  setSelectedName(-1);
 
-	bufferTextureId_ = 0;
-	bufferTextureMaxU_ = 0.0;
-	bufferTextureMaxV_ = 0.0;
-	bufferTextureWidth_ = 0;
-	bufferTextureHeight_ = 0;
-	previousBufferTextureFormat_ = 0;
-	previousBufferTextureInternalFormat_ = 0;
-	currentlyPressedKey_ = Qt::Key(0);
+  bufferTextureId_ = 0;
+  bufferTextureMaxU_ = 0.0;
+  bufferTextureMaxV_ = 0.0;
+  bufferTextureWidth_ = 0;
+  bufferTextureHeight_ = 0;
+  previousBufferTextureFormat_ = 0;
+  previousBufferTextureInternalFormat_ = 0;
+  currentlyPressedKey_ = Qt::Key(0);
 
-	setAttribute(Qt::WA_NoSystemBackground);
+  setAttribute(Qt::WA_NoSystemBackground);
 
-	tileRegion_ = NULL;
+  tileRegion_ = NULL;
 }
 
 #ifndef DOXYGEN
@@ -187,40 +187,40 @@ The viewer is replaced by \c NULL in the QGLViewerPool() (in order to preserve o
 memory is released. The camera() is deleted and should be copied before if it is shared by an other viewer. */
 QGLViewer::~QGLViewer()
 {
-	// See closeEvent comment. Destructor is called (and not closeEvent) only when the widget is embedded.
-	// Hence we saveToFile here. It is however a bad idea if virtual domElement() has been overloaded !
-	// if (parent())
-	// saveStateToFileForAllViewers();
+  // See closeEvent comment. Destructor is called (and not closeEvent) only when the widget is embedded.
+  // Hence we saveToFile here. It is however a bad idea if virtual domElement() has been overloaded !
+  // if (parent())
+  // saveStateToFileForAllViewers();
 
-	QGLViewer::QGLViewerPool_.replace(QGLViewer::QGLViewerPool_.indexOf(this), NULL);
+  QGLViewer::QGLViewerPool_.replace(QGLViewer::QGLViewerPool_.indexOf(this), NULL);
 
-	delete camera();
-	delete[] selectBuffer_;
-	if (helpWidget())
-	{
-		// Needed for Qt 4 which has no main widget.
-		helpWidget()->close();
-		delete helpWidget_;
-	}
+  delete camera();
+  delete[] selectBuffer_;
+  if (helpWidget())
+  {
+    // Needed for Qt 4 which has no main widget.
+    helpWidget()->close();
+    delete helpWidget_;
+  }
 }
 
 
 static QString QGLViewerVersionString()
 {
-	return QString::number((QGLVIEWER_VERSION & 0xff0000) >> 16) + "." +
-			QString::number((QGLVIEWER_VERSION & 0x00ff00) >> 8) + "." +
-			QString::number(QGLVIEWER_VERSION & 0x0000ff);
+  return QString::number((QGLVIEWER_VERSION & 0xff0000) >> 16) + "." +
+      QString::number((QGLVIEWER_VERSION & 0x00ff00) >> 8) + "." +
+      QString::number(QGLVIEWER_VERSION & 0x0000ff);
 }
 
 static Qt::KeyboardModifiers keyboardModifiersFromState(unsigned int state) {
-	// Convertion of keyboard modifiers and mouse buttons as an int is no longer supported : emulate
-	return Qt::KeyboardModifiers(int(state & 0xFF000000));
+  // Convertion of keyboard modifiers and mouse buttons as an int is no longer supported : emulate
+  return Qt::KeyboardModifiers(int(state & 0xFF000000));
 }
 
 
 static Qt::MouseButton mouseButtonFromState(unsigned int state) {
-	// Convertion of keyboard modifiers and mouse buttons as an int is no longer supported : emulate
-	return Qt::MouseButton(state & 0xFFFF);
+  // Convertion of keyboard modifiers and mouse buttons as an int is no longer supported : emulate
+  return Qt::MouseButton(state & 0xFFFF);
 }
 
 /*! Initializes the QGLViewer OpenGL context and then calls user-defined init().
@@ -243,32 +243,32 @@ If you port an existing application to QGLViewer and your display changes, you p
 disable these flags in init() to get back to a standard OpenGL state. */
 void QGLViewer::initializeGL()
 {
-	glEnable(GL_LIGHT0);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_COLOR_MATERIAL);
+  glEnable(GL_LIGHT0);
+  glEnable(GL_LIGHTING);
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_COLOR_MATERIAL);
 
-	// Default colors
-	setForegroundColor(QColor(180, 180, 180));
-	setBackgroundColor(QColor(51, 51, 51));
+  // Default colors
+  setForegroundColor(QColor(180, 180, 180));
+  setBackgroundColor(QColor(51, 51, 51));
 
-	// Clear the buffer where we're going to draw
-	if (format().stereo())
-	{
-		glDrawBuffer(GL_BACK_RIGHT);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glDrawBuffer(GL_BACK_LEFT);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	}
-	else
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  // Clear the buffer where we're going to draw
+  if (format().stereo())
+  {
+    glDrawBuffer(GL_BACK_RIGHT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDrawBuffer(GL_BACK_LEFT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  }
+  else
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Calls user defined method. Default emits a signal.
-	init();
+  // Calls user defined method. Default emits a signal.
+  init();
 
-	// Give time to glInit to finish and then call setFullScreen().
-	if (isFullScreen())
-		QTimer::singleShot( 100, this, SLOT(delayedFullScreen()) );
+  // Give time to glInit to finish and then call setFullScreen().
+  if (isFullScreen())
+    QTimer::singleShot( 100, this, SLOT(delayedFullScreen()) );
 }
 
 /*! Main paint method, inherited from \c QGLWidget.
@@ -279,33 +279,33 @@ Calls the following methods, in that order:
 \arg postDraw() : display of visual hints (world axis, FPS...) */
 void QGLViewer::paintGL()
 {
-	if (displaysInStereo())
-	{
-		for (int view=1; view>=0; --view)
-		{
-			// Clears screen, set model view matrix with shifted matrix for ith buffer
-			preDrawStereo(view);
-			// Used defined method. Default is empty
-			if (camera()->frame()->isManipulated())
-				fastDraw();
-			else
-				draw();
-			postDraw();
-		}
-	}
-	else
-	{
-		// Clears screen, set model view matrix...
-		preDraw();
-		// Used defined method. Default calls draw()
-		if (camera()->frame()->isManipulated())
-			fastDraw();
-		else
-			draw();
-		// Add visual hints: axis, camera, grid...
-		postDraw();
-	}
-	Q_EMIT drawFinished(true);
+  if (displaysInStereo())
+  {
+    for (int view=1; view>=0; --view)
+    {
+      // Clears screen, set model view matrix with shifted matrix for ith buffer
+      preDrawStereo(view);
+      // Used defined method. Default is empty
+      if (camera()->frame()->isManipulated())
+        fastDraw();
+      else
+        draw();
+      postDraw();
+    }
+  }
+  else
+  {
+    // Clears screen, set model view matrix...
+    preDraw();
+    // Used defined method. Default calls draw()
+    if (camera()->frame()->isManipulated())
+      fastDraw();
+    else
+      draw();
+    // Add visual hints: axis, camera, grid...
+    postDraw();
+  }
+  Q_EMIT drawFinished(true);
 }
 
 /*! Sets OpenGL state before draw().
@@ -321,14 +321,14 @@ camera()->loadModelViewMatrix();
 Emits the drawNeeded() signal once this is done (see the <a href="../examples/callback.html">callback example</a>). */
 void QGLViewer::preDraw()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// GL_PROJECTION matrix
-	camera()->loadProjectionMatrix();
-	// GL_MODELVIEW matrix
-	camera()->loadModelViewMatrix();
+  // GL_PROJECTION matrix
+  camera()->loadProjectionMatrix();
+  // GL_MODELVIEW matrix
+  camera()->loadModelViewMatrix();
 
-	Q_EMIT drawNeeded();
+  Q_EMIT drawNeeded();
 }
 
 /*! Called after draw() to draw viewer visual hints.
@@ -343,68 +343,68 @@ draw(), the user can rely on the OpenGL context he defined. Respect this convent
 different attributes) if you overload this method. */
 void QGLViewer::postDraw()
 {
-	// Reset model view matrix to world coordinates origin
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	camera()->loadModelViewMatrix();
-	// TODO restore model loadProjectionMatrixStereo
+  // Reset model view matrix to world coordinates origin
+  glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  camera()->loadModelViewMatrix();
+  // TODO restore model loadProjectionMatrixStereo
 
-	// Save OpenGL state
-	glPushAttrib(GL_ALL_ATTRIB_BITS);
+  // Save OpenGL state
+  glPushAttrib(GL_ALL_ATTRIB_BITS);
 
-	// Set neutral GL state
-	glDisable(GL_TEXTURE_1D);
-	glDisable(GL_TEXTURE_2D);
+  // Set neutral GL state
+  glDisable(GL_TEXTURE_1D);
+  glDisable(GL_TEXTURE_2D);
 #ifdef GL_TEXTURE_3D  // OpenGL 1.2 Only...
-	glDisable(GL_TEXTURE_3D);
+  glDisable(GL_TEXTURE_3D);
 #endif
 
-	glDisable(GL_TEXTURE_GEN_Q);
-	glDisable(GL_TEXTURE_GEN_R);
-	glDisable(GL_TEXTURE_GEN_S);
-	glDisable(GL_TEXTURE_GEN_T);
+  glDisable(GL_TEXTURE_GEN_Q);
+  glDisable(GL_TEXTURE_GEN_R);
+  glDisable(GL_TEXTURE_GEN_S);
+  glDisable(GL_TEXTURE_GEN_T);
 
 #ifdef GL_RESCALE_NORMAL  // OpenGL 1.2 Only...
-	glEnable(GL_RESCALE_NORMAL);
+  glEnable(GL_RESCALE_NORMAL);
 #endif
 
-	glDisable(GL_COLOR_MATERIAL);
+  glDisable(GL_COLOR_MATERIAL);
     glColor4f(foregroundColor().redF(), foregroundColor().greenF(), foregroundColor().blueF(), foregroundColor().alphaF());
 
-	if (cameraIsEdited())
-		camera()->drawAllPaths();
+  if (cameraIsEdited())
+    camera()->drawAllPaths();
 
-	// Pivot point, line when camera rolls, zoom region
-	drawVisualHints();
+  // Pivot point, line when camera rolls, zoom region
+  drawVisualHints();
 
-	if (gridIsDrawn()) { glLineWidth(1.0); drawGrid(camera()->sceneRadius()); }
-	if (axisIsDrawn()) { glLineWidth(2.0); drawAxis(camera()->sceneRadius()); }
+  if (gridIsDrawn()) { glLineWidth(1.0); drawGrid(camera()->sceneRadius()); }
+  if (axisIsDrawn()) { glLineWidth(2.0); drawAxis(camera()->sceneRadius()); }
 
-	// FPS computation
-	const unsigned int maxCounter = 20;
-	if (++fpsCounter_ == maxCounter)
-	{
-		f_p_s_ = 1000.0 * maxCounter / fpsTime_.restart();
-		fpsString_ = tr("%1Hz", "Frames per seconds, in Hertz").arg(f_p_s_, 0, 'f', ((f_p_s_ < 10.0)?1:0));
-		fpsCounter_ = 0;
-	}
+  // FPS computation
+  const unsigned int maxCounter = 20;
+  if (++fpsCounter_ == maxCounter)
+  {
+    f_p_s_ = 1000.0 * maxCounter / fpsTime_.restart();
+    fpsString_ = tr("%1Hz", "Frames per seconds, in Hertz").arg(f_p_s_, 0, 'f', ((f_p_s_ < 10.0)?1:0));
+    fpsCounter_ = 0;
+  }
 
-	// Restore foregroundColor
-	float color[4];
-	color[0] = foregroundColor().red()   / 255.0f;
-	color[1] = foregroundColor().green() / 255.0f;
-	color[2] = foregroundColor().blue()  / 255.0f;
-	color[3] = 1.0f;
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
-	glDisable(GL_LIGHTING);
-	glDisable(GL_DEPTH_TEST);
+  // Restore foregroundColor
+  float color[4];
+  color[0] = foregroundColor().red()   / 255.0f;
+  color[1] = foregroundColor().green() / 255.0f;
+  color[2] = foregroundColor().blue()  / 255.0f;
+  color[3] = 1.0f;
+  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
+  glDisable(GL_LIGHTING);
+  glDisable(GL_DEPTH_TEST);
 
-	if (FPSIsDisplayed()) displayFPS();
-	if (displayMessage_) drawText(10, height()-10,  message_);
+  if (FPSIsDisplayed()) displayFPS();
+  if (displayMessage_) drawText(10, height()-10,  message_);
 
-	// Restore GL state
-	glPopAttrib();
-	glPopMatrix();
+  // Restore GL state
+  glPopAttrib();
+  glPopMatrix();
 }
 
 /*! Called before draw() (instead of preDraw()) when viewer displaysInStereo().
@@ -414,22 +414,22 @@ depending on \p leftBuffer, and it uses qglviewer::Camera::loadProjectionMatrixS
 qglviewer::Camera::loadModelViewMatrixStereo() instead. */
 void QGLViewer::preDrawStereo(bool leftBuffer)
 {
-	// Set buffer to draw in
-	// Seems that SGI and Crystal Eyes are not synchronized correctly !
-	// That's why we don't draw in the appropriate buffer...
-	if (!leftBuffer)
-		glDrawBuffer(GL_BACK_LEFT);
-	else
-		glDrawBuffer(GL_BACK_RIGHT);
+  // Set buffer to draw in
+  // Seems that SGI and Crystal Eyes are not synchronized correctly !
+  // That's why we don't draw in the appropriate buffer...
+  if (!leftBuffer)
+    glDrawBuffer(GL_BACK_LEFT);
+  else
+    glDrawBuffer(GL_BACK_RIGHT);
 
-	// Clear the buffer where we're going to draw
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	// GL_PROJECTION matrix
-	camera()->loadProjectionMatrixStereo(leftBuffer);
-	// GL_MODELVIEW matrix
-	camera()->loadModelViewMatrixStereo(leftBuffer);
+  // Clear the buffer where we're going to draw
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  // GL_PROJECTION matrix
+  camera()->loadProjectionMatrixStereo(leftBuffer);
+  // GL_MODELVIEW matrix
+  camera()->loadModelViewMatrixStereo(leftBuffer);
 
-	Q_EMIT drawNeeded();
+  Q_EMIT drawNeeded();
 }
 
 /*! Draws a simplified version of the scene to guarantee interactive camera displacements.
@@ -441,7 +441,7 @@ Overload this method if your scene is too complex to allow for interactive camer
 the <a href="../examples/fastDraw.html">fastDraw example</a> for an illustration. */
 void QGLViewer::fastDraw()
 {
-	draw();
+  draw();
 }
 
 /*! Starts (\p edit = \c true, default) or stops (\p edit=\c false) the edition of the camera().
@@ -453,136 +453,136 @@ true, so that the Camera paths (see qglviewer::Camera::keyFrameInterpolator()) a
 restores the previous value when \p edit is \c false. */
 void QGLViewer::setCameraIsEdited(bool edit)
 {
-	cameraIsEdited_ = edit;
-	if (edit)
-	{
-		previousCameraZClippingCoefficient_ = camera()->zClippingCoefficient();
-		// #CONNECTION# 5.0 also used in domElement() and in initFromDOMElement().
-		camera()->setZClippingCoefficient(5.0);
-	}
-	else
-		camera()->setZClippingCoefficient(previousCameraZClippingCoefficient_);
+  cameraIsEdited_ = edit;
+  if (edit)
+  {
+    previousCameraZClippingCoefficient_ = camera()->zClippingCoefficient();
+    // #CONNECTION# 5.0 also used in domElement() and in initFromDOMElement().
+    camera()->setZClippingCoefficient(5.0);
+  }
+  else
+    camera()->setZClippingCoefficient(previousCameraZClippingCoefficient_);
 
-	Q_EMIT cameraIsEditedChanged(edit);
+  Q_EMIT cameraIsEditedChanged(edit);
 
-	update();
+  update();
 }
 
 // Key bindings. 0 means not defined
 void QGLViewer::setDefaultShortcuts()
 {
-	// D e f a u l t   a c c e l e r a t o r s
-	setShortcut(DRAW_AXIS, Qt::Key_A);
-	setShortcut(DRAW_GRID, Qt::Key_G);
-	setShortcut(DISPLAY_FPS, Qt::Key_F);
-	setShortcut(ENABLE_TEXT, Qt::SHIFT+Qt::Key_Question);
-	setShortcut(EXIT_VIEWER, Qt::Key_Escape);
-	setShortcut(SAVE_SCREENSHOT, Qt::CTRL+Qt::Key_S);
-	setShortcut(CAMERA_MODE, Qt::Key_Space);
-	setShortcut(FULL_SCREEN, Qt::ALT+Qt::Key_Return);
-	setShortcut(STEREO, Qt::Key_S);
-	setShortcut(ANIMATION, Qt::Key_Return);
-	setShortcut(HELP, Qt::Key_H);
-	setShortcut(EDIT_CAMERA, Qt::Key_C);
-	setShortcut(MOVE_CAMERA_LEFT, Qt::Key_Left);
-	setShortcut(MOVE_CAMERA_RIGHT,Qt::Key_Right);
-	setShortcut(MOVE_CAMERA_UP, Qt::Key_Up);
-	setShortcut(MOVE_CAMERA_DOWN, Qt::Key_Down);
-	setShortcut(INCREASE_FLYSPEED, Qt::Key_Plus);
-	setShortcut(DECREASE_FLYSPEED, Qt::Key_Minus);
-	setShortcut(SNAPSHOT_TO_CLIPBOARD, Qt::CTRL+Qt::Key_C);
+  // D e f a u l t   a c c e l e r a t o r s
+  setShortcut(DRAW_AXIS, Qt::Key_A);
+  setShortcut(DRAW_GRID, Qt::Key_G);
+  setShortcut(DISPLAY_FPS, Qt::Key_F);
+  setShortcut(ENABLE_TEXT, Qt::SHIFT+Qt::Key_Question);
+  setShortcut(EXIT_VIEWER, Qt::Key_Escape);
+  setShortcut(SAVE_SCREENSHOT, Qt::CTRL+Qt::Key_S);
+  setShortcut(CAMERA_MODE, Qt::Key_Space);
+  setShortcut(FULL_SCREEN, Qt::ALT+Qt::Key_Return);
+  setShortcut(STEREO, Qt::Key_S);
+  setShortcut(ANIMATION, Qt::Key_Return);
+  setShortcut(HELP, Qt::Key_H);
+  setShortcut(EDIT_CAMERA, Qt::Key_C);
+  setShortcut(MOVE_CAMERA_LEFT, Qt::Key_Left);
+  setShortcut(MOVE_CAMERA_RIGHT,Qt::Key_Right);
+  setShortcut(MOVE_CAMERA_UP, Qt::Key_Up);
+  setShortcut(MOVE_CAMERA_DOWN, Qt::Key_Down);
+  setShortcut(INCREASE_FLYSPEED, Qt::Key_Plus);
+  setShortcut(DECREASE_FLYSPEED, Qt::Key_Minus);
+  setShortcut(SNAPSHOT_TO_CLIPBOARD, Qt::CTRL+Qt::Key_C);
 
-	keyboardActionDescription_[DISPLAY_FPS] = tr("Toggles the display of the FPS", "DISPLAY_FPS action description");
-	keyboardActionDescription_[SAVE_SCREENSHOT] = tr("Saves a screenshot", "SAVE_SCREENSHOT action description");
-	keyboardActionDescription_[FULL_SCREEN] = tr("Toggles full screen display", "FULL_SCREEN action description");
-	keyboardActionDescription_[DRAW_AXIS] = tr("Toggles the display of the world axis", "DRAW_AXIS action description");
-	keyboardActionDescription_[DRAW_GRID] = tr("Toggles the display of the XY grid", "DRAW_GRID action description");
-	keyboardActionDescription_[CAMERA_MODE] = tr("Changes camera mode (observe or fly)", "CAMERA_MODE action description");
-	keyboardActionDescription_[STEREO] = tr("Toggles stereo display", "STEREO action description");
-	keyboardActionDescription_[HELP] = tr("Opens this help window", "HELP action description");
-	keyboardActionDescription_[ANIMATION] = tr("Starts/stops the animation", "ANIMATION action description");
-	keyboardActionDescription_[EDIT_CAMERA] = tr("Toggles camera paths display", "EDIT_CAMERA action description"); // TODO change
-	keyboardActionDescription_[ENABLE_TEXT] = tr("Toggles the display of the text", "ENABLE_TEXT action description");
-	keyboardActionDescription_[EXIT_VIEWER] = tr("Exits program", "EXIT_VIEWER action description");
-	keyboardActionDescription_[MOVE_CAMERA_LEFT] = tr("Moves camera left", "MOVE_CAMERA_LEFT action description");
-	keyboardActionDescription_[MOVE_CAMERA_RIGHT] = tr("Moves camera right", "MOVE_CAMERA_RIGHT action description");
-	keyboardActionDescription_[MOVE_CAMERA_UP] = tr("Moves camera up", "MOVE_CAMERA_UP action description");
-	keyboardActionDescription_[MOVE_CAMERA_DOWN] = tr("Moves camera down", "MOVE_CAMERA_DOWN action description");
-	keyboardActionDescription_[INCREASE_FLYSPEED] = tr("Increases fly speed", "INCREASE_FLYSPEED action description");
-	keyboardActionDescription_[DECREASE_FLYSPEED] = tr("Decreases fly speed", "DECREASE_FLYSPEED action description");
-	keyboardActionDescription_[SNAPSHOT_TO_CLIPBOARD] = tr("Copies a snapshot to clipboard", "SNAPSHOT_TO_CLIPBOARD action description");
+  keyboardActionDescription_[DISPLAY_FPS] = tr("Toggles the display of the FPS", "DISPLAY_FPS action description");
+  keyboardActionDescription_[SAVE_SCREENSHOT] = tr("Saves a screenshot", "SAVE_SCREENSHOT action description");
+  keyboardActionDescription_[FULL_SCREEN] = tr("Toggles full screen display", "FULL_SCREEN action description");
+  keyboardActionDescription_[DRAW_AXIS] = tr("Toggles the display of the world axis", "DRAW_AXIS action description");
+  keyboardActionDescription_[DRAW_GRID] = tr("Toggles the display of the XY grid", "DRAW_GRID action description");
+  keyboardActionDescription_[CAMERA_MODE] = tr("Changes camera mode (observe or fly)", "CAMERA_MODE action description");
+  keyboardActionDescription_[STEREO] = tr("Toggles stereo display", "STEREO action description");
+  keyboardActionDescription_[HELP] = tr("Opens this help window", "HELP action description");
+  keyboardActionDescription_[ANIMATION] = tr("Starts/stops the animation", "ANIMATION action description");
+  keyboardActionDescription_[EDIT_CAMERA] = tr("Toggles camera paths display", "EDIT_CAMERA action description"); // TODO change
+  keyboardActionDescription_[ENABLE_TEXT] = tr("Toggles the display of the text", "ENABLE_TEXT action description");
+  keyboardActionDescription_[EXIT_VIEWER] = tr("Exits program", "EXIT_VIEWER action description");
+  keyboardActionDescription_[MOVE_CAMERA_LEFT] = tr("Moves camera left", "MOVE_CAMERA_LEFT action description");
+  keyboardActionDescription_[MOVE_CAMERA_RIGHT] = tr("Moves camera right", "MOVE_CAMERA_RIGHT action description");
+  keyboardActionDescription_[MOVE_CAMERA_UP] = tr("Moves camera up", "MOVE_CAMERA_UP action description");
+  keyboardActionDescription_[MOVE_CAMERA_DOWN] = tr("Moves camera down", "MOVE_CAMERA_DOWN action description");
+  keyboardActionDescription_[INCREASE_FLYSPEED] = tr("Increases fly speed", "INCREASE_FLYSPEED action description");
+  keyboardActionDescription_[DECREASE_FLYSPEED] = tr("Decreases fly speed", "DECREASE_FLYSPEED action description");
+  keyboardActionDescription_[SNAPSHOT_TO_CLIPBOARD] = tr("Copies a snapshot to clipboard", "SNAPSHOT_TO_CLIPBOARD action description");
 
-	// K e y f r a m e s   s h o r t c u t   k e y s
-	setPathKey(Qt::Key_F1,   1);
-	setPathKey(Qt::Key_F2,   2);
-	setPathKey(Qt::Key_F3,   3);
-	setPathKey(Qt::Key_F4,   4);
-	setPathKey(Qt::Key_F5,   5);
-	setPathKey(Qt::Key_F6,   6);
-	setPathKey(Qt::Key_F7,   7);
-	setPathKey(Qt::Key_F8,   8);
-	setPathKey(Qt::Key_F9,   9);
-	setPathKey(Qt::Key_F10, 10);
-	setPathKey(Qt::Key_F11, 11);
-	setPathKey(Qt::Key_F12, 12);
+  // K e y f r a m e s   s h o r t c u t   k e y s
+  setPathKey(Qt::Key_F1,   1);
+  setPathKey(Qt::Key_F2,   2);
+  setPathKey(Qt::Key_F3,   3);
+  setPathKey(Qt::Key_F4,   4);
+  setPathKey(Qt::Key_F5,   5);
+  setPathKey(Qt::Key_F6,   6);
+  setPathKey(Qt::Key_F7,   7);
+  setPathKey(Qt::Key_F8,   8);
+  setPathKey(Qt::Key_F9,   9);
+  setPathKey(Qt::Key_F10, 10);
+  setPathKey(Qt::Key_F11, 11);
+  setPathKey(Qt::Key_F12, 12);
 
-	setAddKeyFrameKeyboardModifiers(Qt::AltModifier);
-	setPlayPathKeyboardModifiers(Qt::NoModifier);
+  setAddKeyFrameKeyboardModifiers(Qt::AltModifier);
+  setPlayPathKeyboardModifiers(Qt::NoModifier);
 }
 
 // M o u s e   b e h a v i o r
 void QGLViewer::setDefaultMouseBindings()
 {
-	const Qt::KeyboardModifiers cameraKeyboardModifiers = Qt::NoModifier;
-	const Qt::KeyboardModifiers frameKeyboardModifiers = Qt::ControlModifier;
+  const Qt::KeyboardModifiers cameraKeyboardModifiers = Qt::NoModifier;
+  const Qt::KeyboardModifiers frameKeyboardModifiers = Qt::ControlModifier;
 
-	//#CONNECTION# toggleCameraMode()
-	for (int handler=0; handler<2; ++handler)
-	{
-		MouseHandler mh = (MouseHandler)(handler);
-		Qt::KeyboardModifiers modifiers = (mh == FRAME) ? frameKeyboardModifiers : cameraKeyboardModifiers;
+  //#CONNECTION# toggleCameraMode()
+  for (int handler=0; handler<2; ++handler)
+  {
+    MouseHandler mh = (MouseHandler)(handler);
+    Qt::KeyboardModifiers modifiers = (mh == FRAME) ? frameKeyboardModifiers : cameraKeyboardModifiers;
 
-		setMouseBinding(modifiers, Qt::LeftButton,  mh, ROTATE);
-		setMouseBinding(modifiers, Qt::MidButton,   mh, ZOOM);
-		setMouseBinding(modifiers, Qt::RightButton, mh, TRANSLATE);
+    setMouseBinding(modifiers, Qt::LeftButton,  mh, ROTATE);
+    setMouseBinding(modifiers, Qt::MidButton,   mh, ZOOM);
+    setMouseBinding(modifiers, Qt::RightButton, mh, TRANSLATE);
 
-		setMouseBinding(Qt::Key_R, modifiers, Qt::LeftButton, mh, SCREEN_ROTATE);
+    setMouseBinding(Qt::Key_R, modifiers, Qt::LeftButton, mh, SCREEN_ROTATE);
 
-		setWheelBinding(modifiers, mh, ZOOM);
-	}
+    setWheelBinding(modifiers, mh, ZOOM);
+  }
 
-	// Z o o m   o n   r e g i o n
-	setMouseBinding(Qt::ShiftModifier, Qt::MidButton, CAMERA, ZOOM_ON_REGION);
+  // Z o o m   o n   r e g i o n
+  setMouseBinding(Qt::ShiftModifier, Qt::MidButton, CAMERA, ZOOM_ON_REGION);
 
-	// S e l e c t
-	setMouseBinding(Qt::ShiftModifier, Qt::LeftButton, SELECT);
+  // S e l e c t
+  setMouseBinding(Qt::ShiftModifier, Qt::LeftButton, SELECT);
 
-	setMouseBinding(Qt::ShiftModifier, Qt::RightButton, RAP_FROM_PIXEL);
-	// D o u b l e   c l i c k
-	setMouseBinding(Qt::NoModifier, Qt::LeftButton, ALIGN_CAMERA,      true);
-	setMouseBinding(Qt::NoModifier, Qt::MidButton,  SHOW_ENTIRE_SCENE, true);
-	setMouseBinding(Qt::NoModifier, Qt::RightButton, CENTER_SCENE,     true);
+  setMouseBinding(Qt::ShiftModifier, Qt::RightButton, RAP_FROM_PIXEL);
+  // D o u b l e   c l i c k
+  setMouseBinding(Qt::NoModifier, Qt::LeftButton, ALIGN_CAMERA,      true);
+  setMouseBinding(Qt::NoModifier, Qt::MidButton,  SHOW_ENTIRE_SCENE, true);
+  setMouseBinding(Qt::NoModifier, Qt::RightButton, CENTER_SCENE,     true);
 
-	setMouseBinding(frameKeyboardModifiers, Qt::LeftButton, ALIGN_FRAME, true);
-	// middle double click makes no sense for manipulated frame
-	setMouseBinding(frameKeyboardModifiers, Qt::RightButton, CENTER_FRAME, true);
+  setMouseBinding(frameKeyboardModifiers, Qt::LeftButton, ALIGN_FRAME, true);
+  // middle double click makes no sense for manipulated frame
+  setMouseBinding(frameKeyboardModifiers, Qt::RightButton, CENTER_FRAME, true);
 
-	// A c t i o n s   w i t h   k e y   m o d i f i e r s
-	setMouseBinding(Qt::Key_Z, Qt::NoModifier, Qt::LeftButton, ZOOM_ON_PIXEL);
-	setMouseBinding(Qt::Key_Z, Qt::NoModifier, Qt::RightButton, ZOOM_TO_FIT);
+  // A c t i o n s   w i t h   k e y   m o d i f i e r s
+  setMouseBinding(Qt::Key_Z, Qt::NoModifier, Qt::LeftButton, ZOOM_ON_PIXEL);
+  setMouseBinding(Qt::Key_Z, Qt::NoModifier, Qt::RightButton, ZOOM_TO_FIT);
 
 #ifdef Q_OS_MAC
-	// Specific Mac bindings for touchpads. Two fingers emulate a wheelEvent which zooms.
-	// There is no right button available : make Option key + left emulate the right button.
-	// A Control+Left indeed emulates a right click (OS X system configuration), but it does
-	// no seem to support dragging.
-	// Done at the end to override previous settings.
-	const Qt::KeyboardModifiers macKeyboardModifiers = Qt::AltModifier;
+  // Specific Mac bindings for touchpads. Two fingers emulate a wheelEvent which zooms.
+  // There is no right button available : make Option key + left emulate the right button.
+  // A Control+Left indeed emulates a right click (OS X system configuration), but it does
+  // no seem to support dragging.
+  // Done at the end to override previous settings.
+  const Qt::KeyboardModifiers macKeyboardModifiers = Qt::AltModifier;
 
-	setMouseBinding(macKeyboardModifiers, Qt::LeftButton, CAMERA, TRANSLATE);
-	setMouseBinding(macKeyboardModifiers, Qt::LeftButton, CENTER_SCENE, true);
-	setMouseBinding(frameKeyboardModifiers | macKeyboardModifiers, Qt::LeftButton, CENTER_FRAME, true);
-	setMouseBinding(frameKeyboardModifiers | macKeyboardModifiers, Qt::LeftButton, FRAME, TRANSLATE);
+  setMouseBinding(macKeyboardModifiers, Qt::LeftButton, CAMERA, TRANSLATE);
+  setMouseBinding(macKeyboardModifiers, Qt::LeftButton, CENTER_SCENE, true);
+  setMouseBinding(frameKeyboardModifiers | macKeyboardModifiers, Qt::LeftButton, CENTER_FRAME, true);
+  setMouseBinding(frameKeyboardModifiers | macKeyboardModifiers, Qt::LeftButton, FRAME, TRANSLATE);
 #endif
 }
 
@@ -604,42 +604,42 @@ qglviewer::KeyFrameInterpolator::interpolated() signals are connected to the vie
 The connections with the previous viewer's camera are removed. */
 void QGLViewer::setCamera(Camera* const camera)
 {
-	if (!camera)
-		return;
+  if (!camera)
+    return;
 
-	camera->setSceneRadius(sceneRadius());
-	camera->setSceneCenter(sceneCenter());
-	camera->setScreenWidthAndHeight(width(), height());
+  camera->setSceneRadius(sceneRadius());
+  camera->setSceneCenter(sceneCenter());
+  camera->setScreenWidthAndHeight(width(), height());
 
-	// Disconnect current camera from this viewer.
-	disconnect(this->camera()->frame(), SIGNAL(manipulated()), this, SLOT(update()));
-	disconnect(this->camera()->frame(), SIGNAL(spun()), this, SLOT(update()));
+  // Disconnect current camera from this viewer.
+  disconnect(this->camera()->frame(), SIGNAL(manipulated()), this, SLOT(update()));
+  disconnect(this->camera()->frame(), SIGNAL(spun()), this, SLOT(update()));
 
-	// Connect camera frame to this viewer.
-	connect(camera->frame(), SIGNAL(manipulated()), SLOT(update()));
-	connect(camera->frame(), SIGNAL(spun()), SLOT(update()));
+  // Connect camera frame to this viewer.
+  connect(camera->frame(), SIGNAL(manipulated()), SLOT(update()));
+  connect(camera->frame(), SIGNAL(spun()), SLOT(update()));
 
-	connectAllCameraKFIInterpolatedSignals(false);
-	camera_ = camera;
-	connectAllCameraKFIInterpolatedSignals();
+  connectAllCameraKFIInterpolatedSignals(false);
+  camera_ = camera;
+  connectAllCameraKFIInterpolatedSignals();
 
-	previousCameraZClippingCoefficient_ = this->camera()->zClippingCoefficient();
+  previousCameraZClippingCoefficient_ = this->camera()->zClippingCoefficient();
 }
 
 void QGLViewer::connectAllCameraKFIInterpolatedSignals(bool connection)
 {
-	for (QMap<unsigned int, KeyFrameInterpolator*>::ConstIterator it = camera()->kfi_.begin(), end=camera()->kfi_.end(); it != end; ++it)
-	{
-		if (connection)
-			connect(camera()->keyFrameInterpolator(it.key()), SIGNAL(interpolated()), SLOT(update()));
-		else
-			disconnect(camera()->keyFrameInterpolator(it.key()), SIGNAL(interpolated()), this, SLOT(update()));
-	}
+  for (QMap<unsigned int, KeyFrameInterpolator*>::ConstIterator it = camera()->kfi_.begin(), end=camera()->kfi_.end(); it != end; ++it)
+  {
+    if (connection)
+      connect(camera()->keyFrameInterpolator(it.key()), SIGNAL(interpolated()), SLOT(update()));
+    else
+      disconnect(camera()->keyFrameInterpolator(it.key()), SIGNAL(interpolated()), this, SLOT(update()));
+  }
 
-	if (connection)
-		connect(camera()->interpolationKfi_, SIGNAL(interpolated()), SLOT(update()));
-	else
-		disconnect(camera()->interpolationKfi_, SIGNAL(interpolated()), this, SLOT(update()));
+  if (connection)
+    connect(camera()->interpolationKfi_, SIGNAL(interpolated()), SLOT(update()));
+  else
+    disconnect(camera()->interpolationKfi_, SIGNAL(interpolated()), this, SLOT(update()));
 }
 
 /*! Draws a representation of \p light.
@@ -660,80 +660,79 @@ See the <a href="../examples/drawLight.html">drawLight example</a> for an illust
 the light diffuse color. */
 void QGLViewer::drawLight(GLenum light, qreal scale) const
 {
-	static GLUquadric* quadric = gluNewQuadric();
+  static GLUquadric* quadric = gluNewQuadric();
 
-	const qreal length = sceneRadius() / 5.0 * scale;
+  const qreal length = sceneRadius() / 5.0 * scale;
 
-	GLboolean lightIsOn;
-	glGetBooleanv(light, &lightIsOn);
+  GLboolean lightIsOn;
+  glGetBooleanv(light, &lightIsOn);
 
-	if (lightIsOn)
-	{
-		// All light values are given in eye coordinates
-		glPushMatrix();
-		glLoadIdentity();
+  if (lightIsOn)
+  {
+    // All light values are given in eye coordinates
+    glPushMatrix();
+    glLoadIdentity();
 
-		float color[4];
-		glGetLightfv(light, GL_DIFFUSE, color);
-		glColor4fv(color);
+    float color[4];
+    glGetLightfv(light, GL_DIFFUSE, color);
+    glColor4fv(color);
 
-		float pos[4];
-		glGetLightfv(light, GL_POSITION, pos);
+    float pos[4];
+    glGetLightfv(light, GL_POSITION, pos);
 
-		if (pos[3] != 0.0)
-		{
-			glTranslatef(pos[0]/pos[3], pos[1]/pos[3], pos[2]/pos[3]);
+    if (pos[3] != 0.0)
+    {
+      glTranslatef(pos[0]/pos[3], pos[1]/pos[3], pos[2]/pos[3]);
 
-			GLfloat cutOff;
-			glGetLightfv(light, GL_SPOT_CUTOFF, &cutOff);
-			if (cutOff != 180.0)
-			{
-				GLfloat dir[4];
-				glGetLightfv(light, GL_SPOT_DIRECTION, dir);
-				glMultMatrixd(Quaternion(Vec(0,0,1), Vec(dir)).matrix());
-				QGLViewer::drawArrow(length);
-				gluCylinder(quadric, 0.0, 0.7 * length * sin(cutOff * M_PI / 180.0), 0.7 * length * cos(cutOff * M_PI / 180.0), 12, 1);
-			}
-			else
-				gluSphere(quadric, 0.2*length, 10, 10);
-		}
-		else
-		{
-			// Directional light.
-			Vec dir(pos[0], pos[1], pos[2]);
-			dir.normalize();
-			Frame fr=Frame(camera()->cameraCoordinatesOf(4.0 * length * camera()->frame()->inverseTransformOf(dir)),
-						   Quaternion(Vec(0,0,-1), dir));
-			glMultMatrixd(fr.matrix());
-			drawArrow(length);
-		}
+      GLfloat cutOff;
+      glGetLightfv(light, GL_SPOT_CUTOFF, &cutOff);
+      if (cutOff != 180.0)
+      {
+        GLfloat dir[4];
+        glGetLightfv(light, GL_SPOT_DIRECTION, dir);
+        glMultMatrixd(Quaternion(Vec(0,0,1), Vec(dir)).matrix());
+        QGLViewer::drawArrow(length);
+        gluCylinder(quadric, 0.0, 0.7 * length * sin(cutOff * M_PI / 180.0), 0.7 * length * cos(cutOff * M_PI / 180.0), 12, 1);
+      }
+      else
+        gluSphere(quadric, 0.2*length, 10, 10);
+    }
+    else
+    {
+      // Directional light.
+      Vec dir(pos[0], pos[1], pos[2]);
+      dir.normalize();
+      Frame fr=Frame(camera()->cameraCoordinatesOf(4.0 * length * camera()->frame()->inverseTransformOf(dir)),
+               Quaternion(Vec(0,0,-1), dir));
+      glMultMatrixd(fr.matrix());
+      drawArrow(length);
+    }
 
-		glPopMatrix();
-	}
+    glPopMatrix();
+  }
 }
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
-void QGLViewer::renderText(int x, int y, const QString &str, const QFont &font = QFont() ) {
-    // Identify x and y locations to render text within widget
-    int height = this->height();
-    GLdouble textPosX = 0, textPosY = 0, textPosZ = 0;
-    //project(x, y, 0.0, &textPosX, &textPosY, &textPosZ);
-    textPosY = height - textPosY; // y is inverted
+void QGLViewer::renderText(int x, int y, const QString& str, const QFont& font)
+{
+  // Retrieve last OpenGL color to use as a font color
+  GLdouble glColor[4];
+  glGetDoublev(GL_CURRENT_COLOR, glColor);
+  QColor fontColor = QColor(255 * glColor[0], 255 * glColor[1], 255 * glColor[2], 255 * glColor[3]);
 
-    // Retrieve last OpenGL color to use as a font color
-    GLdouble glColor[4];
-    glGetDoublev(GL_CURRENT_COLOR, glColor);
-    QColor fontColor = QColor(glColor[0], glColor[1], glColor[2], glColor[3]);
-
-    // Render text
-    QPainter painter(this);
-    painter.setPen(fontColor);
-    painter.setFont(font);
-    painter.drawText(textPosX, textPosY, str);
-    painter.end();
-
+  // Render text
+  QPainter painter(this);
+  painter.setPen(fontColor);
+  painter.setFont(font);
+  painter.drawText(x, y, str);
+  painter.end();
 }
 
+void QGLViewer::renderText(double x, double y, double z, const QString& str, const QFont& font)
+{
+  const Vec proj = camera_->projectedCoordinatesOf(Vec(x, y, z));
+  renderText(proj.x, proj.y, str, font);
+}
 #endif
 
 
@@ -769,14 +768,14 @@ Lists, they may overlap with these. Directly use QGLWidget::renderText() in that
 higher \c listBase parameter (or overload <code>fontDisplayListBase</code>).*/
 void QGLViewer::drawText(int x, int y, const QString& text, const QFont& fnt)
 {
-	if (!textIsEnabled())
-		return;
+  if (!textIsEnabled())
+    return;
 
-	if (tileRegion_ != NULL) {
-		renderText(int((x-tileRegion_->xMin) * width() / (tileRegion_->xMax - tileRegion_->xMin)),
-				   int((y-tileRegion_->yMin) * height() / (tileRegion_->yMax - tileRegion_->yMin)), text, scaledFont(fnt));
-	} else
-		renderText(x, y, text, fnt);
+  if (tileRegion_ != NULL) {
+    renderText(int((x-tileRegion_->xMin) * width() / (tileRegion_->xMax - tileRegion_->xMin)),
+           int((y-tileRegion_->yMin) * height() / (tileRegion_->yMax - tileRegion_->yMin)), text, scaledFont(fnt));
+  } else
+    renderText(x, y, text, fnt);
 }
 
 /*! Briefly displays a message in the lower left corner of the widget. Convenient to provide
@@ -792,19 +791,19 @@ Use setTextIsEnabled() (default shortcut is '?') to enable or disable text (and 
 display. */
 void QGLViewer::displayMessage(const QString& message, int delay)
 {
-	message_ = message;
-	displayMessage_ = true;
-	// Was set to single shot in defaultConstructor.
-	messageTimer_.start(delay);
-	if (textIsEnabled())
-		update();
+  message_ = message;
+  displayMessage_ = true;
+  // Was set to single shot in defaultConstructor.
+  messageTimer_.start(delay);
+  if (textIsEnabled())
+    update();
 }
 
 void QGLViewer::hideMessage()
 {
-	displayMessage_ = false;
-	if (textIsEnabled())
-		update();
+  displayMessage_ = false;
+  if (textIsEnabled())
+    update();
 }
 
 
@@ -819,7 +818,7 @@ When FPSIsDisplayed() is \c true (default is \c false), this method is called by
 display the currentFPS(). Use QApplication::setFont() to define the font (see drawText()). */
 void QGLViewer::displayFPS()
 {
-	drawText(10, int(1.5*((QApplication::font().pixelSize()>0)?QApplication::font().pixelSize():QApplication::font().pointSize())), fpsString_);
+  drawText(10, int(1.5*((QApplication::font().pixelSize()>0)?QApplication::font().pixelSize():QApplication::font().pointSize())), fpsString_);
 }
 
 /*! Modify the projection matrix so that drawing can be done directly with 2D screen coordinates.
@@ -855,23 +854,23 @@ provide coordinates, the implicit 0.0 z coordinate will make your drawings appea
 the rest of the scene. */
 void QGLViewer::startScreenCoordinatesSystem(bool upward) const
 {
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	glLoadIdentity();
-	if (tileRegion_ != NULL)
-		if (upward)
-			glOrtho(tileRegion_->xMin, tileRegion_->xMax, tileRegion_->yMin, tileRegion_->yMax, 0.0, -1.0);
-		else
-			glOrtho(tileRegion_->xMin, tileRegion_->xMax, tileRegion_->yMax, tileRegion_->yMin, 0.0, -1.0);
-	else
-		if (upward)
-			glOrtho(0, width(), 0, height(), 0.0, -1.0);
-		else
-			glOrtho(0, width(), height(), 0, 0.0, -1.0);
+  glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
+  glLoadIdentity();
+  if (tileRegion_ != NULL)
+    if (upward)
+      glOrtho(tileRegion_->xMin, tileRegion_->xMax, tileRegion_->yMin, tileRegion_->yMax, 0.0, -1.0);
+    else
+      glOrtho(tileRegion_->xMin, tileRegion_->xMax, tileRegion_->yMax, tileRegion_->yMin, 0.0, -1.0);
+  else
+    if (upward)
+      glOrtho(0, width(), 0, height(), 0.0, -1.0);
+    else
+      glOrtho(0, width(), height(), 0, 0.0, -1.0);
 
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
+  glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  glLoadIdentity();
 }
 
 /*! Stops the pixel coordinate drawing block started by startScreenCoordinatesSystem().
@@ -880,11 +879,11 @@ The \c GL_MODELVIEW and \c GL_PROJECTION matrices modified in
 startScreenCoordinatesSystem() are restored. \c glMatrixMode is set to \c GL_MODELVIEW. */
 void QGLViewer::stopScreenCoordinatesSystem() const
 {
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
+  glMatrixMode(GL_PROJECTION);
+  glPopMatrix();
 
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
+  glMatrixMode(GL_MODELVIEW);
+  glPopMatrix();
 }
 
 /*! Overloading of the \c QObject method.
@@ -892,26 +891,26 @@ void QGLViewer::stopScreenCoordinatesSystem() const
 If animationIsStarted(), calls animate() and draw(). */
 void QGLViewer::timerEvent(QTimerEvent *)
 {
-	if (animationIsStarted())
-	{
-		animate();
-		update();
-	}
+  if (animationIsStarted())
+  {
+    animate();
+    update();
+  }
 }
 
 /*! Starts the animation loop. See animationIsStarted(). */
 void QGLViewer::startAnimation()
 {
-	animationTimerId_ = startTimer(animationPeriod());
-	animationStarted_ = true;
+  animationTimerId_ = startTimer(animationPeriod());
+  animationStarted_ = true;
 }
 
 /*! Stops animation. See animationIsStarted(). */
 void QGLViewer::stopAnimation()
 {
-	animationStarted_ = false;
-	if (animationTimerId_ != 0)
-		killTimer(animationTimerId_);
+  animationStarted_ = false;
+  if (animationTimerId_ != 0)
+    killTimer(animationTimerId_);
 }
 
 /*! Overloading of the \c QWidget method.
@@ -919,37 +918,37 @@ void QGLViewer::stopAnimation()
 Saves the viewer state using saveStateToFile() and then calls QGLWidget::closeEvent(). */
 void QGLViewer::closeEvent(QCloseEvent *e)
 {
-	// When the user clicks on the window close (x) button:
-	// - If the viewer is a top level window, closeEvent is called and then saves to file.
-	// - Otherwise, nothing happen s:(
-	// When the user press the EXIT_VIEWER keyboard shortcut:
-	// - If the viewer is a top level window, saveStateToFile() is also called
-	// - Otherwise, closeEvent is NOT called and keyPressEvent does the job.
+  // When the user clicks on the window close (x) button:
+  // - If the viewer is a top level window, closeEvent is called and then saves to file.
+  // - Otherwise, nothing happen s:(
+  // When the user press the EXIT_VIEWER keyboard shortcut:
+  // - If the viewer is a top level window, saveStateToFile() is also called
+  // - Otherwise, closeEvent is NOT called and keyPressEvent does the job.
 
-	/* After tests:
-	E : Embedded widget
-	N : Widget created with new
-	C : closeEvent called
-	D : destructor called
+  /* After tests:
+  E : Embedded widget
+  N : Widget created with new
+  C : closeEvent called
+  D : destructor called
 
-	E	N	C	D
-	y	y
-	y	n		y
-	n	y	y
-	n	n	y	y
+  E	N	C	D
+  y	y
+  y	n		y
+  n	y	y
+  n	n	y	y
 
-	closeEvent is called iif the widget is NOT embedded.
+  closeEvent is called iif the widget is NOT embedded.
 
-	Destructor is called iif the widget is created on the stack
-	or if widget (resp. parent if embedded) is created with WDestructiveClose flag.
+  Destructor is called iif the widget is created on the stack
+  or if widget (resp. parent if embedded) is created with WDestructiveClose flag.
 
-	closeEvent always before destructor.
+  closeEvent always before destructor.
 
-	Close using qApp->closeAllWindows or (x) is identical.
-	*/
+  Close using qApp->closeAllWindows or (x) is identical.
+  */
 
-	// #CONNECTION# Also done for EXIT_VIEWER in keyPressEvent().
-	saveStateToFile();
+  // #CONNECTION# Also done for EXIT_VIEWER in keyPressEvent().
+  saveStateToFile();
     QOpenGLWidget::closeEvent(e);
 }
 
@@ -964,9 +963,9 @@ This method is called when you use the QGLViewer::SELECT mouse binding(s) (defau
 button). Use setMouseBinding() to change this. */
 void QGLViewer::select(const QMouseEvent* event)
 {
-	// For those who don't derive but rather rely on the signal-slot mechanism.
-	Q_EMIT pointSelected(event);
-	select(event->pos());
+  // For those who don't derive but rather rely on the signal-slot mechanism.
+  Q_EMIT pointSelected(event);
+  select(event->pos());
 }
 
 /*! This method performs a selection in the scene from pixel coordinates.
@@ -1021,10 +1020,10 @@ perform an analytical intersection.
 culling. If you encounter problems try to \c glDisable(GL_CULL_FACE). */
 void QGLViewer::select(const QPoint& point)
 {
-	beginSelection(point);
-	drawWithNames();
-	endSelection(point);
-	postSelection(point);
+  beginSelection(point);
+  drawWithNames();
+  endSelection(point);
+  postSelection(point);
 }
 
 /*! This method should prepare the selection. It is called by select() before drawWithNames().
@@ -1040,26 +1039,26 @@ selection), since this code is fairly classical and can be tuned. You are more l
 endSelection() if you want to use a more complex select buffer structure. */
 void QGLViewer::beginSelection(const QPoint& point)
 {
-	// Make OpenGL context current (may be needed with several viewers ?)
-	makeCurrent();
+  // Make OpenGL context current (may be needed with several viewers ?)
+  makeCurrent();
 
-	// Prepare the selection mode
-	glSelectBuffer(selectBufferSize(), selectBuffer());
-	glRenderMode(GL_SELECT);
-	glInitNames();
+  // Prepare the selection mode
+  glSelectBuffer(selectBufferSize(), selectBuffer());
+  glRenderMode(GL_SELECT);
+  glInitNames();
 
-	// Loads the matrices
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	static GLint viewport[4];
-	camera()->getViewport(viewport);
-	gluPickMatrix(point.x(), point.y(), selectRegionWidth(), selectRegionHeight(), viewport);
+  // Loads the matrices
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  static GLint viewport[4];
+  camera()->getViewport(viewport);
+  gluPickMatrix(point.x(), point.y(), selectRegionWidth(), selectRegionHeight(), viewport);
 
-	// loadProjectionMatrix() first resets the GL_PROJECTION matrix with a glLoadIdentity().
-	// The false parameter prevents this and hence multiplies the matrices.
-	camera()->loadProjectionMatrix(false);
-	// Reset the original (world coordinates) modelview matrix
-	camera()->loadModelViewMatrix();
+  // loadProjectionMatrix() first resets the GL_PROJECTION matrix with a glLoadIdentity().
+  // The false parameter prevents this and hence multiplies the matrices.
+  camera()->loadProjectionMatrix(false);
+  // Reset the original (world coordinates) modelview matrix
+  camera()->loadModelViewMatrix();
 }
 
 /*! This method is called by select() after scene elements were drawn by drawWithNames(). It should
@@ -1100,31 +1099,31 @@ See the <a href="../examples/multiSelect.html">multiSelect example</a> for
 a multi-object selection implementation of this method. */
 void QGLViewer::endSelection(const QPoint& point)
 {
-	Q_UNUSED(point);
+  Q_UNUSED(point);
 
-	// Flush GL buffers
-	glFlush();
+  // Flush GL buffers
+  glFlush();
 
-	// Get the number of objects that were seen through the pick matrix frustum. Reset GL_RENDER mode.
-	GLint nbHits = glRenderMode(GL_RENDER);
+  // Get the number of objects that were seen through the pick matrix frustum. Reset GL_RENDER mode.
+  GLint nbHits = glRenderMode(GL_RENDER);
 
-	if (nbHits <= 0)
-		setSelectedName(-1);
-	else
-	{
-		// Interpret results: each object created 4 values in the selectBuffer().
-		// selectBuffer[4*i+1] is the object minimum depth value, while selectBuffer[4*i+3] is the id pushed on the stack.
-		// Of all the objects that were projected in the pick region, we select the closest one (zMin comparison).
-		// This code needs to be modified if you use several stack levels. See glSelectBuffer() man page.
-		GLuint zMin = (selectBuffer())[1];
-		setSelectedName(int((selectBuffer())[3]));
-		for (int i=1; i<nbHits; ++i)
-			if ((selectBuffer())[4*i+1] < zMin)
-			{
-				zMin = (selectBuffer())[4*i+1];
-				setSelectedName(int((selectBuffer())[4*i+3]));
-			}
-	}
+  if (nbHits <= 0)
+    setSelectedName(-1);
+  else
+  {
+    // Interpret results: each object created 4 values in the selectBuffer().
+    // selectBuffer[4*i+1] is the object minimum depth value, while selectBuffer[4*i+3] is the id pushed on the stack.
+    // Of all the objects that were projected in the pick region, we select the closest one (zMin comparison).
+    // This code needs to be modified if you use several stack levels. See glSelectBuffer() man page.
+    GLuint zMin = (selectBuffer())[1];
+    setSelectedName(int((selectBuffer())[3]));
+    for (int i=1; i<nbHits; ++i)
+      if ((selectBuffer())[4*i+1] < zMin)
+      {
+        zMin = (selectBuffer())[4*i+1];
+        setSelectedName(int((selectBuffer())[4*i+3]));
+      }
+  }
 }
 
 /*! Sets the selectBufferSize().
@@ -1132,73 +1131,73 @@ void QGLViewer::endSelection(const QPoint& point)
 The previous selectBuffer() is deleted and a new one is created. */
 void QGLViewer::setSelectBufferSize(int size)
 {
-	if (selectBuffer_)
-		delete[] selectBuffer_;
-	selectBufferSize_ = size;
-	selectBuffer_ = new GLuint[selectBufferSize()];
+  if (selectBuffer_)
+    delete[] selectBuffer_;
+  selectBufferSize_ = size;
+  selectBuffer_ = new GLuint[selectBufferSize()];
 }
 
 static QString mouseButtonsString(Qt::MouseButtons b)
 {
-	QString result("");
-	bool addAmpersand = false;
-	if (b & Qt::LeftButton)    { result += QGLViewer::tr("Left", "left mouse button"); addAmpersand=true; }
-	if (b & Qt::MidButton)     { if (addAmpersand) result += " & "; result += QGLViewer::tr("Middle", "middle mouse button"); addAmpersand=true; }
-	if (b & Qt::RightButton)   { if (addAmpersand) result += " & "; result += QGLViewer::tr("Right", "right mouse button"); }
-	return result;
+  QString result("");
+  bool addAmpersand = false;
+  if (b & Qt::LeftButton)    { result += QGLViewer::tr("Left", "left mouse button"); addAmpersand=true; }
+  if (b & Qt::MidButton)     { if (addAmpersand) result += " & "; result += QGLViewer::tr("Middle", "middle mouse button"); addAmpersand=true; }
+  if (b & Qt::RightButton)   { if (addAmpersand) result += " & "; result += QGLViewer::tr("Right", "right mouse button"); }
+  return result;
 }
 
 void QGLViewer::performClickAction(ClickAction ca, const QMouseEvent* const e)
 {
-	// Note: action that need it should call update().
-	switch (ca)
-	{
-		// # CONNECTION setMouseBinding prevents adding NO_CLICK_ACTION in clickBinding_
-		// This case should hence not be possible. Prevents unused case warning.
-		case NO_CLICK_ACTION :
-			break;
-		case ZOOM_ON_PIXEL :
-			camera()->interpolateToZoomOnPixel(e->pos());
-			break;
-		case ZOOM_TO_FIT :
-			camera()->interpolateToFitScene();
-			break;
-		case SELECT :
-			select(e);
-			update();
-			break;
-		case RAP_FROM_PIXEL :
-			if (! camera()->setPivotPointFromPixel(e->pos()))
-				camera()->setPivotPoint(sceneCenter());
-			setVisualHintsMask(1);
-			update();
-			break;
-		case RAP_IS_CENTER :
-			camera()->setPivotPoint(sceneCenter());
-			setVisualHintsMask(1);
-			update();
-			break;
-		case CENTER_FRAME :
-			if (manipulatedFrame())
-				manipulatedFrame()->projectOnLine(camera()->position(), camera()->viewDirection());
-			break;
-		case CENTER_SCENE :
-			camera()->centerScene();
-			break;
-		case SHOW_ENTIRE_SCENE :
-			camera()->showEntireScene();
-			break;
-		case ALIGN_FRAME :
-			if (manipulatedFrame())
-				manipulatedFrame()->alignWithFrame(camera()->frame());
-			break;
-		case ALIGN_CAMERA :
-			Frame * frame = new Frame();
-			frame->setTranslation(camera()->pivotPoint());
-			camera()->frame()->alignWithFrame(frame, true);
-			delete frame;
-			break;
-	}
+  // Note: action that need it should call update().
+  switch (ca)
+  {
+    // # CONNECTION setMouseBinding prevents adding NO_CLICK_ACTION in clickBinding_
+    // This case should hence not be possible. Prevents unused case warning.
+    case NO_CLICK_ACTION :
+      break;
+    case ZOOM_ON_PIXEL :
+      camera()->interpolateToZoomOnPixel(e->pos());
+      break;
+    case ZOOM_TO_FIT :
+      camera()->interpolateToFitScene();
+      break;
+    case SELECT :
+      select(e);
+      update();
+      break;
+    case RAP_FROM_PIXEL :
+      if (! camera()->setPivotPointFromPixel(e->pos()))
+        camera()->setPivotPoint(sceneCenter());
+      setVisualHintsMask(1);
+      update();
+      break;
+    case RAP_IS_CENTER :
+      camera()->setPivotPoint(sceneCenter());
+      setVisualHintsMask(1);
+      update();
+      break;
+    case CENTER_FRAME :
+      if (manipulatedFrame())
+        manipulatedFrame()->projectOnLine(camera()->position(), camera()->viewDirection());
+      break;
+    case CENTER_SCENE :
+      camera()->centerScene();
+      break;
+    case SHOW_ENTIRE_SCENE :
+      camera()->showEntireScene();
+      break;
+    case ALIGN_FRAME :
+      if (manipulatedFrame())
+        manipulatedFrame()->alignWithFrame(camera()->frame());
+      break;
+    case ALIGN_CAMERA :
+      Frame * frame = new Frame();
+      frame->setTranslation(camera()->pivotPoint());
+      camera()->frame()->alignWithFrame(frame, true);
+      delete frame;
+      break;
+  }
 }
 
 /*! Overloading of the \c QWidget method.
@@ -1219,75 +1218,75 @@ account. This allows for a direct manipulation of the manipulatedFrame() when th
 which is probably what is expected. */
 void QGLViewer::mousePressEvent(QMouseEvent* e)
 {
-	//#CONNECTION# mouseDoubleClickEvent has the same structure
-	//#CONNECTION# mouseString() concatenates bindings description in inverse order.
-	ClickBindingPrivate cbp(e->modifiers(), e->button(), false, (Qt::MouseButtons)(e->buttons() & ~(e->button())), currentlyPressedKey_);
+  //#CONNECTION# mouseDoubleClickEvent has the same structure
+  //#CONNECTION# mouseString() concatenates bindings description in inverse order.
+  ClickBindingPrivate cbp(e->modifiers(), e->button(), false, (Qt::MouseButtons)(e->buttons() & ~(e->button())), currentlyPressedKey_);
 
-	if (clickBinding_.contains(cbp)) {
-		performClickAction(clickBinding_[cbp], e);
-	} else
-		if (mouseGrabber())
-		{
-			if (mouseGrabberIsAManipulatedFrame_)
-			{
-				for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator it=mouseBinding_.begin(), end=mouseBinding_.end(); it!=end; ++it)
-					if ((it.value().handler == FRAME) && (it.key().button == e->button()))
-					{
-						ManipulatedFrame* mf = dynamic_cast<ManipulatedFrame*>(mouseGrabber());
-						if (mouseGrabberIsAManipulatedCameraFrame_)
-						{
-							mf->ManipulatedFrame::startAction(it.value().action, it.value().withConstraint);
-							mf->ManipulatedFrame::mousePressEvent(e, camera());
-						}
-						else
-						{
-							mf->startAction(it.value().action, it.value().withConstraint);
-							mf->mousePressEvent(e, camera());
-						}
-						break;
-					}
-			}
-			else
-				mouseGrabber()->mousePressEvent(e, camera());
-			update();
-		}
-		else
-		{
-			//#CONNECTION# wheelEvent has the same structure
-			const MouseBindingPrivate mbp(e->modifiers(), e->button(), currentlyPressedKey_);
+  if (clickBinding_.contains(cbp)) {
+    performClickAction(clickBinding_[cbp], e);
+  } else
+    if (mouseGrabber())
+    {
+      if (mouseGrabberIsAManipulatedFrame_)
+      {
+        for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator it=mouseBinding_.begin(), end=mouseBinding_.end(); it!=end; ++it)
+          if ((it.value().handler == FRAME) && (it.key().button == e->button()))
+          {
+            ManipulatedFrame* mf = dynamic_cast<ManipulatedFrame*>(mouseGrabber());
+            if (mouseGrabberIsAManipulatedCameraFrame_)
+            {
+              mf->ManipulatedFrame::startAction(it.value().action, it.value().withConstraint);
+              mf->ManipulatedFrame::mousePressEvent(e, camera());
+            }
+            else
+            {
+              mf->startAction(it.value().action, it.value().withConstraint);
+              mf->mousePressEvent(e, camera());
+            }
+            break;
+          }
+      }
+      else
+        mouseGrabber()->mousePressEvent(e, camera());
+      update();
+    }
+    else
+    {
+      //#CONNECTION# wheelEvent has the same structure
+      const MouseBindingPrivate mbp(e->modifiers(), e->button(), currentlyPressedKey_);
 
-			if (mouseBinding_.contains(mbp))
-			{
-				MouseActionPrivate map = mouseBinding_[mbp];
-				switch (map.handler)
-				{
-					case CAMERA :
-						camera()->frame()->startAction(map.action, map.withConstraint);
-						camera()->frame()->mousePressEvent(e, camera());
-						break;
-					case FRAME :
-						if (manipulatedFrame())
-						{
-							if (manipulatedFrameIsACamera_)
-							{
-								manipulatedFrame()->ManipulatedFrame::startAction(map.action, map.withConstraint);
-								manipulatedFrame()->ManipulatedFrame::mousePressEvent(e, camera());
-							}
-							else
-							{
-								manipulatedFrame()->startAction(map.action, map.withConstraint);
-								manipulatedFrame()->mousePressEvent(e, camera());
-							}
-						}
-						break;
-				}
-				if (map.action == SCREEN_ROTATE)
-					// Display visual hint line
-					update();
-			}
-			else
-				e->ignore();
-		}
+      if (mouseBinding_.contains(mbp))
+      {
+        MouseActionPrivate map = mouseBinding_[mbp];
+        switch (map.handler)
+        {
+          case CAMERA :
+            camera()->frame()->startAction(map.action, map.withConstraint);
+            camera()->frame()->mousePressEvent(e, camera());
+            break;
+          case FRAME :
+            if (manipulatedFrame())
+            {
+              if (manipulatedFrameIsACamera_)
+              {
+                manipulatedFrame()->ManipulatedFrame::startAction(map.action, map.withConstraint);
+                manipulatedFrame()->ManipulatedFrame::mousePressEvent(e, camera());
+              }
+              else
+              {
+                manipulatedFrame()->startAction(map.action, map.withConstraint);
+                manipulatedFrame()->mousePressEvent(e, camera());
+              }
+            }
+            break;
+        }
+        if (map.action == SCREEN_ROTATE)
+          // Display visual hint line
+          update();
+      }
+      else
+        e->ignore();
+    }
 }
 
 /*! Overloading of the \c QWidget method.
@@ -1324,54 +1323,54 @@ else
 \endcode */
 void QGLViewer::mouseMoveEvent(QMouseEvent* e)
 {
-	if (mouseGrabber())
-	{
-		mouseGrabber()->checkIfGrabsMouse(e->x(), e->y(), camera());
-		if (mouseGrabber()->grabsMouse())
-			if (mouseGrabberIsAManipulatedCameraFrame_)
-				(dynamic_cast<ManipulatedFrame*>(mouseGrabber()))->ManipulatedFrame::mouseMoveEvent(e, camera());
-			else
-				mouseGrabber()->mouseMoveEvent(e, camera());
-		else
-			setMouseGrabber(NULL);
-		update();
-	}
+  if (mouseGrabber())
+  {
+    mouseGrabber()->checkIfGrabsMouse(e->x(), e->y(), camera());
+    if (mouseGrabber()->grabsMouse())
+      if (mouseGrabberIsAManipulatedCameraFrame_)
+        (dynamic_cast<ManipulatedFrame*>(mouseGrabber()))->ManipulatedFrame::mouseMoveEvent(e, camera());
+      else
+        mouseGrabber()->mouseMoveEvent(e, camera());
+    else
+      setMouseGrabber(NULL);
+    update();
+  }
 
-	if (!mouseGrabber())
-	{
-		//#CONNECTION# mouseReleaseEvent has the same structure
-		if (camera()->frame()->isManipulated())
-		{
-			camera()->frame()->mouseMoveEvent(e, camera());
-			// #CONNECTION# manipulatedCameraFrame::mouseMoveEvent specific if at the beginning
-			if (camera()->frame()->action_ == ZOOM_ON_REGION)
-				update();
-		}
-		else // !
-			if ((manipulatedFrame()) && (manipulatedFrame()->isManipulated()))
-				if (manipulatedFrameIsACamera_)
-					manipulatedFrame()->ManipulatedFrame::mouseMoveEvent(e, camera());
-				else
-					manipulatedFrame()->mouseMoveEvent(e, camera());
-			else
-				if (hasMouseTracking())
-				{
-					Q_FOREACH (MouseGrabber* mg, MouseGrabber::MouseGrabberPool())
-					{
-						mg->checkIfGrabsMouse(e->x(), e->y(), camera());
-						if (mg->grabsMouse())
-						{
-							setMouseGrabber(mg);
-							// Check that MouseGrabber is not disabled
-							if (mouseGrabber() == mg)
-							{
-								update();
-								break;
-							}
-						}
-					}
-				}
-	}
+  if (!mouseGrabber())
+  {
+    //#CONNECTION# mouseReleaseEvent has the same structure
+    if (camera()->frame()->isManipulated())
+    {
+      camera()->frame()->mouseMoveEvent(e, camera());
+      // #CONNECTION# manipulatedCameraFrame::mouseMoveEvent specific if at the beginning
+      if (camera()->frame()->action_ == ZOOM_ON_REGION)
+        update();
+    }
+    else // !
+      if ((manipulatedFrame()) && (manipulatedFrame()->isManipulated()))
+        if (manipulatedFrameIsACamera_)
+          manipulatedFrame()->ManipulatedFrame::mouseMoveEvent(e, camera());
+        else
+          manipulatedFrame()->mouseMoveEvent(e, camera());
+      else
+        if (hasMouseTracking())
+        {
+          Q_FOREACH (MouseGrabber* mg, MouseGrabber::MouseGrabberPool())
+          {
+            mg->checkIfGrabsMouse(e->x(), e->y(), camera());
+            if (mg->grabsMouse())
+            {
+              setMouseGrabber(mg);
+              // Check that MouseGrabber is not disabled
+              if (mouseGrabber() == mg)
+              {
+                update();
+                break;
+              }
+            }
+          }
+        }
+  }
 }
 
 /*! Overloading of the \c QWidget method.
@@ -1381,37 +1380,37 @@ Calls the mouseGrabber(), camera() or manipulatedFrame \c mouseReleaseEvent meth
 See the mouseMoveEvent() documentation for an example of mouse behavior customization. */
 void QGLViewer::mouseReleaseEvent(QMouseEvent* e)
 {
-	if (mouseGrabber())
-	{
-		if (mouseGrabberIsAManipulatedCameraFrame_)
-			(dynamic_cast<ManipulatedFrame*>(mouseGrabber()))->ManipulatedFrame::mouseReleaseEvent(e, camera());
-		else
-			mouseGrabber()->mouseReleaseEvent(e, camera());
-		mouseGrabber()->checkIfGrabsMouse(e->x(), e->y(), camera());
-		if (!(mouseGrabber()->grabsMouse()))
-			setMouseGrabber(NULL);
-		// update();
-	}
-	else
-		//#CONNECTION# mouseMoveEvent has the same structure
-		if (camera()->frame()->isManipulated())
-		{
-			camera()->frame()->mouseReleaseEvent(e, camera());
-		}
-		else
-			if ((manipulatedFrame()) && (manipulatedFrame()->isManipulated()))
-			{
-				if (manipulatedFrameIsACamera_)
-					manipulatedFrame()->ManipulatedFrame::mouseReleaseEvent(e, camera());
-				else
-					manipulatedFrame()->mouseReleaseEvent(e, camera());
-			}
-			else
-				e->ignore();
+  if (mouseGrabber())
+  {
+    if (mouseGrabberIsAManipulatedCameraFrame_)
+      (dynamic_cast<ManipulatedFrame*>(mouseGrabber()))->ManipulatedFrame::mouseReleaseEvent(e, camera());
+    else
+      mouseGrabber()->mouseReleaseEvent(e, camera());
+    mouseGrabber()->checkIfGrabsMouse(e->x(), e->y(), camera());
+    if (!(mouseGrabber()->grabsMouse()))
+      setMouseGrabber(NULL);
+    // update();
+  }
+  else
+    //#CONNECTION# mouseMoveEvent has the same structure
+    if (camera()->frame()->isManipulated())
+    {
+      camera()->frame()->mouseReleaseEvent(e, camera());
+    }
+    else
+      if ((manipulatedFrame()) && (manipulatedFrame()->isManipulated()))
+      {
+        if (manipulatedFrameIsACamera_)
+          manipulatedFrame()->ManipulatedFrame::mouseReleaseEvent(e, camera());
+        else
+          manipulatedFrame()->mouseReleaseEvent(e, camera());
+      }
+      else
+        e->ignore();
 
-	// Not absolutely needed (see above commented code for the optimal version), but may reveal
-	// useful for specific applications.
-	update();
+  // Not absolutely needed (see above commented code for the optimal version), but may reveal
+  // useful for specific applications.
+  update();
 }
 
 /*! Overloading of the \c QWidget method.
@@ -1420,64 +1419,64 @@ If defined, the wheel event is sent to the mouseGrabber(). It is otherwise sent 
 bindings (see setWheelBinding()). */
 void QGLViewer::wheelEvent(QWheelEvent* e)
 {
-	if (mouseGrabber())
-	{
-		if (mouseGrabberIsAManipulatedFrame_)
-		{
-			for (QMap<WheelBindingPrivate, MouseActionPrivate>::ConstIterator it=wheelBinding_.begin(), end=wheelBinding_.end(); it!=end; ++it)
-				if (it.value().handler == FRAME)
-				{
-					ManipulatedFrame* mf = dynamic_cast<ManipulatedFrame*>(mouseGrabber());
-					if (mouseGrabberIsAManipulatedCameraFrame_)
-					{
-						mf->ManipulatedFrame::startAction(it.value().action, it.value().withConstraint);
-						mf->ManipulatedFrame::wheelEvent(e, camera());
-					}
-					else
-					{
-						mf->startAction(it.value().action, it.value().withConstraint);
-						mf->wheelEvent(e, camera());
-					}
-					break;
-				}
-		}
-		else
-			mouseGrabber()->wheelEvent(e, camera());
-		update();
-	}
-	else
-	{
-		//#CONNECTION# mousePressEvent has the same structure
-		WheelBindingPrivate wbp(e->modifiers(), currentlyPressedKey_);
+  if (mouseGrabber())
+  {
+    if (mouseGrabberIsAManipulatedFrame_)
+    {
+      for (QMap<WheelBindingPrivate, MouseActionPrivate>::ConstIterator it=wheelBinding_.begin(), end=wheelBinding_.end(); it!=end; ++it)
+        if (it.value().handler == FRAME)
+        {
+          ManipulatedFrame* mf = dynamic_cast<ManipulatedFrame*>(mouseGrabber());
+          if (mouseGrabberIsAManipulatedCameraFrame_)
+          {
+            mf->ManipulatedFrame::startAction(it.value().action, it.value().withConstraint);
+            mf->ManipulatedFrame::wheelEvent(e, camera());
+          }
+          else
+          {
+            mf->startAction(it.value().action, it.value().withConstraint);
+            mf->wheelEvent(e, camera());
+          }
+          break;
+        }
+    }
+    else
+      mouseGrabber()->wheelEvent(e, camera());
+    update();
+  }
+  else
+  {
+    //#CONNECTION# mousePressEvent has the same structure
+    WheelBindingPrivate wbp(e->modifiers(), currentlyPressedKey_);
 
-		if (wheelBinding_.contains(wbp))
-		{
-			MouseActionPrivate map = wheelBinding_[wbp];
-			switch (map.handler)
-			{
-				case CAMERA :
-					camera()->frame()->startAction(map.action, map.withConstraint);
-					camera()->frame()->wheelEvent(e, camera());
-					break;
-				case FRAME :
-					if (manipulatedFrame()) {
-						if (manipulatedFrameIsACamera_)
-						{
-							manipulatedFrame()->ManipulatedFrame::startAction(map.action, map.withConstraint);
-							manipulatedFrame()->ManipulatedFrame::wheelEvent(e, camera());
-						}
-						else
-						{
-							manipulatedFrame()->startAction(map.action, map.withConstraint);
-							manipulatedFrame()->wheelEvent(e, camera());
-						}
-					}
-					break;
-			}
-		}
-		else
-			e->ignore();
-	}
+    if (wheelBinding_.contains(wbp))
+    {
+      MouseActionPrivate map = wheelBinding_[wbp];
+      switch (map.handler)
+      {
+        case CAMERA :
+          camera()->frame()->startAction(map.action, map.withConstraint);
+          camera()->frame()->wheelEvent(e, camera());
+          break;
+        case FRAME :
+          if (manipulatedFrame()) {
+            if (manipulatedFrameIsACamera_)
+            {
+              manipulatedFrame()->ManipulatedFrame::startAction(map.action, map.withConstraint);
+              manipulatedFrame()->ManipulatedFrame::wheelEvent(e, camera());
+            }
+            else
+            {
+              manipulatedFrame()->startAction(map.action, map.withConstraint);
+              manipulatedFrame()->wheelEvent(e, camera());
+            }
+          }
+          break;
+      }
+    }
+    else
+      e->ignore();
+  }
 }
 
 /*! Overloading of the \c QWidget method.
@@ -1486,15 +1485,15 @@ The behavior of the mouse double click depends on the mouse binding. See setMous
 <a href="../mouse.html">mouse page</a>. */
 void QGLViewer::mouseDoubleClickEvent(QMouseEvent* e)
 {
-	//#CONNECTION# mousePressEvent has the same structure
-	ClickBindingPrivate cbp(e->modifiers(), e->button(), true, (Qt::MouseButtons)(e->buttons() & ~(e->button())), currentlyPressedKey_);
-	if (clickBinding_.contains(cbp))
-		performClickAction(clickBinding_[cbp], e);
-	else
-		if (mouseGrabber())
-			mouseGrabber()->mouseDoubleClickEvent(e, camera());
-		else
-			e->ignore();
+  //#CONNECTION# mousePressEvent has the same structure
+  ClickBindingPrivate cbp(e->modifiers(), e->button(), true, (Qt::MouseButtons)(e->buttons() & ~(e->button())), currentlyPressedKey_);
+  if (clickBinding_.contains(cbp))
+    performClickAction(clickBinding_[cbp], e);
+  else
+    if (mouseGrabber())
+      mouseGrabber()->mouseDoubleClickEvent(e, camera());
+    else
+      e->ignore();
 }
 
 /*! Sets the state of displaysInStereo(). See also toggleStereoDisplay().
@@ -1503,26 +1502,26 @@ First checks that the display is able to handle stereovision using QGLWidget::fo
 warning message box in case of failure. Emits the stereoChanged() signal otherwise. */
 void QGLViewer::setStereoDisplay(bool stereo)
 {
-	if (format().stereo())
-	{
-		stereo_ = stereo;
-		if (!displaysInStereo())
-		{
-			glDrawBuffer(GL_BACK_LEFT);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glDrawBuffer(GL_BACK_RIGHT);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		}
+  if (format().stereo())
+  {
+    stereo_ = stereo;
+    if (!displaysInStereo())
+    {
+      glDrawBuffer(GL_BACK_LEFT);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      glDrawBuffer(GL_BACK_RIGHT);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
 
-		Q_EMIT stereoChanged(stereo_);
+    Q_EMIT stereoChanged(stereo_);
 
-		update();
-	}
-	else
-		if (stereo)
-			QMessageBox::warning(this, tr("Stereo not supported", "Message box window title"), tr("Stereo is not supported on this display."));
-		else
-			stereo_ = false;
+    update();
+  }
+  else
+    if (stereo)
+      QMessageBox::warning(this, tr("Stereo not supported", "Message box window title"), tr("Stereo is not supported on this display."));
+    else
+      stereo_ = false;
 }
 
 /*! Sets the isFullScreen() state.
@@ -1531,23 +1530,23 @@ If the QGLViewer is embedded in an other QWidget (see QWidget::topLevelWidget())
 displayed in full screen instead. */
 void QGLViewer::setFullScreen(bool fullScreen)
 {
-	if (fullScreen_ == fullScreen) return;
+  if (fullScreen_ == fullScreen) return;
 
-	fullScreen_ = fullScreen;
+  fullScreen_ = fullScreen;
 
-	QWidget* tlw = topLevelWidget();
+  QWidget* tlw = topLevelWidget();
 
-	if (isFullScreen())
-	{
-		prevPos_ = topLevelWidget()->pos();
-		tlw->showFullScreen();
-		tlw->move(0,0);
-	}
-	else
-	{
-		tlw->showNormal();
-		tlw->move(prevPos_);
-	}
+  if (isFullScreen())
+  {
+    prevPos_ = topLevelWidget()->pos();
+    tlw->showFullScreen();
+    tlw->move(0,0);
+  }
+  else
+  {
+    tlw->showNormal();
+    tlw->move(prevPos_);
+  }
 }
 
 /*! Directly defines the mouseGrabber().
@@ -1558,100 +1557,100 @@ qglviewer::MouseGrabber::checkIfGrabsMouse() test performed by mouseMoveEvent().
 If the MouseGrabber is disabled (see mouseGrabberIsEnabled()), this method silently does nothing. */
 void QGLViewer::setMouseGrabber(MouseGrabber* mouseGrabber)
 {
-	if (!mouseGrabberIsEnabled(mouseGrabber))
-		return;
+  if (!mouseGrabberIsEnabled(mouseGrabber))
+    return;
 
-	mouseGrabber_ = mouseGrabber;
+  mouseGrabber_ = mouseGrabber;
 
-	mouseGrabberIsAManipulatedFrame_       = (dynamic_cast<ManipulatedFrame*>(mouseGrabber) != NULL);
-	mouseGrabberIsAManipulatedCameraFrame_ = ((dynamic_cast<ManipulatedCameraFrame*>(mouseGrabber) != NULL) &&
-											  (mouseGrabber != camera()->frame()));
-	Q_EMIT mouseGrabberChanged(mouseGrabber);
+  mouseGrabberIsAManipulatedFrame_       = (dynamic_cast<ManipulatedFrame*>(mouseGrabber) != NULL);
+  mouseGrabberIsAManipulatedCameraFrame_ = ((dynamic_cast<ManipulatedCameraFrame*>(mouseGrabber) != NULL) &&
+                        (mouseGrabber != camera()->frame()));
+  Q_EMIT mouseGrabberChanged(mouseGrabber);
 }
 
 /*! Sets the mouseGrabberIsEnabled() state. */
 void QGLViewer::setMouseGrabberIsEnabled(const qglviewer::MouseGrabber* const mouseGrabber, bool enabled)
 {
-	if (enabled)
-		disabledMouseGrabbers_.remove(reinterpret_cast<size_t>(mouseGrabber));
-	else
-		disabledMouseGrabbers_[reinterpret_cast<size_t>(mouseGrabber)];
+  if (enabled)
+    disabledMouseGrabbers_.remove(reinterpret_cast<size_t>(mouseGrabber));
+  else
+    disabledMouseGrabbers_[reinterpret_cast<size_t>(mouseGrabber)];
 }
 
 QString QGLViewer::mouseActionString(QGLViewer::MouseAction ma)
 {
-	switch (ma)
-	{
-		case QGLViewer::NO_MOUSE_ACTION : return QString::null;
-		case QGLViewer::ROTATE : return QGLViewer::tr("Rotates", "ROTATE mouse action");
-		case QGLViewer::ZOOM : return QGLViewer::tr("Zooms", "ZOOM mouse action");
-		case QGLViewer::TRANSLATE : return QGLViewer::tr("Translates", "TRANSLATE mouse action");
-		case QGLViewer::MOVE_FORWARD : return QGLViewer::tr("Moves forward", "MOVE_FORWARD mouse action");
-		case QGLViewer::LOOK_AROUND : return QGLViewer::tr("Looks around", "LOOK_AROUND mouse action");
-		case QGLViewer::MOVE_BACKWARD : return QGLViewer::tr("Moves backward", "MOVE_BACKWARD mouse action");
-		case QGLViewer::SCREEN_ROTATE : return QGLViewer::tr("Rotates in screen plane", "SCREEN_ROTATE mouse action");
-		case QGLViewer::ROLL : return QGLViewer::tr("Rolls", "ROLL mouse action");
-		case QGLViewer::DRIVE : return QGLViewer::tr("Drives", "DRIVE mouse action");
-		case QGLViewer::SCREEN_TRANSLATE : return QGLViewer::tr("Horizontally/Vertically translates", "SCREEN_TRANSLATE mouse action");
-		case QGLViewer::ZOOM_ON_REGION : return QGLViewer::tr("Zooms on region for", "ZOOM_ON_REGION mouse action");
-	}
-	return QString::null;
+  switch (ma)
+  {
+    case QGLViewer::NO_MOUSE_ACTION : return QString::null;
+    case QGLViewer::ROTATE : return QGLViewer::tr("Rotates", "ROTATE mouse action");
+    case QGLViewer::ZOOM : return QGLViewer::tr("Zooms", "ZOOM mouse action");
+    case QGLViewer::TRANSLATE : return QGLViewer::tr("Translates", "TRANSLATE mouse action");
+    case QGLViewer::MOVE_FORWARD : return QGLViewer::tr("Moves forward", "MOVE_FORWARD mouse action");
+    case QGLViewer::LOOK_AROUND : return QGLViewer::tr("Looks around", "LOOK_AROUND mouse action");
+    case QGLViewer::MOVE_BACKWARD : return QGLViewer::tr("Moves backward", "MOVE_BACKWARD mouse action");
+    case QGLViewer::SCREEN_ROTATE : return QGLViewer::tr("Rotates in screen plane", "SCREEN_ROTATE mouse action");
+    case QGLViewer::ROLL : return QGLViewer::tr("Rolls", "ROLL mouse action");
+    case QGLViewer::DRIVE : return QGLViewer::tr("Drives", "DRIVE mouse action");
+    case QGLViewer::SCREEN_TRANSLATE : return QGLViewer::tr("Horizontally/Vertically translates", "SCREEN_TRANSLATE mouse action");
+    case QGLViewer::ZOOM_ON_REGION : return QGLViewer::tr("Zooms on region for", "ZOOM_ON_REGION mouse action");
+  }
+  return QString::null;
 }
 
 QString QGLViewer::clickActionString(QGLViewer::ClickAction ca)
 {
-	switch (ca)
-	{
-		case QGLViewer::NO_CLICK_ACTION : return QString::null;
-		case QGLViewer::ZOOM_ON_PIXEL : return QGLViewer::tr("Zooms on pixel", "ZOOM_ON_PIXEL click action");
-		case QGLViewer::ZOOM_TO_FIT : return QGLViewer::tr("Zooms to fit scene", "ZOOM_TO_FIT click action");
-		case QGLViewer::SELECT : return QGLViewer::tr("Selects", "SELECT click action");
-		case QGLViewer::RAP_FROM_PIXEL : return QGLViewer::tr("Sets pivot point", "RAP_FROM_PIXEL click action");
-		case QGLViewer::RAP_IS_CENTER : return QGLViewer::tr("Resets pivot point", "RAP_IS_CENTER click action");
-		case QGLViewer::CENTER_FRAME : return QGLViewer::tr("Centers manipulated frame", "CENTER_FRAME click action");
-		case QGLViewer::CENTER_SCENE : return QGLViewer::tr("Centers scene", "CENTER_SCENE click action");
-		case QGLViewer::SHOW_ENTIRE_SCENE : return QGLViewer::tr("Shows entire scene", "SHOW_ENTIRE_SCENE click action");
-		case QGLViewer::ALIGN_FRAME : return QGLViewer::tr("Aligns manipulated frame", "ALIGN_FRAME click action");
-		case QGLViewer::ALIGN_CAMERA : return QGLViewer::tr("Aligns camera", "ALIGN_CAMERA click action");
-	}
-	return QString::null;
+  switch (ca)
+  {
+    case QGLViewer::NO_CLICK_ACTION : return QString::null;
+    case QGLViewer::ZOOM_ON_PIXEL : return QGLViewer::tr("Zooms on pixel", "ZOOM_ON_PIXEL click action");
+    case QGLViewer::ZOOM_TO_FIT : return QGLViewer::tr("Zooms to fit scene", "ZOOM_TO_FIT click action");
+    case QGLViewer::SELECT : return QGLViewer::tr("Selects", "SELECT click action");
+    case QGLViewer::RAP_FROM_PIXEL : return QGLViewer::tr("Sets pivot point", "RAP_FROM_PIXEL click action");
+    case QGLViewer::RAP_IS_CENTER : return QGLViewer::tr("Resets pivot point", "RAP_IS_CENTER click action");
+    case QGLViewer::CENTER_FRAME : return QGLViewer::tr("Centers manipulated frame", "CENTER_FRAME click action");
+    case QGLViewer::CENTER_SCENE : return QGLViewer::tr("Centers scene", "CENTER_SCENE click action");
+    case QGLViewer::SHOW_ENTIRE_SCENE : return QGLViewer::tr("Shows entire scene", "SHOW_ENTIRE_SCENE click action");
+    case QGLViewer::ALIGN_FRAME : return QGLViewer::tr("Aligns manipulated frame", "ALIGN_FRAME click action");
+    case QGLViewer::ALIGN_CAMERA : return QGLViewer::tr("Aligns camera", "ALIGN_CAMERA click action");
+  }
+  return QString::null;
 }
 
 static QString keyString(unsigned int key)
 {
 # if QT_VERSION >= 0x040100
-	return QKeySequence(int(key)).toString(QKeySequence::NativeText);
+  return QKeySequence(int(key)).toString(QKeySequence::NativeText);
 # else
-	return QString(QKeySequence(key));
+  return QString(QKeySequence(key));
 # endif
 }
 
 QString QGLViewer::formatClickActionPrivate(ClickBindingPrivate cbp)
 {
-	bool buttonsBefore = cbp.buttonsBefore != Qt::NoButton;
-	QString keyModifierString = keyString(cbp.modifiers + cbp.key);
-	if (!keyModifierString.isEmpty()) {
+  bool buttonsBefore = cbp.buttonsBefore != Qt::NoButton;
+  QString keyModifierString = keyString(cbp.modifiers + cbp.key);
+  if (!keyModifierString.isEmpty()) {
 #ifdef Q_OS_MAC
-		// modifiers never has a '+' sign. Add one space to clearly separate modifiers (and possible key) from button
-		keyModifierString += " ";
+    // modifiers never has a '+' sign. Add one space to clearly separate modifiers (and possible key) from button
+    keyModifierString += " ";
 #else
-		// modifiers might be of the form : 'S' or 'Ctrl+S' or 'Ctrl+'. For consistency, add an other '+' if needed, no spaces
-		if (!keyModifierString.endsWith('+'))
-			keyModifierString += "+";
+    // modifiers might be of the form : 'S' or 'Ctrl+S' or 'Ctrl+'. For consistency, add an other '+' if needed, no spaces
+    if (!keyModifierString.endsWith('+'))
+      keyModifierString += "+";
 #endif
-	}
+  }
 
-	return tr("%1%2%3%4%5%6", "Modifier / button or wheel / double click / with / button / pressed")
-			.arg(keyModifierString)
-			.arg(mouseButtonsString(cbp.button)+(cbp.button == Qt::NoButton ? tr("Wheel", "Mouse wheel") : ""))
-			.arg(cbp.doubleClick ? tr(" double click", "Suffix after mouse button") : "")
-			.arg(buttonsBefore ? tr(" with ", "As in : Left button with Ctrl pressed") : "")
-			.arg(buttonsBefore ? mouseButtonsString(cbp.buttonsBefore) : "")
-			.arg(buttonsBefore ? tr(" pressed", "As in : Left button with Ctrl pressed") : "");
+  return tr("%1%2%3%4%5%6", "Modifier / button or wheel / double click / with / button / pressed")
+      .arg(keyModifierString)
+      .arg(mouseButtonsString(cbp.button)+(cbp.button == Qt::NoButton ? tr("Wheel", "Mouse wheel") : ""))
+      .arg(cbp.doubleClick ? tr(" double click", "Suffix after mouse button") : "")
+      .arg(buttonsBefore ? tr(" with ", "As in : Left button with Ctrl pressed") : "")
+      .arg(buttonsBefore ? mouseButtonsString(cbp.buttonsBefore) : "")
+      .arg(buttonsBefore ? tr(" pressed", "As in : Left button with Ctrl pressed") : "");
 }
 
 bool QGLViewer::isValidShortcutKey(int key) {
-	return (key >= Qt::Key_Any && key < Qt::Key_Escape) || (key >= Qt::Key_F1 && key <= Qt::Key_F35);
+  return (key >= Qt::Key_Any && key < Qt::Key_Escape) || (key >= Qt::Key_F1 && key <= Qt::Key_F35);
 }
 
 #ifndef DOXYGEN
@@ -1660,12 +1659,12 @@ bool QGLViewer::isValidShortcutKey(int key) {
  Use setMouseBindingDescription(Qt::KeyboardModifiers, Qt::MouseButtons, QString, bool, Qt::MouseButtons) instead.
 */
 void QGLViewer::setMouseBindingDescription(unsigned int state, QString description, bool doubleClick, Qt::MouseButtons buttonsBefore) {
-	qWarning("setMouseBindingDescription(int state,...) is deprecated. Use the modifier/button equivalent");
-	setMouseBindingDescription(keyboardModifiersFromState(state),
-							   mouseButtonFromState(state),
-							   description,
-							   doubleClick,
-							   buttonsBefore);
+  qWarning("setMouseBindingDescription(int state,...) is deprecated. Use the modifier/button equivalent");
+  setMouseBindingDescription(keyboardModifiersFromState(state),
+                 mouseButtonFromState(state),
+                 description,
+                 doubleClick,
+                 buttonsBefore);
 }
 #endif
 
@@ -1675,7 +1674,7 @@ void QGLViewer::setMouseBindingDescription(unsigned int state, QString descripti
  with a key value of Qt::Key(0) (i.e. binding description when no regular key needs to be pressed). */
 void QGLViewer::setMouseBindingDescription(Qt::KeyboardModifiers modifiers, Qt::MouseButton button, QString description, bool doubleClick, Qt::MouseButtons buttonsBefore)
 {
-	setMouseBindingDescription(Qt::Key(0), modifiers, button, description, doubleClick, buttonsBefore);
+  setMouseBindingDescription(Qt::Key(0), modifiers, button, description, doubleClick, buttonsBefore);
 }
 
 /*! Defines a custom mouse binding description, displayed in the help() window's Mouse tab.
@@ -1709,30 +1708,30 @@ href="../examples/keyboardAndMouse.html">keyboardAndMouse example</a> for an ill
 Use setMouseBinding() and setWheelBinding() to change the standard mouse action bindings. */
 void QGLViewer::setMouseBindingDescription(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button, QString description, bool doubleClick, Qt::MouseButtons buttonsBefore)
 {
-	ClickBindingPrivate cbp(modifiers, button, doubleClick, buttonsBefore, key);
+  ClickBindingPrivate cbp(modifiers, button, doubleClick, buttonsBefore, key);
 
-	if (description.isEmpty())
-		mouseDescription_.remove(cbp);
-	else
-		mouseDescription_[cbp] = description;
+  if (description.isEmpty())
+    mouseDescription_.remove(cbp);
+  else
+    mouseDescription_[cbp] = description;
 }
 
 static QString tableLine(const QString& left, const QString& right)
 {
-	static bool even = false;
-	const QString tdtd("</b></td><td>");
-	const QString tdtr("</td></tr>\n");
+  static bool even = false;
+  const QString tdtd("</b></td><td>");
+  const QString tdtr("</td></tr>\n");
 
-	QString res("<tr bgcolor=\"");
+  QString res("<tr bgcolor=\"");
 
-	if (even)
-		res += "#eeeeff\">";
-	else
-		res += "#ffffff\">";
-	res += "<td><b>" + left + tdtd + right + tdtr;
-	even = !even;
+  if (even)
+    res += "#eeeeff\">";
+  else
+    res += "#ffffff\">";
+  res += "<td><b>" + left + tdtd + right + tdtr;
+  even = !even;
 
-	return res;
+  return res;
 }
 
 /*! Returns a QString that describes the application mouse bindings, displayed in the help() window
@@ -1746,93 +1745,93 @@ bindings.
 See also helpString() and keyboardString(). */
 QString QGLViewer::mouseString() const
 {
-	QString text("<center><table border=\"1\" cellspacing=\"0\" cellpadding=\"4\">\n");
-	const QString trtd("<tr><td>");
-	const QString tdtr("</td></tr>\n");
-	const QString tdtd("</td><td>");
+  QString text("<center><table border=\"1\" cellspacing=\"0\" cellpadding=\"4\">\n");
+  const QString trtd("<tr><td>");
+  const QString tdtr("</td></tr>\n");
+  const QString tdtd("</td><td>");
 
-	text += QString("<tr bgcolor=\"#aaaacc\"><th align=\"center\">%1</th><th align=\"center\">%2</th></tr>\n").
-			arg(tr("Button(s)", "Buttons column header in help window mouse tab")).arg(tr("Description", "Description column header in help window mouse tab"));
+  text += QString("<tr bgcolor=\"#aaaacc\"><th align=\"center\">%1</th><th align=\"center\">%2</th></tr>\n").
+      arg(tr("Button(s)", "Buttons column header in help window mouse tab")).arg(tr("Description", "Description column header in help window mouse tab"));
 
-	QMap<ClickBindingPrivate, QString> mouseBinding;
+  QMap<ClickBindingPrivate, QString> mouseBinding;
 
-	// User-defined mouse bindings come first.
-	for (QMap<ClickBindingPrivate, QString>::ConstIterator itm=mouseDescription_.begin(), endm=mouseDescription_.end(); itm!=endm; ++itm)
-		mouseBinding[itm.key()] = itm.value();
+  // User-defined mouse bindings come first.
+  for (QMap<ClickBindingPrivate, QString>::ConstIterator itm=mouseDescription_.begin(), endm=mouseDescription_.end(); itm!=endm; ++itm)
+    mouseBinding[itm.key()] = itm.value();
 
-	for (QMap<ClickBindingPrivate, QString>::ConstIterator it=mouseBinding.begin(), end=mouseBinding.end(); it != end; ++it)
-	{
-		// Should not be needed (see setMouseBindingDescription())
-		if (it.value().isNull())
-			continue;
+  for (QMap<ClickBindingPrivate, QString>::ConstIterator it=mouseBinding.begin(), end=mouseBinding.end(); it != end; ++it)
+  {
+    // Should not be needed (see setMouseBindingDescription())
+    if (it.value().isNull())
+      continue;
 
-		text += tableLine(formatClickActionPrivate(it.key()), it.value());
-	}
+    text += tableLine(formatClickActionPrivate(it.key()), it.value());
+  }
 
-	// Optional separator line
-	if (!mouseBinding.isEmpty())
-	{
-		mouseBinding.clear();
-		text += QString("<tr bgcolor=\"#aaaacc\"><td colspan=2>%1</td></tr>\n").arg(tr("Standard mouse bindings", "In help window mouse tab"));
-	}
+  // Optional separator line
+  if (!mouseBinding.isEmpty())
+  {
+    mouseBinding.clear();
+    text += QString("<tr bgcolor=\"#aaaacc\"><td colspan=2>%1</td></tr>\n").arg(tr("Standard mouse bindings", "In help window mouse tab"));
+  }
 
-	// Then concatenates the descriptions of wheelBinding_, mouseBinding_ and clickBinding_.
-	// The order is significant and corresponds to the priorities set in mousePressEvent() (reverse priority order, last one overwrites previous)
-	// #CONNECTION# mousePressEvent() order
-	for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator itmb=mouseBinding_.begin(), endmb=mouseBinding_.end();
-		 itmb != endmb; ++itmb)
-	{
-		ClickBindingPrivate cbp(itmb.key().modifiers, itmb.key().button, false, Qt::NoButton, itmb.key().key);
+  // Then concatenates the descriptions of wheelBinding_, mouseBinding_ and clickBinding_.
+  // The order is significant and corresponds to the priorities set in mousePressEvent() (reverse priority order, last one overwrites previous)
+  // #CONNECTION# mousePressEvent() order
+  for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator itmb=mouseBinding_.begin(), endmb=mouseBinding_.end();
+     itmb != endmb; ++itmb)
+  {
+    ClickBindingPrivate cbp(itmb.key().modifiers, itmb.key().button, false, Qt::NoButton, itmb.key().key);
 
-		QString text = mouseActionString(itmb.value().action);
+    QString text = mouseActionString(itmb.value().action);
 
-		if (!text.isNull())
-		{
-			switch (itmb.value().handler)
-			{
-				case CAMERA: text += " " + tr("camera", "Suffix after action"); break;
-				case FRAME:  text += " " + tr("manipulated frame", "Suffix after action"); break;
-			}
-			if (!(itmb.value().withConstraint))
-				text += "*";
-		}
-		mouseBinding[cbp] = text;
-	}
+    if (!text.isNull())
+    {
+      switch (itmb.value().handler)
+      {
+        case CAMERA: text += " " + tr("camera", "Suffix after action"); break;
+        case FRAME:  text += " " + tr("manipulated frame", "Suffix after action"); break;
+      }
+      if (!(itmb.value().withConstraint))
+        text += "*";
+    }
+    mouseBinding[cbp] = text;
+  }
 
-	for (QMap<WheelBindingPrivate, MouseActionPrivate>::ConstIterator itw=wheelBinding_.begin(), endw=wheelBinding_.end(); itw != endw; ++itw)
-	{
-		ClickBindingPrivate cbp(itw.key().modifiers, Qt::NoButton, false, Qt::NoButton, itw.key().key);
+  for (QMap<WheelBindingPrivate, MouseActionPrivate>::ConstIterator itw=wheelBinding_.begin(), endw=wheelBinding_.end(); itw != endw; ++itw)
+  {
+    ClickBindingPrivate cbp(itw.key().modifiers, Qt::NoButton, false, Qt::NoButton, itw.key().key);
 
-		QString text = mouseActionString(itw.value().action);
+    QString text = mouseActionString(itw.value().action);
 
-		if (!text.isNull())
-		{
-			switch (itw.value().handler)
-			{
-				case CAMERA: text += " " + tr("camera", "Suffix after action"); break;
-				case FRAME:  text += " " + tr("manipulated frame", "Suffix after action"); break;
-			}
-			if (!(itw.value().withConstraint))
-				text += "*";
-		}
+    if (!text.isNull())
+    {
+      switch (itw.value().handler)
+      {
+        case CAMERA: text += " " + tr("camera", "Suffix after action"); break;
+        case FRAME:  text += " " + tr("manipulated frame", "Suffix after action"); break;
+      }
+      if (!(itw.value().withConstraint))
+        text += "*";
+    }
 
-		mouseBinding[cbp] = text;
-	}
+    mouseBinding[cbp] = text;
+  }
 
-	for (QMap<ClickBindingPrivate, ClickAction>::ConstIterator itcb=clickBinding_.begin(), endcb=clickBinding_.end(); itcb!=endcb; ++itcb)
-		mouseBinding[itcb.key()] = clickActionString(itcb.value());
+  for (QMap<ClickBindingPrivate, ClickAction>::ConstIterator itcb=clickBinding_.begin(), endcb=clickBinding_.end(); itcb!=endcb; ++itcb)
+    mouseBinding[itcb.key()] = clickActionString(itcb.value());
 
-	for (QMap<ClickBindingPrivate, QString>::ConstIterator it2=mouseBinding.begin(), end2=mouseBinding.end(); it2 != end2; ++it2)
-	{
-		if (it2.value().isNull())
-			continue;
+  for (QMap<ClickBindingPrivate, QString>::ConstIterator it2=mouseBinding.begin(), end2=mouseBinding.end(); it2 != end2; ++it2)
+  {
+    if (it2.value().isNull())
+      continue;
 
-		text += tableLine(formatClickActionPrivate(it2.key()), it2.value());
-	}
+    text += tableLine(formatClickActionPrivate(it2.key()), it2.value());
+  }
 
-	text += "</table></center>";
+  text += "</table></center>";
 
-	return text;
+  return text;
 }
 
 /*! Defines a custom keyboard shortcut description, that will be displayed in the help() window \c
@@ -1851,77 +1850,77 @@ See the <a href="../examples/keyboardAndMouse.html">keyboardAndMouse example</a>
 and the <a href="../keyboard.html">keyboard page</a> for details. */
 void QGLViewer::setKeyDescription(unsigned int key, QString description)
 {
-	if (description.isEmpty())
-		keyDescription_.remove(key);
-	else
-		keyDescription_[key] = description;
+  if (description.isEmpty())
+    keyDescription_.remove(key);
+  else
+    keyDescription_[key] = description;
 }
 
 QString QGLViewer::cameraPathKeysString() const
 {
-	if (pathIndex_.isEmpty())
-		return QString::null;
+  if (pathIndex_.isEmpty())
+    return QString::null;
 
-	QVector<Qt::Key> keys;
-	keys.reserve(pathIndex_.count());
-	for (QMap<Qt::Key, unsigned int>::ConstIterator i = pathIndex_.begin(), endi=pathIndex_.end(); i != endi; ++i)
-		keys.push_back(i.key());
-	qSort(keys);
+  QVector<Qt::Key> keys;
+  keys.reserve(pathIndex_.count());
+  for (QMap<Qt::Key, unsigned int>::ConstIterator i = pathIndex_.begin(), endi=pathIndex_.end(); i != endi; ++i)
+    keys.push_back(i.key());
+  qSort(keys);
 
-	QVector<Qt::Key>::const_iterator it = keys.begin(), end = keys.end();
-	QString res = keyString(*it);
+  QVector<Qt::Key>::const_iterator it = keys.begin(), end = keys.end();
+  QString res = keyString(*it);
 
-	const int maxDisplayedKeys = 6;
-	int nbDisplayedKeys = 0;
-	Qt::Key previousKey = (*it);
-	int state = 0;
-	++it;
-	while ((it != end) && (nbDisplayedKeys < maxDisplayedKeys-1))
-	{
-		switch (state)
-		{
-			case 0 :
-				if ((*it) == previousKey + 1)
-					state++;
-				else
-				{
-					res += ", " + keyString(*it);
-					nbDisplayedKeys++;
-				}
-				break;
-			case 1 :
-				if ((*it) == previousKey + 1)
-					state++;
-				else
-				{
-					res += ", " + keyString(previousKey);
-					res += ", " + keyString(*it);
-					nbDisplayedKeys += 2;
-					state = 0;
-				}
-				break;
-			default :
-				if ((*it) != previousKey + 1)
-				{
-					res += ".." + keyString(previousKey);
-					res += ", " + keyString(*it);
-					nbDisplayedKeys += 2;
-					state = 0;
-				}
-				break;
-		}
-		previousKey = *it;
-		++it;
-	}
+  const int maxDisplayedKeys = 6;
+  int nbDisplayedKeys = 0;
+  Qt::Key previousKey = (*it);
+  int state = 0;
+  ++it;
+  while ((it != end) && (nbDisplayedKeys < maxDisplayedKeys-1))
+  {
+    switch (state)
+    {
+      case 0 :
+        if ((*it) == previousKey + 1)
+          state++;
+        else
+        {
+          res += ", " + keyString(*it);
+          nbDisplayedKeys++;
+        }
+        break;
+      case 1 :
+        if ((*it) == previousKey + 1)
+          state++;
+        else
+        {
+          res += ", " + keyString(previousKey);
+          res += ", " + keyString(*it);
+          nbDisplayedKeys += 2;
+          state = 0;
+        }
+        break;
+      default :
+        if ((*it) != previousKey + 1)
+        {
+          res += ".." + keyString(previousKey);
+          res += ", " + keyString(*it);
+          nbDisplayedKeys += 2;
+          state = 0;
+        }
+        break;
+    }
+    previousKey = *it;
+    ++it;
+  }
 
-	if (state == 1)
-		res += ", " + keyString(previousKey);
-	if (state == 2)
-		res += ".." + keyString(previousKey);
-	if (it != end)
-		res += "...";
+  if (state == 1)
+    res += ", " + keyString(previousKey);
+  if (state == 2)
+    res += ".." + keyString(previousKey);
+  if (it != end)
+    res += "...";
 
-	return res;
+  return res;
 }
 
 /*! Returns a QString that describes the application keyboard shortcut bindings, and that will be
@@ -1934,61 +1933,61 @@ well as the \e standard QGLViewer::KeyboardAction shortcuts (defined using setSh
 See also helpString() and mouseString(). */
 QString QGLViewer::keyboardString() const
 {
-	QString text("<center><table border=\"1\" cellspacing=\"0\" cellpadding=\"4\">\n");
-	text += QString("<tr bgcolor=\"#aaaacc\"><th align=\"center\">%1</th><th align=\"center\">%2</th></tr>\n").
-			arg(QGLViewer::tr("Key(s)", "Keys column header in help window mouse tab")).arg(QGLViewer::tr("Description", "Description column header in help window mouse tab"));
+  QString text("<center><table border=\"1\" cellspacing=\"0\" cellpadding=\"4\">\n");
+  text += QString("<tr bgcolor=\"#aaaacc\"><th align=\"center\">%1</th><th align=\"center\">%2</th></tr>\n").
+      arg(QGLViewer::tr("Key(s)", "Keys column header in help window mouse tab")).arg(QGLViewer::tr("Description", "Description column header in help window mouse tab"));
 
-	QMap<unsigned int, QString> keyDescription;
+  QMap<unsigned int, QString> keyDescription;
 
-	// 1 - User defined key descriptions
-	for (QMap<unsigned int, QString>::ConstIterator kd=keyDescription_.begin(), kdend=keyDescription_.end(); kd!=kdend; ++kd)
-		keyDescription[kd.key()] = kd.value();
+  // 1 - User defined key descriptions
+  for (QMap<unsigned int, QString>::ConstIterator kd=keyDescription_.begin(), kdend=keyDescription_.end(); kd!=kdend; ++kd)
+    keyDescription[kd.key()] = kd.value();
 
-	// Add to text in sorted order
-	for (QMap<unsigned int, QString>::ConstIterator kb=keyDescription.begin(), endb=keyDescription.end(); kb!=endb; ++kb)
-		text += tableLine(keyString(kb.key()), kb.value());
-
-
-	// 2 - Optional separator line
-	if (!keyDescription.isEmpty())
-	{
-		keyDescription.clear();
-		text += QString("<tr bgcolor=\"#aaaacc\"><td colspan=2>%1</td></tr>\n").arg(QGLViewer::tr("Standard viewer keys", "In help window keys tab"));
-	}
+  // Add to text in sorted order
+  for (QMap<unsigned int, QString>::ConstIterator kb=keyDescription.begin(), endb=keyDescription.end(); kb!=endb; ++kb)
+    text += tableLine(keyString(kb.key()), kb.value());
 
 
-	// 3 - KeyboardAction bindings description
-	for (QMap<KeyboardAction, unsigned int>::ConstIterator it=keyboardBinding_.begin(), end=keyboardBinding_.end(); it != end; ++it)
-		if ((it.value() != 0) && ((!cameraIsInRotateMode()) || ((it.key() != INCREASE_FLYSPEED) && (it.key() != DECREASE_FLYSPEED))))
-			keyDescription[it.value()] = keyboardActionDescription_[it.key()];
-
-	// Add to text in sorted order
-	for (QMap<unsigned int, QString>::ConstIterator kb2=keyDescription.begin(), endb2=keyDescription.end(); kb2!=endb2; ++kb2)
-		text += tableLine(keyString(kb2.key()), kb2.value());
+  // 2 - Optional separator line
+  if (!keyDescription.isEmpty())
+  {
+    keyDescription.clear();
+    text += QString("<tr bgcolor=\"#aaaacc\"><td colspan=2>%1</td></tr>\n").arg(QGLViewer::tr("Standard viewer keys", "In help window keys tab"));
+  }
 
 
-	// 4 - Camera paths keys description
-	const QString cpks = cameraPathKeysString();
-	if (!cpks.isNull())
-	{
-		text += "<tr bgcolor=\"#ccccff\"><td colspan=2>\n";
-		text += QGLViewer::tr("Camera paths are controlled using the %1 keys (noted <i>Fx</i> below):", "Help window key tab camera keys").arg(cpks) + "</td></tr>\n";
-		text += tableLine(keyString(playPathKeyboardModifiers()) + "<i>" + QGLViewer::tr("Fx", "Generic function key (F1..F12)") + "</i>",
-						  QGLViewer::tr("Plays path (or resets saved position)"));
-		text += tableLine(keyString(addKeyFrameKeyboardModifiers()) + "<i>" + QGLViewer::tr("Fx", "Generic function key (F1..F12)") + "</i>",
-						  QGLViewer::tr("Adds a key frame to path (or defines a position)"));
-		text += tableLine(keyString(addKeyFrameKeyboardModifiers()) + "<i>" + QGLViewer::tr("Fx", "Generic function key (F1..F12)") + "</i>+<i>" + QGLViewer::tr("Fx", "Generic function key (F1..F12)") + "</i>",
-						  QGLViewer::tr("Deletes path (or saved position)"));
-	}
-	text += "</table></center>";
+  // 3 - KeyboardAction bindings description
+  for (QMap<KeyboardAction, unsigned int>::ConstIterator it=keyboardBinding_.begin(), end=keyboardBinding_.end(); it != end; ++it)
+    if ((it.value() != 0) && ((!cameraIsInRotateMode()) || ((it.key() != INCREASE_FLYSPEED) && (it.key() != DECREASE_FLYSPEED))))
+      keyDescription[it.value()] = keyboardActionDescription_[it.key()];
 
-	return text;
+  // Add to text in sorted order
+  for (QMap<unsigned int, QString>::ConstIterator kb2=keyDescription.begin(), endb2=keyDescription.end(); kb2!=endb2; ++kb2)
+    text += tableLine(keyString(kb2.key()), kb2.value());
+
+
+  // 4 - Camera paths keys description
+  const QString cpks = cameraPathKeysString();
+  if (!cpks.isNull())
+  {
+    text += "<tr bgcolor=\"#ccccff\"><td colspan=2>\n";
+    text += QGLViewer::tr("Camera paths are controlled using the %1 keys (noted <i>Fx</i> below):", "Help window key tab camera keys").arg(cpks) + "</td></tr>\n";
+    text += tableLine(keyString(playPathKeyboardModifiers()) + "<i>" + QGLViewer::tr("Fx", "Generic function key (F1..F12)") + "</i>",
+              QGLViewer::tr("Plays path (or resets saved position)"));
+    text += tableLine(keyString(addKeyFrameKeyboardModifiers()) + "<i>" + QGLViewer::tr("Fx", "Generic function key (F1..F12)") + "</i>",
+              QGLViewer::tr("Adds a key frame to path (or defines a position)"));
+    text += tableLine(keyString(addKeyFrameKeyboardModifiers()) + "<i>" + QGLViewer::tr("Fx", "Generic function key (F1..F12)") + "</i>+<i>" + QGLViewer::tr("Fx", "Generic function key (F1..F12)") + "</i>",
+              QGLViewer::tr("Deletes path (or saved position)"));
+  }
+  text += "</table></center>";
+
+  return text;
 }
 
 /*! Displays the help window "About" tab. See help() for details. */
 void QGLViewer::aboutQGLViewer() {
-	help();
-	helpWidget()->setCurrentIndex(3);
+  help();
+  helpWidget()->setCurrentIndex(3);
 }
 
 
@@ -2003,67 +2002,67 @@ You can use helpWidget() to access to the help widget (to add/remove tabs, chang
 The helpRequired() signal is emitted. */
 void QGLViewer::help()
 {
-	Q_EMIT helpRequired();
+  Q_EMIT helpRequired();
 
-	bool resize = false;
-	int width=600;
-	int height=400;
+  bool resize = false;
+  int width=600;
+  int height=400;
 
-	static QString label[] = {tr("&Help", "Help window tab title"), tr("&Keyboard", "Help window tab title"), tr("&Mouse", "Help window tab title"), tr("&About", "Help window about title")};
+  static QString label[] = {tr("&Help", "Help window tab title"), tr("&Keyboard", "Help window tab title"), tr("&Mouse", "Help window tab title"), tr("&About", "Help window about title")};
 
-	if (!helpWidget())
-	{
-		// Qt4 requires a NULL parent...
-		helpWidget_ = new QTabWidget(NULL);
-		helpWidget()->setWindowTitle(tr("Help", "Help window title"));
+  if (!helpWidget())
+  {
+    // Qt4 requires a NULL parent...
+    helpWidget_ = new QTabWidget(NULL);
+    helpWidget()->setWindowTitle(tr("Help", "Help window title"));
 
-		resize = true;
-		for (int i=0; i<4; ++i)
-		{
-			QTextEdit* tab = new QTextEdit(NULL);
-			tab->setReadOnly(true);
+    resize = true;
+    for (int i=0; i<4; ++i)
+    {
+      QTextEdit* tab = new QTextEdit(NULL);
+      tab->setReadOnly(true);
 
-			helpWidget()->insertTab(i, tab, label[i]);
-			if (i==3) {
+      helpWidget()->insertTab(i, tab, label[i]);
+      if (i==3) {
 #               include "qglviewer-icon.xpm"
-				QPixmap pixmap(qglviewer_icon);
-				tab->document()->addResource(QTextDocument::ImageResource,
-											 QUrl("mydata://qglviewer-icon.xpm"), QVariant(pixmap));
-			}
-		}
-	}
+        QPixmap pixmap(qglviewer_icon);
+        tab->document()->addResource(QTextDocument::ImageResource,
+                       QUrl("mydata://qglviewer-icon.xpm"), QVariant(pixmap));
+      }
+    }
+  }
 
-	for (int i=0; i<4; ++i)
-	{
-		QString text;
-		switch (i)
-		{
-			case 0 : text = helpString();	  break;
-			case 1 : text = keyboardString(); break;
-			case 2 : text = mouseString();	  break;
-			case 3 : text = QString("<center><br><img src=\"mydata://qglviewer-icon.xpm\">") + tr(
-							"<h1>libQGLViewer</h1>"
-							"<h3>Version %1</h3><br>"
-							"A versatile 3D viewer based on OpenGL and Qt<br>"
-							"Copyright 2002-%2 Gilles Debunne<br>"
-							"<code>%3</code>").arg(QGLViewerVersionString()).arg("2014").arg("http://www.libqglviewer.com") +
-						QString("</center>");
-				break;
-			default : break;
-		}
+  for (int i=0; i<4; ++i)
+  {
+    QString text;
+    switch (i)
+    {
+      case 0 : text = helpString();	  break;
+      case 1 : text = keyboardString(); break;
+      case 2 : text = mouseString();	  break;
+      case 3 : text = QString("<center><br><img src=\"mydata://qglviewer-icon.xpm\">") + tr(
+              "<h1>libQGLViewer</h1>"
+              "<h3>Version %1</h3><br>"
+              "A versatile 3D viewer based on OpenGL and Qt<br>"
+              "Copyright 2002-%2 Gilles Debunne<br>"
+              "<code>%3</code>").arg(QGLViewerVersionString()).arg("2014").arg("http://www.libqglviewer.com") +
+            QString("</center>");
+        break;
+      default : break;
+    }
 
-		QTextEdit* textEdit = (QTextEdit*)(helpWidget()->widget(i));
-		textEdit->setHtml(text);
-		textEdit->setText(text);
+    QTextEdit* textEdit = (QTextEdit*)(helpWidget()->widget(i));
+    textEdit->setHtml(text);
+    textEdit->setText(text);
 
-		if (resize && (textEdit->height() > height))
-			height = textEdit->height();
-	}
+    if (resize && (textEdit->height() > height))
+      height = textEdit->height();
+  }
 
-	if (resize)
-		helpWidget()->resize(width, height+40); // 40 pixels is ~ tabs' height
-	helpWidget()->show();
-	helpWidget()->raise();
+  if (resize)
+    helpWidget()->resize(width, height+40); // 40 pixels is ~ tabs' height
+  helpWidget()->show();
+  helpWidget()->raise();
 }
 
 /*! Overloading of the \c QWidget method.
@@ -2077,11 +2076,11 @@ void Viewer::keyPressEvent(QKeyEvent *e)
   // Defines the Alt+R shortcut.
   if ((e->key() == Qt::Key_R) && (e->modifiers() == Qt::AltModifier))
   {
-	myResetFunction();
-	update(); // Refresh display
+  myResetFunction();
+  update(); // Refresh display
   }
   else
-	QGLViewer::keyPressEvent(e);
+  QGLViewer::keyPressEvent(e);
 }
 
 // With Qt 2 or 3, you would retrieve modifiers keys using :
@@ -2094,131 +2093,131 @@ href="../examples/keyboardAndMouse.html">keyboardAndMouse</a> example for an ill
 See also QGLWidget::keyReleaseEvent(). */
 void QGLViewer::keyPressEvent(QKeyEvent *e)
 {
-	if (e->key() == 0)
-	{
-		e->ignore();
-		return;
-	}
+  if (e->key() == 0)
+  {
+    e->ignore();
+    return;
+  }
 
-	const Qt::Key key = Qt::Key(e->key());
+  const Qt::Key key = Qt::Key(e->key());
 
-	const Qt::KeyboardModifiers modifiers = e->modifiers();
+  const Qt::KeyboardModifiers modifiers = e->modifiers();
 
-	QMap<KeyboardAction, unsigned int>::ConstIterator it=keyboardBinding_.begin(), end=keyboardBinding_.end();
-	const unsigned int target = key | modifiers;
-	while ((it != end) && (it.value() != target))
-		++it;
+  QMap<KeyboardAction, unsigned int>::ConstIterator it=keyboardBinding_.begin(), end=keyboardBinding_.end();
+  const unsigned int target = key | modifiers;
+  while ((it != end) && (it.value() != target))
+    ++it;
 
-	if (it != end)
-		handleKeyboardAction(it.key());
-	else
-		if (pathIndex_.contains(Qt::Key(key)))
-		{
-			// Camera paths
-			unsigned int index = pathIndex_[Qt::Key(key)];
+  if (it != end)
+    handleKeyboardAction(it.key());
+  else
+    if (pathIndex_.contains(Qt::Key(key)))
+    {
+      // Camera paths
+      unsigned int index = pathIndex_[Qt::Key(key)];
 
-			// not safe, but try to double press on two viewers at the same time !
-			static QTime doublePress;
+      // not safe, but try to double press on two viewers at the same time !
+      static QTime doublePress;
 
-			if (modifiers == playPathKeyboardModifiers())
-			{
-				int elapsed = doublePress.restart();
-				if ((elapsed < 250) && (index==previousPathId_))
-					camera()->resetPath(index);
-				else
-				{
-					// Stop previous interpolation before starting a new one.
-					if (index != previousPathId_)
-					{
-						KeyFrameInterpolator* previous = camera()->keyFrameInterpolator(previousPathId_);
-						if ((previous) && (previous->interpolationIsStarted()))
-							previous->resetInterpolation();
-					}
-					camera()->playPath(index);
-				}
-				previousPathId_ = index;
-			}
-			else if (modifiers == addKeyFrameKeyboardModifiers())
-			{
-				int elapsed = doublePress.restart();
-				if ((elapsed < 250) && (index==previousPathId_))
-				{
-					if (camera()->keyFrameInterpolator(index))
-					{
-						disconnect(camera()->keyFrameInterpolator(index), SIGNAL(interpolated()), this, SLOT(update()));
-						if (camera()->keyFrameInterpolator(index)->numberOfKeyFrames() > 1)
-							displayMessage(tr("Path %1 deleted", "Feedback message").arg(index));
-						else
-							displayMessage(tr("Position %1 deleted", "Feedback message").arg(index));
-						camera()->deletePath(index);
-					}
-				}
-				else
-				{
-					bool nullBefore = (camera()->keyFrameInterpolator(index) == NULL);
-					camera()->addKeyFrameToPath(index);
-					if (nullBefore)
-						connect(camera()->keyFrameInterpolator(index), SIGNAL(interpolated()), SLOT(update()));
-					int nbKF = camera()->keyFrameInterpolator(index)->numberOfKeyFrames();
-					if (nbKF > 1)
-						displayMessage(tr("Path %1, position %2 added", "Feedback message").arg(index).arg(nbKF));
-					else
-						displayMessage(tr("Position %1 saved", "Feedback message").arg(index));
-				}
-				previousPathId_ = index;
-			}
-			update();
-		} else {
-			if (isValidShortcutKey(key)) currentlyPressedKey_ = key;
-			e->ignore();
-		}
+      if (modifiers == playPathKeyboardModifiers())
+      {
+        int elapsed = doublePress.restart();
+        if ((elapsed < 250) && (index==previousPathId_))
+          camera()->resetPath(index);
+        else
+        {
+          // Stop previous interpolation before starting a new one.
+          if (index != previousPathId_)
+          {
+            KeyFrameInterpolator* previous = camera()->keyFrameInterpolator(previousPathId_);
+            if ((previous) && (previous->interpolationIsStarted()))
+              previous->resetInterpolation();
+          }
+          camera()->playPath(index);
+        }
+        previousPathId_ = index;
+      }
+      else if (modifiers == addKeyFrameKeyboardModifiers())
+      {
+        int elapsed = doublePress.restart();
+        if ((elapsed < 250) && (index==previousPathId_))
+        {
+          if (camera()->keyFrameInterpolator(index))
+          {
+            disconnect(camera()->keyFrameInterpolator(index), SIGNAL(interpolated()), this, SLOT(update()));
+            if (camera()->keyFrameInterpolator(index)->numberOfKeyFrames() > 1)
+              displayMessage(tr("Path %1 deleted", "Feedback message").arg(index));
+            else
+              displayMessage(tr("Position %1 deleted", "Feedback message").arg(index));
+            camera()->deletePath(index);
+          }
+        }
+        else
+        {
+          bool nullBefore = (camera()->keyFrameInterpolator(index) == NULL);
+          camera()->addKeyFrameToPath(index);
+          if (nullBefore)
+            connect(camera()->keyFrameInterpolator(index), SIGNAL(interpolated()), SLOT(update()));
+          int nbKF = camera()->keyFrameInterpolator(index)->numberOfKeyFrames();
+          if (nbKF > 1)
+            displayMessage(tr("Path %1, position %2 added", "Feedback message").arg(index).arg(nbKF));
+          else
+            displayMessage(tr("Position %1 saved", "Feedback message").arg(index));
+        }
+        previousPathId_ = index;
+      }
+      update();
+    } else {
+      if (isValidShortcutKey(key)) currentlyPressedKey_ = key;
+      e->ignore();
+    }
 }
 
 void QGLViewer::keyReleaseEvent(QKeyEvent * e) {
-	if (isValidShortcutKey(e->key())) currentlyPressedKey_ = Qt::Key(0);
+  if (isValidShortcutKey(e->key())) currentlyPressedKey_ = Qt::Key(0);
 }
 
 void QGLViewer::handleKeyboardAction(KeyboardAction id)
 {
-	switch (id)
-	{
-		case DRAW_AXIS :		toggleAxisIsDrawn(); break;
-		case DRAW_GRID :		toggleGridIsDrawn(); break;
-		case DISPLAY_FPS :		toggleFPSIsDisplayed(); break;
-		case ENABLE_TEXT :		toggleTextIsEnabled(); break;
-		case EXIT_VIEWER :		saveStateToFileForAllViewers(); qApp->closeAllWindows(); break;
-		case SAVE_SCREENSHOT :	saveSnapshot(false, false); break;
-		case FULL_SCREEN :		toggleFullScreen(); break;
-		case STEREO :			toggleStereoDisplay(); break;
-		case ANIMATION :		toggleAnimation(); break;
-		case HELP :				help(); break;
-		case EDIT_CAMERA :		toggleCameraIsEdited(); break;
-		case SNAPSHOT_TO_CLIPBOARD :	snapshotToClipboard(); break;
-		case CAMERA_MODE :
-			toggleCameraMode();
-			displayMessage(cameraIsInRotateMode()?tr("Camera in observer mode", "Feedback message"):tr("Camera in fly mode", "Feedback message"));
-			break;
+  switch (id)
+  {
+    case DRAW_AXIS :		toggleAxisIsDrawn(); break;
+    case DRAW_GRID :		toggleGridIsDrawn(); break;
+    case DISPLAY_FPS :		toggleFPSIsDisplayed(); break;
+    case ENABLE_TEXT :		toggleTextIsEnabled(); break;
+    case EXIT_VIEWER :		saveStateToFileForAllViewers(); qApp->closeAllWindows(); break;
+    case SAVE_SCREENSHOT :	saveSnapshot(false, false); break;
+    case FULL_SCREEN :		toggleFullScreen(); break;
+    case STEREO :			toggleStereoDisplay(); break;
+    case ANIMATION :		toggleAnimation(); break;
+    case HELP :				help(); break;
+    case EDIT_CAMERA :		toggleCameraIsEdited(); break;
+    case SNAPSHOT_TO_CLIPBOARD :	snapshotToClipboard(); break;
+    case CAMERA_MODE :
+      toggleCameraMode();
+      displayMessage(cameraIsInRotateMode()?tr("Camera in observer mode", "Feedback message"):tr("Camera in fly mode", "Feedback message"));
+      break;
 
-		case MOVE_CAMERA_LEFT :
-			camera()->frame()->translate(camera()->frame()->inverseTransformOf(Vec(-10.0*camera()->flySpeed(), 0.0, 0.0)));
-			update();
-			break;
-		case MOVE_CAMERA_RIGHT :
-			camera()->frame()->translate(camera()->frame()->inverseTransformOf(Vec( 10.0*camera()->flySpeed(), 0.0, 0.0)));
-			update();
-			break;
-		case MOVE_CAMERA_UP :
-			camera()->frame()->translate(camera()->frame()->inverseTransformOf(Vec(0.0, 10.0*camera()->flySpeed(), 0.0)));
-			update();
-			break;
-		case MOVE_CAMERA_DOWN :
-			camera()->frame()->translate(camera()->frame()->inverseTransformOf(Vec(0.0, -10.0*camera()->flySpeed(), 0.0)));
-			update();
-			break;
+    case MOVE_CAMERA_LEFT :
+      camera()->frame()->translate(camera()->frame()->inverseTransformOf(Vec(-10.0*camera()->flySpeed(), 0.0, 0.0)));
+      update();
+      break;
+    case MOVE_CAMERA_RIGHT :
+      camera()->frame()->translate(camera()->frame()->inverseTransformOf(Vec( 10.0*camera()->flySpeed(), 0.0, 0.0)));
+      update();
+      break;
+    case MOVE_CAMERA_UP :
+      camera()->frame()->translate(camera()->frame()->inverseTransformOf(Vec(0.0, 10.0*camera()->flySpeed(), 0.0)));
+      update();
+      break;
+    case MOVE_CAMERA_DOWN :
+      camera()->frame()->translate(camera()->frame()->inverseTransformOf(Vec(0.0, -10.0*camera()->flySpeed(), 0.0)));
+      update();
+      break;
 
-		case INCREASE_FLYSPEED : camera()->setFlySpeed(camera()->flySpeed() * 1.5); break;
-		case DECREASE_FLYSPEED : camera()->setFlySpeed(camera()->flySpeed() / 1.5); break;
-	}
+    case INCREASE_FLYSPEED : camera()->setFlySpeed(camera()->flySpeed() * 1.5); break;
+    case DECREASE_FLYSPEED : camera()->setFlySpeed(camera()->flySpeed() / 1.5); break;
+  }
 }
 
 /*! Callback method used when the widget size is modified.
@@ -2228,8 +2227,8 @@ created, before its first display. */
 void QGLViewer::resizeGL(int width, int height)
 {
     QOpenGLWidget::resizeGL(width, height);
-	glViewport( 0, 0, GLint(width), GLint(height) );
-	camera()->setScreenWidthAndHeight(this->width(), this->height());
+  glViewport( 0, 0, GLint(width), GLint(height) );
+  camera()->setScreenWidthAndHeight(this->width(), this->height());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -2255,7 +2254,7 @@ previous ones). If several KeyboardAction are binded to the same shortcut, only 
 active. */
 void QGLViewer::setShortcut(KeyboardAction action, unsigned int key)
 {
-	keyboardBinding_[action] = key;
+  keyboardBinding_[action] = key;
 }
 
 /*! Returns the keyboard shortcut associated to a given QGLViewer::KeyboardAction.
@@ -2275,23 +2274,23 @@ href="../examples/keyboardAndMouse.html">keyboardAndMouse</a> example for a prac
 illustration. */
 unsigned int QGLViewer::shortcut(KeyboardAction action) const
 {
-	if (keyboardBinding_.contains(action))
-		return keyboardBinding_[action];
-	else
-		return 0;
+  if (keyboardBinding_.contains(action))
+    return keyboardBinding_[action];
+  else
+    return 0;
 }
 
 #ifndef DOXYGEN
 void QGLViewer::setKeyboardAccelerator(KeyboardAction action, unsigned int key)
 {
-	qWarning("setKeyboardAccelerator is deprecated. Use setShortcut instead.");
-	setShortcut(action, key);
+  qWarning("setKeyboardAccelerator is deprecated. Use setShortcut instead.");
+  setShortcut(action, key);
 }
 
 unsigned int QGLViewer::keyboardAccelerator(KeyboardAction action) const
 {
-	qWarning("keyboardAccelerator is deprecated. Use shortcut instead.");
-	return shortcut(action);
+  qWarning("keyboardAccelerator is deprecated. Use shortcut instead.");
+  return shortcut(action);
 }
 #endif
 
@@ -2314,10 +2313,10 @@ Returns \c 0 if no key is associated with this index.
 See also the <a href="../keyboard.html">keyboard page</a>. */
 Qt::Key QGLViewer::pathKey(unsigned int index) const
 {
-	for (QMap<Qt::Key, unsigned int>::ConstIterator it = pathIndex_.begin(), end=pathIndex_.end(); it != end; ++it)
-		if (it.value() == index)
-			return it.key();
-	return Qt::Key(0);
+  for (QMap<Qt::Key, unsigned int>::ConstIterator it = pathIndex_.begin(), end=pathIndex_.end(); it != end; ++it)
+    if (it.value() == index)
+      return it.key();
+  return Qt::Key(0);
 }
 
 /*! Sets the pathKey() associated with the camera Key Frame path \p index.
@@ -2333,23 +2332,23 @@ setPathKey(-Qt::Key_Space);
 \endcode */
 void QGLViewer::setPathKey(int key, unsigned int index)
 {
-	Qt::Key k = Qt::Key(abs(key));
-	if (key < 0)
-		pathIndex_.remove(k);
-	else
-		pathIndex_[k] = index;
+  Qt::Key k = Qt::Key(abs(key));
+  if (key < 0)
+    pathIndex_.remove(k);
+  else
+    pathIndex_[k] = index;
 }
 
 /*! Sets the playPathKeyboardModifiers() value. */
 void QGLViewer::setPlayPathKeyboardModifiers(Qt::KeyboardModifiers modifiers)
 {
-	playPathKeyboardModifiers_ = modifiers;
+  playPathKeyboardModifiers_ = modifiers;
 }
 
 /*! Sets the addKeyFrameKeyboardModifiers() value. */
 void QGLViewer::setAddKeyFrameKeyboardModifiers(Qt::KeyboardModifiers modifiers)
 {
-	addKeyFrameKeyboardModifiers_ = modifiers;
+  addKeyFrameKeyboardModifiers_ = modifiers;
 }
 
 /*! Returns the keyboard modifiers that must be pressed with a pathKey() to add the current camera
@@ -2363,7 +2362,7 @@ Default value is Qt::AltModifier. Defined using setAddKeyFrameKeyboardModifiers(
 See also playPathKeyboardModifiers(). */
 Qt::KeyboardModifiers QGLViewer::addKeyFrameKeyboardModifiers() const
 {
-	return addKeyFrameKeyboardModifiers_;
+  return addKeyFrameKeyboardModifiers_;
 }
 
 /*! Returns the keyboard modifiers that must be pressed with a pathKey() to play a camera KeyFrame path.
@@ -2376,56 +2375,56 @@ Default value is Qt::NoModifier. Defined using setPlayPathKeyboardModifiers().
 See also addKeyFrameKeyboardModifiers(). */
 Qt::KeyboardModifiers QGLViewer::playPathKeyboardModifiers() const
 {
-	return playPathKeyboardModifiers_;
+  return playPathKeyboardModifiers_;
 }
 
 #ifndef DOXYGEN
 // Deprecated methods
 Qt::KeyboardModifiers QGLViewer::addKeyFrameStateKey() const
 {
-	qWarning("addKeyFrameStateKey has been renamed addKeyFrameKeyboardModifiers");
-	return addKeyFrameKeyboardModifiers(); }
+  qWarning("addKeyFrameStateKey has been renamed addKeyFrameKeyboardModifiers");
+  return addKeyFrameKeyboardModifiers(); }
 
 Qt::KeyboardModifiers QGLViewer::playPathStateKey() const
 {
-	qWarning("playPathStateKey has been renamed playPathKeyboardModifiers");
-	return playPathKeyboardModifiers();
+  qWarning("playPathStateKey has been renamed playPathKeyboardModifiers");
+  return playPathKeyboardModifiers();
 }
 
 void QGLViewer::setAddKeyFrameStateKey(unsigned int buttonState)
 {
-	qWarning("setAddKeyFrameStateKey has been renamed setAddKeyFrameKeyboardModifiers");
-	setAddKeyFrameKeyboardModifiers(keyboardModifiersFromState(buttonState));
+  qWarning("setAddKeyFrameStateKey has been renamed setAddKeyFrameKeyboardModifiers");
+  setAddKeyFrameKeyboardModifiers(keyboardModifiersFromState(buttonState));
 }
 
 void QGLViewer::setPlayPathStateKey(unsigned int buttonState)
 {
-	qWarning("setPlayPathStateKey has been renamed setPlayPathKeyboardModifiers");
-	setPlayPathKeyboardModifiers(keyboardModifiersFromState(buttonState));
+  qWarning("setPlayPathStateKey has been renamed setPlayPathKeyboardModifiers");
+  setPlayPathKeyboardModifiers(keyboardModifiersFromState(buttonState));
 }
 
 Qt::Key QGLViewer::keyFrameKey(unsigned int index) const
 {
-	qWarning("keyFrameKey has been renamed pathKey.");
-	return pathKey(index);
+  qWarning("keyFrameKey has been renamed pathKey.");
+  return pathKey(index);
 }
 
 Qt::KeyboardModifiers QGLViewer::playKeyFramePathStateKey() const
 {
-	qWarning("playKeyFramePathStateKey has been renamed playPathKeyboardModifiers.");
-	return playPathKeyboardModifiers();
+  qWarning("playKeyFramePathStateKey has been renamed playPathKeyboardModifiers.");
+  return playPathKeyboardModifiers();
 }
 
 void QGLViewer::setKeyFrameKey(unsigned int index, int key)
 {
-	qWarning("setKeyFrameKey is deprecated, use setPathKey instead, with swapped parameters.");
-	setPathKey(key, index);
+  qWarning("setKeyFrameKey is deprecated, use setPathKey instead, with swapped parameters.");
+  setPathKey(key, index);
 }
 
 void QGLViewer::setPlayKeyFramePathStateKey(unsigned int buttonState)
 {
-	qWarning("setPlayKeyFramePathStateKey has been renamed setPlayPathKeyboardModifiers.");
-	setPlayPathKeyboardModifiers(keyboardModifiersFromState(buttonState));
+  qWarning("setPlayKeyFramePathStateKey has been renamed setPlayPathKeyboardModifiers.");
+  setPlayPathKeyboardModifiers(keyboardModifiersFromState(buttonState));
 }
 #endif
 
@@ -2473,65 +2472,65 @@ setHandlerKeyboardModifiers(QGLViewer::FRAME, Qt::NoModifier);
 \endcode */
 void QGLViewer::setHandlerKeyboardModifiers(MouseHandler handler, Qt::KeyboardModifiers modifiers)
 {
-	qWarning("setHandlerKeyboardModifiers is deprecated, call setMouseBinding() instead");
+  qWarning("setHandlerKeyboardModifiers is deprecated, call setMouseBinding() instead");
 
-	QMap<MouseBindingPrivate, MouseActionPrivate> newMouseBinding;
-	QMap<WheelBindingPrivate, MouseActionPrivate> newWheelBinding;
-	QMap<ClickBindingPrivate, ClickAction> newClickBinding_;
+  QMap<MouseBindingPrivate, MouseActionPrivate> newMouseBinding;
+  QMap<WheelBindingPrivate, MouseActionPrivate> newWheelBinding;
+  QMap<ClickBindingPrivate, ClickAction> newClickBinding_;
 
-	QMap<MouseBindingPrivate, MouseActionPrivate>::Iterator mit;
-	QMap<WheelBindingPrivate, MouseActionPrivate>::Iterator wit;
+  QMap<MouseBindingPrivate, MouseActionPrivate>::Iterator mit;
+  QMap<WheelBindingPrivate, MouseActionPrivate>::Iterator wit;
 
-	// First copy unchanged bindings.
-	for (mit = mouseBinding_.begin(); mit != mouseBinding_.end(); ++mit)
-		if ((mit.value().handler != handler) || (mit.value().action == ZOOM_ON_REGION))
-			newMouseBinding[mit.key()] = mit.value();
+  // First copy unchanged bindings.
+  for (mit = mouseBinding_.begin(); mit != mouseBinding_.end(); ++mit)
+    if ((mit.value().handler != handler) || (mit.value().action == ZOOM_ON_REGION))
+      newMouseBinding[mit.key()] = mit.value();
 
-	for (wit = wheelBinding_.begin(); wit != wheelBinding_.end(); ++wit)
-		if (wit.value().handler != handler)
-			newWheelBinding[wit.key()] = wit.value();
+  for (wit = wheelBinding_.begin(); wit != wheelBinding_.end(); ++wit)
+    if (wit.value().handler != handler)
+      newWheelBinding[wit.key()] = wit.value();
 
-	// Then, add modified bindings, that can overwrite the previous ones.
-	for (mit = mouseBinding_.begin(); mit != mouseBinding_.end(); ++mit)
-		if ((mit.value().handler == handler) && (mit.value().action != ZOOM_ON_REGION))
-		{
-			MouseBindingPrivate mbp(modifiers, mit.key().button, mit.key().key);
-			newMouseBinding[mbp] = mit.value();
-		}
+  // Then, add modified bindings, that can overwrite the previous ones.
+  for (mit = mouseBinding_.begin(); mit != mouseBinding_.end(); ++mit)
+    if ((mit.value().handler == handler) && (mit.value().action != ZOOM_ON_REGION))
+    {
+      MouseBindingPrivate mbp(modifiers, mit.key().button, mit.key().key);
+      newMouseBinding[mbp] = mit.value();
+    }
 
-	for (wit = wheelBinding_.begin(); wit != wheelBinding_.end(); ++wit)
-		if (wit.value().handler == handler)
-		{
-			WheelBindingPrivate wbp(modifiers, wit.key().key);
-			newWheelBinding[wbp] = wit.value();
-		}
+  for (wit = wheelBinding_.begin(); wit != wheelBinding_.end(); ++wit)
+    if (wit.value().handler == handler)
+    {
+      WheelBindingPrivate wbp(modifiers, wit.key().key);
+      newWheelBinding[wbp] = wit.value();
+    }
 
-	// Same for button bindings
-	for (QMap<ClickBindingPrivate, ClickAction>::ConstIterator cb=clickBinding_.begin(), end=clickBinding_.end(); cb != end; ++cb)
-		if (((handler==CAMERA) && ((cb.value() == CENTER_SCENE) || (cb.value() == ALIGN_CAMERA))) ||
-			((handler==FRAME)  && ((cb.value() == CENTER_FRAME) || (cb.value() == ALIGN_FRAME))))
-		{
-			ClickBindingPrivate cbp(modifiers, cb.key().button, cb.key().doubleClick, cb.key().buttonsBefore, cb.key().key);
-			newClickBinding_[cbp] = cb.value();
-		}
-		else
-			newClickBinding_[cb.key()] = cb.value();
+  // Same for button bindings
+  for (QMap<ClickBindingPrivate, ClickAction>::ConstIterator cb=clickBinding_.begin(), end=clickBinding_.end(); cb != end; ++cb)
+    if (((handler==CAMERA) && ((cb.value() == CENTER_SCENE) || (cb.value() == ALIGN_CAMERA))) ||
+      ((handler==FRAME)  && ((cb.value() == CENTER_FRAME) || (cb.value() == ALIGN_FRAME))))
+    {
+      ClickBindingPrivate cbp(modifiers, cb.key().button, cb.key().doubleClick, cb.key().buttonsBefore, cb.key().key);
+      newClickBinding_[cbp] = cb.value();
+    }
+    else
+      newClickBinding_[cb.key()] = cb.value();
 
-	mouseBinding_ = newMouseBinding;
-	wheelBinding_ = newWheelBinding;
-	clickBinding_ = newClickBinding_;
+  mouseBinding_ = newMouseBinding;
+  wheelBinding_ = newWheelBinding;
+  clickBinding_ = newClickBinding_;
 }
 
 void QGLViewer::setHandlerStateKey(MouseHandler handler, unsigned int buttonState)
 {
-	qWarning("setHandlerStateKey has been renamed setHandlerKeyboardModifiers");
-	setHandlerKeyboardModifiers(handler, keyboardModifiersFromState(buttonState));
+  qWarning("setHandlerStateKey has been renamed setHandlerKeyboardModifiers");
+  setHandlerKeyboardModifiers(handler, keyboardModifiersFromState(buttonState));
 }
 
 void QGLViewer::setMouseStateKey(MouseHandler handler, unsigned int buttonState)
 {
-	qWarning("setMouseStateKey has been renamed setHandlerKeyboardModifiers.");
-	setHandlerKeyboardModifiers(handler, keyboardModifiersFromState(buttonState));
+  qWarning("setMouseStateKey has been renamed setHandlerKeyboardModifiers.");
+  setHandlerKeyboardModifiers(handler, keyboardModifiersFromState(buttonState));
 }
 
 /*! This method is deprecated since version 2.5.0
@@ -2540,12 +2539,12 @@ void QGLViewer::setMouseStateKey(MouseHandler handler, unsigned int buttonState)
 */
 void QGLViewer::setMouseBinding(unsigned int state, MouseHandler handler, MouseAction action, bool withConstraint)
 {
-	qWarning("setMouseBinding(int state, MouseHandler...) is deprecated. Use the modifier/button equivalent");
-	setMouseBinding(keyboardModifiersFromState(state),
-					mouseButtonFromState(state),
-					handler,
-					action,
-					withConstraint);
+  qWarning("setMouseBinding(int state, MouseHandler...) is deprecated. Use the modifier/button equivalent");
+  setMouseBinding(keyboardModifiersFromState(state),
+          mouseButtonFromState(state),
+          handler,
+          action,
+          withConstraint);
 }
 #endif
 
@@ -2554,7 +2553,7 @@ void QGLViewer::setMouseBinding(unsigned int state, MouseHandler handler, MouseA
   Same as calling setMouseBinding(Qt::Key, Qt::KeyboardModifiers, Qt::MouseButton, MouseHandler, MouseAction, bool),
   with a key value of Qt::Key(0) (i.e. no regular extra key needs to be pressed to perform this action). */
 void QGLViewer::setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButton button, MouseHandler handler, MouseAction action, bool withConstraint) {
-	setMouseBinding(Qt::Key(0), modifiers, button, handler, action, withConstraint);
+  setMouseBinding(Qt::Key(0), modifiers, button, handler, action, withConstraint);
 }
 
 /*! Associates a MouseAction to any mouse \p button, while keyboard \p modifiers and \p key are pressed.
@@ -2591,31 +2590,31 @@ To remove a specific mouse binding, use \p NO_MOUSE_ACTION as the \p action.
 See also setMouseBinding(Qt::KeyboardModifiers, Qt::MouseButtons, ClickAction, bool, int), setWheelBinding() and clearMouseBindings(). */
 void QGLViewer::setMouseBinding(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button, MouseHandler handler, MouseAction action, bool withConstraint)
 {
-	if ((handler == FRAME) && ((action == MOVE_FORWARD) || (action == MOVE_BACKWARD) ||
-							   (action == ROLL) || (action == LOOK_AROUND) ||
-							   (action == ZOOM_ON_REGION)))	{
-		qWarning("Cannot bind %s to FRAME", mouseActionString(action).toLatin1().constData());
-		return;
-	}
+  if ((handler == FRAME) && ((action == MOVE_FORWARD) || (action == MOVE_BACKWARD) ||
+                 (action == ROLL) || (action == LOOK_AROUND) ||
+                 (action == ZOOM_ON_REGION)))	{
+    qWarning("Cannot bind %s to FRAME", mouseActionString(action).toLatin1().constData());
+    return;
+  }
 
-	if (button == Qt::NoButton) {
-		qWarning("No mouse button specified in setMouseBinding");
-		return;
-	}
+  if (button == Qt::NoButton) {
+    qWarning("No mouse button specified in setMouseBinding");
+    return;
+  }
 
-	MouseActionPrivate map;
-	map.handler = handler;
-	map.action = action;
-	map.withConstraint = withConstraint;
+  MouseActionPrivate map;
+  map.handler = handler;
+  map.action = action;
+  map.withConstraint = withConstraint;
 
-	MouseBindingPrivate mbp(modifiers, button, key);
-	if (action == NO_MOUSE_ACTION)
-		mouseBinding_.remove(mbp);
-	else
-		mouseBinding_.insert(mbp, map);
+  MouseBindingPrivate mbp(modifiers, button, key);
+  if (action == NO_MOUSE_ACTION)
+    mouseBinding_.remove(mbp);
+  else
+    mouseBinding_.insert(mbp, map);
 
-	ClickBindingPrivate cbp(modifiers, button, false, Qt::NoButton, key);
-	clickBinding_.remove(cbp);
+  ClickBindingPrivate cbp(modifiers, button, false, Qt::NoButton, key);
+  clickBinding_.remove(cbp);
 }
 
 #ifndef DOXYGEN
@@ -2624,12 +2623,12 @@ void QGLViewer::setMouseBinding(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt
  Use setMouseBinding(Qt::KeyboardModifiers, Qt::MouseButtons, MouseHandler, MouseAction, bool) instead.
 */
 void QGLViewer::setMouseBinding(unsigned int state, ClickAction action, bool doubleClick, Qt::MouseButtons buttonsBefore) {
-	qWarning("setMouseBinding(int state, ClickAction...) is deprecated. Use the modifier/button equivalent");
-	setMouseBinding(keyboardModifiersFromState(state),
-					mouseButtonFromState(state),
-					action,
-					doubleClick,
-					buttonsBefore);
+  qWarning("setMouseBinding(int state, ClickAction...) is deprecated. Use the modifier/button equivalent");
+  setMouseBinding(keyboardModifiersFromState(state),
+          mouseButtonFromState(state),
+          action,
+          doubleClick,
+          buttonsBefore);
 }
 #endif
 
@@ -2639,7 +2638,7 @@ void QGLViewer::setMouseBinding(unsigned int state, ClickAction action, bool dou
  with a key value of Qt::Key(0) (i.e. no regular key needs to be pressed to activate this action). */
 void QGLViewer::setMouseBinding(Qt::KeyboardModifiers modifiers, Qt::MouseButton button, ClickAction action, bool doubleClick, Qt::MouseButtons buttonsBefore)
 {
-	setMouseBinding(Qt::Key(0), modifiers, button, action, doubleClick, buttonsBefore);
+  setMouseBinding(Qt::Key(0), modifiers, button, action, doubleClick, buttonsBefore);
 }
 
 /*! Associates a ClickAction to a button and keyboard key and modifier(s) combination.
@@ -2664,28 +2663,28 @@ See also setMouseBinding(Qt::KeyboardModifiers, Qt::MouseButtons, MouseHandler, 
 */
 void QGLViewer::setMouseBinding(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button, ClickAction action, bool doubleClick, Qt::MouseButtons buttonsBefore)
 {
-	if ((buttonsBefore != Qt::NoButton) && !doubleClick) {
-		qWarning("Buttons before is only meaningful when doubleClick is true in setMouseBinding().");
-		return;
-	}
+  if ((buttonsBefore != Qt::NoButton) && !doubleClick) {
+    qWarning("Buttons before is only meaningful when doubleClick is true in setMouseBinding().");
+    return;
+  }
 
-	if (button == Qt::NoButton) {
-		qWarning("No mouse button specified in setMouseBinding");
-		return;
-	}
+  if (button == Qt::NoButton) {
+    qWarning("No mouse button specified in setMouseBinding");
+    return;
+  }
 
-	ClickBindingPrivate cbp(modifiers, button, doubleClick, buttonsBefore, key);
+  ClickBindingPrivate cbp(modifiers, button, doubleClick, buttonsBefore, key);
 
-	// #CONNECTION performClickAction comment on NO_CLICK_ACTION
-	if (action == NO_CLICK_ACTION)
-		clickBinding_.remove(cbp);
-	else
-		clickBinding_.insert(cbp, action);
+  // #CONNECTION performClickAction comment on NO_CLICK_ACTION
+  if (action == NO_CLICK_ACTION)
+    clickBinding_.remove(cbp);
+  else
+    clickBinding_.insert(cbp, action);
 
-	if ((!doubleClick) && (buttonsBefore == Qt::NoButton)) {
-		MouseBindingPrivate mbp(modifiers, button, key);
-		mouseBinding_.remove(mbp);
-	}
+  if ((!doubleClick) && (buttonsBefore == Qt::NoButton)) {
+    MouseBindingPrivate mbp(modifiers, button, key);
+    mouseBinding_.remove(mbp);
+  }
 }
 
 /*! Defines a mouse wheel binding.
@@ -2693,7 +2692,7 @@ void QGLViewer::setMouseBinding(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt
  Same as calling setWheelBinding(Qt::Key, Qt::KeyboardModifiers, MouseHandler, MouseAction, bool),
  with a key value of Qt::Key(0) (i.e. no regular key needs to be pressed to activate this action). */
 void QGLViewer::setWheelBinding(Qt::KeyboardModifiers modifiers, MouseHandler handler, MouseAction action, bool withConstraint) {
-	setWheelBinding(Qt::Key(0), modifiers, handler, action, withConstraint);
+  setWheelBinding(Qt::Key(0), modifiers, handler, action, withConstraint);
 }
 
 /*! Associates a MouseAction and a MouseHandler to a mouse wheel event.
@@ -2708,27 +2707,27 @@ depends on the distance to the object, while QGLViewer::MOVE_FORWARD moves at a 
 defined by qglviewer::Camera::flySpeed(). */
 void QGLViewer::setWheelBinding(Qt::Key key, Qt::KeyboardModifiers modifiers, MouseHandler handler, MouseAction action, bool withConstraint)
 {
-	//#CONNECTION# ManipulatedFrame::wheelEvent and ManipulatedCameraFrame::wheelEvent switches
-	if ((action != ZOOM) && (action != MOVE_FORWARD) && (action != MOVE_BACKWARD) && (action != NO_MOUSE_ACTION)) {
-		qWarning("Cannot bind %s to wheel", mouseActionString(action).toLatin1().constData());
-		return;
-	}
+  //#CONNECTION# ManipulatedFrame::wheelEvent and ManipulatedCameraFrame::wheelEvent switches
+  if ((action != ZOOM) && (action != MOVE_FORWARD) && (action != MOVE_BACKWARD) && (action != NO_MOUSE_ACTION)) {
+    qWarning("Cannot bind %s to wheel", mouseActionString(action).toLatin1().constData());
+    return;
+  }
 
-	if ((handler == FRAME) && (action != ZOOM) && (action != NO_MOUSE_ACTION)) {
-		qWarning("Cannot bind %s to FRAME wheel", mouseActionString(action).toLatin1().constData());
-		return;
-	}
+  if ((handler == FRAME) && (action != ZOOM) && (action != NO_MOUSE_ACTION)) {
+    qWarning("Cannot bind %s to FRAME wheel", mouseActionString(action).toLatin1().constData());
+    return;
+  }
 
-	MouseActionPrivate map;
-	map.handler = handler;
-	map.action  = action;
-	map.withConstraint = withConstraint;
+  MouseActionPrivate map;
+  map.handler = handler;
+  map.action  = action;
+  map.withConstraint = withConstraint;
 
-	WheelBindingPrivate wbp(modifiers, key);
-	if (action == NO_MOUSE_ACTION)
-		wheelBinding_.remove(wbp);
-	else
-		wheelBinding_[wbp] = map;
+  WheelBindingPrivate wbp(modifiers, key);
+  if (action == NO_MOUSE_ACTION)
+    wheelBinding_.remove(wbp);
+  else
+    wheelBinding_[wbp] = map;
 }
 
 /*! Clears all the default mouse bindings.
@@ -2736,9 +2735,9 @@ void QGLViewer::setWheelBinding(Qt::Key key, Qt::KeyboardModifiers modifiers, Mo
 After this call, you will have to use setMouseBinding() and setWheelBinding() to restore the mouse bindings you are interested in.
 */
 void QGLViewer::clearMouseBindings() {
-	mouseBinding_.clear();
-	clickBinding_.clear();
-	wheelBinding_.clear();
+  mouseBinding_.clear();
+  clickBinding_.clear();
+  wheelBinding_.clear();
 }
 
 /*! Clears all the default keyboard shortcuts.
@@ -2746,8 +2745,8 @@ void QGLViewer::clearMouseBindings() {
 After this call, you will have to use setShortcut() to define your own keyboard shortcuts.
 */
 void QGLViewer::clearShortcuts() {
-	keyboardBinding_.clear();
-	pathIndex_.clear();
+  keyboardBinding_.clear();
+  pathIndex_.clear();
 }
 
 /*! This method is deprecated since version 2.5.0
@@ -2755,8 +2754,8 @@ void QGLViewer::clearShortcuts() {
  Use mouseAction(Qt::Key, Qt::KeyboardModifiers, Qt::MouseButtons) instead.
 */
 QGLViewer::MouseAction QGLViewer::mouseAction(unsigned int state) const {
-	qWarning("mouseAction(int state,...) is deprecated. Use the modifier/button equivalent");
-	return mouseAction(Qt::Key(0), keyboardModifiersFromState(state), mouseButtonFromState(state));
+  qWarning("mouseAction(int state,...) is deprecated. Use the modifier/button equivalent");
+  return mouseAction(Qt::Key(0), keyboardModifiersFromState(state), mouseButtonFromState(state));
 }
 
 /*! Returns the MouseAction the will be triggered when the mouse \p button is pressed,
@@ -2775,11 +2774,11 @@ Use mouseHandler() to know which object (QGLViewer::CAMERA or QGLViewer::FRAME) 
 action. */
 QGLViewer::MouseAction QGLViewer::mouseAction(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button) const
 {
-	MouseBindingPrivate mbp(modifiers, button, key);
-	if (mouseBinding_.contains(mbp))
-		return mouseBinding_[mbp].action;
-	else
-		return NO_MOUSE_ACTION;
+  MouseBindingPrivate mbp(modifiers, button, key);
+  if (mouseBinding_.contains(mbp))
+    return mouseBinding_[mbp].action;
+  else
+    return NO_MOUSE_ACTION;
 }
 
 /*! This method is deprecated since version 2.5.0
@@ -2787,8 +2786,8 @@ QGLViewer::MouseAction QGLViewer::mouseAction(Qt::Key key, Qt::KeyboardModifiers
  Use mouseHanler(Qt::Key, Qt::KeyboardModifiers, Qt::MouseButtons) instead.
 */
 int QGLViewer::mouseHandler(unsigned int state) const {
-	qWarning("mouseHandler(int state,...) is deprecated. Use the modifier/button equivalent");
-	return mouseHandler(Qt::Key(0), keyboardModifiersFromState(state), mouseButtonFromState(state));
+  qWarning("mouseHandler(int state,...) is deprecated. Use the modifier/button equivalent");
+  return mouseHandler(Qt::Key(0), keyboardModifiersFromState(state), mouseButtonFromState(state));
 }
 
 /*! Returns the MouseHandler which will be activated when the mouse \p button is pressed, while the \p modifiers and \p key are pressed.
@@ -2805,11 +2804,11 @@ if (mh == QGLViewer::CAMERA) ...
 Use mouseAction() to know which action (see the MouseAction enum) will be performed on this handler. */
 int QGLViewer::mouseHandler(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button) const
 {
-	MouseBindingPrivate mbp(modifiers, button, key);
-	if (mouseBinding_.contains(mbp))
-		return mouseBinding_[mbp].handler;
-	else
-		return -1;
+  MouseBindingPrivate mbp(modifiers, button, key);
+  if (mouseBinding_.contains(mbp))
+    return mouseBinding_[mbp].handler;
+  else
+    return -1;
 }
 
 
@@ -2819,12 +2818,12 @@ int QGLViewer::mouseHandler(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::Mo
  Use mouseButtons() and keyboardModifiers() instead.
 */
 int QGLViewer::mouseButtonState(MouseHandler handler, MouseAction action, bool withConstraint) const {
-	qWarning("mouseButtonState() is deprecated. Use mouseButtons() and keyboardModifiers() instead");
-	for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator it=mouseBinding_.begin(), end=mouseBinding_.end(); it != end; ++it)
-		if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) )
-			return (int) it.key().modifiers | (int) it.key().button;
+  qWarning("mouseButtonState() is deprecated. Use mouseButtons() and keyboardModifiers() instead");
+  for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator it=mouseBinding_.begin(), end=mouseBinding_.end(); it != end; ++it)
+    if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) )
+      return (int) it.key().modifiers | (int) it.key().button;
 
-	return Qt::NoButton;
+  return Qt::NoButton;
 }
 #endif
 
@@ -2836,17 +2835,17 @@ If several keyboard states trigger the MouseAction, one of them is returned.
 
 See also setMouseBinding(), getClickActionBinding() and getMouseActionBinding(). */
 void QGLViewer::getWheelActionBinding(MouseHandler handler, MouseAction action, bool withConstraint,
-									  Qt::Key& key, Qt::KeyboardModifiers& modifiers) const
+                    Qt::Key& key, Qt::KeyboardModifiers& modifiers) const
 {
-	for (QMap<WheelBindingPrivate, MouseActionPrivate>::ConstIterator it=wheelBinding_.begin(), end=wheelBinding_.end(); it != end; ++it)
-		if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) ) {
-			key = it.key().key;
-			modifiers = it.key().modifiers;
-			return;
-		}
+  for (QMap<WheelBindingPrivate, MouseActionPrivate>::ConstIterator it=wheelBinding_.begin(), end=wheelBinding_.end(); it != end; ++it)
+    if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) ) {
+      key = it.key().key;
+      modifiers = it.key().modifiers;
+      return;
+    }
 
-	key = Qt::Key(-1);
-	modifiers = Qt::NoModifier;
+  key = Qt::Key(-1);
+  modifiers = Qt::NoModifier;
 }
 
 /*! Returns the mouse and keyboard state that triggers \p action on \p handler \p withConstraint.
@@ -2857,20 +2856,20 @@ If several mouse and keyboard states trigger the MouseAction, one of them is ret
 
 See also setMouseBinding(), getClickActionBinding() and getWheelActionBinding(). */
 void QGLViewer::getMouseActionBinding(MouseHandler handler, MouseAction action, bool withConstraint,
-									  Qt::Key& key, Qt::KeyboardModifiers& modifiers, Qt::MouseButton& button) const
+                    Qt::Key& key, Qt::KeyboardModifiers& modifiers, Qt::MouseButton& button) const
 {
-	for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator it=mouseBinding_.begin(), end=mouseBinding_.end(); it != end; ++it) {
-		if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) ) {
-			key = it.key().key;
-			modifiers = it.key().modifiers;
-			button = it.key().button;
-			return;
-		}
-	}
+  for (QMap<MouseBindingPrivate, MouseActionPrivate>::ConstIterator it=mouseBinding_.begin(), end=mouseBinding_.end(); it != end; ++it) {
+    if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) ) {
+      key = it.key().key;
+      modifiers = it.key().modifiers;
+      button = it.key().button;
+      return;
+    }
+  }
 
-	key = Qt::Key(0);
-	modifiers = Qt::NoModifier;
-	button = Qt::NoButton;
+  key = Qt::Key(0);
+  modifiers = Qt::NoModifier;
+  button = Qt::NoButton;
 }
 
 /*! Returns the MouseAction (if any) that is performed when using the wheel, when the \p modifiers and \p key keyboard keys are pressed.
@@ -2881,11 +2880,11 @@ Same as mouseAction(), but for the wheel action. See also wheelHandler().
 */
 QGLViewer::MouseAction QGLViewer::wheelAction(Qt::Key key, Qt::KeyboardModifiers modifiers) const
 {
-	WheelBindingPrivate wbp(modifiers, key);
-	if (wheelBinding_.contains(wbp))
-		return wheelBinding_[wbp].action;
-	else
-		return NO_MOUSE_ACTION;
+  WheelBindingPrivate wbp(modifiers, key);
+  if (wheelBinding_.contains(wbp))
+    return wheelBinding_[wbp].action;
+  else
+    return NO_MOUSE_ACTION;
 }
 
 /*! Returns the MouseHandler (if any) that receives wheel events when the \p modifiers and \p key keyboard keys are pressed.
@@ -2894,40 +2893,40 @@ QGLViewer::MouseAction QGLViewer::wheelAction(Qt::Key key, Qt::KeyboardModifiers
 */
 int QGLViewer::wheelHandler(Qt::Key key, Qt::KeyboardModifiers modifiers) const
 {
-	WheelBindingPrivate wbp(modifiers, key);
-	if (wheelBinding_.contains(wbp))
-		return wheelBinding_[wbp].handler;
-	else
-		return -1;
+  WheelBindingPrivate wbp(modifiers, key);
+  if (wheelBinding_.contains(wbp))
+    return wheelBinding_[wbp].handler;
+  else
+    return -1;
 }
 
 /*! Same as mouseAction(), but for the ClickAction set using setMouseBinding().
 
 Returns NO_CLICK_ACTION if no click action is associated with this keyboard and mouse buttons combination. */
 QGLViewer::ClickAction QGLViewer::clickAction(Qt::Key key, Qt::KeyboardModifiers modifiers, Qt::MouseButton button,
-											  bool doubleClick, Qt::MouseButtons buttonsBefore) const {
-	ClickBindingPrivate cbp(modifiers, button, doubleClick, buttonsBefore, key);
-	if (clickBinding_.contains(cbp))
-		return clickBinding_[cbp];
-	else
-		return NO_CLICK_ACTION;
+                        bool doubleClick, Qt::MouseButtons buttonsBefore) const {
+  ClickBindingPrivate cbp(modifiers, button, doubleClick, buttonsBefore, key);
+  if (clickBinding_.contains(cbp))
+    return clickBinding_[cbp];
+  else
+    return NO_CLICK_ACTION;
 }
 
 #ifndef DOXYGEN
 /*! This method is deprecated since version 2.5.0
 
-	Use wheelAction(Qt::Key key, Qt::KeyboardModifiers modifiers) instead. */
+  Use wheelAction(Qt::Key key, Qt::KeyboardModifiers modifiers) instead. */
 QGLViewer::MouseAction QGLViewer::wheelAction(Qt::KeyboardModifiers modifiers) const {
-	qWarning("wheelAction() is deprecated. Use the new wheelAction() method with a key parameter instead");
-	return wheelAction(Qt::Key(0), modifiers);
+  qWarning("wheelAction() is deprecated. Use the new wheelAction() method with a key parameter instead");
+  return wheelAction(Qt::Key(0), modifiers);
 }
 
 /*! This method is deprecated since version 2.5.0
 
-	Use wheelHandler(Qt::Key key, Qt::KeyboardModifiers modifiers) instead. */
+  Use wheelHandler(Qt::Key key, Qt::KeyboardModifiers modifiers) instead. */
 int QGLViewer::wheelHandler(Qt::KeyboardModifiers modifiers) const {
-	qWarning("wheelHandler() is deprecated. Use the new wheelHandler() method with a key parameter instead");
-	return wheelHandler(Qt::Key(0), modifiers);
+  qWarning("wheelHandler() is deprecated. Use the new wheelHandler() method with a key parameter instead");
+  return wheelHandler(Qt::Key(0), modifiers);
 }
 
 /*! This method is deprecated since version 2.5.0
@@ -2935,12 +2934,12 @@ int QGLViewer::wheelHandler(Qt::KeyboardModifiers modifiers) const {
   Use wheelAction() and wheelHandler() instead. */
 unsigned int QGLViewer::wheelButtonState(MouseHandler handler, MouseAction action, bool withConstraint) const
 {
-	qWarning("wheelButtonState() is deprecated. Use the wheelAction() and wheelHandler() instead");
-	for (QMap<WheelBindingPrivate, MouseActionPrivate>::ConstIterator it=wheelBinding_.begin(), end=wheelBinding_.end(); it!=end; ++it)
-		if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) )
-			return it.key().key + it.key().modifiers;
+  qWarning("wheelButtonState() is deprecated. Use the wheelAction() and wheelHandler() instead");
+  for (QMap<WheelBindingPrivate, MouseActionPrivate>::ConstIterator it=wheelBinding_.begin(), end=wheelBinding_.end(); it!=end; ++it)
+    if ( (it.value().handler == handler) && (it.value().action == action) && (it.value().withConstraint == withConstraint) )
+      return it.key().key + it.key().modifiers;
 
-	return -1;
+  return -1;
 }
 
 /*! This method is deprecated since version 2.5.0
@@ -2948,12 +2947,12 @@ unsigned int QGLViewer::wheelButtonState(MouseHandler handler, MouseAction actio
  Use clickAction(Qt::KeyboardModifiers, Qt::MouseButtons, bool, Qt::MouseButtons) instead.
 */
 QGLViewer::ClickAction QGLViewer::clickAction(unsigned int state, bool doubleClick, Qt::MouseButtons buttonsBefore) const {
-	qWarning("clickAction(int state,...) is deprecated. Use the modifier/button equivalent");
-	return clickAction(Qt::Key(0),
-					   keyboardModifiersFromState(state),
-					   mouseButtonFromState(state),
-					   doubleClick,
-					   buttonsBefore);
+  qWarning("clickAction(int state,...) is deprecated. Use the modifier/button equivalent");
+  return clickAction(Qt::Key(0),
+             keyboardModifiersFromState(state),
+             mouseButtonFromState(state),
+             doubleClick,
+             buttonsBefore);
 }
 
 /*! This method is deprecated since version 2.5.0
@@ -2961,12 +2960,12 @@ QGLViewer::ClickAction QGLViewer::clickAction(unsigned int state, bool doubleCli
  Use getClickActionState(ClickAction, Qt::Key, Qt::KeyboardModifiers, Qt::MouseButton, bool, Qt::MouseButtons) instead.
 */
 void QGLViewer::getClickButtonState(ClickAction action, unsigned int& state, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const {
-	qWarning("getClickButtonState(int state,...) is deprecated. Use the modifier/button equivalent");
-	Qt::KeyboardModifiers modifiers;
-	Qt::MouseButton button;
-	Qt::Key key;
-	getClickActionBinding(action, key, modifiers, button, doubleClick, buttonsBefore);
-	state = (unsigned int) modifiers | (unsigned int) button | (unsigned int) key;
+  qWarning("getClickButtonState(int state,...) is deprecated. Use the modifier/button equivalent");
+  Qt::KeyboardModifiers modifiers;
+  Qt::MouseButton button;
+  Qt::Key key;
+  getClickActionBinding(action, key, modifiers, button, doubleClick, buttonsBefore);
+  state = (unsigned int) modifiers | (unsigned int) button | (unsigned int) key;
 }
 #endif
 
@@ -2979,21 +2978,21 @@ If several mouse buttons trigger in the ClickAction, one of them is returned.
 See also setMouseBinding(), getMouseActionBinding() and getWheelActionBinding(). */
 void QGLViewer::getClickActionBinding(ClickAction action, Qt::Key& key, Qt::KeyboardModifiers& modifiers, Qt::MouseButton &button, bool& doubleClick, Qt::MouseButtons& buttonsBefore) const
 {
-	for (QMap<ClickBindingPrivate, ClickAction>::ConstIterator it=clickBinding_.begin(), end=clickBinding_.end(); it != end; ++it)
-		if (it.value() == action) {
-			modifiers = it.key().modifiers;
-			button = it.key().button;
-			doubleClick = it.key().doubleClick;
-			buttonsBefore = it.key().buttonsBefore;
-			key = it.key().key;
-			return;
-		}
+  for (QMap<ClickBindingPrivate, ClickAction>::ConstIterator it=clickBinding_.begin(), end=clickBinding_.end(); it != end; ++it)
+    if (it.value() == action) {
+      modifiers = it.key().modifiers;
+      button = it.key().button;
+      doubleClick = it.key().doubleClick;
+      buttonsBefore = it.key().buttonsBefore;
+      key = it.key().key;
+      return;
+    }
 
-	modifiers = Qt::NoModifier;
-	button = Qt::NoButton;
-	doubleClick = false;
-	buttonsBefore = Qt::NoButton;
-	key = Qt::Key(0);
+  modifiers = Qt::NoModifier;
+  button = Qt::NoButton;
+  doubleClick = false;
+  buttonsBefore = Qt::NoButton;
+  key = Qt::Key(0);
 }
 
 /*! This function should be used in conjunction with toggleCameraMode(). It returns \c true when at
@@ -3001,12 +3000,12 @@ least one mouse button is binded to the \c ROTATE mouseAction. This is crude way
 which "mode" the camera is in. */
 bool QGLViewer::cameraIsInRotateMode() const
 {
-	//#CONNECTION# used in toggleCameraMode() and keyboardString()
-	Qt::Key key;
-	Qt::KeyboardModifiers modifiers;
-	Qt::MouseButton button;
-	getMouseActionBinding(CAMERA, ROTATE, true /*constraint*/, key, modifiers, button);
-	return button != Qt::NoButton;
+  //#CONNECTION# used in toggleCameraMode() and keyboardString()
+  Qt::Key key;
+  Qt::KeyboardModifiers modifiers;
+  Qt::MouseButton button;
+  getMouseActionBinding(CAMERA, ROTATE, true /*constraint*/, key, modifiers, button);
+  return button != Qt::NoButton;
 }
 
 /*! Swaps between two predefined camera mouse bindings.
@@ -3023,49 +3022,49 @@ The current mode is determined by checking if a mouse button is binded to QGLVie
 the QGLViewer::CAMERA. The state key that was previously used to move the camera is preserved. */
 void QGLViewer::toggleCameraMode()
 {
-	Qt::Key key;
-	Qt::KeyboardModifiers modifiers;
-	Qt::MouseButton button;
-	getMouseActionBinding(CAMERA, ROTATE, true /*constraint*/, key, modifiers, button);
-	bool rotateMode = button != Qt::NoButton;
+  Qt::Key key;
+  Qt::KeyboardModifiers modifiers;
+  Qt::MouseButton button;
+  getMouseActionBinding(CAMERA, ROTATE, true /*constraint*/, key, modifiers, button);
+  bool rotateMode = button != Qt::NoButton;
 
-	if (!rotateMode) {
-		getMouseActionBinding(CAMERA, MOVE_FORWARD, true /*constraint*/, key, modifiers, button);
-	}
+  if (!rotateMode) {
+    getMouseActionBinding(CAMERA, MOVE_FORWARD, true /*constraint*/, key, modifiers, button);
+  }
 
-	//#CONNECTION# setDefaultMouseBindings()
-	if (rotateMode)
-	{
-		camera()->frame()->updateSceneUpVector();
-		camera()->frame()->stopSpinning();
+  //#CONNECTION# setDefaultMouseBindings()
+  if (rotateMode)
+  {
+    camera()->frame()->updateSceneUpVector();
+    camera()->frame()->stopSpinning();
 
-		setMouseBinding(modifiers, Qt::LeftButton,  CAMERA, MOVE_FORWARD);
-		setMouseBinding(modifiers, Qt::MidButton,   CAMERA, LOOK_AROUND);
-		setMouseBinding(modifiers, Qt::RightButton, CAMERA, MOVE_BACKWARD);
+    setMouseBinding(modifiers, Qt::LeftButton,  CAMERA, MOVE_FORWARD);
+    setMouseBinding(modifiers, Qt::MidButton,   CAMERA, LOOK_AROUND);
+    setMouseBinding(modifiers, Qt::RightButton, CAMERA, MOVE_BACKWARD);
 
-		setMouseBinding(Qt::Key_R, modifiers, Qt::LeftButton, CAMERA, ROLL);
+    setMouseBinding(Qt::Key_R, modifiers, Qt::LeftButton, CAMERA, ROLL);
 
-		setMouseBinding(Qt::NoModifier, Qt::LeftButton,  NO_CLICK_ACTION, true);
-		setMouseBinding(Qt::NoModifier, Qt::MidButton,   NO_CLICK_ACTION, true);
-		setMouseBinding(Qt::NoModifier, Qt::RightButton, NO_CLICK_ACTION, true);
+    setMouseBinding(Qt::NoModifier, Qt::LeftButton,  NO_CLICK_ACTION, true);
+    setMouseBinding(Qt::NoModifier, Qt::MidButton,   NO_CLICK_ACTION, true);
+    setMouseBinding(Qt::NoModifier, Qt::RightButton, NO_CLICK_ACTION, true);
 
-		setWheelBinding(modifiers, CAMERA, MOVE_FORWARD);
-	}
-	else
-	{
-		// Should stop flyTimer. But unlikely and not easy.
-		setMouseBinding(modifiers, Qt::LeftButton,  CAMERA, ROTATE);
-		setMouseBinding(modifiers, Qt::MidButton,   CAMERA, ZOOM);
-		setMouseBinding(modifiers, Qt::RightButton, CAMERA, TRANSLATE);
+    setWheelBinding(modifiers, CAMERA, MOVE_FORWARD);
+  }
+  else
+  {
+    // Should stop flyTimer. But unlikely and not easy.
+    setMouseBinding(modifiers, Qt::LeftButton,  CAMERA, ROTATE);
+    setMouseBinding(modifiers, Qt::MidButton,   CAMERA, ZOOM);
+    setMouseBinding(modifiers, Qt::RightButton, CAMERA, TRANSLATE);
 
-		setMouseBinding(Qt::Key_R, modifiers, Qt::LeftButton, CAMERA, SCREEN_ROTATE);
+    setMouseBinding(Qt::Key_R, modifiers, Qt::LeftButton, CAMERA, SCREEN_ROTATE);
 
-		setMouseBinding(Qt::NoModifier, Qt::LeftButton,  ALIGN_CAMERA,      true);
-		setMouseBinding(Qt::NoModifier, Qt::MidButton,   SHOW_ENTIRE_SCENE, true);
-		setMouseBinding(Qt::NoModifier, Qt::RightButton, CENTER_SCENE,      true);
+    setMouseBinding(Qt::NoModifier, Qt::LeftButton,  ALIGN_CAMERA,      true);
+    setMouseBinding(Qt::NoModifier, Qt::MidButton,   SHOW_ENTIRE_SCENE, true);
+    setMouseBinding(Qt::NoModifier, Qt::RightButton, CENTER_SCENE,      true);
 
-		setWheelBinding(modifiers, CAMERA, ZOOM);
-	}
+    setWheelBinding(modifiers, CAMERA, ZOOM);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3085,31 +3084,31 @@ Note that a qglviewer::ManipulatedCameraFrame can be set as the manipulatedFrame
 to manipulate the camera of a first viewer in a second viewer. */
 void QGLViewer::setManipulatedFrame(ManipulatedFrame* frame)
 {
-	if (manipulatedFrame())
-	{
-		manipulatedFrame()->stopSpinning();
+  if (manipulatedFrame())
+  {
+    manipulatedFrame()->stopSpinning();
 
-		if (manipulatedFrame() != camera()->frame())
-		{
-			disconnect(manipulatedFrame(), SIGNAL(manipulated()), this, SLOT(update()));
-			disconnect(manipulatedFrame(), SIGNAL(spun()), this, SLOT(update()));
-		}
-	}
+    if (manipulatedFrame() != camera()->frame())
+    {
+      disconnect(manipulatedFrame(), SIGNAL(manipulated()), this, SLOT(update()));
+      disconnect(manipulatedFrame(), SIGNAL(spun()), this, SLOT(update()));
+    }
+  }
 
-	manipulatedFrame_ = frame;
+  manipulatedFrame_ = frame;
 
-	manipulatedFrameIsACamera_ = ((manipulatedFrame() != camera()->frame()) &&
-								  (dynamic_cast<ManipulatedCameraFrame*>(manipulatedFrame()) != NULL));
+  manipulatedFrameIsACamera_ = ((manipulatedFrame() != camera()->frame()) &&
+                  (dynamic_cast<ManipulatedCameraFrame*>(manipulatedFrame()) != NULL));
 
-	if (manipulatedFrame())
-	{
-		// Prevent multiple connections, that would result in useless display updates
-		if (manipulatedFrame() != camera()->frame())
-		{
-			connect(manipulatedFrame(), SIGNAL(manipulated()), SLOT(update()));
-			connect(manipulatedFrame(), SIGNAL(spun()), SLOT(update()));
-		}
-	}
+  if (manipulatedFrame())
+  {
+    // Prevent multiple connections, that would result in useless display updates
+    if (manipulatedFrame() != camera()->frame())
+    {
+      connect(manipulatedFrame(), SIGNAL(manipulated()), SLOT(update()));
+      connect(manipulatedFrame(), SIGNAL(spun()), SLOT(update()));
+    }
+  }
 }
 
 #ifndef DOXYGEN
@@ -3133,75 +3132,75 @@ Limitation : One needs to have access to visualHint_ to overload this method.
 Removed from the documentation for this reason. */
 void QGLViewer::drawVisualHints()
 {
-	// Pivot point cross
-	if (visualHint_ & 1)
-	{
-		const qreal size = 15.0;
-		Vec proj = camera()->projectedCoordinatesOf(camera()->pivotPoint());
-		startScreenCoordinatesSystem();
-		glDisable(GL_LIGHTING);
-		glDisable(GL_DEPTH_TEST);
-		glLineWidth(3.0);
-		glBegin(GL_LINES);
-		glVertex2d(proj.x - size, proj.y);
-		glVertex2d(proj.x + size, proj.y);
-		glVertex2d(proj.x, proj.y - size);
-		glVertex2d(proj.x, proj.y + size);
-		glEnd();
-		glEnable(GL_DEPTH_TEST);
-		stopScreenCoordinatesSystem();
-	}
+  // Pivot point cross
+  if (visualHint_ & 1)
+  {
+    const qreal size = 15.0;
+    Vec proj = camera()->projectedCoordinatesOf(camera()->pivotPoint());
+    startScreenCoordinatesSystem();
+    glDisable(GL_LIGHTING);
+    glDisable(GL_DEPTH_TEST);
+    glLineWidth(3.0);
+    glBegin(GL_LINES);
+    glVertex2d(proj.x - size, proj.y);
+    glVertex2d(proj.x + size, proj.y);
+    glVertex2d(proj.x, proj.y - size);
+    glVertex2d(proj.x, proj.y + size);
+    glEnd();
+    glEnable(GL_DEPTH_TEST);
+    stopScreenCoordinatesSystem();
+  }
 
-	// if (visualHint_ & 2)
-	// drawText(80, 10, "Play");
+  // if (visualHint_ & 2)
+  // drawText(80, 10, "Play");
 
-	// Screen rotate line
-	ManipulatedFrame* mf = NULL;
-	Vec pnt;
-	if (camera()->frame()->action_ == SCREEN_ROTATE)
-	{
-		mf = camera()->frame();
-		pnt = camera()->pivotPoint();
-	}
-	if (manipulatedFrame() && (manipulatedFrame()->action_ == SCREEN_ROTATE))
-	{
-		mf = manipulatedFrame();
-		// Maybe useful if the mf is a manipCameraFrame...
-		// pnt = manipulatedFrame()->pivotPoint();
-		pnt = manipulatedFrame()->position();
-	}
+  // Screen rotate line
+  ManipulatedFrame* mf = NULL;
+  Vec pnt;
+  if (camera()->frame()->action_ == SCREEN_ROTATE)
+  {
+    mf = camera()->frame();
+    pnt = camera()->pivotPoint();
+  }
+  if (manipulatedFrame() && (manipulatedFrame()->action_ == SCREEN_ROTATE))
+  {
+    mf = manipulatedFrame();
+    // Maybe useful if the mf is a manipCameraFrame...
+    // pnt = manipulatedFrame()->pivotPoint();
+    pnt = manipulatedFrame()->position();
+  }
 
-	if (mf)
-	{
-		pnt = camera()->projectedCoordinatesOf(pnt);
-		startScreenCoordinatesSystem();
-		glDisable(GL_LIGHTING);
-		glDisable(GL_DEPTH_TEST);
-		glLineWidth(3.0);
-		glBegin(GL_LINES);
-		glVertex2d(pnt.x, pnt.y);
-		glVertex2i(mf->prevPos_.x(), mf->prevPos_.y());
-		glEnd();
-		glEnable(GL_DEPTH_TEST);
-		stopScreenCoordinatesSystem();
-	}
+  if (mf)
+  {
+    pnt = camera()->projectedCoordinatesOf(pnt);
+    startScreenCoordinatesSystem();
+    glDisable(GL_LIGHTING);
+    glDisable(GL_DEPTH_TEST);
+    glLineWidth(3.0);
+    glBegin(GL_LINES);
+    glVertex2d(pnt.x, pnt.y);
+    glVertex2i(mf->prevPos_.x(), mf->prevPos_.y());
+    glEnd();
+    glEnable(GL_DEPTH_TEST);
+    stopScreenCoordinatesSystem();
+  }
 
-	// Zoom on region: draw a rectangle
-	if (camera()->frame()->action_ == ZOOM_ON_REGION)
-	{
-		startScreenCoordinatesSystem();
-		glDisable(GL_LIGHTING);
-		glDisable(GL_DEPTH_TEST);
-		glLineWidth(2.0);
-		glBegin(GL_LINE_LOOP);
-		glVertex2i(camera()->frame()->pressPos_.x(), camera()->frame()->pressPos_.y());
-		glVertex2i(camera()->frame()->prevPos_.x(),  camera()->frame()->pressPos_.y());
-		glVertex2i(camera()->frame()->prevPos_.x(),  camera()->frame()->prevPos_.y());
-		glVertex2i(camera()->frame()->pressPos_.x(), camera()->frame()->prevPos_.y());
-		glEnd();
-		glEnable(GL_DEPTH_TEST);
-		stopScreenCoordinatesSystem();
-	}
+  // Zoom on region: draw a rectangle
+  if (camera()->frame()->action_ == ZOOM_ON_REGION)
+  {
+    startScreenCoordinatesSystem();
+    glDisable(GL_LIGHTING);
+    glDisable(GL_DEPTH_TEST);
+    glLineWidth(2.0);
+    glBegin(GL_LINE_LOOP);
+    glVertex2i(camera()->frame()->pressPos_.x(), camera()->frame()->pressPos_.y());
+    glVertex2i(camera()->frame()->prevPos_.x(),  camera()->frame()->pressPos_.y());
+    glVertex2i(camera()->frame()->prevPos_.x(),  camera()->frame()->prevPos_.y());
+    glVertex2i(camera()->frame()->pressPos_.x(), camera()->frame()->prevPos_.y());
+    glEnd();
+    glEnable(GL_DEPTH_TEST);
+    stopScreenCoordinatesSystem();
+  }
 }
 
 /*! Defines the mask that will be used to drawVisualHints(). The only available mask is currently 1,
@@ -3209,14 +3208,14 @@ corresponding to the display of the qglviewer::Camera::pivotPoint(). resetVisual
 automatically called after \p delay milliseconds (default is 2 seconds). */
 void QGLViewer::setVisualHintsMask(int mask, int delay)
 {
-	visualHint_ = visualHint_ | mask;
-	QTimer::singleShot(delay, this, SLOT(resetVisualHints()));
+  visualHint_ = visualHint_ | mask;
+  QTimer::singleShot(delay, this, SLOT(resetVisualHints()));
 }
 
 /*! Reset the mask used by drawVisualHints(). Called by setVisualHintsMask() after 2 seconds to reset the display. */
 void QGLViewer::resetVisualHints()
 {
-	visualHint_ = 0;
+  visualHint_ = 0;
 }
 #endif
 
@@ -3235,18 +3234,18 @@ ModelView matrix to place the arrow in 3D.
 Uses current color and does not modify the OpenGL state. */
 void QGLViewer::drawArrow(qreal length, qreal radius, int nbSubdivisions)
 {
-	static GLUquadric* quadric = gluNewQuadric();
+  static GLUquadric* quadric = gluNewQuadric();
 
-	if (radius < 0.0)
-		radius = 0.05 * length;
+  if (radius < 0.0)
+    radius = 0.05 * length;
 
-	const qreal head = 2.5*(radius / length) + 0.1;
-	const qreal coneRadiusCoef = 4.0 - 5.0 * head;
+  const qreal head = 2.5*(radius / length) + 0.1;
+  const qreal coneRadiusCoef = 4.0 - 5.0 * head;
 
-	gluCylinder(quadric, radius, radius, length * (1.0 - head/coneRadiusCoef), nbSubdivisions, 1);
-	glTranslated(0.0, 0.0, length * (1.0 - head));
-	gluCylinder(quadric, coneRadiusCoef * radius, 0.0, head * length, nbSubdivisions, 1);
-	glTranslated(0.0, 0.0, -length * (1.0 - head));
+  gluCylinder(quadric, radius, radius, length * (1.0 - head/coneRadiusCoef), nbSubdivisions, 1);
+  glTranslated(0.0, 0.0, length * (1.0 - head));
+  gluCylinder(quadric, coneRadiusCoef * radius, 0.0, head * length, nbSubdivisions, 1);
+  glTranslated(0.0, 0.0, -length * (1.0 - head));
 }
 
 /*! Draws a 3D arrow between the 3D point \p from and the 3D point \p to, both defined in the
@@ -3255,12 +3254,12 @@ current ModelView coordinates system.
 See drawArrow(qreal length, qreal radius, int nbSubdivisions) for details. */
 void QGLViewer::drawArrow(const Vec& from, const Vec& to, qreal radius, int nbSubdivisions)
 {
-	glPushMatrix();
-	glTranslated(from[0], from[1], from[2]);
-	const Vec dir = to-from;
-	glMultMatrixd(Quaternion(Vec(0,0,1), dir).matrix());
-	QGLViewer::drawArrow(dir.norm(), radius, nbSubdivisions);
-	glPopMatrix();
+  glPushMatrix();
+  glTranslated(from[0], from[1], from[2]);
+  const Vec dir = to-from;
+  glMultMatrixd(Quaternion(Vec(0,0,1), dir).matrix());
+  QGLViewer::drawArrow(dir.norm(), radius, nbSubdivisions);
+  glPopMatrix();
 }
 
 /*! Draws an XYZ axis, with a given size (default is 1.0).
@@ -3283,64 +3282,64 @@ axisIsDrawn() uses this method to draw a representation of the world coordinate 
 QGLViewer::drawArrow() and QGLViewer::drawGrid(). */
 void QGLViewer::drawAxis(qreal length)
 {
-	const qreal charWidth = length / 40.0;
-	const qreal charHeight = length / 30.0;
-	const qreal charShift = 1.04 * length;
+  const qreal charWidth = length / 40.0;
+  const qreal charHeight = length / 30.0;
+  const qreal charShift = 1.04 * length;
 
-	GLboolean lighting, colorMaterial;
-	glGetBooleanv(GL_LIGHTING, &lighting);
-	glGetBooleanv(GL_COLOR_MATERIAL, &colorMaterial);
+  GLboolean lighting, colorMaterial;
+  glGetBooleanv(GL_LIGHTING, &lighting);
+  glGetBooleanv(GL_COLOR_MATERIAL, &colorMaterial);
 
-	glDisable(GL_LIGHTING);
+  glDisable(GL_LIGHTING);
 
-	glBegin(GL_LINES);
-	// The X
-	glVertex3d(charShift,  charWidth, -charHeight);
-	glVertex3d(charShift, -charWidth,  charHeight);
-	glVertex3d(charShift, -charWidth, -charHeight);
-	glVertex3d(charShift,  charWidth,  charHeight);
-	// The Y
-	glVertex3d( charWidth, charShift, charHeight);
-	glVertex3d(0.0,        charShift, 0.0);
-	glVertex3d(-charWidth, charShift, charHeight);
-	glVertex3d(0.0,        charShift, 0.0);
-	glVertex3d(0.0,        charShift, 0.0);
-	glVertex3d(0.0,        charShift, -charHeight);
-	// The Z
-	glVertex3d(-charWidth,  charHeight, charShift);
-	glVertex3d( charWidth,  charHeight, charShift);
-	glVertex3d( charWidth,  charHeight, charShift);
-	glVertex3d(-charWidth, -charHeight, charShift);
-	glVertex3d(-charWidth, -charHeight, charShift);
-	glVertex3d( charWidth, -charHeight, charShift);
-	glEnd();
+  glBegin(GL_LINES);
+  // The X
+  glVertex3d(charShift,  charWidth, -charHeight);
+  glVertex3d(charShift, -charWidth,  charHeight);
+  glVertex3d(charShift, -charWidth, -charHeight);
+  glVertex3d(charShift,  charWidth,  charHeight);
+  // The Y
+  glVertex3d( charWidth, charShift, charHeight);
+  glVertex3d(0.0,        charShift, 0.0);
+  glVertex3d(-charWidth, charShift, charHeight);
+  glVertex3d(0.0,        charShift, 0.0);
+  glVertex3d(0.0,        charShift, 0.0);
+  glVertex3d(0.0,        charShift, -charHeight);
+  // The Z
+  glVertex3d(-charWidth,  charHeight, charShift);
+  glVertex3d( charWidth,  charHeight, charShift);
+  glVertex3d( charWidth,  charHeight, charShift);
+  glVertex3d(-charWidth, -charHeight, charShift);
+  glVertex3d(-charWidth, -charHeight, charShift);
+  glVertex3d( charWidth, -charHeight, charShift);
+  glEnd();
 
-	glEnable(GL_LIGHTING);
-	glDisable(GL_COLOR_MATERIAL);
+  glEnable(GL_LIGHTING);
+  glDisable(GL_COLOR_MATERIAL);
 
-	float color[4];
-	color[0] = 0.7f;  color[1] = 0.7f;  color[2] = 1.0f;  color[3] = 1.0f;
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
-	QGLViewer::drawArrow(length, 0.01*length);
+  float color[4];
+  color[0] = 0.7f;  color[1] = 0.7f;  color[2] = 1.0f;  color[3] = 1.0f;
+  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
+  QGLViewer::drawArrow(length, 0.01*length);
 
-	color[0] = 1.0f;  color[1] = 0.7f;  color[2] = 0.7f;  color[3] = 1.0f;
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
-	glPushMatrix();
-	glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
-	QGLViewer::drawArrow(length, 0.01*length);
-	glPopMatrix();
+  color[0] = 1.0f;  color[1] = 0.7f;  color[2] = 0.7f;  color[3] = 1.0f;
+  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
+  glPushMatrix();
+  glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
+  QGLViewer::drawArrow(length, 0.01*length);
+  glPopMatrix();
 
-	color[0] = 0.7f;  color[1] = 1.0f;  color[2] = 0.7f;  color[3] = 1.0f;
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
-	glPushMatrix();
-	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-	QGLViewer::drawArrow(length, 0.01*length);
-	glPopMatrix();
+  color[0] = 0.7f;  color[1] = 1.0f;  color[2] = 0.7f;  color[3] = 1.0f;
+  glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color);
+  glPushMatrix();
+  glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+  QGLViewer::drawArrow(length, 0.01*length);
+  glPopMatrix();
 
-	if (colorMaterial)
-		glEnable(GL_COLOR_MATERIAL);
-	if (!lighting)
-		glDisable(GL_LIGHTING);
+  if (colorMaterial)
+    glEnable(GL_COLOR_MATERIAL);
+  if (!lighting)
+    glDisable(GL_LIGHTING);
 }
 
 /*! Draws a grid in the XY plane, centered on (0,0,0) (defined in the current coordinate system).
@@ -3351,24 +3350,24 @@ place and orientate the grid in 3D space (see the drawAxis() documentation).
 The OpenGL state is not modified by this method. */
 void QGLViewer::drawGrid(qreal size, int nbSubdivisions)
 {
-	GLboolean lighting;
-	glGetBooleanv(GL_LIGHTING, &lighting);
+  GLboolean lighting;
+  glGetBooleanv(GL_LIGHTING, &lighting);
 
-	glDisable(GL_LIGHTING);
+  glDisable(GL_LIGHTING);
 
-	glBegin(GL_LINES);
-	for (int i=0; i<=nbSubdivisions; ++i)
-	{
-		const qreal pos = size*(2.0*i/nbSubdivisions-1.0);
-		glVertex2d(pos, -size);
-		glVertex2d(pos, +size);
-		glVertex2d(-size, pos);
-		glVertex2d( size, pos);
-	}
-	glEnd();
+  glBegin(GL_LINES);
+  for (int i=0; i<=nbSubdivisions; ++i)
+  {
+    const qreal pos = size*(2.0*i/nbSubdivisions-1.0);
+    glVertex2d(pos, -size);
+    glVertex2d(pos, +size);
+    glVertex2d(-size, pos);
+    glVertex2d( size, pos);
+  }
+  glEnd();
 
-	if (lighting)
-		glEnable(GL_LIGHTING);
+  if (lighting)
+    glEnable(GL_LIGHTING);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -3378,11 +3377,11 @@ void QGLViewer::drawGrid(qreal size, int nbSubdivisions)
 /*! saveStateToFile() is called on all the QGLViewers using the QGLViewerPool(). */
 void QGLViewer::saveStateToFileForAllViewers()
 {
-	Q_FOREACH (QGLViewer* viewer, QGLViewer::QGLViewerPool())
-	{
-		if (viewer)
-			viewer->saveStateToFile();
-	}
+  Q_FOREACH (QGLViewer* viewer, QGLViewer::QGLViewerPool())
+  {
+    if (viewer)
+      viewer->saveStateToFile();
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -3404,18 +3403,18 @@ viewers. Each viewer will then read back its own information in restoreStateFrom
 that the viewers are created in the same order, which is usually the case. */
 QString QGLViewer::stateFileName() const
 {
-	QString name = stateFileName_;
+  QString name = stateFileName_;
 
-	if (!name.isEmpty() && QGLViewer::QGLViewerIndex(this) > 0)
-	{
-		QFileInfo fi(name);
-		if (fi.suffix().isEmpty())
-			name += QString::number(QGLViewer::QGLViewerIndex(this));
-		else
-			name = fi.absolutePath() + '/' + fi.completeBaseName() + QString::number(QGLViewer::QGLViewerIndex(this)) + "." + fi.suffix();
-	}
+  if (!name.isEmpty() && QGLViewer::QGLViewerIndex(this) > 0)
+  {
+    QFileInfo fi(name);
+    if (fi.suffix().isEmpty())
+      name += QString::number(QGLViewer::QGLViewerIndex(this));
+    else
+      name = fi.absolutePath() + '/' + fi.completeBaseName() + QString::number(QGLViewer::QGLViewerIndex(this)) + "." + fi.suffix();
+  }
 
-	return name;
+  return name;
 }
 
 /*! Saves in stateFileName() an XML representation of the QGLViewer state, obtained from
@@ -3427,43 +3426,43 @@ This method is automatically called when a viewer is closed (using Escape or usi
 upper right \c x close button). setStateFileName() to \c QString::null to prevent this. */
 void QGLViewer::saveStateToFile()
 {
-	QString name = stateFileName();
+  QString name = stateFileName();
 
-	if (name.isEmpty())
-		return;
+  if (name.isEmpty())
+    return;
 
-	QFileInfo fileInfo(name);
+  QFileInfo fileInfo(name);
 
-	if (fileInfo.isDir())
-	{
-		QMessageBox::warning(this, tr("Save to file error", "Message box window title"), tr("State file name (%1) references a directory instead of a file.").arg(name));
-		return;
-	}
+  if (fileInfo.isDir())
+  {
+    QMessageBox::warning(this, tr("Save to file error", "Message box window title"), tr("State file name (%1) references a directory instead of a file.").arg(name));
+    return;
+  }
 
-	const QString dirName = fileInfo.absolutePath();
-	if (!QFileInfo(dirName).exists())
-	{
-		QDir dir;
-		if (!(dir.mkdir(dirName)))
-		{
-			QMessageBox::warning(this, tr("Save to file error", "Message box window title"), tr("Unable to create directory %1").arg(dirName));
-			return;
-		}
-	}
+  const QString dirName = fileInfo.absolutePath();
+  if (!QFileInfo(dirName).exists())
+  {
+    QDir dir;
+    if (!(dir.mkdir(dirName)))
+    {
+      QMessageBox::warning(this, tr("Save to file error", "Message box window title"), tr("Unable to create directory %1").arg(dirName));
+      return;
+    }
+  }
 
-	// Write the DOM tree to file
-	QFile f(name);
-	if (f.open(QIODevice::WriteOnly))
-	{
-		QTextStream out(&f);
-		QDomDocument doc("QGLVIEWER");
-		doc.appendChild(domElement("QGLViewer", doc));
-		doc.save(out, 2);
-		f.flush();
-		f.close();
-	}
-	else
-		QMessageBox::warning(this, tr("Save to file error", "Message box window title"), tr("Unable to save to file %1").arg(name) + ":\n" + f.errorString());
+  // Write the DOM tree to file
+  QFile f(name);
+  if (f.open(QIODevice::WriteOnly))
+  {
+    QTextStream out(&f);
+    QDomDocument doc("QGLVIEWER");
+    doc.appendChild(domElement("QGLViewer", doc));
+    doc.save(out, 2);
+    f.flush();
+    f.close();
+  }
+  else
+    QMessageBox::warning(this, tr("Save to file error", "Message box window title"), tr("Unable to save to file %1").arg(name) + ":\n" + f.errorString());
 }
 
 /*! Restores the QGLViewer state from the stateFileName() file using initFromDOMElement().
@@ -3488,40 +3487,40 @@ showEntireScene(); // Previous state cannot be restored: fit camera to scene.
 \endcode */
 bool QGLViewer::restoreStateFromFile()
 {
-	QString name = stateFileName();
+  QString name = stateFileName();
 
-	if (name.isEmpty())
-		return false;
+  if (name.isEmpty())
+    return false;
 
-	QFileInfo fileInfo(name);
+  QFileInfo fileInfo(name);
 
-	if (!fileInfo.isFile())
-		// No warning since it would be displayed at first start.
-		return false;
+  if (!fileInfo.isFile())
+    // No warning since it would be displayed at first start.
+    return false;
 
-	if (!fileInfo.isReadable())
-	{
-		QMessageBox::warning(this, tr("Problem in state restoration", "Message box window title"), tr("File %1 is not readable.").arg(name));
-		return false;
-	}
+  if (!fileInfo.isReadable())
+  {
+    QMessageBox::warning(this, tr("Problem in state restoration", "Message box window title"), tr("File %1 is not readable.").arg(name));
+    return false;
+  }
 
-	// Read the DOM tree form file
-	QFile f(name);
-	if (f.open(QIODevice::ReadOnly))
-	{
-		QDomDocument doc;
-		doc.setContent(&f);
-		f.close();
-		QDomElement main = doc.documentElement();
-		initFromDOMElement(main);
-	}
-	else
-	{
-		QMessageBox::warning(this, tr("Open file error", "Message box window title"), tr("Unable to open file %1").arg(name) + ":\n" + f.errorString());
-		return false;
-	}
+  // Read the DOM tree form file
+  QFile f(name);
+  if (f.open(QIODevice::ReadOnly))
+  {
+    QDomDocument doc;
+    doc.setContent(&f);
+    f.close();
+    QDomElement main = doc.documentElement();
+    initFromDOMElement(main);
+  }
+  else
+  {
+    QMessageBox::warning(this, tr("Open file error", "Message box window title"), tr("Unable to open file %1").arg(name) + ":\n" + f.errorString());
+    return false;
+  }
 
-	return true;
+  return true;
 }
 
 /*! Returns an XML \c QDomElement that represents the QGLViewer.
@@ -3558,54 +3557,54 @@ See initFromDOMElement() for the associated restoration code.
 qglviewer::Frame::referenceFrame() are not saved. See qglviewer::Frame::domElement(). */
 QDomElement QGLViewer::domElement(const QString& name, QDomDocument& document) const
 {
-	QDomElement de = document.createElement(name);
-	de.setAttribute("version", QGLViewerVersionString());
+  QDomElement de = document.createElement(name);
+  de.setAttribute("version", QGLViewerVersionString());
 
-	QDomElement stateNode = document.createElement("State");
-	// hasMouseTracking() is not saved
-	stateNode.appendChild(DomUtils::QColorDomElement(foregroundColor(), "foregroundColor", document));
-	stateNode.appendChild(DomUtils::QColorDomElement(backgroundColor(), "backgroundColor", document));
-	DomUtils::setBoolAttribute(stateNode, "stereo", displaysInStereo());
-	// Revolve or fly camera mode is not saved
-	de.appendChild(stateNode);
+  QDomElement stateNode = document.createElement("State");
+  // hasMouseTracking() is not saved
+  stateNode.appendChild(DomUtils::QColorDomElement(foregroundColor(), "foregroundColor", document));
+  stateNode.appendChild(DomUtils::QColorDomElement(backgroundColor(), "backgroundColor", document));
+  DomUtils::setBoolAttribute(stateNode, "stereo", displaysInStereo());
+  // Revolve or fly camera mode is not saved
+  de.appendChild(stateNode);
 
-	QDomElement displayNode = document.createElement("Display");
-	DomUtils::setBoolAttribute(displayNode, "axisIsDrawn", axisIsDrawn());
-	DomUtils::setBoolAttribute(displayNode, "gridIsDrawn", gridIsDrawn());
-	DomUtils::setBoolAttribute(displayNode, "FPSIsDisplayed", FPSIsDisplayed());
-	DomUtils::setBoolAttribute(displayNode, "cameraIsEdited", cameraIsEdited());
-	// textIsEnabled() is not saved
-	de.appendChild(displayNode);
+  QDomElement displayNode = document.createElement("Display");
+  DomUtils::setBoolAttribute(displayNode, "axisIsDrawn", axisIsDrawn());
+  DomUtils::setBoolAttribute(displayNode, "gridIsDrawn", gridIsDrawn());
+  DomUtils::setBoolAttribute(displayNode, "FPSIsDisplayed", FPSIsDisplayed());
+  DomUtils::setBoolAttribute(displayNode, "cameraIsEdited", cameraIsEdited());
+  // textIsEnabled() is not saved
+  de.appendChild(displayNode);
 
-	QDomElement geometryNode = document.createElement("Geometry");
-	DomUtils::setBoolAttribute(geometryNode, "fullScreen", isFullScreen());
-	if (isFullScreen())
-	{
-		geometryNode.setAttribute("prevPosX", QString::number(prevPos_.x()));
-		geometryNode.setAttribute("prevPosY", QString::number(prevPos_.y()));
-	}
-	else
-	{
-		QWidget* tlw = topLevelWidget();
-		geometryNode.setAttribute("width",  QString::number(tlw->width()));
-		geometryNode.setAttribute("height", QString::number(tlw->height()));
-		geometryNode.setAttribute("posX",   QString::number(tlw->pos().x()));
-		geometryNode.setAttribute("posY",   QString::number(tlw->pos().y()));
-	}
-	de.appendChild(geometryNode);
+  QDomElement geometryNode = document.createElement("Geometry");
+  DomUtils::setBoolAttribute(geometryNode, "fullScreen", isFullScreen());
+  if (isFullScreen())
+  {
+    geometryNode.setAttribute("prevPosX", QString::number(prevPos_.x()));
+    geometryNode.setAttribute("prevPosY", QString::number(prevPos_.y()));
+  }
+  else
+  {
+    QWidget* tlw = topLevelWidget();
+    geometryNode.setAttribute("width",  QString::number(tlw->width()));
+    geometryNode.setAttribute("height", QString::number(tlw->height()));
+    geometryNode.setAttribute("posX",   QString::number(tlw->pos().x()));
+    geometryNode.setAttribute("posY",   QString::number(tlw->pos().y()));
+  }
+  de.appendChild(geometryNode);
 
-	// Restore original Camera zClippingCoefficient before saving.
-	if (cameraIsEdited())
-		camera()->setZClippingCoefficient(previousCameraZClippingCoefficient_);
-	de.appendChild(camera()->domElement("Camera", document));
-	if (cameraIsEdited())
-		// #CONNECTION# 5.0 from setCameraIsEdited()
-		camera()->setZClippingCoefficient(5.0);
+  // Restore original Camera zClippingCoefficient before saving.
+  if (cameraIsEdited())
+    camera()->setZClippingCoefficient(previousCameraZClippingCoefficient_);
+  de.appendChild(camera()->domElement("Camera", document));
+  if (cameraIsEdited())
+    // #CONNECTION# 5.0 from setCameraIsEdited()
+    camera()->setZClippingCoefficient(5.0);
 
-	if (manipulatedFrame())
-		de.appendChild(manipulatedFrame()->domElement("ManipulatedFrame", document));
+  if (manipulatedFrame())
+    de.appendChild(manipulatedFrame()->domElement("ManipulatedFrame", document));
 
-	return de;
+  return de;
 }
 
 /*! Restores the QGLViewer state from a \c QDomElement created by domElement().
@@ -3644,93 +3643,93 @@ See also qglviewer::Camera::initFromDOMElement(), qglviewer::ManipulatedFrame::i
 simply set from the \p element values. */
 void QGLViewer::initFromDOMElement(const QDomElement& element)
 {
-	const QString version = element.attribute("version");
-	// if (version != QGLViewerVersionString())
-	if (version[0] != '2')
-		// Patches for previous versions should go here when the state file syntax is modified.
-		qWarning("State file created using QGLViewer version %s may not be correctly read.", version.toLatin1().constData());
+  const QString version = element.attribute("version");
+  // if (version != QGLViewerVersionString())
+  if (version[0] != '2')
+    // Patches for previous versions should go here when the state file syntax is modified.
+    qWarning("State file created using QGLViewer version %s may not be correctly read.", version.toLatin1().constData());
 
-	QDomElement child=element.firstChild().toElement();
-	bool tmpCameraIsEdited = cameraIsEdited();
-	while (!child.isNull())
-	{
-		if (child.tagName() == "State")
-		{
-			// #CONNECTION# default values from defaultConstructor()
-			// setMouseTracking(DomUtils::boolFromDom(child, "mouseTracking", false));
-			setStereoDisplay(DomUtils::boolFromDom(child, "stereo", false));
-			//if ((child.attribute("cameraMode", "revolve") == "fly") && (cameraIsInRevolveMode()))
-			//	toggleCameraMode();
+  QDomElement child=element.firstChild().toElement();
+  bool tmpCameraIsEdited = cameraIsEdited();
+  while (!child.isNull())
+  {
+    if (child.tagName() == "State")
+    {
+      // #CONNECTION# default values from defaultConstructor()
+      // setMouseTracking(DomUtils::boolFromDom(child, "mouseTracking", false));
+      setStereoDisplay(DomUtils::boolFromDom(child, "stereo", false));
+      //if ((child.attribute("cameraMode", "revolve") == "fly") && (cameraIsInRevolveMode()))
+      //	toggleCameraMode();
 
-			QDomElement ch=child.firstChild().toElement();
-			while (!ch.isNull())
-			{
-				if (ch.tagName() == "foregroundColor")
-					setForegroundColor(DomUtils::QColorFromDom(ch));
-				if (ch.tagName() == "backgroundColor")
-					setBackgroundColor(DomUtils::QColorFromDom(ch));
-				ch = ch.nextSibling().toElement();
-			}
-		}
+      QDomElement ch=child.firstChild().toElement();
+      while (!ch.isNull())
+      {
+        if (ch.tagName() == "foregroundColor")
+          setForegroundColor(DomUtils::QColorFromDom(ch));
+        if (ch.tagName() == "backgroundColor")
+          setBackgroundColor(DomUtils::QColorFromDom(ch));
+        ch = ch.nextSibling().toElement();
+      }
+    }
 
-		if (child.tagName() == "Display")
-		{
-			// #CONNECTION# default values from defaultConstructor()
-			setAxisIsDrawn(DomUtils::boolFromDom(child, "axisIsDrawn", false));
-			setGridIsDrawn(DomUtils::boolFromDom(child, "gridIsDrawn", false));
-			setFPSIsDisplayed(DomUtils::boolFromDom(child, "FPSIsDisplayed", false));
-			// See comment below.
-			tmpCameraIsEdited = DomUtils::boolFromDom(child, "cameraIsEdited", false);
-			// setTextIsEnabled(DomUtils::boolFromDom(child, "textIsEnabled", true));
-		}
+    if (child.tagName() == "Display")
+    {
+      // #CONNECTION# default values from defaultConstructor()
+      setAxisIsDrawn(DomUtils::boolFromDom(child, "axisIsDrawn", false));
+      setGridIsDrawn(DomUtils::boolFromDom(child, "gridIsDrawn", false));
+      setFPSIsDisplayed(DomUtils::boolFromDom(child, "FPSIsDisplayed", false));
+      // See comment below.
+      tmpCameraIsEdited = DomUtils::boolFromDom(child, "cameraIsEdited", false);
+      // setTextIsEnabled(DomUtils::boolFromDom(child, "textIsEnabled", true));
+    }
 
-		if (child.tagName() == "Geometry")
-		{
-			setFullScreen(DomUtils::boolFromDom(child, "fullScreen", false));
+    if (child.tagName() == "Geometry")
+    {
+      setFullScreen(DomUtils::boolFromDom(child, "fullScreen", false));
 
-			if (isFullScreen())
-			{
-				prevPos_.setX(DomUtils::intFromDom(child, "prevPosX", 0));
-				prevPos_.setY(DomUtils::intFromDom(child, "prevPosY", 0));
-			}
-			else
-			{
-				int width  = DomUtils::intFromDom(child, "width",  600);
-				int height = DomUtils::intFromDom(child, "height", 400);
-				topLevelWidget()->resize(width, height);
-				camera()->setScreenWidthAndHeight(this->width(), this->height());
+      if (isFullScreen())
+      {
+        prevPos_.setX(DomUtils::intFromDom(child, "prevPosX", 0));
+        prevPos_.setY(DomUtils::intFromDom(child, "prevPosY", 0));
+      }
+      else
+      {
+        int width  = DomUtils::intFromDom(child, "width",  600);
+        int height = DomUtils::intFromDom(child, "height", 400);
+        topLevelWidget()->resize(width, height);
+        camera()->setScreenWidthAndHeight(this->width(), this->height());
 
-				QPoint pos;
-				pos.setX(DomUtils::intFromDom(child, "posX", 0));
-				pos.setY(DomUtils::intFromDom(child, "posY", 0));
-				topLevelWidget()->move(pos);
-			}
-		}
+        QPoint pos;
+        pos.setX(DomUtils::intFromDom(child, "posX", 0));
+        pos.setY(DomUtils::intFromDom(child, "posY", 0));
+        topLevelWidget()->move(pos);
+      }
+    }
 
-		if (child.tagName() == "Camera")
-		{
-			connectAllCameraKFIInterpolatedSignals(false);
-			camera()->initFromDOMElement(child);
-			connectAllCameraKFIInterpolatedSignals();
-		}
+    if (child.tagName() == "Camera")
+    {
+      connectAllCameraKFIInterpolatedSignals(false);
+      camera()->initFromDOMElement(child);
+      connectAllCameraKFIInterpolatedSignals();
+    }
 
-		if ((child.tagName() == "ManipulatedFrame") && (manipulatedFrame()))
-			manipulatedFrame()->initFromDOMElement(child);
+    if ((child.tagName() == "ManipulatedFrame") && (manipulatedFrame()))
+      manipulatedFrame()->initFromDOMElement(child);
 
-		child = child.nextSibling().toElement();
-	}
+    child = child.nextSibling().toElement();
+  }
 
-	// The Camera always stores its "real" zClippingCoef in domElement(). If it is edited,
-	// its "real" coef must be saved and the coef set to 5.0, as is done in setCameraIsEdited().
-	// BUT : Camera and Display are read in an arbitrary order. We must initialize Camera's
-	// "real" coef BEFORE calling setCameraIsEdited. Hence this temp cameraIsEdited and delayed call
-	cameraIsEdited_ = tmpCameraIsEdited;
-	if (cameraIsEdited_)
-	{
-		previousCameraZClippingCoefficient_ = camera()->zClippingCoefficient();
-		// #CONNECTION# 5.0 from setCameraIsEdited.
-		camera()->setZClippingCoefficient(5.0);
-	}
+  // The Camera always stores its "real" zClippingCoef in domElement(). If it is edited,
+  // its "real" coef must be saved and the coef set to 5.0, as is done in setCameraIsEdited().
+  // BUT : Camera and Display are read in an arbitrary order. We must initialize Camera's
+  // "real" coef BEFORE calling setCameraIsEdited. Hence this temp cameraIsEdited and delayed call
+  cameraIsEdited_ = tmpCameraIsEdited;
+  if (cameraIsEdited_)
+  {
+    previousCameraZClippingCoefficient_ = camera()->zClippingCoefficient();
+    // #CONNECTION# 5.0 from setCameraIsEdited.
+    camera()->setZClippingCoefficient(5.0);
+  }
 }
 
 #ifndef DOXYGEN
@@ -3738,22 +3737,22 @@ void QGLViewer::initFromDOMElement(const QDomElement& element)
 instead. */
 void QGLViewer::saveToFile(const QString& fileName)
 {
-	if (!fileName.isEmpty())
-		setStateFileName(fileName);
+  if (!fileName.isEmpty())
+    setStateFileName(fileName);
 
-	qWarning("saveToFile() is deprecated, use saveStateToFile() instead.");
-	saveStateToFile();
+  qWarning("saveToFile() is deprecated, use saveStateToFile() instead.");
+  saveStateToFile();
 }
 
 /*! This function is deprecated since version 1.3.9-5. Use restoreStateFromFile() and
 setStateFileName() instead. */
 bool QGLViewer::restoreFromFile(const QString& fileName)
 {
-	if (!fileName.isEmpty())
-		setStateFileName(fileName);
+  if (!fileName.isEmpty())
+    setStateFileName(fileName);
 
-	qWarning("restoreFromFile() is deprecated, use restoreStateFromFile() instead.");
-	return restoreStateFromFile();
+  qWarning("restoreFromFile() is deprecated, use restoreStateFromFile() instead.");
+  return restoreStateFromFile();
 }
 #endif
 
@@ -3812,53 +3811,53 @@ emulated in software, resulting in poor performances.
 \note The bufferTextureId() texture is binded at the end of this method. */
 void QGLViewer::copyBufferToTexture(GLint internalFormat, GLenum format)
 {
-	int h = 16;
-	int w = 16;
-	// Todo compare performance with qt code.
-	while (w < width())
-		w <<= 1;
-	while (h < height())
-		h <<= 1;
+  int h = 16;
+  int w = 16;
+  // Todo compare performance with qt code.
+  while (w < width())
+    w <<= 1;
+  while (h < height())
+    h <<= 1;
 
-	bool init = false;
+  bool init = false;
 
-	if ((w != bufferTextureWidth_) || (h != bufferTextureHeight_))
-	{
-		bufferTextureWidth_ = w;
-		bufferTextureHeight_ = h;
-		bufferTextureMaxU_ = width()  / qreal(bufferTextureWidth_);
-		bufferTextureMaxV_ = height() / qreal(bufferTextureHeight_);
-		init = true;
-	}
+  if ((w != bufferTextureWidth_) || (h != bufferTextureHeight_))
+  {
+    bufferTextureWidth_ = w;
+    bufferTextureHeight_ = h;
+    bufferTextureMaxU_ = width()  / qreal(bufferTextureWidth_);
+    bufferTextureMaxV_ = height() / qreal(bufferTextureHeight_);
+    init = true;
+  }
 
-	if (bufferTextureId() == 0)
-	{
-		glGenTextures(1, &bufferTextureId_);
-		glBindTexture(GL_TEXTURE_2D, bufferTextureId_);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		init = true;
-	}
-	else
-		glBindTexture(GL_TEXTURE_2D, bufferTextureId_);
+  if (bufferTextureId() == 0)
+  {
+    glGenTextures(1, &bufferTextureId_);
+    glBindTexture(GL_TEXTURE_2D, bufferTextureId_);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    init = true;
+  }
+  else
+    glBindTexture(GL_TEXTURE_2D, bufferTextureId_);
 
-	if ((format != previousBufferTextureFormat_) ||
-		(internalFormat != previousBufferTextureInternalFormat_))
-	{
-		previousBufferTextureFormat_ = format;
-		previousBufferTextureInternalFormat_ = internalFormat;
-		init = true;
-	}
+  if ((format != previousBufferTextureFormat_) ||
+    (internalFormat != previousBufferTextureInternalFormat_))
+  {
+    previousBufferTextureFormat_ = format;
+    previousBufferTextureInternalFormat_ = internalFormat;
+    init = true;
+  }
 
-	if (init)
-	{
-		if (format == GL_NONE)
-			format = GLenum(internalFormat);
+  if (init)
+  {
+    if (format == GL_NONE)
+      format = GLenum(internalFormat);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, bufferTextureWidth_, bufferTextureHeight_, 0, format, GL_UNSIGNED_BYTE, NULL);
-	}
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, bufferTextureWidth_, bufferTextureHeight_, 0, format, GL_UNSIGNED_BYTE, NULL);
+  }
 
-	glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, width(), height());
+  glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, width(), height());
 }
 
 /*! Returns the texture id of the texture created by copyBufferToTexture().
@@ -3869,8 +3868,8 @@ Returns \c 0 is copyBufferToTexture() was never called or if the texure was dele
 glDeleteTextures() since then. */
 GLuint QGLViewer::bufferTextureId() const
 {
-	if (glIsTexture(bufferTextureId_))
-		return bufferTextureId_;
-	else
-		return 0;
+  if (glIsTexture(bufferTextureId_))
+    return bufferTextureId_;
+  else
+    return 0;
 }
