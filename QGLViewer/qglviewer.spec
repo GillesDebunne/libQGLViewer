@@ -1,7 +1,6 @@
-
 %define version_major 2
-%define version_minor 6
-%define version_revision 4
+%define version_minor 7
+%define version_revision 0
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -155,6 +154,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Wed Jun 14 2017 Gilles Debunne <contact@libQGLViewer.com> 2.7.0
+- QGLWidget extends QOpenGLWidget instead of deprecated QGLWidget.
+
 * Tue Sep 27 2016 Gilles Debunne <contact@libQGLViewer.com> 2.6.4
 - Fix ARM build, remove contribs examples' compilation.
 
