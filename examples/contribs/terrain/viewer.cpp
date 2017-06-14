@@ -256,7 +256,7 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 	myTree.switchTree();
 	update();
 	break;
-      case Qt::Key_L:		//switch direction de lumiere (en pas de 45??)
+      case Qt::Key_L:		//switch direction de lumiere (45 degrees steps)
 	myQuadtree.StepLightingDirection();
 	myQuadtree.CalculateLighting( );
 	update();
