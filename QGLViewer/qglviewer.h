@@ -60,9 +60,17 @@ public:
 
 #else
 
-    explicit QGLViewer(QWidget* parent=0, const QOpenGLWidget* shareWidget=0, Qt::WindowFlags flags=0);
-    explicit QGLViewer(QOpenGLContext *context, QWidget* parent=0, const QOpenGLWidget* shareWidget=0, Qt::WindowFlags flags=0);
-    explicit QGLViewer(const QGLFormat& format, QWidget* parent=0, const QOpenGLWidget* shareWidget=0, Qt::WindowFlags flags=0);
+  explicit QGLViewer(QWidget* parent = 0,
+                     const QGLWidget* shareWidget = 0,
+                     Qt::WindowFlags flags = 0);
+  explicit QGLViewer(QGLContext* context,
+                     QWidget* parent = 0,
+                     const QGLWidget* shareWidget = 0,
+                     Qt::WindowFlags flags = 0);
+  explicit QGLViewer(const QGLFormat& format,
+                     QWidget* parent = 0,
+                     const QGLWidget* shareWidget = 0,
+                     Qt::WindowFlags flags = 0);
 #endif
 
 	virtual ~QGLViewer();

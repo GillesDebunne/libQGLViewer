@@ -129,32 +129,57 @@ void QGLViewer::defaultConstructor()
 	tileRegion_ = NULL;
 }
 
+#ifndef DOXYGEN
+/*! These contructors are deprecated since version 2.7.0, since they are not supported by
+ * QOpenGlWidget */
+
 #if !defined QT3_SUPPORT
 /*! Constructor. See \c QGLWidget documentation for details.
 
-All viewer parameters (display flags, scene parameters, associated objects...) are set to their default values. See
-the associated documentation.
+All viewer parameters (display flags, scene parameters, associated objects...) are set to their
+default values. See the associated documentation.
 
 If the \p shareWidget parameter points to a valid \c QGLWidget, the QGLViewer will share the OpenGL
 context with \p shareWidget (see isSharing()). */
-QGLViewer::QGLViewer(QWidget* parent, const QOpenGLWidget* shareWidget, Qt::WindowFlags flags)
+QGLViewer::QGLViewer(QWidget* parent, const QGLWidget* shareWidget, Qt::WindowFlags flags)
     : QOpenGLWidget(parent, flags)
-{ defaultConstructor(); }
+{
+  Q_UNUSED(shareWidget);
+  qWarning("The constructor with a shareWidget is deprecated, use the regular contructor instead.");
+  defaultConstructor();
+}
 
 /*! Same as QGLViewer(), but a \c QGLContext can be provided so that viewers share GL contexts, even
 with \c QGLContext sub-classes (use \p shareWidget otherwise). */
-QGLViewer::QGLViewer(QOpenGLContext *context, QWidget* parent, const QOpenGLWidget* shareWidget, Qt::WindowFlags flags)
+QGLViewer::QGLViewer(QGLContext* context,
+                     QWidget* parent,
+                     const QGLWidget* shareWidget,
+                     Qt::WindowFlags flags)
     : QOpenGLWidget(parent, flags)
-{ defaultConstructor(); }
+{
+  Q_UNUSED(context);
+  Q_UNUSED(shareWidget);
+  qWarning("The constructor with a QGLContext is deprecated, use the regular contructor instead.");
+  defaultConstructor();
+}
 
 /*! Same as QGLViewer(), but a specific \c QGLFormat can be provided.
 
 This is for instance needed to ask for a stencil buffer or for stereo display (as is illustrated in
 the <a href="../examples/stereoViewer.html">stereoViewer example</a>). */
-QGLViewer::QGLViewer(const QGLFormat &format, QWidget* parent, const QOpenGLWidget* shareWidget, Qt::WindowFlags flags)
+QGLViewer::QGLViewer(const QGLFormat& format,
+                     QWidget* parent,
+                     const QGLWidget* shareWidget,
+                     Qt::WindowFlags flags)
     : QOpenGLWidget(parent, flags)
-{ defaultConstructor(); }
+{
+  Q_UNUSED(format);
+  Q_UNUSED(shareWidget);
+  qWarning("The constructor with a QGLFormat is deprecated, use the regular contructor instead.");
+  defaultConstructor();
+}
 #endif // QT3_SUPPORT
+#endif // DOXYGEN
 
 /*! Virtual destructor.
 
