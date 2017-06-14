@@ -1,21 +1,17 @@
 #include <QGLViewer/qglviewer.h>
 
-class Scene
-{
+class Scene {
 public:
   void draw() const;
 };
 
-
-class Viewer : public QGLViewer
-{
+class Viewer : public QGLViewer {
 public:
-  Viewer(const Scene* const s, int type, QWidget* parent);
+  Viewer(const Scene *const s, int type, QWidget *parent);
 
 protected:
   virtual void draw();
 
 private:
-  const Scene* const scene_;
+  const Scene *const scene_;
 };
-

@@ -1,9 +1,8 @@
 #include "multiSelect.h"
 #include <qapplication.h>
 
-int main(int argc, char** argv)
-{
-  QApplication application(argc,argv);
+int main(int argc, char **argv) {
+  QApplication application(argc, argv);
 
   Viewer viewer;
 

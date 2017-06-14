@@ -1,26 +1,25 @@
 #include "QGLViewer/qglviewer.h"
 #include "object.h"
 
-class Viewer : public QGLViewer
-{
+class Viewer : public QGLViewer {
 public:
   Viewer();
 
-protected :
+protected:
   virtual void draw();
   virtual void init();
   virtual QString helpString() const;
 
   // Selection functions
   virtual void drawWithNames();
-  virtual void endSelection(const QPoint&);
+  virtual void endSelection(const QPoint &);
 
   // Mouse events functions
   virtual void mousePressEvent(QMouseEvent *e);
   virtual void mouseMoveEvent(QMouseEvent *e);
   virtual void mouseReleaseEvent(QMouseEvent *e);
 
-private :
+private:
   void startManipulation();
   void drawSelectionRectangle() const;
   void addIdToSelection(int id);
@@ -33,6 +32,6 @@ private :
   enum SelectionMode { NONE, ADD, REMOVE };
   SelectionMode selectionMode_;
 
-  QList<Object*> objects_;
+  QList<Object *> objects_;
   QList<int> selection_;
 };

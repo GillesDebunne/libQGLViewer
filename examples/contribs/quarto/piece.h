@@ -1,9 +1,9 @@
 #ifndef PIECE_H
 #define PIECE_H
 
-#include <qgl.h>
-#include <math.h>
 #include <iostream>
+#include <math.h>
+#include <qgl.h>
 
 /*
  * Classe decrivant une piece
@@ -32,10 +32,13 @@ public:
   Piece(int, bool, bool, bool, bool, double, double);
   ~Piece() {}
   void paint(bool);
-  void setSelected(bool s) { selected=s; }
-  void setFenetre(bool f) { fenetre=f; }
-  void setPos(double x, double y) { x_pos=x; y_pos=y; }
-  void setTexture( GLuint t) { texture=t; }
+  void setSelected(bool s) { selected = s; }
+  void setFenetre(bool f) { fenetre = f; }
+  void setPos(double x, double y) {
+    x_pos = x;
+    y_pos = y;
+  }
+  void setTexture(GLuint t) { texture = t; }
   bool getTaille() { return taille; }
   bool getCouleur() { return couleur; }
   bool getForme() { return forme; }
@@ -47,21 +50,21 @@ public:
  */
 class SetOfPiece {
 private:
-  Piece* tab[16];
+  Piece *tab[16];
   int selected;
 
 public:
   SetOfPiece();
   ~SetOfPiece() {
-    for(int i=0; i<16; i++)
-      delete(tab[i]);
+    for (int i = 0; i < 16; i++)
+      delete (tab[i]);
   }
   void init();
   void paint(bool);
   void setSelected(int);
   void setTexture(GLuint);
   void placeSelectedPiece(int);
-  Piece* getPiece() { return tab[selected]; }
+  Piece *getPiece() { return tab[selected]; }
 };
 
 #endif // PIECE_H

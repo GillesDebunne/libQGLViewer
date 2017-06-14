@@ -1,18 +1,17 @@
 #include <QGLViewer/qglviewer.h>
 
-class Viewer : public QGLViewer
-{
+class Viewer : public QGLViewer {
 public:
-  Viewer() : wireframe_(false), flatShading_(false) {};
+  Viewer() : wireframe_(false), flatShading_(false){};
 
-protected :
+protected:
   virtual void draw();
   virtual void init();
   virtual void keyPressEvent(QKeyEvent *e);
-  virtual void mousePressEvent(QMouseEvent* e);
+  virtual void mousePressEvent(QMouseEvent *e);
 
   virtual QString helpString() const;
 
-private :
+private:
   bool wireframe_, flatShading_;
 };

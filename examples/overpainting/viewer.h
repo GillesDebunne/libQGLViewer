@@ -3,12 +3,11 @@
 class QPaintEvent;
 class QPainter;
 
-class Viewer : public QGLViewer
-{
-public :
-  Viewer(QWidget* parent = 0);
+class Viewer : public QGLViewer {
+public:
+  Viewer(QWidget *parent = 0);
 
-protected :
+protected:
   virtual void draw();
   virtual void init();
   void drawOverpaint(QPainter *painter);
@@ -16,7 +15,7 @@ protected :
   virtual void paintGL() { update(); };
   virtual void paintEvent(QPaintEvent *event);
   // Could be overloaded to defer final initializations
-  //virtual void showEvent(QShowEvent *event);
+  // virtual void showEvent(QShowEvent *event);
 
   virtual QString helpString() const;
 };

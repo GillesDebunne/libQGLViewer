@@ -1,14 +1,13 @@
 #include <QGLViewer/qglviewer.h>
 
-class CameraViewer : public QGLViewer
-{
-public :
-  CameraViewer(qglviewer::Camera* camera);
+class CameraViewer : public QGLViewer {
+public:
+  CameraViewer(qglviewer::Camera *camera);
 
-protected :
+protected:
   virtual void draw();
   virtual void init();
 
-private :
-  qglviewer::Camera* c;
+private:
+  qglviewer::Camera *c;
 };

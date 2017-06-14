@@ -8,18 +8,19 @@
 #include <qcolor.h>
 
 #define WATER_RESOLUTION 60
-#define SQR( number )		( number*number )
+#define SQR(number) (number * number)
 
-using namespace qglviewer;		//classe VEC
+using namespace qglviewer; // classe VEC
 
-class WATER
-{
+class WATER {
 private:
-  Vec vertArray[SQR( WATER_RESOLUTION )];		//champ de vertex
-  Vec normalArray[SQR( WATER_RESOLUTION )];	//champ des normales de vertex
-  float forceArray[SQR( WATER_RESOLUTION )];	//champ des forces influencant un vertex d'eau
-  float velArray[SQR( WATER_RESOLUTION )];	//champ de vitesses des vagues
-  int polyIndexArray[SQR( ( WATER_RESOLUTION-1 ) )*6];	//champ des indices des polygones (pour updates..)
+  Vec vertArray[SQR(WATER_RESOLUTION)];   // champ de vertex
+  Vec normalArray[SQR(WATER_RESOLUTION)]; // champ des normales de vertex
+  float forceArray[SQR(
+      WATER_RESOLUTION)]; // champ des forces influencant un vertex d'eau
+  float velArray[SQR(WATER_RESOLUTION)]; // champ de vitesses des vagues
+  int polyIndexArray[SQR((WATER_RESOLUTION - 1)) *
+                     6]; // champ des indices des polygones (pour updates..)
 
   float worldSize;
 
@@ -33,8 +34,7 @@ private:
   unsigned int refmapID;
 
 public:
-  WATER()
-  {
+  WATER() {
     SetColor(QColor("white"));
     iwantwater = false;
   }
@@ -49,10 +49,9 @@ public:
 
   bool wantWater() { return iwantwater; }
 
-  void LoadReflectionMap(const QString& filename);
+  void LoadReflectionMap(const QString &filename);
 
-  void SetColor(const QColor& col) { color = col; }
+  void SetColor(const QColor &col) { color = col; }
 };
 
-
-#endif	//__WATER_H__
+#endif //__WATER_H__

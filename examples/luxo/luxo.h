@@ -1,18 +1,17 @@
 #include <QGLViewer/qglviewer.h>
 
-class Luxo
-{
-public :
+class Luxo {
+public:
   Luxo();
 
-  void draw(bool names=false);
+  void draw(bool names = false);
 
-  qglviewer::ManipulatedFrame* frame(unsigned short i) { return frame_[i]; }
+  qglviewer::ManipulatedFrame *frame(unsigned short i) { return frame_[i]; }
   void setSelectedFrameNumber(unsigned short nb) { selected = nb; }
 
-private :
+private:
   // The four articulations of the lamp
-  qglviewer::ManipulatedFrame* frame_[4];
+  qglviewer::ManipulatedFrame *frame_[4];
   // Used to draw the selected element in a different color
   unsigned short selected;
 
@@ -24,19 +23,16 @@ private :
   void drawHead();
 };
 
-
-class Viewer : public QGLViewer
-{
-protected :
+class Viewer : public QGLViewer {
+protected:
   virtual void draw();
   virtual void init();
   virtual void drawWithNames();
-  virtual void postSelection(const QPoint& point);
+  virtual void postSelection(const QPoint &point);
   virtual QString helpString() const;
 
   void initSpotLight();
 
-private :
+private:
   Luxo luxo;
 };
-

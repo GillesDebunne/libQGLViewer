@@ -1,11 +1,10 @@
-#include <qgl.h>
 #include "object.h"
+#include <qgl.h>
 
 using namespace qglviewer;
 
-void Object::draw() const
-{
-  static GLUquadric* quad = gluNewQuadric();
+void Object::draw() const {
+  static GLUquadric *quad = gluNewQuadric();
 
   glPushMatrix();
   glMultMatrixd(frame.matrix());

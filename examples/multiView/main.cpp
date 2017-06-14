@@ -2,17 +2,16 @@
 #include <qapplication.h>
 #include <qsplitter.h>
 
-int main(int argc, char** argv)
-{
+int main(int argc, char **argv) {
   QApplication application(argc, argv);
 
   // Create Splitters
-  QSplitter* hSplit = new QSplitter(Qt::Vertical);
-  QSplitter* vSplit1 = new QSplitter(hSplit);
-  QSplitter* vSplit2 = new QSplitter(hSplit);
+  QSplitter *hSplit = new QSplitter(Qt::Vertical);
+  QSplitter *vSplit1 = new QSplitter(hSplit);
+  QSplitter *vSplit2 = new QSplitter(hSplit);
 
   // Create the scene
-  Scene* s = new Scene();
+  Scene *s = new Scene();
 
   // Instantiate the viewers.
   Viewer side(s, 0, vSplit1);

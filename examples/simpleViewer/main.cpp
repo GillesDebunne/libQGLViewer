@@ -1,10 +1,9 @@
 #include "simpleViewer.h"
 #include <qapplication.h>
 
-int main(int argc, char** argv)
-{
+int main(int argc, char **argv) {
   // Read command lines arguments.
-  QApplication application(argc,argv);
+  QApplication application(argc, argv);
 
   // Instantiate the viewer.
   Viewer viewer;

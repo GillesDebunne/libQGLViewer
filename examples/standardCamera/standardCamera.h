@@ -1,8 +1,7 @@
 #include <QGLViewer/camera.h>
 
-class StandardCamera : public qglviewer::Camera
-{
-public :
+class StandardCamera : public qglviewer::Camera {
+public:
   StandardCamera();
 
   virtual qreal zNear() const;
@@ -12,9 +11,10 @@ public :
   bool isStandard() { return standard; }
 
   void changeOrthoFrustumSize(int delta);
-  virtual void getOrthoWidthHeight(GLdouble &halfWidth, GLdouble &halfHeight) const;
+  virtual void getOrthoWidthHeight(GLdouble &halfWidth,
+                                   GLdouble &halfHeight) const;
 
-private :
+private:
   bool standard;
   float orthoSize;
 };
