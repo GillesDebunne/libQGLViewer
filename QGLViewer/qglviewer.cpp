@@ -271,7 +271,7 @@ void QGLViewer::initializeGL()
     QTimer::singleShot( 100, this, SLOT(delayedFullScreen()) );
 }
 
-/*! Main paint method, inherited from \c QGLWidget.
+/*! Main paint method, inherited from \c QOpenGLWidget.
 
 Calls the following methods, in that order:
 \arg preDraw() (or preDrawStereo() if viewer displaysInStereo()) : places the camera in the world coordinate system.
@@ -757,15 +757,11 @@ conveniently remove all the displayed text with a single keyboard shortcut.
 
 See also displayMessage() to drawText() for only a short amount of time.
 
-Use QGLWidget::renderText(x,y,z, text) instead if you want to draw a text located
+Use renderText(x,y,z, text) instead if you want to draw a text located
  at a specific 3D position instead of 2D screen coordinates (fixed size text, facing the camera).
 
 The \c GL_MODELVIEW and \c GL_PROJECTION matrices are not modified by this method.
-
-\attention This method uses display lists to render the characters, with an index that starts at
-2000 by default (see the QGLWidget::renderText() documentation). If you use more than 2000 Display
-Lists, they may overlap with these. Directly use QGLWidget::renderText() in that case, with a
-higher \c listBase parameter (or overload <code>fontDisplayListBase</code>).*/
+*/
 void QGLViewer::drawText(int x, int y, const QString& text, const QFont& fnt)
 {
   if (!textIsEnabled())
@@ -915,7 +911,7 @@ void QGLViewer::stopAnimation()
 
 /*! Overloading of the \c QWidget method.
 
-Saves the viewer state using saveStateToFile() and then calls QGLWidget::closeEvent(). */
+Saves the viewer state using saveStateToFile() and then calls QOpenGLWidget::closeEvent(). */
 void QGLViewer::closeEvent(QCloseEvent *e)
 {
   // When the user clicks on the window close (x) button:
@@ -1498,7 +1494,7 @@ void QGLViewer::mouseDoubleClickEvent(QMouseEvent* e)
 
 /*! Sets the state of displaysInStereo(). See also toggleStereoDisplay().
 
-First checks that the display is able to handle stereovision using QGLWidget::format(). Opens a
+First checks that the display is able to handle stereovision using QOpenGLWidget::format(). Opens a
 warning message box in case of failure. Emits the stereoChanged() signal otherwise. */
 void QGLViewer::setStereoDisplay(bool stereo)
 {
@@ -2090,7 +2086,7 @@ When you define a new keyboard shortcut, use setKeyDescription() to provide a sh
 which is displayed in the help() window Keyboard tab. See the <a
 href="../examples/keyboardAndMouse.html">keyboardAndMouse</a> example for an illustration.
 
-See also QGLWidget::keyReleaseEvent(). */
+See also QOpenGLWidget::keyReleaseEvent(). */
 void QGLViewer::keyPressEvent(QKeyEvent *e)
 {
   if (e->key() == 0)

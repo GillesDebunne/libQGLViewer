@@ -29,7 +29,7 @@ bool
 domElement
 glReadPixel
 setHorizontalFieldOfView
-QGLWidget
+QOpenGLWidget
 glPushName
 QStyleSheet
 isSharing

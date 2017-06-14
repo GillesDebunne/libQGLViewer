@@ -155,7 +155,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Wed Jun 14 2017 Gilles Debunne <contact@libQGLViewer.com> 2.7.0
-- QGLWidget extends QOpenGLWidget instead of deprecated QGLWidget.
+- QGLViewer extends QOpenGLWidget instead of the deprecated QGLWidget.
 
 * Tue Sep 27 2016 Gilles Debunne <contact@libQGLViewer.com> 2.6.4
 - Fix ARM build, remove contribs examples' compilation.

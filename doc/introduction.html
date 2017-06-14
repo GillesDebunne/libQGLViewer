@@ -1,64 +1,60 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
 <head>
   <title>libQGLViewer - Introduction</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link href="qglviewer.css" rel="stylesheet" type="text/css" />
   <link rel="shortcut icon" href="images/qglviewer.ico" type="image/x-icon" />
   <link rel="icon" href="images/qglviewer.icon.png" type="image/png" />
-<script type="text/javascript">
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-23223012-2']);
+    _gaq.push(['_trackPageview']);
 
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-23223012-2']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
+    (function () {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
 </head>
+
 <body>
 
-<div class="banner">
-  <a class="qindex highlight" href="index.html">Home</a>
-  <a class="qindex" href="download.html">Download</a>
-  <a class="qindex" href="examples/index.html">Gallery</a>
-  <a class="qindex" href="refManual/hierarchy.html">Documentation</a>
-  <a class="qindex" href="developer.html">Developer</a>
-</div>
+  <div class="banner">
+    <a class="qindex highlight" href="index.html">Home</a>
+    <a class="qindex" href="download.html">Download</a>
+    <a class="qindex" href="examples/index.html">Gallery</a>
+    <a class="qindex" href="refManual/hierarchy.html">Documentation</a>
+    <a class="qindex" href="developer.html">Developer</a>
+  </div>
 
-<h1>libQGLViewer - Introduction</h1>
+  <h1>libQGLViewer - Introduction</h1>
 
-<h2>Philosophy</h2>
+  <h2>Philosophy</h2>
 
-libQGLViewer provides 3D application developers some of the classical features of a 3D viewer (see
-the <a href="features.html">feature list</a>). Most of the functionalities of the viewer are
-illustrated by a very simple <a href="examples">example</a> which can be used as a cut and paste
-source for your own applications.
+  libQGLViewer provides 3D application developers some of the classical features of a 3D viewer (see the <a href="features.html">feature list</a>).
+  Most of the functionalities of the viewer are illustrated by a very simple <a href="examples">example</a> which can be
+  used as a cut and paste source for your own applications.
 
-<p>
-libQGLViewer enables you to quickly develop a small test program as well as a complete 3D
-application. It is versatile and is not designed for any specific application. It it also very
-convenient as a 3D/OpenGL pedagogical tool.
-</p>
+  <p>
+    libQGLViewer enables you to quickly develop a small test program as well as a complete 3D application. It is versatile and
+    is not designed for any specific application. It it also very convenient as a 3D/OpenGL pedagogical tool.
+  </p>
 
-<h2>The QGLViewer class</h2>
+  <h2>The QGLViewer class</h2>
 
-The core of the library is the <code>QGLViewer</code> class, which opens an OpenGL window with your
-3D geometry inside, and lets you move the camera using the mouse. <code>QGLViewer</code> actually
-inherits from the Qt's <code>QGLWidget</code> class (use Qt's <code>assistant</code> to see its
-documentation).
+  The core of the library is the <code>QGLViewer</code> class, which opens an OpenGL window with your 3D geometry inside,
+  and lets you move the camera using the mouse. <code>QGLViewer</code> actually inherits from the Qt's <code>QOpenGLWidget</code>  class (use Qt's <code>assistant</code> to see its documentation).
 
-<p>
-A very simple application will look like <a href="examples/simpleViewer.html">simpleViewer</a>. In
-your header file, you declare a new <code>Viewer</code> class which publicly inherits from
-<code>QGLViewer</code> and you overload the <code>draw()</code> method:
-</p>
+  <p>
+    A very simple application will look like <a href="examples/simpleViewer.html">simpleViewer</a>. In your header file,
+    you declare a new <code>Viewer</code> class which publicly inherits from
+    <code>QGLViewer</code> and you overload the <code>draw()</code> method:
+  </p>
 
-<pre>
+  <pre>
 <strong>class</strong> <span style="color:#2040a0">Viewer</span> <span style="#color:4444FF">:</span
 > <strong>public</strong> <span style="color:#2040a0">QGLViewer</span>
 <span style="color:#4444FF"><strong>{</strong></span>
@@ -66,11 +62,9 @@ your header file, you declare a new <code>Viewer</code> class which publicly inh
   <strong>virtual void</strong> <span style="color:#2040a0">draw</span><span
   style="color:#4444FF">(</span><span style="color:#4444FF">)</span><span style="color:#4444FF">;</span>
 <span style="color:#4444FF"><strong>}</strong></span><span style="color:#4444FF">;</span>
-</pre>
+</pre> and here is the implementation:
 
-and here is the implementation:
-
-<pre>
+  <pre>
 <span style="color:#0000ff"><strong>#include <span style="color:#008000">&quot;viewer.h&quot;</span></strong></span>
 
 <strong>void</strong> <span style="color:#2040a0">Viewer</span><span
@@ -81,56 +75,50 @@ style="color:#2040a0">draw</span><span style="color:#4444FF">(</span><span style
   <span style="color:#444444">// It consists in geometry description using glBegin() ... glEnd() blocks.</span>
   <span style="color:#444444">// Camera's GL_MODELVIEW and GL_PROJECTION matrices are handled by the QGLViewer.</span>
 <span style="color:#4444FF"><strong>}</strong></span>
-</pre>
+</pre> All you need now is a <code>main</code> function, where you create a <code>Viewer</code> instance. Most
+  <code>main</code> function are identical: simply copy and paste from the <a href="examples/simpleViewer.html">simpleViewer</a>  example.
 
-All you need now is a <code>main</code> function, where you create a <code>Viewer</code> instance. Most
-<code>main</code> function are identical: simply copy and paste from the <a
-href="examples/simpleViewer.html">simpleViewer</a> example.
+  <p>
+    An other useful method that can be overloaded is <code>init()</code>, which is called once before the first display.
+    This is where your OpenGL initialization code goes (camera placement, scene initialization, display lists creation...).
+  </p>
 
-<p>
-An other useful method that can be overloaded is <code>init()</code>, which is called once before the first
-display. This is where your OpenGL initialization code goes (camera placement, scene initialization,
-display lists creation...).
-</p>
+  libQGLViewer also provides useful tools (a Camera class, key frame interpolation, manipulated frames...) that simplify the
+  implementation of your viewer's specific features. See the complete <a href="refManual/hierarchy.html">documentation</a>  for details.
 
-libQGLViewer also provides useful tools (a Camera class, key frame interpolation, manipulated
-frames...) that simplify the implementation of your viewer's specific features. See the complete <a
-href="refManual/hierarchy.html">documentation</a> for details.
+  <p>
+    Your viewer can also be embedded in a Qt interface, using other Qt widgets to create a complete multi-platform application.
+    Instead of deriving from <code>QGLViewer</code>, you can also use the Qt signal-slot mechanism and connect your drawing
+    method to the signals emitted by an instance of
+    <code>QGLViewer</code>. See the <a href="examples/callback.html">callback example</a> for details.
+  </p>
 
-<p>
-Your viewer can also be embedded in a Qt interface, using other Qt widgets to create a complete
-multi-platform application. Instead of deriving from <code>QGLViewer</code>, you can also use the Qt
-signal-slot mechanism and connect your drawing method to the signals emitted by an instance of
-<code>QGLViewer</code>. See the <a href="examples/callback.html">callback example</a> for details.
-</p>
+  <h2>Camera and world coordinate system</h2>
 
-<h2>Camera and world coordinate system</h2>
+  When you start giving OpenGL orders in your <code>draw()</code> function, you are implicitly located at the origin of the
+  so-called <i>world coordinate system</i>.
 
-When you start giving OpenGL orders in your <code>draw()</code> function, you are implicitly located
-at the origin of the so-called <i>world coordinate system</i>.
+  <p>
+    In <code>libQGLViewer</code>, the
+    <code>Camera</code> is an "object" located in this virtual world, that displays it and that can be moved with the mouse.
+    Press 'A' to draw the axis of this world coordinate system. This approach is different (but much more intuitive) from
+    the original camera-centered OpenGL coordinate system.
+  </p>
 
-<p>
-In <code>libQGLViewer</code>, the
-<code>Camera</code> is an "object" located in this virtual world, that displays it and that can be
-moved with the mouse. Press 'A' to draw the axis of this world coordinate system. This approach is
-different (but much more intuitive) from the original camera-centered OpenGL coordinate system.
-</p>
+  <a name="sceneRadius"></a>
+  <h2>Scene radius and center</h2>
 
-<a name="sceneRadius"></a>
-<h2>Scene radius and center</h2>
+  A <code>QGLViewer</code> has no knowledge of the 3D scene it displays. However, you need to provide an estimation of your
+  <i>scene radius</i> (expressed in OpenGL units) in order to optimally set the near and far clipping planes of the camera
+  and to be able to <code>showEntireScene()</code>. This is done using the <code>setSceneRadius()</code> function (default
+  value is 1.0).
 
-A <code>QGLViewer</code> has no knowledge of the 3D scene it displays. However, you need to provide
-an estimation of your <i>scene radius</i> (expressed in OpenGL units) in order to optimally set the
-near and far clipping planes of the camera and to be able to <code>showEntireScene()</code>. This
-is done using the <code>setSceneRadius()</code> function (default value is 1.0).
+  <p>
+    You may also want to tune the <i>scene center</i> if your scene is not centered on the world coordinate origin (0,0,0).
+  </p>
 
-<p>
-You may also want to tune the <i>scene center</i> if your scene is not centered on the world
-coordinate origin (0,0,0).
-</p>
-
-Use code like this in your <code>init()</code> function to define your scene dimensions:
-<pre>
+  Use code like this in your <code>init()</code> function to define your scene dimensions:
+  <pre>
 <font color="#2040a0">setSceneRadius</font><font color="4444FF">(</font><font
 color="#FF0000">100.0</font><font color="4444FF">)</font><font color="4444FF">;</font>  <font
 color="#444444">        // scene has a 100 OpenGL units radius </font>
@@ -140,10 +128,12 @@ color="4444FF">) )</font><font color="4444FF">;</font> <font color="#444444">// 
 <font color="#2040a0">camera()</font>-><font color="#2040a0">showEntireScene</font><font color="4444FF">(</font><font color="4444FF">)</font><font color="4444FF">;</font>
 </pre>
 
-<p>
-  <a href="http://validator.w3.org/check/referer"><img src="images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
-  <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="images/css.gif" alt="Valid CSS!" width="88" height="31"/></a>
-  <i>Last modified on #DATE#.</i>
-</p>
+  <p>
+    <a href="http://validator.w3.org/check/referer"><img src="images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
+    <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="images/css.gif" alt="Valid CSS!" width="88" height="31"/></a>
+    <i>Last modified on #DATE#.</i>
+  </p>
 
-</body></html>
+</body>
+
+</html>
