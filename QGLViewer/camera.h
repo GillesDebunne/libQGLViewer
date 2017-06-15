@@ -164,12 +164,12 @@ public:
 	/*! Returns the width (in pixels) of the Camera screen.
 
 	Set using setScreenWidthAndHeight(). This value is automatically fitted to the QGLViewer's
-	window dimensions when the Camera is attached to a QGLViewer. See also QGLWidget::width() */
+	window dimensions when the Camera is attached to a QGLViewer. See also QOpenGLWidget::width() */
 	int screenWidth() const { return screenWidth_; }
 	/*! Returns the height (in pixels) of the Camera screen.
 
 	Set using setScreenWidthAndHeight(). This value is automatically fitted to the QGLViewer's
-	window dimensions when the Camera is attached to a QGLViewer. See also QGLWidget::height() */
+	window dimensions when the Camera is attached to a QGLViewer. See also QOpenGLWidget::height() */
 	int screenHeight() const { return screenHeight_; }
 	void getViewport(GLint viewport[4]) const;
 	qreal pixelGLRatio(const Vec& position) const;

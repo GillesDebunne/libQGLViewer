@@ -217,7 +217,7 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 	myQuadtree.GenerateTextureMap( 2*mapSize );	//double precision de la carte d'hauteur
 	myQuadtree.CalculateLighting( );
 	myTree.initTrees(myQuadtree,numTrees,waterLevel*mapSize);
-	updateGL();
+	update();
 	break;
       case Qt::Key_H :	//charger la carte d'hauteur (dans le meme repertoire)
 	if (!myQuadtree.LoadHeightMap( "height128.raw", mapSize ))
@@ -227,7 +227,7 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 	myQuadtree.GenerateTextureMap( 2*mapSize );	//double precision de la carte d'hauteur
 	myQuadtree.CalculateLighting( );
 	myTree.initTrees(myQuadtree,numTrees,waterLevel*mapSize);
-	updateGL();
+	update();
 	break;
       case Qt::Key_M :	//ne pas dessiner les polygones, mais les lignes seulement
 	drawMesh = !drawMesh;
@@ -235,31 +235,31 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 	  glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 	else
 	  glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-	updateGL();
+	update();
 	break;
       case Qt::Key_O:		//switch affichage ombres
 	if (myQuadtree.isLighted())
 	  myQuadtree.DoLighting(false);
 	else
 	  myQuadtree.DoLighting(true);
-	updateGL();
+	update();
 	break;
       case Qt::Key_W:		//switch water
 	myWater.switchWater();
-	updateGL();
+	update();
 	break;
       case Qt::Key_S:		//switch sky
 	mySky.switchSky();
-	updateGL();
+	update();
 	break;
       case Qt::Key_T:		//switch trees
 	myTree.switchTree();
-	updateGL();
+	update();
 	break;
-      case Qt::Key_L:		//switch direction de lumiere (en pas de 45°)
+      case Qt::Key_L:		//switch direction de lumiere (en pas de 45??)
 	myQuadtree.StepLightingDirection();
 	myQuadtree.CalculateLighting( );
-	updateGL();
+	update();
 	break;
       case Qt::Key_X :	//switch affichage textures (detail+base)
 	if (myQuadtree.isTexture())
@@ -270,7 +270,7 @@ void Viewer::keyPressEvent(QKeyEvent *e)
 	    myQuadtree.GenerateTextureMap( 2*mapSize );	//double precision de la carte d'hauteur
 	    myQuadtree.DoTexturing(true);
 	  }
-	updateGL();
+	update();
 	break;
       default: QGLViewer::keyPressEvent(e);		//handler de la classe superieure
       }

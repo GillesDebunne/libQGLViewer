@@ -437,7 +437,7 @@ void Camera::computeModelViewMatrix() const
  \attention \c glMatrixMode is set to \c GL_PROJECTION.
 
  \attention If you use several OpenGL contexts and bypass the Qt main refresh loop, you should call
- QGLWidget::makeCurrent() before this method in order to activate the right OpenGL context. */
+ QOpenGLWidget::makeCurrent() before this method in order to activate the right OpenGL context. */
 void Camera::loadProjectionMatrix(bool reset) const
 {
 	// WARNING: makeCurrent must be called by every calling method
@@ -474,7 +474,7 @@ void Camera::loadProjectionMatrix(bool reset) const
  \attention glMatrixMode is set to \c GL_MODELVIEW
 
  \attention If you use several OpenGL contexts and bypass the Qt main refresh loop, you should call
- QGLWidget::makeCurrent() before this method in order to activate the right OpenGL context. */
+ QOpenGLWidget::makeCurrent() before this method in order to activate the right OpenGL context. */
 void Camera::loadModelViewMatrix(bool reset) const
 {
 	// WARNING: makeCurrent must be called by every calling method

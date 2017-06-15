@@ -58,7 +58,7 @@ BlobWarViewer::BlobWarViewer(QWidget* parent)
 {
   kfi_ = new KeyFrameInterpolator(new Frame());
 
-  QObject::connect(kfi_, SIGNAL(interpolated()), this, SLOT(updateGL()));
+  QObject::connect(kfi_, SIGNAL(interpolated()), this, SLOT(update()));
   QObject::connect(kfi_, SIGNAL(endReached()), this, SLOT(flipColor()));
 
   undoTimer_ = new QTimer();
@@ -223,7 +223,7 @@ void BlobWarViewer::simplePlay()
 	board_->doDrawPiece(currentMove_.start());
 
   board_->play(currentMove_);
-  updateGL();
+  update();
   playNextMove();
 }
 
@@ -298,7 +298,7 @@ void BlobWarViewer::animatePlay()
 
 void BlobWarViewer::flipColor()
 {
-  updateGL();
+  update();
 
   if (animationStep_++ < 10)
 	QTimer::singleShot(100, this, SLOT(flipColor()));
@@ -478,7 +478,7 @@ void BlobWarViewer::redo()
 void BlobWarViewer::finalizeUndoRedo()
 {
   selectedPiece_ = -1;
-  updateGL();
+  update();
 #if QT_VERSION < 0x040000
   undoTimer_->start(1000, true);
 #else

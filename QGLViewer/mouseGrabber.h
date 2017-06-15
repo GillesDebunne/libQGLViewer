@@ -38,7 +38,7 @@ class Camera;
   \code
   init() { setMouseTracking(true); }
   \endcode
-  Call \c QGLWidget::hasMouseTracking() to get the current state of this flag.
+  Call \c QOpenGLWidget::hasMouseTracking() to get the current state of this flag.
 
   The \p camera parameter of the different mouse event methods is a pointer to the
   QGLViewer::camera() of the QGLViewer that uses the MouseGrabber. It can be used to compute 2D to
@@ -205,11 +205,11 @@ protected:
 	See the <a href="#_details">detailed description section</a> and the <a
 	href="../examples/mouseGrabber.html">mouseGrabber example</a> for examples.
 
-	See the \c QGLWidget::mousePressEvent() and the \c QMouseEvent documentations for details. */
+	See the \c QOpenGLWidget::mousePressEvent() and the \c QMouseEvent documentations for details. */
 	virtual void mousePressEvent(QMouseEvent* const event, Camera* const camera) { Q_UNUSED(event); Q_UNUSED(camera); }
 	/*! Callback method called when the MouseGrabber grabsMouse() and a mouse button is double clicked.
 
-	See the \c QGLWidget::mouseDoubleClickEvent() and the \c QMouseEvent documentations for details. */
+	See the \c QOpenGLWidget::mouseDoubleClickEvent() and the \c QMouseEvent documentations for details. */
 	virtual void mouseDoubleClickEvent(QMouseEvent* const event, Camera* const camera) { Q_UNUSED(event); Q_UNUSED(camera); }
 	/*! Mouse release event callback method. See mousePressEvent(). */
 	virtual void mouseReleaseEvent(QMouseEvent* const event, Camera* const camera) { Q_UNUSED(event); Q_UNUSED(camera); }
@@ -221,7 +221,7 @@ protected:
 	virtual void mouseMoveEvent(QMouseEvent* const event, Camera* const camera) { Q_UNUSED(event); Q_UNUSED(camera); }
 	/*! Callback method called when the MouseGrabber grabsMouse() and the mouse wheel is used.
 
-	See the \c QGLWidget::wheelEvent() and the \c QWheelEvent documentations for details. */
+	See the \c QOpenGLWidget::wheelEvent() and the \c QWheelEvent documentations for details. */
 	virtual void wheelEvent(QWheelEvent* const event, Camera* const camera) { Q_UNUSED(event); Q_UNUSED(camera); }
 	//@}
 
