@@ -558,7 +558,7 @@ public:
 	/*! Same as bufferTextureMaxU(), but for the v texture coordinate. */
 	qreal bufferTextureMaxV() const { return bufferTextureMaxV_; }
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
-    void renderText(int x, int y, const QString &str, const QFont &font);
+    void renderText(int textPosX, int textPosY, const QString &text, const QFont & font = QFont(), const QColor & fontColor = Qt::white);
 #endif
 
 public Q_SLOTS:
