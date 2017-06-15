@@ -693,27 +693,16 @@ void QGLViewer::drawLight(GLenum light, qreal scale) const
 }
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
-void QGLViewer::renderText(double x, double y, const QString &str, const QFont &font = QFont() ) {
-    // Identify x and y locations to render text within widget
-    int height = this->height();
-    GLdouble textPosX = 0, textPosY = 0, textPosZ = 0;
-    //project(x, y, 0.0, &textPosX, &textPosY, &textPosZ);
-    textPosY = height - textPosY; // y is inverted
-
-    // Retrieve last OpenGL color to use as a font color
-    GLdouble glColor[4];
-    glGetDoublev(GL_CURRENT_COLOR, glColor);
-    QColor fontColor = QColor(glColor[0], glColor[1], glColor[2], glColor[3]);
+void QGLViewer::renderText(int textPosX, int textPosY, const QString &text, const QFont & font, const QColor& fontColor) {
 
     // Render text
     QPainter painter(this);
     painter.setPen(fontColor);
     painter.setFont(font);
-    painter.drawText(textPosX, textPosY, str);
+    painter.drawText(textPosX, textPosY, text);
     painter.end();
 
 }
-
 #endif
 
 
