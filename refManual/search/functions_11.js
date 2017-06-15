@@ -17,7 +17,6 @@ var searchData=
   ['setaddkeyframekeyboardmodifiers',['setAddKeyFrameKeyboardModifiers',['../classQGLViewer.html#afe04d1c918e50f6b4db5f7b6c7b80219',1,'QGLViewer']]],
   ['setanimationperiod',['setAnimationPeriod',['../classQGLViewer.html#aa37d4e0afe6a47e8f4f828ed41072176',1,'QGLViewer']]],
   ['setaspectratio',['setAspectRatio',['../classqglviewer_1_1Camera.html#a254f1cf63c3ba41c4947e5587260a5f0',1,'qglviewer::Camera']]],
-  ['setautobufferswap',['setAutoBufferSwap',['../classQGLViewer.html#ad95e0ffd255bcc1fb69c9213d8d8b017',1,'QGLViewer']]],
   ['setaxisangle',['setAxisAngle',['../classqglviewer_1_1Quaternion.html#ae903a46cefc96e2d13096d5b891d9c81',1,'qglviewer::Quaternion']]],
   ['setaxisisdrawn',['setAxisIsDrawn',['../classQGLViewer.html#a5be8cff3702c1a130f8a17330737a887',1,'QGLViewer']]],
   ['setbackgroundcolor',['setBackgroundColor',['../classQGLViewer.html#a70d4e21190fdc47edd88f078dd2037cb',1,'QGLViewer']]],

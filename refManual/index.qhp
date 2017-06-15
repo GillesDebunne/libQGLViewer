@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QtHelpProject version="1.0">
-  <namespace>com.libqglviewer.2.6.4</namespace>
+  <namespace>com.libqglviewer.2.7.0</namespace>
   <virtualFolder>doc</virtualFolder>
   <filterSection>
     <filterAttribute>doxygen</filterAttribute>
     <toc>
-      <section title="libQGLViewer Version 2.6.4" ref="index.html">
+      <section title="libQGLViewer Version 2.7.0" ref="index.html">
         <section title="Namespaces">
           <section title="Namespace List" ref="namespaces.html">
             <section title="qglviewer" ref="namespaceqglviewer.html" />
@@ -505,7 +505,6 @@
               <section title="animationIsStarted" ref="classQGLViewer.html#a621e23ded1b4147664e35bebccb56205" />
               <section title="animationPeriod" ref="classQGLViewer.html#aaa419ff12e9ef052d418f4ab0bfe7932" />
               <section title="aspectRatio" ref="classQGLViewer.html#abf815480f78d40b0a20e403ddd927bb6" />
-              <section title="autoBufferSwap" ref="classQGLViewer.html#a1e3032e85c4ae368bb4839d1de981ace" />
               <section title="axisIsDrawn" ref="classQGLViewer.html#a865af43423c594d96ae6ae4c1150c6eb" />
               <section title="axisIsDrawnChanged" ref="classQGLViewer.html#a541cdbec67d0c5895cd6c77c01b0f89e" />
               <section title="backgroundColor" ref="classQGLViewer.html#ad908e5c524cf9bf566e7f00618666ca0" />
@@ -551,7 +550,6 @@
               <section title="initFromDOMElement" ref="classQGLViewer.html#acd13d2ddeca530cb9f26ead47f7d25d3" />
               <section title="initializeGL" ref="classQGLViewer.html#a2d3d45239c78255c23a70ca558b4d4f1" />
               <section title="isFullScreen" ref="classQGLViewer.html#a49e8f313e0344b8feb492b17a823c652" />
-              <section title="isSharing" ref="classQGLViewer.html#ade737c490c676330b84dcef608ba74a6" />
               <section title="isValid" ref="classQGLViewer.html#a5bc2a781be2586924afce4e4a4ea6697" />
               <section title="keyboardString" ref="classQGLViewer.html#a204b57736a39c0d1dcb19f5dcb38d3aa" />
               <section title="keyPressEvent" ref="classQGLViewer.html#a2cc4c898ca007c7cc0ebb7791aa3e5b3" />
@@ -577,8 +575,8 @@
               <section title="postSelection" ref="classQGLViewer.html#a3dc0d3b212e04bcafd63e9c3eb214a6c" />
               <section title="preDraw" ref="classQGLViewer.html#a9c6b3ec107b4f010cf1fcd8c51ca92e4" />
               <section title="preDrawStereo" ref="classQGLViewer.html#a43df4754781c2aaf3236d676401cec59" />
-              <section title="qglClearColor" ref="classQGLViewer.html#ab946d4a33743ad672ddb2951235bfaf4" />
-              <section title="qglColor" ref="classQGLViewer.html#a3a113b44ffb7583a98e8fedbaba97472" />
+              <section title="renderText" ref="classQGLViewer.html#a2d198fcc4994f0b2fd52c88da412b606" />
+              <section title="renderText" ref="classQGLViewer.html#a4920f4be3d9a7426ed065c143bdd4913" />
               <section title="resize" ref="classQGLViewer.html#ad1185e99a9efec124b7a9bede84a6cf1" />
               <section title="resizeGL" ref="classQGLViewer.html#a3efe88f982dbec7825725dd954991139" />
               <section title="restoreStateFromFile" ref="classQGLViewer.html#a212f6b7b669463c2151688f629d72a81" />
@@ -597,7 +595,6 @@
               <section title="selectRegionWidth" ref="classQGLViewer.html#a1ff0b56ece4f01b7728a16e4d8457c3a" />
               <section title="setAddKeyFrameKeyboardModifiers" ref="classQGLViewer.html#afe04d1c918e50f6b4db5f7b6c7b80219" />
               <section title="setAnimationPeriod" ref="classQGLViewer.html#aa37d4e0afe6a47e8f4f828ed41072176" />
-              <section title="setAutoBufferSwap" ref="classQGLViewer.html#ad95e0ffd255bcc1fb69c9213d8d8b017" />
               <section title="setAxisIsDrawn" ref="classQGLViewer.html#a5be8cff3702c1a130f8a17330737a887" />
               <section title="setBackgroundColor" ref="classQGLViewer.html#a70d4e21190fdc47edd88f078dd2037cb" />
               <section title="setCamera" ref="classQGLViewer.html#a9c45e1d2c4777de28664d3db952b7585" />
@@ -662,7 +659,7 @@
               <section title="toggleGridIsDrawn" ref="classQGLViewer.html#a8dfaa8be71152ae881b9347235ccc6a1" />
               <section title="toggleStereoDisplay" ref="classQGLViewer.html#a4e0ebf98eacbcbad3b094e26d9e35886" />
               <section title="toggleTextIsEnabled" ref="classQGLViewer.html#ab92b2b41db85e4347675b0bc453366d7" />
-              <section title="updateGL" ref="classQGLViewer.html#ae12b7378efbffabc24a133ca1deb19ae" />
+              <section title="update" ref="classQGLViewer.html#acd36d7881ea8503d5c5824e7a5ad6c7e" />
               <section title="viewerInitialized" ref="classQGLViewer.html#a252b68caec768d882a3fa78ecd1499db" />
               <section title="wheelAction" ref="classQGLViewer.html#a3f80b299376cb5fdaee21a6830bd006c" />
               <section title="wheelEvent" ref="classQGLViewer.html#abc61c05ed30a94d66ab715c718532c03" />
@@ -683,15 +680,15 @@
                 <section title="ManipulatedCameraFrame" ref="classqglviewer_1_1ManipulatedCameraFrame.html" />
               </section>
             </section>
-            <section title="QGLWidget">
-              <section title="QGLViewer" ref="classQGLViewer.html" />
-            </section>
             <section title="QObject">
               <section title="Camera" ref="classqglviewer_1_1Camera.html" />
               <section title="Frame" ref="classqglviewer_1_1Frame.html">
                 <section title="ManipulatedFrame" ref="classqglviewer_1_1ManipulatedFrame.html" />
               </section>
               <section title="KeyFrameInterpolator" ref="classqglviewer_1_1KeyFrameInterpolator.html" />
+            </section>
+            <section title="QOpenGLWidget">
+              <section title="QGLViewer" ref="classQGLViewer.html" />
             </section>
             <section title="Quaternion" ref="classqglviewer_1_1Quaternion.html" />
             <section title="Vec" ref="classqglviewer_1_1Vec.html" />
@@ -840,18 +837,12 @@
       <keyword name="drawLight" id="QGLViewer::drawLight" ref="classQGLViewer.html#a7f389a4865b2d7a68ea30520a6ac80c2" />
       <keyword name="width" id="QGLViewer::width" ref="classQGLViewer.html#ad72663daf610f2a0833a2fc3d78e4fdf" />
       <keyword name="height" id="QGLViewer::height" ref="classQGLViewer.html#ad3774f6419003470f54fd495124ef51f" />
-      <keyword name="updateGL" id="QGLViewer::updateGL" ref="classQGLViewer.html#ae12b7378efbffabc24a133ca1deb19ae" />
-      <keyword name="qglColor" id="QGLViewer::qglColor" ref="classQGLViewer.html#a3a113b44ffb7583a98e8fedbaba97472" />
-      <keyword name="qglClearColor" id="QGLViewer::qglClearColor" ref="classQGLViewer.html#ab946d4a33743ad672ddb2951235bfaf4" />
+      <keyword name="update" id="QGLViewer::update" ref="classQGLViewer.html#acd36d7881ea8503d5c5824e7a5ad6c7e" />
       <keyword name="isValid" id="QGLViewer::isValid" ref="classQGLViewer.html#a5bc2a781be2586924afce4e4a4ea6697" />
-      <keyword name="isSharing" id="QGLViewer::isSharing" ref="classQGLViewer.html#ade737c490c676330b84dcef608ba74a6" />
       <keyword name="makeCurrent" id="QGLViewer::makeCurrent" ref="classQGLViewer.html#a1436277e13026c94601bbe37a2f1d262" />
       <keyword name="hasMouseTracking" id="QGLViewer::hasMouseTracking" ref="classQGLViewer.html#ab49cc4520cb16ab336d439c0f4e1d955" />
       <keyword name="resize" id="QGLViewer::resize" ref="classQGLViewer.html#ad1185e99a9efec124b7a9bede84a6cf1" />
       <keyword name="setMouseTracking" id="QGLViewer::setMouseTracking" ref="classQGLViewer.html#acf0a4ee197fe91b8c07dd74cad1aafaa" />
-      <keyword name="convertToGLFormat" id="QGLViewer::convertToGLFormat" ref="classQGLViewer.html#a75679575b3b071cddce2a56c77e1bd68" />
-      <keyword name="autoBufferSwap" id="QGLViewer::autoBufferSwap" ref="classQGLViewer.html#a1e3032e85c4ae368bb4839d1de981ace" />
-      <keyword name="setAutoBufferSwap" id="QGLViewer::setAutoBufferSwap" ref="classQGLViewer.html#ad95e0ffd255bcc1fb69c9213d8d8b017" />
       <keyword name="snapshotFileName" id="QGLViewer::snapshotFileName" ref="classQGLViewer.html#a88ba0d57aa2965dbab412a0eddef73b0" />
       <keyword name="snapshotFormat" id="QGLViewer::snapshotFormat" ref="classQGLViewer.html#a758d21b4b4391f97d686d665c2246341" />
       <keyword name="snapshotCounter" id="QGLViewer::snapshotCounter" ref="classQGLViewer.html#a0af205899b028f54edd152bdb5f345a1" />
@@ -868,6 +859,8 @@
       <keyword name="bufferTextureId" id="QGLViewer::bufferTextureId" ref="classQGLViewer.html#a9e7f69b9aeb271711430375eaea94167" />
       <keyword name="bufferTextureMaxU" id="QGLViewer::bufferTextureMaxU" ref="classQGLViewer.html#ae78f71e7c6386ead5682c241b5d52908" />
       <keyword name="bufferTextureMaxV" id="QGLViewer::bufferTextureMaxV" ref="classQGLViewer.html#a9e2e86608fb30b4a60cc6c465ebc08ad" />
+      <keyword name="renderText" id="QGLViewer::renderText" ref="classQGLViewer.html#a2d198fcc4994f0b2fd52c88da412b606" />
+      <keyword name="renderText" id="QGLViewer::renderText" ref="classQGLViewer.html#a4920f4be3d9a7426ed065c143bdd4913" />
       <keyword name="copyBufferToTexture" id="QGLViewer::copyBufferToTexture" ref="classQGLViewer.html#aeb1721bfb1c032ae68665808bb2f4453" />
       <keyword name="animationIsStarted" id="QGLViewer::animationIsStarted" ref="classQGLViewer.html#a621e23ded1b4147664e35bebccb56205" />
       <keyword name="animationPeriod" id="QGLViewer::animationPeriod" ref="classQGLViewer.html#aaa419ff12e9ef052d418f4ab0bfe7932" />
@@ -948,7 +941,7 @@
       <keyword name="saveStateToFile" id="QGLViewer::saveStateToFile" ref="classQGLViewer.html#aaec9168a5f41b3b7fa4211523535ceaa" />
       <keyword name="restoreStateFromFile" id="QGLViewer::restoreStateFromFile" ref="classQGLViewer.html#a212f6b7b669463c2151688f629d72a81" />
       <keyword name="setStateFileName" id="QGLViewer::setStateFileName" ref="classQGLViewer.html#a68737cce3d7301701bca6e4270a5a34e" />
-      <keyword name="QGLViewerPool" id="QGLViewer::QGLViewerPool" ref="classQGLViewer.html#a32d7a506084c50fd97a24f94d9ca4864" />
+      <keyword name="QGLViewerPool" id="QGLViewer::QGLViewerPool" ref="classQGLViewer.html#aa27d9e0070ba3117afb99cfe5931d754" />
       <keyword name="QGLViewerIndex" id="QGLViewer::QGLViewerIndex" ref="classQGLViewer.html#a9570ddcbaab08bce6f121e69db4fb903" />
       <keyword name="NO_CLICK_ACTION" id="QGLViewer::NO_CLICK_ACTION" ref="classQGLViewer.html#a85fe75121d351785616b75b2c5661d8faed60c81bb5edd0570ff12ac8a0e2b604" />
       <keyword name="ZOOM_ON_PIXEL" id="QGLViewer::ZOOM_ON_PIXEL" ref="classQGLViewer.html#a85fe75121d351785616b75b2c5661d8fac7b18b21c4c8f1eeb5d54bf1b7919db4" />
@@ -1414,7 +1407,7 @@
       <keyword name="spun" id="qglviewer::ManipulatedFrame::spun" ref="classqglviewer_1_1ManipulatedFrame.html#a8e3a52ff9f948f42269cab711bb92b5c" />
       <keyword name="modified" id="qglviewer::Frame::modified" ref="classqglviewer_1_1Frame.html#ab6722375e68e03d151762ebfc83c5459" />
       <keyword name="interpolated" id="qglviewer::Frame::interpolated" ref="classqglviewer_1_1Frame.html#ab55c2a4f1732b90057fae4b6037399de" />
-      <keyword name="MouseGrabberPool" id="qglviewer::MouseGrabber::MouseGrabberPool" ref="classqglviewer_1_1MouseGrabber.html#ae4eac355da73462080fe66243be5a286" />
+      <keyword name="MouseGrabberPool" id="qglviewer::MouseGrabber::MouseGrabberPool" ref="classqglviewer_1_1MouseGrabber.html#af7e82fa1a9d156ce22f7e573a6bbe8ad" />
       <keyword name="spin" id="qglviewer::ManipulatedFrame::spin" ref="classqglviewer_1_1ManipulatedFrame.html#af87828117d0582d0031f563933f97bfd" />
       <keyword name="mousePressEvent" id="qglviewer::ManipulatedFrame::mousePressEvent" ref="classqglviewer_1_1ManipulatedFrame.html#a9b4cce9d77e0495202100a8f1055f1f3" />
       <keyword name="mouseDoubleClickEvent" id="qglviewer::ManipulatedFrame::mouseDoubleClickEvent" ref="classqglviewer_1_1ManipulatedFrame.html#a866619719201540ace1f05a1f8b1f156" />
@@ -1542,7 +1535,7 @@
       <keyword name="domElement" id="qglviewer::ManipulatedFrame::domElement" ref="classqglviewer_1_1ManipulatedFrame.html#a1aa0ee6f18bae0d4638705905cd37a51" />
       <keyword name="initFromDOMElement" id="qglviewer::ManipulatedFrame::initFromDOMElement" ref="classqglviewer_1_1ManipulatedFrame.html#acd13d2ddeca530cb9f26ead47f7d25d3" />
       <keyword name="initFromDOMElement" id="qglviewer::Frame::initFromDOMElement" ref="classqglviewer_1_1Frame.html#acd13d2ddeca530cb9f26ead47f7d25d3" />
-      <keyword name="MouseGrabberPool" id="qglviewer::MouseGrabber::MouseGrabberPool" ref="classqglviewer_1_1MouseGrabber.html#ae4eac355da73462080fe66243be5a286" />
+      <keyword name="MouseGrabberPool" id="qglviewer::MouseGrabber::MouseGrabberPool" ref="classqglviewer_1_1MouseGrabber.html#af7e82fa1a9d156ce22f7e573a6bbe8ad" />
       <keyword name="setGrabsMouse" id="qglviewer::MouseGrabber::setGrabsMouse" ref="classqglviewer_1_1MouseGrabber.html#a9ecea0a9f8ce1b2d92bbd1dd6bdcd4f9" />
       <keyword name="qglviewer::MouseGrabber" id="qglviewer::MouseGrabber" ref="classqglviewer_1_1MouseGrabber.html" />
       <keyword name="MouseGrabber" id="qglviewer::MouseGrabber::MouseGrabber" ref="classqglviewer_1_1MouseGrabber.html#aeed1d659951e2bc8dbe0ffa3850c97e6" />
@@ -1554,7 +1547,7 @@
       <keyword name="addInMouseGrabberPool" id="qglviewer::MouseGrabber::addInMouseGrabberPool" ref="classqglviewer_1_1MouseGrabber.html#a4ef00d9d2abb7b331a3c333649f6ff82" />
       <keyword name="removeFromMouseGrabberPool" id="qglviewer::MouseGrabber::removeFromMouseGrabberPool" ref="classqglviewer_1_1MouseGrabber.html#a4ac2261aafd5f48f2d90c989cdd69369" />
       <keyword name="clearMouseGrabberPool" id="qglviewer::MouseGrabber::clearMouseGrabberPool" ref="classqglviewer_1_1MouseGrabber.html#a23548e9ef41cf38913f6c642509a81ec" />
-      <keyword name="MouseGrabberPool" id="qglviewer::MouseGrabber::MouseGrabberPool" ref="classqglviewer_1_1MouseGrabber.html#ae4eac355da73462080fe66243be5a286" />
+      <keyword name="MouseGrabberPool" id="qglviewer::MouseGrabber::MouseGrabberPool" ref="classqglviewer_1_1MouseGrabber.html#af7e82fa1a9d156ce22f7e573a6bbe8ad" />
       <keyword name="mousePressEvent" id="qglviewer::MouseGrabber::mousePressEvent" ref="classqglviewer_1_1MouseGrabber.html#a56df172a6eff56ecc1a99d2e7d548d31" />
       <keyword name="mouseDoubleClickEvent" id="qglviewer::MouseGrabber::mouseDoubleClickEvent" ref="classqglviewer_1_1MouseGrabber.html#a7c092390bad31d7f73ea474667159859" />
       <keyword name="mouseReleaseEvent" id="qglviewer::MouseGrabber::mouseReleaseEvent" ref="classqglviewer_1_1MouseGrabber.html#a2e07bf5f7c6c96f40e7f1d1fdb031b0c" />
@@ -1680,6 +1673,8 @@
       <file>sync_on.png</file>
       <file>sync_off.png</file>
       <file>doxygen.css</file>
+      <file>jquery.js</file>
+      <file>dynsections.js</file>
       <file>search/search_l.png</file>
       <file>search/search_m.png</file>
       <file>search/search_r.png</file>

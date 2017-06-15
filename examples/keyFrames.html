@@ -60,18 +60,17 @@
 <pre>
 #include &lt;QGLViewer/qglviewer.h&gt;
 
-class Viewer : public QGLViewer
-{
-public :
+class Viewer : public QGLViewer {
+public:
   Viewer();
 
-protected :
+protected:
   virtual void draw();
   virtual void keyPressEvent(QKeyEvent *e);
   virtual QString helpString() const;
 
-private :
-  qglviewer::ManipulatedFrame** keyFrame_;
+private:
+  qglviewer::ManipulatedFrame **keyFrame_;
   qglviewer::KeyFrameInterpolator kfi_;
   const int nbKeyFrames;
   int currentKF_;
@@ -83,34 +82,31 @@ private :
 <pre>
 #include "keyFrames.h"
 
-#include &lt;QKeyEvent&gt;
 #include &lt;QGLViewer/manipulatedFrame.h&gt;
+#include &lt;QKeyEvent&gt;
 
 using namespace qglviewer;
 using namespace std;
 
-Viewer::Viewer()
-  : nbKeyFrames(4)
-{
+Viewer::Viewer() : nbKeyFrames(4) {
   restoreStateFromFile();
 
   // myFrame is the Frame that will be interpolated.
-  Frame* myFrame = new Frame();
+  Frame *myFrame = new Frame();
 
   // Set myFrame as the KeyFrameInterpolator interpolated Frame.
   kfi_.setFrame(myFrame);
   kfi_.setLoopInterpolation();
 
   // An array of manipulated (key) frames.
-  keyFrame_ = new ManipulatedFrame*[nbKeyFrames];
+  keyFrame_ = new ManipulatedFrame *[nbKeyFrames];
 
   // Create an initial path
-  for (int i=0; i&lt;nbKeyFrames; i++)
-	{
-	  keyFrame_[i] = new ManipulatedFrame();
-	  keyFrame_[i]-&gt;setPosition(-1.0 + 2.0*i/(nbKeyFrames-1), 0.0, 0.0);
-	  kfi_.addKeyFrame(keyFrame_[i]);
-	}
+  for (int i = 0; i &lt; nbKeyFrames; i++) {
+    keyFrame_[i] = new ManipulatedFrame();
+    keyFrame_[i]-&gt;setPosition(-1.0 + 2.0 * i / (nbKeyFrames - 1), 0.0, 0.0);
+    kfi_.addKeyFrame(keyFrame_[i]);
+  }
 
   currentKF_ = 0;
   setManipulatedFrame(keyFrame_[currentKF_]);
@@ -126,58 +122,59 @@ Viewer::Viewer()
 
   help();
 
-  connect(&amp;kfi_, SIGNAL(interpolated()), SLOT(updateGL()));
+  connect(&amp;kfi_, SIGNAL(interpolated()), SLOT(update()));
   kfi_.startInterpolation();
 }
 
-QString Viewer::helpString() const
-{
+QString Viewer::helpString() const {
   QString text("&lt;h2&gt;K e y F r a m e s&lt;/h2&gt;");
-  text += "A &lt;i&gt;KeyFrameInterpolator&lt;/i&gt; holds an interpolated path defined by key frames. ";
-  text += "It can then smoothly make its associed frame follow that path. Key frames can interactively be manipulated, even ";
+  text += "A &lt;i&gt;KeyFrameInterpolator&lt;/i&gt; holds an interpolated path defined by "
+          "key frames. ";
+  text += "It can then smoothly make its associed frame follow that path. Key "
+          "frames can interactively be manipulated, even ";
   text += "during interpolation.&lt;br&gt;&lt;br&gt;";
-  text += "Note that the camera holds 12 such keyFrameInterpolators, binded to F1-F12. Press &lt;b&gt;Alt+Fx&lt;/b&gt; to define new key ";
-  text += "frames, and then press &lt;b&gt;Fx&lt;/b&gt; to make the camera follow the path. Press &lt;b&gt;C&lt;/b&gt; to visualize these paths.&lt;br&gt;&lt;br&gt;";
-  text += "&lt;b&gt;+/-&lt;/b&gt; changes the interpolation speed. Negative values are allowed.&lt;br&gt;&lt;br&gt;";
+  text += "Note that the camera holds 12 such keyFrameInterpolators, binded to "
+          "F1-F12. Press &lt;b&gt;Alt+Fx&lt;/b&gt; to define new key ";
+  text += "frames, and then press &lt;b&gt;Fx&lt;/b&gt; to make the camera follow the "
+          "path. Press &lt;b&gt;C&lt;/b&gt; to visualize these paths.&lt;br&gt;&lt;br&gt;";
+  text += "&lt;b&gt;+/-&lt;/b&gt; changes the interpolation speed. Negative values are "
+          "allowed.&lt;br&gt;&lt;br&gt;";
   text += "&lt;b&gt;Return&lt;/b&gt; starts-stops the interpolation.&lt;br&gt;&lt;br&gt;";
   text += "Use the left and right arrows to change the manipulated KeyFrame. ";
   text += "Press &lt;b&gt;Control&lt;/b&gt; to move it or simply hover over it.";
   return text;
 }
 
-void Viewer::keyPressEvent(QKeyEvent *e)
-{
-  switch (e-&gt;key())
-	{
-	case Qt::Key_Left :
-	  currentKF_ = (currentKF_+nbKeyFrames-1) % nbKeyFrames;
-	  setManipulatedFrame(keyFrame_[currentKF_]);
-	  updateGL();
-	  break;
-	case Qt::Key_Right :
-	  currentKF_ = (currentKF_+1) % nbKeyFrames;
-	  setManipulatedFrame(keyFrame_[currentKF_]);
-	  updateGL();
-	  break;
-	case Qt::Key_Return :
-	  kfi_.toggleInterpolation();
-	  break;
-	case Qt::Key_Plus :
-	  kfi_.setInterpolationSpeed(kfi_.interpolationSpeed()+0.25);
-	  break;
-	case Qt::Key_Minus :
-	  kfi_.setInterpolationSpeed(kfi_.interpolationSpeed()-0.25);
-	  break;
-	// case Qt::Key_C :
-	  // kfi_.setClosedPath(!kfi_.closedPath());
-	  // break;
-	default:
-	  QGLViewer::keyPressEvent(e);
-	}
+void Viewer::keyPressEvent(QKeyEvent *e) {
+  switch (e-&gt;key()) {
+  case Qt::Key_Left:
+    currentKF_ = (currentKF_ + nbKeyFrames - 1) % nbKeyFrames;
+    setManipulatedFrame(keyFrame_[currentKF_]);
+    update();
+    break;
+  case Qt::Key_Right:
+    currentKF_ = (currentKF_ + 1) % nbKeyFrames;
+    setManipulatedFrame(keyFrame_[currentKF_]);
+    update();
+    break;
+  case Qt::Key_Return:
+    kfi_.toggleInterpolation();
+    break;
+  case Qt::Key_Plus:
+    kfi_.setInterpolationSpeed(kfi_.interpolationSpeed() + 0.25);
+    break;
+  case Qt::Key_Minus:
+    kfi_.setInterpolationSpeed(kfi_.interpolationSpeed() - 0.25);
+    break;
+  // case Qt::Key_C :
+  // kfi_.setClosedPath(!kfi_.closedPath());
+  // break;
+  default:
+    QGLViewer::keyPressEvent(e);
+  }
 }
 
-void Viewer::draw()
-{
+void Viewer::draw() {
   // Draw interpolated frame
   glPushMatrix();
   glMultMatrixd(kfi_.frame()-&gt;matrix());
@@ -186,18 +183,17 @@ void Viewer::draw()
 
   kfi_.drawPath(5, 10);
 
-  for (int i=0; i&lt;nbKeyFrames; ++i)
-	{
-	  glPushMatrix();
-	  glMultMatrixd(kfi_.keyFrame(i).matrix());
+  for (int i = 0; i &lt; nbKeyFrames; ++i) {
+    glPushMatrix();
+    glMultMatrixd(kfi_.keyFrame(i).matrix());
 
-	  if ((i == currentKF_) || (keyFrame_[i]-&gt;grabsMouse()))
-	drawAxis(0.4f);
-	  else
-	drawAxis(0.2f);
+    if ((i == currentKF_) || (keyFrame_[i]-&gt;grabsMouse()))
+      drawAxis(0.4f);
+    else
+      drawAxis(0.2f);
 
-	  glPopMatrix();
-	}
+    glPopMatrix();
+  }
 }
 </pre>
 
@@ -207,9 +203,8 @@ void Viewer::draw()
 #include "keyFrames.h"
 #include &lt;qapplication.h&gt;
 
-int main(int argc, char** argv)
-{
-  QApplication application(argc,argv);
+int main(int argc, char **argv) {
+  QApplication application(argc, argv);
 
   Viewer viewer;
 

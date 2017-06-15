@@ -54,18 +54,17 @@
 
 class CullingCamera;
 
-class Viewer : public QGLViewer
-{
+class Viewer : public QGLViewer {
 public:
-  void setCullingCamera(const CullingCamera* const cc) { cullingCamera = cc; }
-  
+  void setCullingCamera(const CullingCamera *const cc) { cullingCamera = cc; }
+
 protected:
   virtual void draw();
   virtual void init();
   virtual QString helpString() const;
 
 private:
-  const CullingCamera* cullingCamera;
+  const CullingCamera *cullingCamera;
 };
 </pre>
 
@@ -73,52 +72,50 @@ private:
 <h2>frustumCulling.cpp</h2>
 <pre>
 #include "frustumCulling.h"
-#include "cullingCamera.h"
 #include "box.h"
+#include "cullingCamera.h"
 
 using namespace qglviewer;
 
-void Viewer::draw()
-{
+void Viewer::draw() {
   Box::Root-&gt;drawIfAllChildrenAreVisible(cullingCamera);
 
   if (cullingCamera == camera())
     // Main viewer computes its plane equation
     cullingCamera-&gt;computeFrustumPlanesEquations();
-  else
-    {
-      // Observer viewer draws cullingCamera
-      glLineWidth(4.0);
-      glColor4f(1.0, 1.0, 1.0, 0.5);
-      cullingCamera-&gt;draw();
-    }
+  else {
+    // Observer viewer draws cullingCamera
+    glLineWidth(4.0);
+    glColor4f(1.0, 1.0, 1.0, 0.5);
+    cullingCamera-&gt;draw();
+  }
 }
 
-void Viewer::init()
-{
+void Viewer::init() {
   // Restore previous viewer state.
   restoreStateFromFile();
 
-  if (cullingCamera != camera())
-    {
-      // Observer viewer configuration
-      glEnable(GL_BLEND);
-      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-      help();
-    }
-  
+  if (cullingCamera != camera()) {
+    // Observer viewer configuration
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    help();
+  }
+
   glDisable(GL_LIGHTING);
 }
 
-QString Viewer::helpString() const
-{
+QString Viewer::helpString() const {
   QString text("&lt;h2&gt;F r u s t u m C u l l i n g&lt;/h2&gt;");
 
-  text += "A hierarchical octree structure is clipped against the camera's frustum clipping planes, obtained ";
-  text += "using &lt;code&gt;getFrustumPlanesCoefficients&lt;/code&gt;. A second viewer uses &lt;code&gt;drawCamera()&lt;/code&gt; to ";
+  text += "A hierarchical octree structure is clipped against the camera's "
+          "frustum clipping planes, obtained ";
+  text += "using &lt;code&gt;getFrustumPlanesCoefficients&lt;/code&gt;. A second viewer "
+          "uses &lt;code&gt;drawCamera()&lt;/code&gt; to ";
   text += "display an external view of the first viewer's camera.&lt;br&gt;&lt;br&gt;";
 
-  text += "This frustum culling implementation is quite naive. Many optimisation techniques are available in ";
+  text += "This frustum culling implementation is quite naive. Many "
+          "optimisation techniques are available in ";
   text += "the litterature.";
 
   return text;
@@ -133,21 +130,20 @@ QString Viewer::helpString() const
 class CullingCamera;
 
 // An Axis Aligned Bounding Box octree hierarchy element.
-class Box
-{
+class Box {
 public:
-  Box(const qglviewer::Vec&amp; P1, const qglviewer::Vec&amp; P2) : p1(P1), p2(P2) {};
+  Box(const qglviewer::Vec &amp;P1, const qglviewer::Vec &amp;P2) : p1(P1), p2(P2){};
 
   void draw() const;
-  void drawIfAllChildrenAreVisible(const CullingCamera* camera) const;
+  void drawIfAllChildrenAreVisible(const CullingCamera *camera) const;
   void buildBoxHierarchy(int l);
 
   // Lazy static member, so that it is shared by viewers
-  static Box* Root;
-  
+  static Box *Root;
+
 private:
   qglviewer::Vec p1, p2;
-  Box* child[8];
+  Box *child[8];
   int level;
 };
 </pre>
@@ -157,16 +153,17 @@ private:
 <pre>
 #include &lt;QGLViewer/camera.h&gt;
 
-class CullingCamera : public qglviewer::Camera
-{
+class CullingCamera : public qglviewer::Camera {
 public:
+  void computeFrustumPlanesEquations() const {
+    getFrustumPlanesCoefficients(planeCoefficients);
+  }
 
-  void computeFrustumPlanesEquations() const { getFrustumPlanesCoefficients(planeCoefficients); }
+  float distanceToFrustumPlane(int index, const qglviewer::Vec &amp;pos) const;
+  bool sphereIsVisible(const qglviewer::Vec &amp;center, float radius) const;
+  bool aaBoxIsVisible(const qglviewer::Vec &amp;p1, const qglviewer::Vec &amp;p2,
+                      bool *entirely = NULL) const;
 
-  float distanceToFrustumPlane(int index, const qglviewer::Vec&amp; pos) const;
-  bool sphereIsVisible(const qglviewer::Vec&amp; center, float radius) const;
-  bool aaBoxIsVisible(const qglviewer::Vec&amp; p1, const qglviewer::Vec&amp; p2, bool* entirely=NULL) const;
-  
 private:
   // F r u s t u m   p l a n e s
   mutable GLdouble planeCoefficients[6][4];
@@ -183,12 +180,11 @@ using namespace std;
 using namespace qglviewer;
 
 // Static member initialization
-Box* Box::Root;
+Box *Box::Root;
 
-void Box::draw() const
-{
-  glColor3f(0.3*level, 0.2f, 1.0-0.3*level);
-  glLineWidth(level+1);
+void Box::draw() const {
+  glColor3f(0.3 * level, 0.2f, 1.0 - 0.3 * level);
+  glLineWidth(level + 1);
 
   glBegin(GL_LINE_STRIP);
   glVertex3fv(Vec(p1.x, p1.y, p1.z));
@@ -213,37 +209,32 @@ void Box::draw() const
   glEnd();
 }
 
-void Box::buildBoxHierarchy(int l)
-{
+void Box::buildBoxHierarchy(int l) {
   level = l;
-  const Vec middle = (p1+p2) / 2.0;
-  for (unsigned int i=0; i&lt;8; ++i)
-    {
-      // point in one of the 8 box corners
-      const Vec point((i&amp;4)?p1.x:p2.x, (i&amp;2)?p1.y:p2.y, (i&amp;1)?p1.z:p2.z);
-      if (level &gt; 0)
-	{
-	  child[i] = new Box(point, middle);
-	  child[i]-&gt;buildBoxHierarchy(level-1);
-	}
-      else
-	child[i] = NULL;
-    }
+  const Vec middle = (p1 + p2) / 2.0;
+  for (unsigned int i = 0; i &lt; 8; ++i) {
+    // point in one of the 8 box corners
+    const Vec point((i &amp; 4) ? p1.x : p2.x, (i &amp; 2) ? p1.y : p2.y,
+                    (i &amp; 1) ? p1.z : p2.z);
+    if (level &gt; 0) {
+      child[i] = new Box(point, middle);
+      child[i]-&gt;buildBoxHierarchy(level - 1);
+    } else
+      child[i] = NULL;
+  }
 }
 
-void Box::drawIfAllChildrenAreVisible(const CullingCamera* camera) const
-{
-  static bool* entirely = new bool;
+void Box::drawIfAllChildrenAreVisible(const CullingCamera *camera) const {
+  static bool *entirely = new bool;
 
   if (camera-&gt;aaBoxIsVisible(p1, p2, entirely)) {
     if (*entirely)
       draw();
+    else if (child[0])
+      for (int i = 0; i &lt; 8; ++i)
+        child[i]-&gt;drawIfAllChildrenAreVisible(camera);
     else
-      if (child[0])
-	for (int i=0; i&lt;8; ++i)
-	  child[i]-&gt;drawIfAllChildrenAreVisible(camera);
-      else
-	draw();
+      draw();
   }
 }
 </pre>
@@ -255,41 +246,39 @@ void Box::drawIfAllChildrenAreVisible(const CullingCamera* camera) const
 
 using namespace qglviewer;
 
-float CullingCamera::distanceToFrustumPlane(int index, const Vec&amp; pos) const
-{
+float CullingCamera::distanceToFrustumPlane(int index, const Vec &amp;pos) const {
   return pos * Vec(planeCoefficients[index]) - planeCoefficients[index][3];
 }
 
-bool CullingCamera::sphereIsVisible(const Vec&amp; center, float radius) const
-{
-  for (int i=0; i&lt;6; ++i)
+bool CullingCamera::sphereIsVisible(const Vec &amp;center, float radius) const {
+  for (int i = 0; i &lt; 6; ++i)
     if (distanceToFrustumPlane(i, center) &gt; radius)
       return false;
   return true;
 }
 
-bool CullingCamera::aaBoxIsVisible(const Vec&amp; p1, const Vec&amp; p2, bool* entirely) const
-{
+bool CullingCamera::aaBoxIsVisible(const Vec &amp;p1, const Vec &amp;p2,
+                                   bool *entirely) const {
   bool allInForAllPlanes = true;
-  for (int i=0; i&lt;6; ++i)
-    {
-      bool allOut = true;
-      for (unsigned int c=0; c&lt;8; ++c)
-	{
-	  const Vec pos((c&amp;4)?p1.x:p2.x, (c&amp;2)?p1.y:p2.y, (c&amp;1)?p1.z:p2.z);
-	  if (distanceToFrustumPlane(i, pos) &gt; 0.0)
-	    allInForAllPlanes = false;
-	  else
-	    allOut = false;
-	}
-
-      // The eight points are on the outside side of this plane
-      if (allOut)
-	return false;
+  for (int i = 0; i &lt; 6; ++i) {
+    bool allOut = true;
+    for (unsigned int c = 0; c &lt; 8; ++c) {
+      const Vec pos((c &amp; 4) ? p1.x : p2.x, (c &amp; 2) ? p1.y : p2.y,
+                    (c &amp; 1) ? p1.z : p2.z);
+      if (distanceToFrustumPlane(i, pos) &gt; 0.0)
+        allInForAllPlanes = false;
+      else
+        allOut = false;
     }
 
+    // The eight points are on the outside side of this plane
+    if (allOut)
+      return false;
+  }
+
   if (entirely)
-    // Entirely visible : the eight points are on the inside side of the 6 planes
+    // Entirely visible : the eight points are on the inside side of the 6
+    // planes
     *entirely = allInForAllPlanes;
 
   // Too conservative, but tangent cases are too expensive to detect
@@ -300,55 +289,55 @@ bool CullingCamera::aaBoxIsVisible(const Vec&amp; p1, const Vec&amp; p2, bool* e
 
 <h2>main.cpp</h2>
 <pre>
-#include "frustumCulling.h"
-#include "cullingCamera.h"
 #include "box.h"
+#include "cullingCamera.h"
+#include "frustumCulling.h"
 
 #include &lt;QApplication&gt;
 #include &lt;QGLViewer/manipulatedCameraFrame.h&gt;
 
 using namespace qglviewer;
 
-int main(int argc, char** argv)
-{
-	QApplication application(argc,argv);
+int main(int argc, char **argv) {
+  QApplication application(argc, argv);
 
-	// Create octree AABBox hierarchy
-	const qglviewer::Vec p(1.0, 0.7f, 1.3f);
-	Box::Root = new Box(-p, p);
-	Box::Root-&gt;buildBoxHierarchy(4);
+  // Create octree AABBox hierarchy
+  const qglviewer::Vec p(1.0, 0.7f, 1.3f);
+  Box::Root = new Box(-p, p);
+  Box::Root-&gt;buildBoxHierarchy(4);
 
-	// Instantiate the two viewers.
-	Viewer viewer, observer;
+  // Instantiate the two viewers.
+  Viewer viewer, observer;
 
-	// Give v a cullingCamera;
-	Camera* c = viewer.camera();
-	CullingCamera* cc = new CullingCamera();
-	viewer.setCamera(cc);
-	delete c;
+  // Give v a cullingCamera;
+  Camera *c = viewer.camera();
+  CullingCamera *cc = new CullingCamera();
+  viewer.setCamera(cc);
+  delete c;
 
-	// Both viewers share the culling camera
-	viewer.setCullingCamera(cc);
-	observer.setCullingCamera(cc);
+  // Both viewers share the culling camera
+  viewer.setCullingCamera(cc);
+  observer.setCullingCamera(cc);
 
-	// Place observer
-	observer.setSceneRadius(10.0);
-	observer.camera()-&gt;setViewDirection(qglviewer::Vec(0.0, -1.0, 0.0));
-	observer.showEntireScene();
+  // Place observer
+  observer.setSceneRadius(10.0);
+  observer.camera()-&gt;setViewDirection(qglviewer::Vec(0.0, -1.0, 0.0));
+  observer.showEntireScene();
 
-	// Make sure every culling Camera movement updates the outer viewer
-	QObject::connect(viewer.camera()-&gt;frame(), SIGNAL(manipulated()), &amp;observer, SLOT(updateGL()));
-	QObject::connect(viewer.camera()-&gt;frame(), SIGNAL(spun()), &amp;observer, SLOT(updateGL()));
+  // Make sure every culling Camera movement updates the outer viewer
+  QObject::connect(viewer.camera()-&gt;frame(), SIGNAL(manipulated()), &amp;observer,
+                   SLOT(update()));
+  QObject::connect(viewer.camera()-&gt;frame(), SIGNAL(spun()), &amp;observer,
+                   SLOT(update()));
 
+  viewer.setWindowTitle("frustumCulling");
+  observer.setWindowTitle("scene observer");
 
-	viewer.setWindowTitle("frustumCulling");
-	observer.setWindowTitle("scene observer");
+  // Show the viewers' windows.
+  viewer.show();
+  observer.show();
 
-	// Show the viewers' windows.
-	viewer.show();
-	observer.show();
-
-	return application.exec();
+  return application.exec();
 }
 </pre>
 

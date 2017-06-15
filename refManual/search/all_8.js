@@ -23,7 +23,6 @@ var searchData=
   ['isfullscreen',['isFullScreen',['../classQGLViewer.html#a49e8f313e0344b8feb492b17a823c652',1,'QGLViewer']]],
   ['isinmousegrabberpool',['isInMouseGrabberPool',['../classqglviewer_1_1MouseGrabber.html#aa6086c9f8a93116e1d48bafe385951f3',1,'qglviewer::MouseGrabber']]],
   ['ismanipulated',['isManipulated',['../classqglviewer_1_1ManipulatedFrame.html#a87ef429b01696965e74a61653acd4f18',1,'qglviewer::ManipulatedFrame']]],
-  ['issharing',['isSharing',['../classQGLViewer.html#ade737c490c676330b84dcef608ba74a6',1,'QGLViewer']]],
   ['isspinning',['isSpinning',['../classqglviewer_1_1ManipulatedFrame.html#a14d8413b0b98350825fef9dbc9c44e12',1,'qglviewer::ManipulatedFrame']]],
   ['isvalid',['isValid',['../classQGLViewer.html#a5bc2a781be2586924afce4e4a4ea6697',1,'QGLViewer']]]
 ];

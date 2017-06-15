@@ -15,10 +15,8 @@ var searchData=
   ['animationisstarted',['animationIsStarted',['../classQGLViewer.html#a621e23ded1b4147664e35bebccb56205',1,'QGLViewer']]],
   ['animationperiod',['animationPeriod',['../classQGLViewer.html#aaa419ff12e9ef052d418f4ab0bfe7932',1,'QGLViewer']]],
   ['aspectratio',['aspectRatio',['../classqglviewer_1_1Camera.html#abf815480f78d40b0a20e403ddd927bb6',1,'qglviewer::Camera::aspectRatio()'],['../classQGLViewer.html#abf815480f78d40b0a20e403ddd927bb6',1,'QGLViewer::aspectRatio()']]],
-  ['autobufferswap',['autoBufferSwap',['../classQGLViewer.html#a1e3032e85c4ae368bb4839d1de981ace',1,'QGLViewer']]],
   ['axis',['axis',['../classqglviewer_1_1Quaternion.html#adcbbf25e4ef1aa91221408d60e8b25fe',1,'qglviewer::Quaternion::axis()'],['../classqglviewer_1_1AxisPlaneConstraint.html#a1d1cfd8ffb84e947f82999c682b666a7a1ad785f7d0b0b3a5a52cdd4385785a6b',1,'qglviewer::AxisPlaneConstraint::AXIS()']]],
   ['axisisdrawn',['axisIsDrawn',['../classQGLViewer.html#a865af43423c594d96ae6ae4c1150c6eb',1,'QGLViewer']]],
   ['axisisdrawnchanged',['axisIsDrawnChanged',['../classQGLViewer.html#a541cdbec67d0c5895cd6c77c01b0f89e',1,'QGLViewer']]],
-  ['axisplaneconstraint',['AxisPlaneConstraint',['../classqglviewer_1_1AxisPlaneConstraint.html',1,'qglviewer']]],
-  ['axisplaneconstraint',['AxisPlaneConstraint',['../classqglviewer_1_1AxisPlaneConstraint.html#a1049b4e70e2fc0d46b4cfaf93d167515',1,'qglviewer::AxisPlaneConstraint']]]
+  ['axisplaneconstraint',['AxisPlaneConstraint',['../classqglviewer_1_1AxisPlaneConstraint.html',1,'AxisPlaneConstraint'],['../classqglviewer_1_1AxisPlaneConstraint.html#a1049b4e70e2fc0d46b4cfaf93d167515',1,'qglviewer::AxisPlaneConstraint::AxisPlaneConstraint()']]]
 ];

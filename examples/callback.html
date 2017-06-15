@@ -52,12 +52,11 @@ class QGLViewer;
 
 // The Scene class must derive from QObject in order to allow a
 // signal slot mechanism.
-class Scene : public QObject
-{
+class Scene : public QObject {
   Q_OBJECT
 
-public :
-  Scene(const QGLViewer* const v);
+public:
+  Scene(const QGLViewer *const v);
 
 public Q_SLOTS:
   void draw();
@@ -67,37 +66,34 @@ public Q_SLOTS:
 
 <h2>callback.cpp</h2>
 <pre>
-#include &lt;QGLViewer/qglviewer.h&gt;
 #include "callback.h"
+#include &lt;QGLViewer/qglviewer.h&gt;
 #include &lt;math.h&gt;
 
-Scene::Scene(const QGLViewer* const v)
-{
+Scene::Scene(const QGLViewer *const v) {
   // Connect the viewer signal to our draw slot.
   connect(v, SIGNAL(drawNeeded()), this, SLOT(draw()));
 }
 
 // Draws a spiral
-void Scene::draw()
-{
+void Scene::draw() {
   const float nbSteps = 200.0;
   glBegin(GL_QUAD_STRIP);
-  for (float i=0; i&lt;nbSteps; ++i)
-    {
-      float ratio = i/nbSteps;
-      float angle = 21.0*ratio;
-      float c = cos(angle);
-      float s = sin(angle);
-      float r1 = 1.0 - 0.8*ratio;
-      float r2 = 0.8 - 0.8*ratio;
-      float alt = ratio - 0.5;
-      const float nor = .5;
-      const float up = sqrt(1.0-nor*nor);
-      glColor3f(1.0-ratio, 0.2f , ratio);
-      glNormal3f(nor*c, up, nor*s);
-      glVertex3f(r1*c, alt, r1*s);
-      glVertex3f(r2*c, alt+0.05, r2*s);
-    }
+  for (float i = 0; i &lt; nbSteps; ++i) {
+    float ratio = i / nbSteps;
+    float angle = 21.0 * ratio;
+    float c = cos(angle);
+    float s = sin(angle);
+    float r1 = 1.0 - 0.8 * ratio;
+    float r2 = 0.8 - 0.8 * ratio;
+    float alt = ratio - 0.5;
+    const float nor = .5;
+    const float up = sqrt(1.0 - nor * nor);
+    glColor3f(1.0 - ratio, 0.2f, ratio);
+    glNormal3f(nor * c, up, nor * s);
+    glVertex3f(r1 * c, alt, r1 * s);
+    glVertex3f(r2 * c, alt + 0.05, r2 * s);
+  }
   glEnd();
 }
 </pre>
@@ -112,21 +108,20 @@ void Scene::draw()
 
 using namespace std;
 
-void help()
-{
+void help() {
   QString text("&lt;h2&gt;C a l l b a c k&lt;/h2&gt;");
   text += "This example is conceptually the same as simpleViewer.&lt;br&gt;";
   text += "The difference is that it uses the Qt signal/slot mechanism ";
   text += "instead of deriving the QGLViewer class. ";
-  text += "The QGLViewer::drawNeeded() signal is connected to the Scene::draw() method. ";
+  text += "The QGLViewer::drawNeeded() signal is connected to the "
+          "Scene::draw() method. ";
   text += "The two classes are otherwise completely independant.";
 
   QMessageBox::information(NULL, "Callback exemple", text);
 }
 
-int main(int argc, char** argv)
-{
-  QApplication application(argc,argv);
+int main(int argc, char **argv) {
+  QApplication application(argc, argv);
 
   // Instantiate the viewer.
   QGLViewer viewer;

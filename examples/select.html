@@ -53,16 +53,15 @@
 <pre>
 #include &lt;QGLViewer/qglviewer.h&gt;
 
-class Viewer : public QGLViewer
-{
-protected :
+class Viewer : public QGLViewer {
+protected:
   virtual void draw();
   virtual void drawWithNames();
-  virtual void postSelection(const QPoint&amp; point);
+  virtual void postSelection(const QPoint &amp;point);
   virtual void init();
   virtual QString helpString() const;
 
-private :
+private:
   qglviewer::Vec orig, dir, selectedPoint;
 };
 </pre>
@@ -71,76 +70,76 @@ private :
 <h2>select.cpp</h2>
 <pre>
 #include "select.h"
-#include &lt;qmessagebox.h&gt;
 #include &lt;math.h&gt;
+#include &lt;qmessagebox.h&gt;
 
 using namespace std;
 
-static void drawSpiral(const bool specialColor = false)
-{
+static void drawSpiral(const bool specialColor = false) {
   const float nbSteps = 100.0;
   glBegin(GL_QUAD_STRIP);
-  for (float i=0; i&lt;nbSteps; ++i)
-    {
-      float ratio = i/nbSteps;
-      float angle = 21.0*ratio;
-      float c = cos(angle);
-      float s = sin(angle);
-      float r1 = 0.5 - 0.3*ratio;
-      float r2 = 0.3 - 0.3*ratio;
-      float alt = ratio - 0.5;
-      const float nor = .5;
-      const float up = sqrt(1.0-nor*nor);
-      if (specialColor)
-	glColor3f(1.0-ratio, 0.8f , ratio/2.0);
-      else
-	glColor3f(1.0-ratio, 0.2f, ratio);
-      glNormal3f(nor*c, nor*s, up);
-      glVertex3f(r2*c, r2*s, alt+0.05f);
-      glVertex3f(r1*c, r1*s, alt);
-    }
+  for (float i = 0; i &lt; nbSteps; ++i) {
+    float ratio = i / nbSteps;
+    float angle = 21.0 * ratio;
+    float c = cos(angle);
+    float s = sin(angle);
+    float r1 = 0.5 - 0.3 * ratio;
+    float r2 = 0.3 - 0.3 * ratio;
+    float alt = ratio - 0.5;
+    const float nor = .5;
+    const float up = sqrt(1.0 - nor * nor);
+    if (specialColor)
+      glColor3f(1.0 - ratio, 0.8f, ratio / 2.0);
+    else
+      glColor3f(1.0 - ratio, 0.2f, ratio);
+    glNormal3f(nor * c, nor * s, up);
+    glVertex3f(r2 * c, r2 * s, alt + 0.05f);
+    glVertex3f(r1 * c, r1 * s, alt);
+  }
   glEnd();
 }
 
-void Viewer::drawWithNames()
-{
+void Viewer::drawWithNames() {
   // Draw spirals, pushing a name (id) for each of them
   const int nb = 10;
-  for (int i=0; i&lt;nb; ++i)
-    {
-      glPushMatrix();
-      glTranslatef(cos(2.0*i*M_PI/nb), sin(2.0*i*M_PI/nb), 0.);
+  for (int i = 0; i &lt; nb; ++i) {
+    glPushMatrix();
+    glTranslatef(cos(2.0 * i * M_PI / nb), sin(2.0 * i * M_PI / nb), 0.);
 
-      glPushName(i);
-      drawSpiral();
-      glPopName();
+    glPushName(i);
+    drawSpiral();
+    glPopName();
 
-      glPopMatrix();
-    }
+    glPopMatrix();
+  }
 }
 
-void Viewer::postSelection(const QPoint&amp; point)
-{
-  // Compute orig and dir, used to draw a representation of the intersecting line
+void Viewer::postSelection(const QPoint &amp;point) {
+  // Compute orig and dir, used to draw a representation of the intersecting
+  // line
   camera()-&gt;convertClickToLine(point, orig, dir);
 
   // Find the selectedPoint coordinates, using camera()-&gt;pointUnderPixel().
   bool found;
   selectedPoint = camera()-&gt;pointUnderPixel(point, found);
-  selectedPoint -= 0.01f*dir; // Small offset to make point clearly visible.
-  // Note that "found" is different from (selectedObjectId()&gt;=0) because of the size of the select region.
+  selectedPoint -= 0.01f * dir; // Small offset to make point clearly visible.
+  // Note that "found" is different from (selectedObjectId()&gt;=0) because of the
+  // size of the select region.
 
   if (selectedName() == -1)
     QMessageBox::information(this, "No selection",
-			     "No object selected under pixel " + QString::number(point.x()) + "," + QString::number(point.y()));
+                             "No object selected under pixel " +
+                                 QString::number(point.x()) + "," +
+                                 QString::number(point.y()));
   else
-    QMessageBox::information(this, "Selection",
-			     "Spiral number " + QString::number(selectedName()) + " selected under pixel " +
-			     QString::number(point.x()) + "," + QString::number(point.y()));
+    QMessageBox::information(
+        this, "Selection",
+        "Spiral number " + QString::number(selectedName()) +
+            " selected under pixel " + QString::number(point.x()) + "," +
+            QString::number(point.y()));
 }
 
-void Viewer::init()
-{
+void Viewer::init() {
   restoreStateFromFile();
 
   glLineWidth(3.0);
@@ -149,43 +148,45 @@ void Viewer::init()
   help();
 }
 
-void Viewer::draw()
-{
+void Viewer::draw() {
   // Draw ten spirals
   const int nb = 10;
-  for (int i=0; i&lt;nb; ++i)
-    {
-      glPushMatrix();
-      glTranslatef(cos(2.0*i*M_PI/nb), sin(2.0*i*M_PI/nb), 0.0);
-      drawSpiral(i == selectedName());
-      glPopMatrix();
-    }
+  for (int i = 0; i &lt; nb; ++i) {
+    glPushMatrix();
+    glTranslatef(cos(2.0 * i * M_PI / nb), sin(2.0 * i * M_PI / nb), 0.0);
+    drawSpiral(i == selectedName());
+    glPopMatrix();
+  }
 
   // Draw the intersection line
   glBegin(GL_LINES);
   glVertex3fv(orig);
-  glVertex3fv(orig + 100.0*dir);
+  glVertex3fv(orig + 100.0 * dir);
   glEnd();
 
   // Draw (approximated) intersection point on selected object
-  if (selectedName() &gt;= 0)
-    {
-      glColor3f(0.9f, 0.2f, 0.1f);
-      glBegin(GL_POINTS);
-      glVertex3fv(selectedPoint);
-      glEnd();
-    }
+  if (selectedName() &gt;= 0) {
+    glColor3f(0.9f, 0.2f, 0.1f);
+    glBegin(GL_POINTS);
+    glVertex3fv(selectedPoint);
+    glEnd();
+  }
 }
 
-QString Viewer::helpString() const
-{
+QString Viewer::helpString() const {
   QString text("&lt;h2&gt;S e l e c t&lt;/h2&gt;");
-  text += "Left click while pressing the &lt;b&gt;Shift&lt;/b&gt; key to select an object of the scene.&lt;br&gt;&lt;br&gt;";
-  text += "A line is drawn between the selected point and the camera selection position. ";
-  text += "using &lt;i&gt;convertClickToLine()&lt;/i&gt;, a useful function for analytical intersections.&lt;br&gt;&lt;br&gt;";
-  text += "To add object selection in your viewer, all you need to do is to define the &lt;i&gt;drawWithNames&lt;/i&gt; function. ";
-  text += "It gives a name to each selectable object and selection is then performed using the OpenGL &lt;i&gt;GL_SELECT&lt;/i&gt; render mode.&lt;br&gt;&lt;br&gt;";
-  text += "Feel free to cut and paste this implementation in your own applications.";
+  text += "Left click while pressing the &lt;b&gt;Shift&lt;/b&gt; key to select an object "
+          "of the scene.&lt;br&gt;&lt;br&gt;";
+  text += "A line is drawn between the selected point and the camera selection "
+          "position. ";
+  text += "using &lt;i&gt;convertClickToLine()&lt;/i&gt;, a useful function for analytical "
+          "intersections.&lt;br&gt;&lt;br&gt;";
+  text += "To add object selection in your viewer, all you need to do is to "
+          "define the &lt;i&gt;drawWithNames&lt;/i&gt; function. ";
+  text += "It gives a name to each selectable object and selection is then "
+          "performed using the OpenGL &lt;i&gt;GL_SELECT&lt;/i&gt; render mode.&lt;br&gt;&lt;br&gt;";
+  text += "Feel free to cut and paste this implementation in your own "
+          "applications.";
   return text;
 }
 </pre>
@@ -196,9 +197,8 @@ QString Viewer::helpString() const
 #include "select.h"
 #include &lt;qapplication.h&gt;
 
-int main(int argc, char** argv)
-{
-  QApplication application(argc,argv);
+int main(int argc, char **argv) {
+  QApplication application(argc, argv);
 
   Viewer viewer;
 

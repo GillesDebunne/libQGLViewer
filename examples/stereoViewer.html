@@ -48,9 +48,8 @@
 <pre>
 #include &lt;QGLViewer/qglviewer.h&gt;
 
-class Viewer : public QGLViewer
-{
-protected :
+class Viewer : public QGLViewer {
+protected:
   virtual void draw();
   virtual void init();
   virtual QString helpString() const;
@@ -61,13 +60,12 @@ protected :
 <h2>stereoViewer.cpp</h2>
 <pre>
 #include "stereoViewer.h"
-#include &lt;qapplication.h&gt;
 #include &lt;math.h&gt;
+#include &lt;qapplication.h&gt;
 
 using namespace std;
 
-void Viewer::init()
-{
+void Viewer::init() {
   restoreStateFromFile();
 
   // Activate the stereo display. Press 'S' to toggle.
@@ -76,39 +74,40 @@ void Viewer::init()
   help();
 }
 
-QString Viewer::helpString() const
-{
+QString Viewer::helpString() const {
   QString text("&lt;h2&gt;S t e r e o V i e w e r&lt;/h2&gt;");
-  text += "You can display in stereo with no change to your application, provided that your hardware supports stereo display.&lt;br&gt;&lt;br&gt;";
-  
-  text += "If you get a &lt;b&gt;Stereo not supported on this display&lt;/b&gt; error message, check that ";
-  text += "your machine supports stereo (search for quad-buffer in &lt;i&gt;glxinfo&lt;/i&gt; and find stereo glasses !).&lt;br&gt;&lt;br&gt;";
-  
-  text += "You can then toggle the stereo display by pressing &lt;b&gt;S&lt;/b&gt; in any application.";
+  text += "You can display in stereo with no change to your application, "
+          "provided that your hardware supports stereo display.&lt;br&gt;&lt;br&gt;";
+
+  text += "If you get a &lt;b&gt;Stereo not supported on this display&lt;/b&gt; error "
+          "message, check that ";
+  text += "your machine supports stereo (search for quad-buffer in "
+          "&lt;i&gt;glxinfo&lt;/i&gt; and find stereo glasses !).&lt;br&gt;&lt;br&gt;";
+
+  text += "You can then toggle the stereo display by pressing &lt;b&gt;S&lt;/b&gt; in any "
+          "application.";
   return text;
 }
 
-void Viewer::draw()
-{
+void Viewer::draw() {
   // Draws a spiral
   const float nbSteps = 200.0;
   glBegin(GL_QUAD_STRIP);
-  for (float i=0; i&lt;nbSteps; ++i)
-    {
-      float ratio = i/nbSteps;
-      float angle = 21.0*ratio;
-      float c = cos(angle);
-      float s = sin(angle);
-      float r1 = 1.0 - 0.8*ratio;
-      float r2 = 0.8 - 0.8*ratio;
-      float alt = ratio - 0.5;
-      const float nor = 0.5;
-      const float up = sqrt(1.0-nor*nor);
-      glColor3f(1.0-ratio, 0.2f , ratio);
-      glNormal3f(nor*c, up, nor*s);
-      glVertex3f(r1*c, alt, r1*s);
-      glVertex3f(r2*c, alt+0.05f, r2*s);
-    }
+  for (float i = 0; i &lt; nbSteps; ++i) {
+    float ratio = i / nbSteps;
+    float angle = 21.0 * ratio;
+    float c = cos(angle);
+    float s = sin(angle);
+    float r1 = 1.0 - 0.8 * ratio;
+    float r2 = 0.8 - 0.8 * ratio;
+    float alt = ratio - 0.5;
+    const float nor = 0.5;
+    const float up = sqrt(1.0 - nor * nor);
+    glColor3f(1.0 - ratio, 0.2f, ratio);
+    glNormal3f(nor * c, up, nor * s);
+    glVertex3f(r1 * c, alt, r1 * s);
+    glVertex3f(r2 * c, alt + 0.05f, r2 * s);
+  }
   glEnd();
 
   return;
@@ -121,12 +120,10 @@ void Viewer::draw()
 #include "stereoViewer.h"
 #include &lt;qapplication.h&gt;
 
-int main(int argc, char** argv)
-{
-  QApplication application(argc,argv);
+int main(int argc, char **argv) {
+  QApplication application(argc, argv);
 
   // Set the default OpenGL format with stereo capabilities.
-  // An alternative is to pass this parameter to the QGLWidget constructor.
   QGLFormat format;
   format.setStereo(true);
   QGLFormat::setDefaultFormat(format);
