@@ -127,7 +127,7 @@ Q_SIGNALS:
 	connect(myFrame->referenceFrame(), SIGNAL(modified()), myFrame, SIGNAL(modified()));
 	\endcode
 
-	\attention Connecting this signal to a QGLWidget::update() slot (or a method that calls it)
+	\attention Connecting this signal to a QOpenGLWidget::update() slot (or a method that calls it)
 	will prevent you from modifying the Frame \e inside your QGLViewer::draw() method as it would
 	result in an infinite loop. However, QGLViewer::draw() should not modify the scene.
 

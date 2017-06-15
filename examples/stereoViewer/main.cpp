@@ -6,7 +6,7 @@ int main(int argc, char** argv)
   QApplication application(argc,argv);
 
   // Set the default OpenGL format with stereo capabilities.
-  // An alternative is to pass this parameter to the QGLWidget constructor.
+  // An alternative is to pass this parameter to the QOpenGLWidget constructor.
   QGLFormat format;
   format.setStereo(true);
   QGLFormat::setDefaultFormat(format);
