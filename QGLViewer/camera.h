@@ -1,6 +1,7 @@
 #ifndef QGLVIEWER_CAMERA_H
 #define QGLVIEWER_CAMERA_H
 
+#include <QMap>
 #include "keyFrameInterpolator.h"
 class QGLViewer;
 
