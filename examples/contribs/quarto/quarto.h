@@ -1,11 +1,11 @@
 #ifndef QUARTO_H
 #define QUARTO_H
 
-#include <qvariant.h>
-#include <qmainwindow.h>
 #include "glview.h"
 #include "piece.h"
 #include <iostream>
+#include <qmainwindow.h>
+#include <qvariant.h>
 
 class QVBoxLayout;
 class QHBoxLayout;
@@ -17,24 +17,24 @@ class QLabel;
 class QPushButton;
 class QWidget;
 
-class Quarto : public QMainWindow
-{
+class Quarto : public QMainWindow {
   Q_OBJECT
 
 public:
 #if QT_VERSION < 0x040000
-  Quarto(QWidget* parent=NULL, const char* name=0, WFlags fl=WType_TopLevel);
+  Quarto(QWidget *parent = NULL, const char *name = 0,
+         WFlags fl = WType_TopLevel);
 #else
-  Quarto(QWidget* parent=NULL);
+  Quarto(QWidget *parent = NULL);
 #endif
 
   ~Quarto();
 
-  QFrame* GLFrameJeu, *GLFramePieces;
+  QFrame *GLFrameJeu, *GLFramePieces;
   // buttons
-  QGroupBox* GameGroupBox;
-  QLabel* TourDeJeuLabel, *NomLabel;
-  QPushButton* ResetButton, *QuitButton;
+  QGroupBox *GameGroupBox;
+  QLabel *TourDeJeuLabel, *NomLabel;
+  QPushButton *ResetButton, *QuitButton;
   QPopupMenu *GagnantPopUp;
 
 public Q_SLOTS:
@@ -48,8 +48,8 @@ Q_SIGNALS:
   void updategl();
 
 protected:
-  QVBoxLayout* QuartoLayout, *VLayout1, *VLayout2, *VLayout3;
-  QHBoxLayout* MainHLayout, *HLayout1, *HLayout2, *HLayout3, *HLayout4;
+  QVBoxLayout *QuartoLayout, *VLayout1, *VLayout2, *VLayout3;
+  QHBoxLayout *MainHLayout, *HLayout1, *HLayout2, *HLayout3, *HLayout4;
 
   bool joueur;
   bool pieceplacee;

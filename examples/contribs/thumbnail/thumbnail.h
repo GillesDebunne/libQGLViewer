@@ -1,8 +1,7 @@
 #include <QGLViewer/qglviewer.h>
 
-class Viewer : public QGLViewer
-{
-protected :
+class Viewer : public QGLViewer {
+protected:
   virtual void draw();
   virtual void postDraw();
   virtual void init();
@@ -12,6 +11,6 @@ protected :
   void drawThumbnail();
   void drawSpiral(bool thumb);
 
-private :
+private:
   bool thumbnail_;
 };

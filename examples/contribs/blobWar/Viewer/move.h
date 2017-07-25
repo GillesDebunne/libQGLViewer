@@ -1,28 +1,27 @@
 #ifndef MOVE_H
 #define MOVE_H
 
-#include <qpoint.h>
 #include <iostream>
+#include <qpoint.h>
 
 class Board;
 
-class Move
-{  
+class Move {
 public:
-  Move() {};
-  Move(const QPoint& s, const QPoint& e);
-  Move(const Board* const b, int s, int e);
+  Move(){};
+  Move(const QPoint &s, const QPoint &e);
+  Move(const Board *const b, int s, int e);
   Move(const QString text);
 
-  bool isValid(const Board* const b) const;  
+  bool isValid(const Board *const b) const;
   bool isClose() const;
 
-  int numberOfNewPieces(const Board& b) const;
+  int numberOfNewPieces(const Board &b) const;
 
-  friend std::ostream& operator<<(std::ostream& out, const Move& m);
+  friend std::ostream &operator<<(std::ostream &out, const Move &m);
 
-  const QPoint& start() const { return start_; }
-  const QPoint& end() const { return end_; }
+  const QPoint &start() const { return start_; }
+  const QPoint &end() const { return end_; }
 
 private:
   QPoint start_, end_;

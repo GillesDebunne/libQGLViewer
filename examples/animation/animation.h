@@ -1,23 +1,20 @@
 #include <QGLViewer/qglviewer.h>
 
-class Particle
-{
-public :
+class Particle {
+public:
   Particle();
 
   void init();
   void draw();
   void animate();
 
-private :
+private:
   qglviewer::Vec speed_, pos_;
   int age_, ageMax_;
 };
 
-
-class Viewer : public QGLViewer
-{
-protected :
+class Viewer : public QGLViewer {
+protected:
   virtual void draw();
   virtual void init();
   virtual void animate();
@@ -25,6 +22,5 @@ protected :
 
 private:
   int nbPart_;
-  Particle* particle_;
+  Particle *particle_;
 };
-

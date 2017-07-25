@@ -4,43 +4,37 @@
 
 using namespace qglviewer;
 
-StandardCamera::StandardCamera()
-{
+StandardCamera::StandardCamera() {
   standard = true;
   orthoSize = 1.0;
 }
 
-qreal StandardCamera::zNear() const
-{
+qreal StandardCamera::zNear() const {
   if (standard)
-	return 0.001;
+    return 0.001;
   else
-	return Camera::zNear();
+    return Camera::zNear();
 }
 
-qreal StandardCamera::zFar() const
-{
+qreal StandardCamera::zFar() const {
   if (standard)
-	return 1000.0;
+    return 1000.0;
   else
-	return Camera::zFar();
+    return Camera::zFar();
 }
 
-void StandardCamera::changeOrthoFrustumSize(int delta)
-{
+void StandardCamera::changeOrthoFrustumSize(int delta) {
   if (delta > 0)
-	orthoSize *= 1.1;
+    orthoSize *= 1.1;
   else
-	orthoSize /= 1.1;
+    orthoSize /= 1.1;
 }
 
-void StandardCamera::getOrthoWidthHeight(GLdouble &halfWidth, GLdouble &halfHeight) const
-{
-  if (standard)
-  {
-	halfHeight = orthoSize;
-	halfWidth = aspectRatio() * orthoSize;
-  }
-  else
-	Camera::getOrthoWidthHeight(halfWidth, halfHeight);
+void StandardCamera::getOrthoWidthHeight(GLdouble &halfWidth,
+                                         GLdouble &halfHeight) const {
+  if (standard) {
+    halfHeight = orthoSize;
+    halfWidth = aspectRatio() * orthoSize;
+  } else
+    Camera::getOrthoWidthHeight(halfWidth, halfHeight);
 }

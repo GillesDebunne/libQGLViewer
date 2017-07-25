@@ -1,8 +1,7 @@
 #include <QGLViewer/qglviewer.h>
 
-class Viewer : public QGLViewer
-{
-protected :
+class Viewer : public QGLViewer {
+protected:
   virtual void init();
   virtual void draw();
   virtual void drawBackground();
@@ -11,7 +10,7 @@ protected :
 
   void loadImage();
 
-private :
+private:
   float ratio, u_max, v_max;
 
   bool background_;

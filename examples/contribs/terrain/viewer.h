@@ -4,25 +4,22 @@
 
 #include <QGLViewer/qglviewer.h>
 
-class Viewer : public QGLViewer
-{
+class Viewer : public QGLViewer {
 private:
   bool drawMesh;
 
-protected :
+protected:
   virtual void draw();
   virtual void init();
-  virtual void animate();		//pour l'eau
+  virtual void animate(); // pour l'eau
   virtual QString helpString() const;
 
-  bool CheckExtension(const QString& szExtensionName );	//CODE EXTERNE
+  bool CheckExtension(const QString &szExtensionName); // CODE EXTERNE
 
 public:
-  bool DrawInit( void );
-  bool DrawShutdown( void );
+  bool DrawInit(void);
+  bool DrawShutdown(void);
   void keyPressEvent(QKeyEvent *e);
 };
 
-
 #endif
-

@@ -2,15 +2,13 @@
 
 #include "ui_viewerInterface.h"
 
-class ViewerInterface : public QDialog, public Ui::Dialog
-{
+class ViewerInterface : public QDialog, public Ui::Dialog {
 public:
-	ViewerInterface() { setupUi(this); }
+  ViewerInterface() { setupUi(this); }
 };
 
-int main(int argc, char** argv)
-{
-  QApplication application(argc,argv);
+int main(int argc, char **argv) {
+  QApplication application(argc, argv);
 
   ViewerInterface vi;
 

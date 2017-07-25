@@ -1,8 +1,7 @@
 #include "drawLight.h"
 #include <qapplication.h>
 
-int main(int argc, char** argv)
-{
+int main(int argc, char **argv) {
   QApplication application(argc, argv);
 
   Viewer viewer;

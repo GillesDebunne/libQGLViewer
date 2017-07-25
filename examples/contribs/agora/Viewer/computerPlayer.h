@@ -7,39 +7,38 @@
 class ComputerPlayerInterface;
 class QProcess;
 
-class ComputerPlayer : public QObject
-{
+class ComputerPlayer : public QObject {
   Q_OBJECT
-  
+
 public:
   ComputerPlayer();
   ~ComputerPlayer();
-  
+
   bool isActive() const { return isActive_; }
   void setIsActive(bool on);
-  
+
   int allowedTime() const;
   void setAllowedTime(int time);
 
   QString programFileName() const;
-  void setProgramFileName(const QString& name);
+  void setProgramFileName(const QString &name);
 
   void configure();
 
-  void play(bool black, const QString& stateFileName, int nbMovesLeft);
+  void play(bool black, const QString &stateFileName, int nbMovesLeft);
 
 public:
-  Q_SIGNALS:
+Q_SIGNALS:
   void moveMade(QString move, int duration);
- 
+
 private Q_SLOTS:
   void selectProgram();
   void readFromStdout();
-  
+
 private:
   bool isActive_;
-  ComputerPlayerInterface* interface_;
-  QProcess* process_;
+  ComputerPlayerInterface *interface_;
+  QProcess *process_;
 };
 
 #endif // COMPUTER_PLAYER_H

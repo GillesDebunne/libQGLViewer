@@ -3,9 +3,8 @@
 
 #include "QGLViewer/frame.h"
 
-class Object
-{
-public :
+class Object {
+public:
   void draw() const;
   qglviewer::Frame frame;
 };

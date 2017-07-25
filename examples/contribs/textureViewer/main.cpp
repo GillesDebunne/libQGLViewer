@@ -1,9 +1,8 @@
 #include "textureViewer.h"
 #include <qapplication.h>
 
-int main(int argc, char** argv)
-{
-  QApplication application(argc,argv);
+int main(int argc, char **argv) {
+  QApplication application(argc, argv);
 
   Viewer viewer;
 
@@ -14,6 +13,6 @@ int main(int argc, char** argv)
 #endif
 
   viewer.show();
-  
+
   return application.exec();
 }

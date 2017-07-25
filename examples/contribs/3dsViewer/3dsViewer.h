@@ -3,12 +3,11 @@
 #include <lib3ds/file.h>
 #include <lib3ds/node.h>
 
-class Viewer : public QGLViewer
-{
-public :
-  Viewer() : file(NULL), current_frame(0.0), camera_name(NULL) {};
+class Viewer : public QGLViewer {
+public:
+  Viewer() : file(NULL), current_frame(0.0), camera_name(NULL){};
 
-protected :
+protected:
   virtual void draw();
   virtual void animate();
   virtual void init();
@@ -19,8 +18,8 @@ protected :
   void loadFile();
   void initScene();
 
-private :
+private:
   Lib3dsFile *file;
   float current_frame;
-  char* camera_name;
+  char *camera_name;
 };
