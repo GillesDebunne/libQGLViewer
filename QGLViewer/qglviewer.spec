@@ -1,6 +1,6 @@
 %define version_major 2
 %define version_minor 7
-%define version_revision 0
+%define version_revision 1
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -154,6 +154,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Fri Nov 17 2017 Gilles Debunne <contact@libQGLViewer.com> 2.7.1
+- Fix deprecated message in constructor.
+
 * Wed Jun 14 2017 Gilles Debunne <contact@libQGLViewer.com> 2.7.0
 - QGLViewer extends QOpenGLWidget instead of the deprecated QGLWidget.
 

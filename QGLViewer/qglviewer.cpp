@@ -132,11 +132,19 @@ void QGLViewer::defaultConstructor() {
   tileRegion_ = NULL;
 }
 
+/*! Constructor. See \c QGLWidget documentation for details.
+
+All viewer parameters (display flags, scene parameters, associated objects...)
+are set to their default values. See the associated documentation. */
+QGLViewer::QGLViewer(QWidget *parent, Qt::WindowFlags flags)
+    : QOpenGLWidget(parent, flags) {
+  defaultConstructor();
+}
+
 #ifndef DOXYGEN
 /*! These contructors are deprecated since version 2.7.0, since they are not
  * supported by QOpenGlWidget */
 
-#if !defined QT3_SUPPORT
 /*! Constructor. See \c QGLWidget documentation for details.
 
 All viewer parameters (display flags, scene parameters, associated objects...)
@@ -180,7 +188,6 @@ QGLViewer::QGLViewer(const QGLFormat &format, QWidget *parent,
            "contructor instead.");
   defaultConstructor();
 }
-#endif // QT3_SUPPORT
 #endif // DOXYGEN
 
 /*! Virtual destructor.
@@ -852,10 +859,9 @@ When FPSIsDisplayed() is \c true (default is \c false), this method is called by
 postDraw() to display the currentFPS(). Use QApplication::setFont() to define
 the font (see drawText()). */
 void QGLViewer::displayFPS() {
-  drawText(10,
-           int(1.5 * ((QApplication::font().pixelSize() > 0)
-                          ? QApplication::font().pixelSize()
-                          : QApplication::font().pointSize())),
+  drawText(10, int(1.5 * ((QApplication::font().pixelSize() > 0)
+                              ? QApplication::font().pixelSize()
+                              : QApplication::font().pointSize())),
            fpsString_);
 }
 

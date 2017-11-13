@@ -6,7 +6,7 @@
 #ifndef QGLVIEWER_CONFIG_H
 #define QGLVIEWER_CONFIG_H
 
-#define QGLVIEWER_VERSION 0x020700
+#define QGLVIEWER_VERSION 0x020701
 
 // Needed for Qt < 4 (?)
 #ifndef QT_CLEAN_NAMESPACE
@@ -16,8 +16,9 @@
 // Get QT_VERSION and other Qt flags
 #include <qglobal.h>
 
-#if QT_VERSION < 0x040000
-Error : libQGLViewer requires a minimum Qt version of 4.0
+#if QT_VERSION < 0x050400
+Error : libQGLViewer requires a minimum Qt version of 5.4 Error
+        : Use a version prior to 2.7.0 to remove this constraint
 #endif
 
 // Win 32 DLL export macros

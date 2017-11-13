@@ -47,33 +47,9 @@ class QGLVIEWER_EXPORT QGLViewer : public QOpenGLWidget {
   Q_OBJECT
 
 public:
-// Complete implementation is provided so that the constructor is defined with
-// QT3_SUPPORT when .h is included. (Would not be available otherwise since lib
-// is compiled without QT3_SUPPORT).
-#ifdef QT3_SUPPORT
-  explicit QGLViewer(QWidget *parent = NULL, const char *name = 0,
-                     const QGLWidget *shareWidget = 0,
-                     Qt::WindowFlags flags = 0)
-      : QGLWidget(parent, name, shareWidget, flags) {
-    defaultConstructor();
-  }
-
-  explicit QGLViewer(const QGLFormat &format, QWidget *parent = 0,
-                     const char *name = 0, const QGLWidget *shareWidget = 0,
-                     Qt::WindowFlags flags = 0)
-      : QGLWidget(format, parent, name, shareWidget, flags) {
-    defaultConstructor();
-  }
-
-  QGLViewer(QGLContext *context, QWidget *parent, const char *name = 0,
-            const QGLWidget *shareWidget = 0, Qt::WindowFlags flags = 0)
-      : QGLWidget(context, parent, name, shareWidget, flags) {
-    defaultConstructor();
-  }
-
-#else
-
-  explicit QGLViewer(QWidget *parent = 0, const QGLWidget *shareWidget = 0,
+  explicit QGLViewer(QWidget *parent = 0,
+                     Qt::WindowFlags flags = Qt::WindowFlags());
+  explicit QGLViewer(QWidget *parent, const QGLWidget *shareWidget,
                      Qt::WindowFlags flags = 0);
   explicit QGLViewer(QGLContext *context, QWidget *parent = 0,
                      const QGLWidget *shareWidget = 0,
@@ -81,7 +57,6 @@ public:
   explicit QGLViewer(const QGLFormat &format, QWidget *parent = 0,
                      const QGLWidget *shareWidget = 0,
                      Qt::WindowFlags flags = 0);
-#endif
 
   virtual ~QGLViewer();
 
