@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QtHelpProject version="1.0">
-  <namespace>com.libqglviewer.2.7.0</namespace>
+  <namespace>com.libqglviewer.2.7.1</namespace>
   <virtualFolder>doc</virtualFolder>
   <filterSection>
     <filterAttribute>doxygen</filterAttribute>
     <toc>
-      <section title="libQGLViewer Version 2.7.0" ref="index.html">
+      <section title="libQGLViewer Version 2.7.1" ref="index.html">
         <section title="Namespaces">
           <section title="Namespace List" ref="namespaces.html">
             <section title="qglviewer" ref="namespaceqglviewer.html" />
@@ -494,7 +494,8 @@
                 <section title="CAMERA" ref="classQGLViewer.html#a5b90ab220b7700ca28db5ecf3217325dada31f516cdf218b68b790fb31e8a6956" />
                 <section title="FRAME" ref="classQGLViewer.html#a5b90ab220b7700ca28db5ecf3217325da200c1bcf1eaa8635daa3cbb5fdd2ebb6" />
               </section>
-              <section title="QGLViewer" ref="classQGLViewer.html#a5cfffe102b268c9af761c5d82a694dcc" />
+              <section title="QGLViewer" ref="classQGLViewer.html#ad423b9ea16b28f627c3197deacf44fac" />
+              <section title="QGLViewer" ref="classQGLViewer.html#a605f8644f21dbda2218108bf3f0ca281" />
               <section title="QGLViewer" ref="classQGLViewer.html#a4724b62429d2ecd9049bc41a562901b6" />
               <section title="QGLViewer" ref="classQGLViewer.html#a5b655fa44abb36439e4f7ef3ad2cd649" />
               <section title="~QGLViewer" ref="classQGLViewer.html#a8c90239e64b7a43473a189d5da865ac7" />
@@ -779,7 +780,8 @@
       <keyword name="stereoChanged" id="QGLViewer::stereoChanged" ref="classQGLViewer.html#a9d7df8ab7c351e32da3c72b19c4585c0" />
       <keyword name="pointSelected" id="QGLViewer::pointSelected" ref="classQGLViewer.html#ab78f96913c9aede4854b0efccf53f983" />
       <keyword name="mouseGrabberChanged" id="QGLViewer::mouseGrabberChanged" ref="classQGLViewer.html#a959ca6df1731d57aa692af99abcd28d1" />
-      <keyword name="QGLViewer" id="QGLViewer::QGLViewer" ref="classQGLViewer.html#a5cfffe102b268c9af761c5d82a694dcc" />
+      <keyword name="QGLViewer" id="QGLViewer::QGLViewer" ref="classQGLViewer.html#ad423b9ea16b28f627c3197deacf44fac" />
+      <keyword name="QGLViewer" id="QGLViewer::QGLViewer" ref="classQGLViewer.html#a605f8644f21dbda2218108bf3f0ca281" />
       <keyword name="QGLViewer" id="QGLViewer::QGLViewer" ref="classQGLViewer.html#a4724b62429d2ecd9049bc41a562901b6" />
       <keyword name="QGLViewer" id="QGLViewer::QGLViewer" ref="classQGLViewer.html#a5b655fa44abb36439e4f7ef3ad2cd649" />
       <keyword name="~QGLViewer" id="QGLViewer::~QGLViewer" ref="classQGLViewer.html#a8c90239e64b7a43473a189d5da865ac7" />

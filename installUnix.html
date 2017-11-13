@@ -50,7 +50,7 @@ Unix systems
 <a name="mac"></a>
 <h2><img src="images/mac.png" width="55" height="54" alt="mac"/> Mac OS X</h2>
 
-<a href="http://www.libqglviewer.com/src/libQGLViewer-2.7.0.tar.gz" onclick="javascript: _gaq.push(['_trackPageview', 'libQGLViewer-2.7.0.tar.gz']);">Download</a> and decompress the sources, then open the <code>libQGLViewer-2.7.0/QGLViewer</code> folder.
+<a href="http://www.libqglviewer.com/src/libQGLViewer-2.7.1.tar.gz" onclick="javascript: _gaq.push(['_trackPageview', 'libQGLViewer-2.7.1.tar.gz']);">Download</a> and decompress the sources, then open the <code>libQGLViewer-2.7.1/QGLViewer</code> folder.
 
 <h3>Using Qt Creator</h3>
 Open <code>QGLViewer.pro</code> and "build all".
@@ -58,13 +58,13 @@ Open <code>QGLViewer.pro</code> and "build all".
 <h3>Using Xcode</h3>
 Create the Xcode project by running these lines in a terminal:
 <pre>
-cd path/to/libQGLViewer-2.7.0/QGLViewer
+cd path/to/libQGLViewer-2.7.1/QGLViewer
 qmake -spec macx-xcode
 </pre>
 
 <h3>Using <code>make</code></h3>
 <pre>
-cd path/to/libQGLViewer-2.7.0/QGLViewer
+cd path/to/libQGLViewer-2.7.1/QGLViewer
 qmake -spec macx-g++
 make
 </pre>
@@ -170,19 +170,19 @@ It should be available from standard debian depositories and can be installed us
 
 <p>As an alternative, you can use these debian packages generated using Alien and depending on the latest Qt version :</p>
 <pre>
-apt-get install <a href="http://www.libqglviewer.com/src/libqglviewer_2.7.0_i386.deb" onclick="javascript: _gaq.push(['_trackPageview', 'libqglviewer_2.7.0_i386.deb']);">libqglviewer_2.7.0_i386.deb</a> <a href="http://www.libqglviewer.com/src/libqglviewer-devel_2.7.0_i386.deb" onclick="javascript: _gaq.push(['_trackPageview', 'libqglviewer-devel_2.7.0_i386.deb']);">libqglviewer-devel_2.7.0_i386.deb</a>
+apt-get install <a href="http://www.libqglviewer.com/src/libqglviewer_2.7.1_i386.deb" onclick="javascript: _gaq.push(['_trackPageview', 'libqglviewer_2.7.1_i386.deb']);">libqglviewer_2.7.1_i386.deb</a> <a href="http://www.libqglviewer.com/src/libqglviewer-devel_2.7.1_i386.deb" onclick="javascript: _gaq.push(['_trackPageview', 'libqglviewer-devel_2.7.1_i386.deb']);">libqglviewer-devel_2.7.1_i386.deb</a>
 </pre>
 
 <h3>RPM packages</h3>
 Use the following command line:
 <pre>
-rpm -Uvh <a href="http://www.libqglviewer.com/src/libQGLViewer-2.7.0.i386.rpm" onclick="javascript: _gaq.push(['_trackPageview', 'libQGLViewer-2.7.0.i386.rpm']);">libQGLViewer-2.7.0.i386.rpm</a> <a href="http://www.libqglviewer.com/src/libQGLViewer-devel-2.7.0.i386.rpm" onclick="javascript: _gaq.push(['_trackPageview', 'libQGLViewer-devel-2.7.0.i386.rpm']);">libQGLViewer-devel-2.7.0.i386.rpm</a>
+rpm -Uvh <a href="http://www.libqglviewer.com/src/libQGLViewer-2.7.1.i386.rpm" onclick="javascript: _gaq.push(['_trackPageview', 'libQGLViewer-2.7.1.i386.rpm']);">libQGLViewer-2.7.1.i386.rpm</a> <a href="http://www.libqglviewer.com/src/libQGLViewer-devel-2.7.1.i386.rpm" onclick="javascript: _gaq.push(['_trackPageview', 'libQGLViewer-devel-2.7.1.i386.rpm']);">libQGLViewer-devel-2.7.1.i386.rpm</a>
 </pre>
 You can also re-compile the RPM for optimal results:
 <pre>
-rpmbuild - !!!!!!!!!!!!!!!!!!!!!! FIXME !!!!!!!!!!!!!!!!!!!!! -rebuild <a href="http://www.libqglviewer.com/src/libQGLViewer-2.7.0.src.rpm" onclick="javascript: _gaq.push(['_trackPageview', 'libQGLViewer-2.7.0.src.rpm']);">libQGLViewer-2.7.0.src.rpm</a>
+rpmbuild - !!!!!!!!!!!!!!!!!!!!!! FIXME !!!!!!!!!!!!!!!!!!!!! -rebuild <a href="http://www.libqglviewer.com/src/libQGLViewer-2.7.1.src.rpm" onclick="javascript: _gaq.push(['_trackPageview', 'libQGLViewer-2.7.1.src.rpm']);">libQGLViewer-2.7.1.src.rpm</a>
 cd /usr/src/RPM/RPMS/i?86/ (or /usr/src/redhat/RPMS/i?86, see the rpmbuild last log lines)
-rpm -Uvh libQGLViewer-*2.7.0.i?86.rpm
+rpm -Uvh libQGLViewer-*2.7.1.i?86.rpm
 </pre>
 
 <p>
@@ -196,11 +196,11 @@ Change the RPM installation prefix, say to <code>/usr/local</code> (default is
 Use the <a href="http://www.freshports.org/graphics/libqglviewer/">FreeBSD port</a>.
 -->
 
-<a href="http://www.libqglviewer.com/src/libQGLViewer-2.7.0.tar.gz" onclick="javascript: _gaq.push(['_trackPageview', 'libQGLViewer-2.7.0.tar.gz']);">Download</a> and decompress the sources, then go to the <code>libQGLViewer-2.7.0/QGLViewer</code> folder.
+<a href="http://www.libqglviewer.com/src/libQGLViewer-2.7.1.tar.gz" onclick="javascript: _gaq.push(['_trackPageview', 'libQGLViewer-2.7.1.tar.gz']);">Download</a> and decompress the sources, then go to the <code>libQGLViewer-2.7.1/QGLViewer</code> folder.
 
 <pre>
-tar -xzf <a href="http://www.libqglviewer.com/src/libQGLViewer-2.7.0.tar.gz" onclick="javascript: _gaq.push(['_trackPageview', 'libQGLViewer-2.7.0.tar.gz']);">libQGLViewer-2.7.0.tar.gz</a>
-cd libQGLViewer-2.7.0/QGLViewer
+tar -xzf <a href="http://www.libqglviewer.com/src/libQGLViewer-2.7.1.tar.gz" onclick="javascript: _gaq.push(['_trackPageview', 'libQGLViewer-2.7.1.tar.gz']);">libQGLViewer-2.7.1.tar.gz</a>
+cd libQGLViewer-2.7.1/QGLViewer
 </pre>
 
 <h3>Using Qt Creator</h3>
@@ -215,7 +215,7 @@ sudo make install [optional]
 
 The following files are installed (you need root privileges to <code>install</code>, since these are system directories):
 <ul>
-<li>The library (<code>libQGLViewer-2.7.0.so</code>) in <code>/usr/lib</code></li>
+<li>The library (<code>libQGLViewer-2.7.1.so</code>) in <code>/usr/lib</code></li>
 <li>The header files and designer plugin code in <code>/usr/include/QGLViewer</code></li>
 <li>The documentation and the examples in <code>/usr/share/doc/QGLViewer</code></li>
 </ul>
@@ -422,7 +422,7 @@ encounter specific installation problems.
 <p>
   <a href="http://validator.w3.org/check/referer"><img src="images/xhtml.png" alt="Valid XHTML 1.0!" height="31" width="88"/></a>
   <a href="http://jigsaw.w3.org/css-validator/check/referer"><img src="images/css.gif" alt="Valid CSS!" width="88" height="31"/></a>
-  <i>Last modified on Tuesday, June 20, 2017.</i>
+  <i>Last modified on Monday, November 13, 2017.</i>
 </p>
 
 </body>

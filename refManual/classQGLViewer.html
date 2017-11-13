@@ -24,7 +24,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">libQGLViewer
-   &#160;<span id="projectnumber">Version 2.7.0</span>
+   &#160;<span id="projectnumber">Version 2.7.1</span>
    </div>
   </td>
  </tr>
@@ -104,8 +104,10 @@ Signals</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5cfffe102b268c9af761c5d82a694dcc"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQGLViewer.html#a5cfffe102b268c9af761c5d82a694dcc">QGLViewer</a> (QWidget *parent=0, const QGLWidget *shareWidget=0, Qt::WindowFlags flags=0)</td></tr>
-<tr class="separator:a5cfffe102b268c9af761c5d82a694dcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad423b9ea16b28f627c3197deacf44fac"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQGLViewer.html#ad423b9ea16b28f627c3197deacf44fac">QGLViewer</a> (QWidget *parent=0, Qt::WindowFlags flags=Qt::WindowFlags())</td></tr>
+<tr class="separator:ad423b9ea16b28f627c3197deacf44fac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a605f8644f21dbda2218108bf3f0ca281"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQGLViewer.html#a605f8644f21dbda2218108bf3f0ca281">QGLViewer</a> (QWidget *parent, const QGLWidget *shareWidget, Qt::WindowFlags flags=0)</td></tr>
+<tr class="separator:a605f8644f21dbda2218108bf3f0ca281"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4724b62429d2ecd9049bc41a562901b6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQGLViewer.html#a4724b62429d2ecd9049bc41a562901b6">QGLViewer</a> (QGLContext *context, QWidget *parent=0, const QGLWidget *shareWidget=0, Qt::WindowFlags flags=0)</td></tr>
 <tr class="separator:a4724b62429d2ecd9049bc41a562901b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b655fa44abb36439e4f7ef3ad2cd649"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classQGLViewer.html#a5b655fa44abb36439e4f7ef3ad2cd649">QGLViewer</a> (const QGLFormat &amp;format, QWidget *parent=0, const QGLWidget *shareWidget=0, Qt::WindowFlags flags=0)</td></tr>
@@ -678,8 +680,8 @@ QGLViewer pool</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a5cfffe102b268c9af761c5d82a694dcc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5cfffe102b268c9af761c5d82a694dcc">&#9670;&nbsp;</a></span>QGLViewer() <span class="overload">[1/3]</span></h2>
+<a id="ad423b9ea16b28f627c3197deacf44fac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad423b9ea16b28f627c3197deacf44fac">&#9670;&nbsp;</a></span>QGLViewer() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -696,8 +698,46 @@ QGLViewer pool</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">Qt::WindowFlags&#160;</td>
+          <td class="paramname"><em>flags</em> = <code>Qt::WindowFlags()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Constructor. See <code>QGLWidget</code> documentation for details.</p>
+<p>All viewer parameters (display flags, scene parameters, associated objects...) are set to their default values. See the associated documentation. </p>
+
+</div>
+</div>
+<a id="a605f8644f21dbda2218108bf3f0ca281"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a605f8644f21dbda2218108bf3f0ca281">&#9670;&nbsp;</a></span>QGLViewer() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">QGLViewer </td>
+          <td>(</td>
+          <td class="paramtype">QWidget *&#160;</td>
+          <td class="paramname"><em>parent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype">const QGLWidget *&#160;</td>
-          <td class="paramname"><em>shareWidget</em> = <code>0</code>, </td>
+          <td class="paramname"><em>shareWidget</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -721,7 +761,7 @@ QGLViewer pool</h2></td></tr>
 </div>
 </div>
 <a id="a4724b62429d2ecd9049bc41a562901b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4724b62429d2ecd9049bc41a562901b6">&#9670;&nbsp;</a></span>QGLViewer() <span class="overload">[2/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4724b62429d2ecd9049bc41a562901b6">&#9670;&nbsp;</a></span>QGLViewer() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -769,7 +809,7 @@ QGLViewer pool</h2></td></tr>
 </div>
 </div>
 <a id="a5b655fa44abb36439e4f7ef3ad2cd649"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5b655fa44abb36439e4f7ef3ad2cd649">&#9670;&nbsp;</a></span>QGLViewer() <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b655fa44abb36439e4f7ef3ad2cd649">&#9670;&nbsp;</a></span>QGLViewer() <span class="overload">[4/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -5992,7 +6032,7 @@ The <a class="el" href="classQGLViewer.html#a9e7f69b9aeb271711430375eaea94167">b
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jun 20 2017 15:04:23 for libQGLViewer by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Nov 13 2017 23:06:23 for libQGLViewer by &#160;<a href="http://www.doxygen.org/index.html">
 doxygen
 </a> 1.8.13
 </small></address>
