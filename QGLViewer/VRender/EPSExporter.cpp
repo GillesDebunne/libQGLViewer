@@ -46,7 +46,7 @@ void EPSExporter::writeHeader(QTextStream& out) const
 
 	out << "/threshold " << EPS_GOURAUD_THRESHOLD << " def\n";
 
-	for(int i = 0; GOURAUD_TRIANGLE_EPS[i] != NULL; i++)
+	for(int i = 0; GOURAUD_TRIANGLE_EPS[i] != nullptr; i++)
 		out << GOURAUD_TRIANGLE_EPS[i] << "\n";
 #ifdef A_VOIR
 	out <<  "\n" <<  << " setlinewidth\n\n", _lineWidth;
@@ -102,7 +102,7 @@ const char *EPSExporter::GOURAUD_TRIANGLE_EPS[] =
 	"div 10 1 roll 7 index 5 index 3 index add add 3 div 10 1 roll 6 index 4 ",
 	"index 2 index add add 3 div 10 1 roll 9 {pop} repeat 3 array astore ",
 	"triangle } ifelse } bd",
-	NULL
+	nullptr
 };
 
 void EPSExporter::spewPolygone(const Polygone *P, QTextStream& out)

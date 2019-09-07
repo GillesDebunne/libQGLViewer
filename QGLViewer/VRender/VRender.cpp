@@ -24,9 +24,9 @@ using namespace std ;
 
 void vrender::VectorialRender(RenderCB render_callback, void *callback_params, VRenderParams& vparams)
 {
-	GLfloat *feedbackBuffer = NULL ;
-	SortMethod *sort_method = NULL ;
-	Exporter *exporter = NULL ;
+	GLfloat *feedbackBuffer = nullptr ;
+	SortMethod *sort_method = nullptr ;
+	Exporter *exporter = nullptr ;
 
 	try
 	{
@@ -40,12 +40,12 @@ void vrender::VectorialRender(RenderCB render_callback, void *callback_params, V
 
 		while(returned < 0)
 		{
-			if(feedbackBuffer != NULL)
+			if(feedbackBuffer != nullptr)
 				delete[] feedbackBuffer ;
 
 			feedbackBuffer = new GLfloat[vparams.size()] ;
 
-			if(feedbackBuffer == NULL)
+			if(feedbackBuffer == nullptr)
 				throw std::runtime_error("Out of memory during feedback buffer allocation.") ;
 
 			glFeedbackBuffer(vparams.size(), GL_3D_COLOR, feedbackBuffer);
@@ -83,10 +83,10 @@ void vrender::VectorialRender(RenderCB render_callback, void *callback_params, V
 		ParserGL parserGL ;
 		parserGL.parseFeedbackBuffer(feedbackBuffer,returned,primitive_tab,vparams) ;
 
-		if(feedbackBuffer != NULL)
+		if(feedbackBuffer != nullptr)
 		{
 			delete[] feedbackBuffer ;
-			feedbackBuffer = NULL ;
+			feedbackBuffer = nullptr ;
 		}
 
 		if(vparams.isEnabled(VRenderParams::OptimizeBackFaceCulling))
@@ -180,16 +180,16 @@ void vrender::VectorialRender(RenderCB render_callback, void *callback_params, V
 		for(unsigned int i=0;i<primitive_tab.size();++i)
 			delete primitive_tab[i] ;
 
-		if(exporter != NULL) delete exporter ;
-		if(sort_method != NULL) delete sort_method ;
+		if(exporter != nullptr) delete exporter ;
+		if(sort_method != nullptr) delete sort_method ;
 	}
 	catch(exception& e)
 	{
 		cout << "Render aborted: " << e.what() << endl ;
 
-		if(exporter != NULL) delete exporter ;
-		if(sort_method != NULL) delete sort_method ;
-		if(feedbackBuffer != NULL) delete[] feedbackBuffer ;
+		if(exporter != nullptr) delete exporter ;
+		if(sort_method != nullptr) delete sort_method ;
+		if(feedbackBuffer != nullptr) delete[] feedbackBuffer ;
 
 		throw e ;
 	}
@@ -200,7 +200,7 @@ VRenderParams::VRenderParams()
 	_options = 0 ;
 	_format = EPS ;
 	_filename = "" ;
-	_progress_function = NULL ;
+	_progress_function = nullptr ;
 	_sortMethod = BSPSort ;
 }
 
