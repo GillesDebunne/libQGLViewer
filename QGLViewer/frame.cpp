@@ -8,8 +8,8 @@ using namespace std;
 /*! Creates a default Frame.
 
   Its position() is (0,0,0) and it has an identity orientation() Quaternion. The
-  referenceFrame() and the constraint() are \c NULL. */
-Frame::Frame() : constraint_(NULL), referenceFrame_(NULL) {}
+  referenceFrame() and the constraint() are \c nullptr. */
+Frame::Frame() : constraint_(nullptr), referenceFrame_(nullptr) {}
 
 /*! Creates a Frame with a position() and an orientation().
 
@@ -17,9 +17,9 @@ Frame::Frame() : constraint_(NULL), referenceFrame_(NULL) {}
  methods.
 
  The Frame is defined in the world coordinate system (its referenceFrame() is \c
- NULL). It has a \c NULL associated constraint(). */
+ nullptr). It has a \c nullptr associated constraint(). */
 Frame::Frame(const Vec &position, const Quaternion &orientation)
-    : t_(position), q_(orientation), constraint_(NULL), referenceFrame_(NULL) {}
+    : t_(position), q_(orientation), constraint_(nullptr), referenceFrame_(nullptr) {}
 
 /*! Equal operator.
 
@@ -83,7 +83,7 @@ Frame::Frame(const Frame &frame) : QObject() { (*this) = frame; }
   This matrix only represents the local Frame transformation (i.e. with respect
   to the referenceFrame()). Use worldMatrix() to get the full Frame
   transformation matrix (i.e. from the world to the Frame coordinate system).
-  These two match when the referenceFrame() is \c NULL.
+  These two match when the referenceFrame() is \c nullptr.
 
   The result is only valid until the next call to matrix(), getMatrix(),
   worldMatrix() or getWorldMatrix(). Use it immediately (as above) or use
@@ -132,7 +132,7 @@ void Frame::getMatrix(GLdouble m[16]) const {
   Only the local Frame transformation (i.e. defined with respect to the
   referenceFrame()) is inverted. Use worldInverse() for a global inverse.
 
-  The resulting Frame has the same referenceFrame() as the Frame and a \c NULL
+  The resulting Frame has the same referenceFrame() as the Frame and a \c nullptr
   constraint().
 
   \note The scaling factor of the 4x4 matrix is 1.0. */
@@ -159,7 +159,7 @@ Frame Frame::inverse() const {
   referenceFrame() hierarchy is taken into account to define the Frame
   transformation from the world coordinate system. Use matrix() to get the local
   Frame transformation matrix (i.e. defined with respect to the
-  referenceFrame()). These two match when the referenceFrame() is \c NULL.
+  referenceFrame()). These two match when the referenceFrame() is \c nullptr.
 
   The OpenGL format of the result is the transpose of the actual mathematical
   European representation (translation is on the last \e line instead of the
@@ -506,7 +506,7 @@ Vec Frame::position() const {
 Quaternion Frame::orientation() const {
   Quaternion res = rotation();
   const Frame *fr = referenceFrame();
-  while (fr != NULL) {
+  while (fr != nullptr) {
     res = fr->rotation() * res;
     fr = fr->referenceFrame();
   }
@@ -617,7 +617,7 @@ Emits the modified() signal if \p refFrame differs from the current
 referenceFrame().
 
 Using this method, you can create a hierarchy of Frames. This hierarchy needs to
-be a tree, which root is the world coordinate system (i.e. a \c NULL
+be a tree, which root is the world coordinate system (i.e. a \c nullptr
 referenceFrame()). A warning is printed and no action is performed if setting \p
 refFrame as the referenceFrame() would create a loop in the Frame hierarchy (see
 settingAsReferenceFrameWillCreateALoop()). */
@@ -636,7 +636,7 @@ void Frame::setReferenceFrame(const Frame *const refFrame) {
   create a loop in the Frame hierarchy. */
 bool Frame::settingAsReferenceFrameWillCreateALoop(const Frame *const frame) {
   const Frame *f = frame;
-  while (f != NULL) {
+  while (f != nullptr) {
     if (f == this)
       return true;
     f = f->referenceFrame();
@@ -670,7 +670,7 @@ Vec Frame::coordinatesOf(const Vec &src) const {
 Vec Frame::inverseCoordinatesOf(const Vec &src) const {
   const Frame *fr = this;
   Vec res = src;
-  while (fr != NULL) {
+  while (fr != nullptr) {
     res = fr->localInverseCoordinatesOf(res);
     fr = fr->referenceFrame();
   }
@@ -715,7 +715,7 @@ Vec Frame::coordinatesOfFrom(const Vec &src, const Frame *const from) const {
 Vec Frame::coordinatesOfIn(const Vec &src, const Frame *const in) const {
   const Frame *fr = this;
   Vec res = src;
-  while ((fr != NULL) && (fr != in)) {
+  while ((fr != nullptr) && (fr != in)) {
     res = fr->localInverseCoordinatesOf(res);
     fr = fr->referenceFrame();
   }
@@ -802,7 +802,7 @@ Vec Frame::transformOf(const Vec &src) const {
 Vec Frame::inverseTransformOf(const Vec &src) const {
   const Frame *fr = this;
   Vec res = src;
-  while (fr != NULL) {
+  while (fr != nullptr) {
     res = fr->localInverseTransformOf(res);
     fr = fr->referenceFrame();
   }
@@ -848,7 +848,7 @@ Vec Frame::transformOfFrom(const Vec &src, const Frame *const from) const {
 Vec Frame::transformOfIn(const Vec &src, const Frame *const in) const {
   const Frame *fr = this;
   Vec res = src;
-  while ((fr != NULL) && (fr != in)) {
+  while ((fr != nullptr) && (fr != in)) {
     res = fr->localInverseTransformOf(res);
     fr = fr->referenceFrame();
   }
@@ -988,7 +988,7 @@ alignment. The new Frame's position() is such that the \p frame position
 (computed with coordinatesOf(), in the Frame coordinates system) does not
 change.
 
-\p frame may be \c NULL and then represents the world coordinate system (same
+\p frame may be \c nullptr and then represents the world coordinate system (same
 convention than for the referenceFrame()).
 
 The rotation (and translation when \p move is \c true) applied to the Frame are

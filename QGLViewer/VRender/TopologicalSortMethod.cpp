@@ -455,12 +455,12 @@ void TopologicalSortUtils::recursTopologicalSort(	vector< vector<size_t> >& prec
 					bool prim_lower_prec_contains_ip1 = false ;
 					bool prim_upper_prec_contains_ip1 = false ;
 
-					Primitive *prim_upper = NULL ;
-					Primitive *prim_lower = NULL ;
+					Primitive *prim_upper = nullptr ;
+					Primitive *prim_lower = nullptr ;
 
 					PrimitivePositioning::splitPrimitive(primitive_tab[ancestors[i3]],normal,c,prim_upper,prim_lower) ;
 
-					if(prim_upper == NULL || prim_lower == NULL)
+					if(prim_upper == nullptr || prim_lower == nullptr)
 						continue ;
 #ifdef DEBUG_TS
 					cout << "Splitted primitive " << ancestors[i3] << endl ;

@@ -29,7 +29,7 @@ ManipulatedFrame::ManipulatedFrame()
   setZoomSensitivity(1.0);
 
   isSpinning_ = false;
-  previousConstraint_ = NULL;
+  previousConstraint_ = nullptr;
 
   connect(&spinningTimer_, SIGNAL(timeout()), SLOT(spinUpdate()));
 }
@@ -118,7 +118,7 @@ restored and are left unchanged.
 
 See Vec::initFromDOMElement() for a complete code example. */
 void ManipulatedFrame::initFromDOMElement(const QDomElement &element) {
-  // Not called since it would set constraint() and referenceFrame() to NULL.
+  // Not called since it would set constraint() and referenceFrame() to nullptr.
   // *this = ManipulatedFrame();
   Frame::initFromDOMElement(element);
 
@@ -183,16 +183,16 @@ void ManipulatedFrame::spinUpdate() {
 #ifndef DOXYGEN
 /*! Protected internal method used to handle mouse events. */
 void ManipulatedFrame::startAction(int ma, bool withConstraint) {
-  action_ = (QGLViewer::MouseAction)(ma);
+  action_ = static_cast<QGLViewer::MouseAction>(ma);
 
   // #CONNECTION# manipulatedFrame::wheelEvent,
   // manipulatedCameraFrame::wheelEvent and mouseReleaseEvent() restore previous
   // constraint
   if (withConstraint)
-    previousConstraint_ = NULL;
+    previousConstraint_ = nullptr;
   else {
     previousConstraint_ = constraint();
-    setConstraint(NULL);
+    setConstraint(nullptr);
   }
 
   switch (action_) {
@@ -281,7 +281,7 @@ The mouse behavior depends on which button is pressed. See the <a
 href="../mouse.html">QGLViewer mouse page</a> for details. */
 void ManipulatedFrame::mousePressEvent(QMouseEvent *const event,
                                        Camera *const camera) {
-  Q_UNUSED(camera);
+  Q_UNUSED(camera)
 
   if (grabsMouse())
     keepsGrabbingMouse_ = true;
@@ -440,8 +440,8 @@ spinningSensitivity() when the button is released. Press the rotate button again
 to stop spinning. See startSpinning() and isSpinning(). */
 void ManipulatedFrame::mouseReleaseEvent(QMouseEvent *const event,
                                          Camera *const camera) {
-  Q_UNUSED(event);
-  Q_UNUSED(camera);
+  Q_UNUSED(event)
+  Q_UNUSED(camera)
 
   keepsGrabbingMouse_ = false;
 
