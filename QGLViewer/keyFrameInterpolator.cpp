@@ -11,7 +11,7 @@ using namespace std;
   interpolationTime(), interpolationSpeed() and interpolationPeriod() are set to
   their default values. */
 KeyFrameInterpolator::KeyFrameInterpolator(Frame *frame)
-    : frame_(NULL), period_(40), interpolationTime_(0.0),
+    : frame_(nullptr), period_(40), interpolationTime_(0.0),
       interpolationSpeed_(1.0), interpolationStarted_(false),
       closedPath_(false), loopInterpolation_(false), pathIsValid_(false),
       valuesAreValid_(true), currentFrameValid_(false)
@@ -145,7 +145,7 @@ void KeyFrameInterpolator::resetInterpolation() {
   edited, even during the interpolation. See the <a
   href="../examples/keyFrames.html">keyFrames example</a> for an illustration.
 
-  \c NULL \p frame pointers are silently ignored. The keyFrameTime() has to be
+  \c nullptr \p frame pointers are silently ignored. The keyFrameTime() has to be
   monotonously increasing over keyFrames.
 
   Use addKeyFrame(const Frame&, qreal) to add keyFrame by values. */
@@ -331,9 +331,9 @@ void KeyFrameInterpolator::drawPath(int mask, int nbFrames, qreal scale) {
       kf_[0] = keyFrame_.first();
       kf_[1] = kf_[0];
       int index = 1;
-      kf_[2] = (index < keyFrame_.size()) ? keyFrame_.at(index) : NULL;
+      kf_[2] = (index < keyFrame_.size()) ? keyFrame_.at(index) : nullptr;
       index++;
-      kf_[3] = (index < keyFrame_.size()) ? keyFrame_.at(index) : NULL;
+      kf_[3] = (index < keyFrame_.size()) ? keyFrame_.at(index) : nullptr;
 
       while (kf_[2]) {
         Vec diff = kf_[2]->position() - kf_[1]->position();
@@ -357,7 +357,7 @@ void KeyFrameInterpolator::drawPath(int mask, int nbFrames, qreal scale) {
         kf_[1] = kf_[2];
         kf_[2] = kf_[3];
         index++;
-        kf_[3] = (index < keyFrame_.size()) ? keyFrame_.at(index) : NULL;
+        kf_[3] = (index < keyFrame_.size()) ? keyFrame_.at(index) : nullptr;
       }
       // Add last KeyFrame
       path_.push_back(Frame(kf_[1]->position(), kf_[1]->orientation()));
@@ -410,7 +410,7 @@ void KeyFrameInterpolator::updateModifiedFrameValues() {
   kf = keyFrame_.first();
   int index = 1;
   while (kf) {
-    KeyFrame *next = (index < keyFrame_.size()) ? keyFrame_.at(index) : NULL;
+    KeyFrame *next = (index < keyFrame_.size()) ? keyFrame_.at(index) : nullptr;
     index++;
     if (next)
       kf->computeTangent(prev, next);
@@ -647,7 +647,7 @@ void KeyFrameInterpolator::initFromDOMElement(const QDomElement &element) {
   setClosedPath(DomUtils::boolFromDom(element, "closedPath", false));
   setLoopInterpolation(DomUtils::boolFromDom(element, "loop", false));
 
-  // setFrame(NULL);
+  // setFrame(nullptr);
   pathIsValid_ = false;
   valuesAreValid_ = false;
   currentFrameValid_ = false;
@@ -659,7 +659,7 @@ void KeyFrameInterpolator::initFromDOMElement(const QDomElement &element) {
 
 //////////// KeyFrame private class implementation /////////
 KeyFrameInterpolator::KeyFrame::KeyFrame(const Frame &fr, qreal t)
-    : time_(t), frame_(NULL) {
+    : time_(t), frame_(nullptr) {
   p_ = fr.position();
   q_ = fr.orientation();
 }
