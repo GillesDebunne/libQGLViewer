@@ -541,6 +541,7 @@ cd - > /dev/null
 
 echo
 echo ">> All files set in $tmpDir"
+echo "Copy $tmpDir in gh-pages branches and push to update site"
 cd $tmpDir
 
 
