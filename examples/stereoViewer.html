@@ -62,11 +62,16 @@ protected:
 #include "stereoViewer.h"
 #include &lt;math.h&gt;
 #include &lt;qapplication.h&gt;
+#include &lt;QSurfaceFormat&gt;
 
 using namespace std;
 
 void Viewer::init() {
   restoreStateFromFile();
+
+  QSurfaceFormat format;
+  format.setStereo(true);
+  setFormat(format);
 
   // Activate the stereo display. Press 'S' to toggle.
   setStereoDisplay(true);

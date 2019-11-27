@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QtHelpProject version="1.0">
-  <namespace>com.libqglviewer.2.7.1</namespace>
+  <namespace>com.libqglviewer.2.7.2</namespace>
   <virtualFolder>doc</virtualFolder>
   <filterSection>
     <filterAttribute>doxygen</filterAttribute>
     <toc>
-      <section title="libQGLViewer Version 2.7.1" ref="index.html">
-        <section title="Namespaces">
+      <section title="libQGLViewer Version 2.7.2" ref="index.html">
+        <section title="Namespaces" ref="namespaces.html">
           <section title="Namespace List" ref="namespaces.html">
             <section title="qglviewer" ref="namespaceqglviewer.html" />
           </section>
@@ -65,15 +65,15 @@
                 <section title="frame" ref="classqglviewer_1_1Camera.html#a1fe0ea3c17091d0981f6cb3b463405b7" />
                 <section title="getCameraCoordinatesOf" ref="classqglviewer_1_1Camera.html#a72df4e1a9394de9fd1cbf6d5c9def471" />
                 <section title="getFrustumPlanesCoefficients" ref="classqglviewer_1_1Camera.html#a8d206eab3db02f3c20d3113203868f18" />
-                <section title="getModelViewMatrix" ref="classqglviewer_1_1Camera.html#af62c8d105480c98da84b28f11b68d5ec" />
                 <section title="getModelViewMatrix" ref="classqglviewer_1_1Camera.html#a496ef278873a112c02e1fc66480a0769" />
-                <section title="getModelViewProjectionMatrix" ref="classqglviewer_1_1Camera.html#ab9d51300a6d3eecb0175daf0e38c9e72" />
+                <section title="getModelViewMatrix" ref="classqglviewer_1_1Camera.html#af62c8d105480c98da84b28f11b68d5ec" />
                 <section title="getModelViewProjectionMatrix" ref="classqglviewer_1_1Camera.html#af4a6b4671727ab2b178592ed44c2cae7" />
+                <section title="getModelViewProjectionMatrix" ref="classqglviewer_1_1Camera.html#ab9d51300a6d3eecb0175daf0e38c9e72" />
                 <section title="getOrthoWidthHeight" ref="classqglviewer_1_1Camera.html#a7479012d34a4e697d1450979267afab7" />
-                <section title="getProjectedCoordinatesOf" ref="classqglviewer_1_1Camera.html#a93c1e776b8dddc5f841281d592aa6ac1" />
-                <section title="getProjectionMatrix" ref="classqglviewer_1_1Camera.html#a0a65b1592e96a4d5154d0d51fa25005a" />
+                <section title="getProjectedCoordinatesOf" ref="classqglviewer_1_1Camera.html#a22178e1e9015d8c4dfc0f75b8b70465d" />
                 <section title="getProjectionMatrix" ref="classqglviewer_1_1Camera.html#a8198337a92cbfcc5f988d2a3082eb6f4" />
-                <section title="getUnprojectedCoordinatesOf" ref="classqglviewer_1_1Camera.html#a26261f2b0fdcb640c794c04b31b6a8e9" />
+                <section title="getProjectionMatrix" ref="classqglviewer_1_1Camera.html#a0a65b1592e96a4d5154d0d51fa25005a" />
+                <section title="getUnprojectedCoordinatesOf" ref="classqglviewer_1_1Camera.html#ade89a30e93f8da458303eb6b176f2378" />
                 <section title="getViewport" ref="classqglviewer_1_1Camera.html#a529916a86898e63f9c8e2fe1e206a006" />
                 <section title="getWorldCoordinatesOf" ref="classqglviewer_1_1Camera.html#a69657ca414da99ea8e07600df3bec5ba" />
                 <section title="horizontalFieldOfView" ref="classqglviewer_1_1Camera.html#af329336bd1e8ec4d1fb53b2d5dc8413e" />
@@ -97,7 +97,7 @@
                 <section title="playPath" ref="classqglviewer_1_1Camera.html#a4299db38c4e04020738e39cfa99d91a0" />
                 <section title="pointUnderPixel" ref="classqglviewer_1_1Camera.html#ac41c6ea30aedce51e816c2a8866dbf99" />
                 <section title="position" ref="classqglviewer_1_1Camera.html#a8bd03c538c9b90a8db7ecee97332c86a" />
-                <section title="projectedCoordinatesOf" ref="classqglviewer_1_1Camera.html#aa4326f1811f45a3e8b505b85a53a172c" />
+                <section title="projectedCoordinatesOf" ref="classqglviewer_1_1Camera.html#acac8dc20579bea1f9d6af1173d7bf24b" />
                 <section title="resetPath" ref="classqglviewer_1_1Camera.html#abaddf6c36a75060a76c6813d59e6b132" />
                 <section title="rightVector" ref="classqglviewer_1_1Camera.html#aa398a60580664d07a5a86df7714a9e21" />
                 <section title="sceneCenter" ref="classqglviewer_1_1Camera.html#a443a9ce83366c63a62723204eb3dc532" />
@@ -133,7 +133,7 @@
                 <section title="setZNearCoefficient" ref="classqglviewer_1_1Camera.html#a8c7b68fdc4a06c76e623a7c4eafcef95" />
                 <section title="showEntireScene" ref="classqglviewer_1_1Camera.html#ada8dd7d2346ebf46ed1f9822a8418df2" />
                 <section title="type" ref="classqglviewer_1_1Camera.html#adf4a6727c689e0038cf2cdd158d5ed2c" />
-                <section title="unprojectedCoordinatesOf" ref="classqglviewer_1_1Camera.html#ab5171f000d0fa2a69299b0b6ffa1192f" />
+                <section title="unprojectedCoordinatesOf" ref="classqglviewer_1_1Camera.html#a9a1ef53a134fedb324716f4fd5f3c354" />
                 <section title="upVector" ref="classqglviewer_1_1Camera.html#aa21be395612075a865ee62d6a60caf5d" />
                 <section title="viewDirection" ref="classqglviewer_1_1Camera.html#a3815f8f8099eb5fcdbaa2afaee4d91fc" />
                 <section title="worldCoordinatesOf" ref="classqglviewer_1_1Camera.html#a65ad26c443eb5602762349038786e9b4" />
@@ -174,8 +174,8 @@
                 <section title="getLocalInverseCoordinatesOf" ref="classqglviewer_1_1Frame.html#a64ecb22b9dafb5939c69b163f35c7b71" />
                 <section title="getLocalInverseTransformOf" ref="classqglviewer_1_1Frame.html#a9ccd62a0fcb3abe4211affe2f08a6691" />
                 <section title="getLocalTransformOf" ref="classqglviewer_1_1Frame.html#ad15a539bd36192b3509f541e7b91cfcd" />
-                <section title="getMatrix" ref="classqglviewer_1_1Frame.html#a311f6a41c30c709d838aa139576646ee" />
                 <section title="getMatrix" ref="classqglviewer_1_1Frame.html#a4b555f9fd87155fe9a31ab0cb89c39e7" />
+                <section title="getMatrix" ref="classqglviewer_1_1Frame.html#a311f6a41c30c709d838aa139576646ee" />
                 <section title="getOrientation" ref="classqglviewer_1_1Frame.html#a20d93b6a4f93416cc0de818958427756" />
                 <section title="getPosition" ref="classqglviewer_1_1Frame.html#a1fada63fd30b9384c9de29159759ad59" />
                 <section title="getRotation" ref="classqglviewer_1_1Frame.html#a71528857329cb0eca5cffc86252d3c4d" />
@@ -183,8 +183,8 @@
                 <section title="getTransformOfFrom" ref="classqglviewer_1_1Frame.html#a199aa062ea1677c0ece3799daa44b36d" />
                 <section title="getTransformOfIn" ref="classqglviewer_1_1Frame.html#a9adbbc777e04afe9ff8d8f16473802c8" />
                 <section title="getTranslation" ref="classqglviewer_1_1Frame.html#a46419b9393c738fa6afa50618a91dd02" />
-                <section title="getWorldMatrix" ref="classqglviewer_1_1Frame.html#ac7eab2dc5798e0e3e57e1c8c68f6b615" />
                 <section title="getWorldMatrix" ref="classqglviewer_1_1Frame.html#a30ee5f2774de906224d80842e3582d81" />
+                <section title="getWorldMatrix" ref="classqglviewer_1_1Frame.html#ac7eab2dc5798e0e3e57e1c8c68f6b615" />
                 <section title="initFromDOMElement" ref="classqglviewer_1_1Frame.html#acd13d2ddeca530cb9f26ead47f7d25d3" />
                 <section title="interpolated" ref="classqglviewer_1_1Frame.html#ab55c2a4f1732b90057fae4b6037399de" />
                 <section title="inverse" ref="classqglviewer_1_1Frame.html#a6941c3f1dac640aeb74992df6623a075" />
@@ -201,16 +201,16 @@
                 <section title="position" ref="classqglviewer_1_1Frame.html#a8bd03c538c9b90a8db7ecee97332c86a" />
                 <section title="projectOnLine" ref="classqglviewer_1_1Frame.html#af97ae9e790033879dfcb9837a7312255" />
                 <section title="referenceFrame" ref="classqglviewer_1_1Frame.html#acff1a699a1a37a598aa766db7d26b56f" />
-                <section title="rotate" ref="classqglviewer_1_1Frame.html#a38dffd6ee0ad7e395b49082b2b94de33" />
                 <section title="rotate" ref="classqglviewer_1_1Frame.html#ac754417fa609300f980fcba5405c9989" />
-                <section title="rotate" ref="classqglviewer_1_1Frame.html#ae8e783d4aec3409b05fd414e3d30b8ff" />
                 <section title="rotate" ref="classqglviewer_1_1Frame.html#a6d6d837252d4c1d036a08f2c50827181" />
-                <section title="rotateAroundPoint" ref="classqglviewer_1_1Frame.html#a85f48572c1298bc3192f111e8b587bca" />
+                <section title="rotate" ref="classqglviewer_1_1Frame.html#ae8e783d4aec3409b05fd414e3d30b8ff" />
+                <section title="rotate" ref="classqglviewer_1_1Frame.html#a38dffd6ee0ad7e395b49082b2b94de33" />
                 <section title="rotateAroundPoint" ref="classqglviewer_1_1Frame.html#a5f87bae05096c99fb3b30cf5bb52c891" />
+                <section title="rotateAroundPoint" ref="classqglviewer_1_1Frame.html#a85f48572c1298bc3192f111e8b587bca" />
                 <section title="rotation" ref="classqglviewer_1_1Frame.html#af4fba6607ff11dcf675217c8937a414a" />
                 <section title="setConstraint" ref="classqglviewer_1_1Frame.html#adffa44cd173714b29f2441848a39c224" />
-                <section title="setFromMatrix" ref="classqglviewer_1_1Frame.html#a5408d08ab204157ec29f555b6813f9e4" />
                 <section title="setFromMatrix" ref="classqglviewer_1_1Frame.html#a0c4d51f142f43235e30198e7b8abc626" />
+                <section title="setFromMatrix" ref="classqglviewer_1_1Frame.html#a5408d08ab204157ec29f555b6813f9e4" />
                 <section title="setOrientation" ref="classqglviewer_1_1Frame.html#a6733704520780505759efdef38a68b8b" />
                 <section title="setOrientation" ref="classqglviewer_1_1Frame.html#a63727a742d16aec0d93a0469134a55bb" />
                 <section title="setOrientationWithConstraint" ref="classqglviewer_1_1Frame.html#a8b69106a268d78daf27d32854d455da4" />
@@ -232,16 +232,16 @@
                 <section title="transformOf" ref="classqglviewer_1_1Frame.html#a9d6ed15207562765a1f30007f7e1bc5d" />
                 <section title="transformOfFrom" ref="classqglviewer_1_1Frame.html#aaf7dc263ab1079adfc346c4b9942dab1" />
                 <section title="transformOfIn" ref="classqglviewer_1_1Frame.html#ac6526e85b60ea63827c6c2ed746031e5" />
-                <section title="translate" ref="classqglviewer_1_1Frame.html#a4cb0cf5ff79e1acf0755befdaceb6f4a" />
                 <section title="translate" ref="classqglviewer_1_1Frame.html#ac774331eeae8d29acc94f5653b2f2c3b" />
-                <section title="translate" ref="classqglviewer_1_1Frame.html#aa1abe660fa5c640c01a33d29dd7acca5" />
                 <section title="translate" ref="classqglviewer_1_1Frame.html#a1148e82d06e6c4ad4a9baedc9893cd11" />
+                <section title="translate" ref="classqglviewer_1_1Frame.html#aa1abe660fa5c640c01a33d29dd7acca5" />
+                <section title="translate" ref="classqglviewer_1_1Frame.html#a4cb0cf5ff79e1acf0755befdaceb6f4a" />
                 <section title="translation" ref="classqglviewer_1_1Frame.html#af2d29a4540462e2194f93a3bf387a9ef" />
                 <section title="worldInverse" ref="classqglviewer_1_1Frame.html#a1fc13c8d8d5f8a89b2282d142f493f60" />
                 <section title="worldMatrix" ref="classqglviewer_1_1Frame.html#a62a37fcfd943261a21bc85abbc81ca17" />
               </section>
               <section title="KeyFrameInterpolator" ref="classqglviewer_1_1KeyFrameInterpolator.html">
-                <section title="KeyFrameInterpolator" ref="classqglviewer_1_1KeyFrameInterpolator.html#a2a78bc183af3ac92802cbe605e2a878e" />
+                <section title="KeyFrameInterpolator" ref="classqglviewer_1_1KeyFrameInterpolator.html#a072f20f0cc0eeab8aeca7bb6df475063" />
                 <section title="~KeyFrameInterpolator" ref="classqglviewer_1_1KeyFrameInterpolator.html#a110b875f9265a30f7a520a3603362f95" />
                 <section title="addKeyFrame" ref="classqglviewer_1_1KeyFrameInterpolator.html#a44ac54529e675a2157067c9d205d9622" />
                 <section title="addKeyFrame" ref="classqglviewer_1_1KeyFrameInterpolator.html#ad20780dd1eef86ef712cbeee0a69238a" />
@@ -365,11 +365,11 @@
                 <section title="domElement" ref="classqglviewer_1_1Quaternion.html#a1aa0ee6f18bae0d4638705905cd37a51" />
                 <section title="exp" ref="classqglviewer_1_1Quaternion.html#a5c546a33cc0c65f24b7e9c48e5069ba7" />
                 <section title="getAxisAngle" ref="classqglviewer_1_1Quaternion.html#a1c58851391965e675c6b214334019340" />
-                <section title="getInverseMatrix" ref="classqglviewer_1_1Quaternion.html#a34410fe0160b854ea150b7c56a6ff564" />
                 <section title="getInverseMatrix" ref="classqglviewer_1_1Quaternion.html#ae50fea0de238ee3bb4f66a02c160456f" />
+                <section title="getInverseMatrix" ref="classqglviewer_1_1Quaternion.html#a34410fe0160b854ea150b7c56a6ff564" />
                 <section title="getInverseRotationMatrix" ref="classqglviewer_1_1Quaternion.html#af6fe115aebde0e6bda6c78b84a0bca8d" />
-                <section title="getMatrix" ref="classqglviewer_1_1Quaternion.html#a311f6a41c30c709d838aa139576646ee" />
                 <section title="getMatrix" ref="classqglviewer_1_1Quaternion.html#a4b555f9fd87155fe9a31ab0cb89c39e7" />
+                <section title="getMatrix" ref="classqglviewer_1_1Quaternion.html#a311f6a41c30c709d838aa139576646ee" />
                 <section title="getRotationMatrix" ref="classqglviewer_1_1Quaternion.html#aa27ca82f934d7df3e4f15648b7200b70" />
                 <section title="initFromDOMElement" ref="classqglviewer_1_1Quaternion.html#acd13d2ddeca530cb9f26ead47f7d25d3" />
                 <section title="inverse" ref="classqglviewer_1_1Quaternion.html#a567f751ab549bce51e4546ffbb88d068" />
@@ -384,8 +384,8 @@
                 <section title="operator*=" ref="classqglviewer_1_1Quaternion.html#a0caef8e6e702101a45fdc0af3920c49d" />
                 <section title="operator&lt;&lt;" ref="classqglviewer_1_1Quaternion.html#a16d5f2f021103b05006b0c58fbd48796" />
                 <section title="operator=" ref="classqglviewer_1_1Quaternion.html#ad20a1310f5fac88d5e00fa055e09fe72" />
-                <section title="operator[]" ref="classqglviewer_1_1Quaternion.html#a8dfdcf5273066192cb0d64249b7aa2af" />
                 <section title="operator[]" ref="classqglviewer_1_1Quaternion.html#a9e7f720c3b3b086f7aac81e480ea778e" />
+                <section title="operator[]" ref="classqglviewer_1_1Quaternion.html#a8dfdcf5273066192cb0d64249b7aa2af" />
                 <section title="rotate" ref="classqglviewer_1_1Quaternion.html#acae83d07d47b96029050ee9eeb2c3f84" />
                 <section title="setAxisAngle" ref="classqglviewer_1_1Quaternion.html#ae903a46cefc96e2d13096d5b891d9c81" />
                 <section title="setFromRotatedBasis" ref="classqglviewer_1_1Quaternion.html#a760617f082c950633b5642d2f60b2dd9" />
@@ -412,8 +412,8 @@
                 <section title="operator/=" ref="classqglviewer_1_1Vec.html#a0fb079a45fba8116b30717d048c94b22" />
                 <section title="operator&lt;&lt;" ref="classqglviewer_1_1Vec.html#a16d5f2f021103b05006b0c58fbd48796" />
                 <section title="operator=" ref="classqglviewer_1_1Vec.html#a9d105072fa3c0fc1e66c162ba083fee8" />
-                <section title="operator[]" ref="classqglviewer_1_1Vec.html#a8dfdcf5273066192cb0d64249b7aa2af" />
                 <section title="operator[]" ref="classqglviewer_1_1Vec.html#a9e7f720c3b3b086f7aac81e480ea778e" />
+                <section title="operator[]" ref="classqglviewer_1_1Vec.html#a8dfdcf5273066192cb0d64249b7aa2af" />
                 <section title="orthogonalVec" ref="classqglviewer_1_1Vec.html#a5adf49461a5de0f05cc25088c714e55e" />
                 <section title="projectOnAxis" ref="classqglviewer_1_1Vec.html#a8c89e6f39afb5bd92e4cae4ffa6c3221" />
                 <section title="projectOnPlane" ref="classqglviewer_1_1Vec.html#a6ed4feca0d9a299bdc68632eb7db51b9" />
@@ -422,12 +422,12 @@
                 <section title="unit" ref="classqglviewer_1_1Vec.html#abe45eac70b1c297a47d275e8f709ef21" />
                 <section title="cross" ref="classqglviewer_1_1Vec.html#a835244f47bc3744aed547f6ae814e13e" />
                 <section title="operator!=" ref="classqglviewer_1_1Vec.html#aa694f4dad59f93a8b8364d1b9cbdfd54" />
+                <section title="operator*" ref="classqglviewer_1_1Vec.html#a941c47349fbb80d0a53f524e7a2c5702" />
                 <section title="operator*" ref="classqglviewer_1_1Vec.html#a902b74d17f4fd5ff37bfd81f0304300d" />
                 <section title="operator*" ref="classqglviewer_1_1Vec.html#ab31a7e0c3cbca5395eb59cb45236cce5" />
-                <section title="operator*" ref="classqglviewer_1_1Vec.html#a941c47349fbb80d0a53f524e7a2c5702" />
                 <section title="operator+" ref="classqglviewer_1_1Vec.html#abc7a7829beaefabef78bbf1aa8aa69f7" />
-                <section title="operator-" ref="classqglviewer_1_1Vec.html#a84bd051b693ee420203ae5947ac38bdc" />
                 <section title="operator-" ref="classqglviewer_1_1Vec.html#a780b6fbbee93774c986eb645dc5c6373" />
+                <section title="operator-" ref="classqglviewer_1_1Vec.html#a84bd051b693ee420203ae5947ac38bdc" />
                 <section title="operator/" ref="classqglviewer_1_1Vec.html#a0b311e215c03e4c4a2ee856255849270" />
                 <section title="operator==" ref="classqglviewer_1_1Vec.html#aa36a8f02bb5bd8f5ab8532a79ceb4e9f" />
                 <section title="operator^" ref="classqglviewer_1_1Vec.html#af521e6619361cc97fff70ae3115e0317" />
@@ -576,8 +576,8 @@
               <section title="postSelection" ref="classQGLViewer.html#a3dc0d3b212e04bcafd63e9c3eb214a6c" />
               <section title="preDraw" ref="classQGLViewer.html#a9c6b3ec107b4f010cf1fcd8c51ca92e4" />
               <section title="preDrawStereo" ref="classQGLViewer.html#a43df4754781c2aaf3236d676401cec59" />
-              <section title="renderText" ref="classQGLViewer.html#a2d198fcc4994f0b2fd52c88da412b606" />
               <section title="renderText" ref="classQGLViewer.html#a4920f4be3d9a7426ed065c143bdd4913" />
+              <section title="renderText" ref="classQGLViewer.html#a2d198fcc4994f0b2fd52c88da412b606" />
               <section title="resize" ref="classQGLViewer.html#ad1185e99a9efec124b7a9bede84a6cf1" />
               <section title="resizeGL" ref="classQGLViewer.html#a3efe88f982dbec7825725dd954991139" />
               <section title="restoreStateFromFile" ref="classQGLViewer.html#a212f6b7b669463c2151688f629d72a81" />
@@ -606,12 +606,12 @@
               <section title="setGridIsDrawn" ref="classQGLViewer.html#ae9dd114195dfdf82e23b5754b7c161de" />
               <section title="setKeyDescription" ref="classQGLViewer.html#ae33368bc379da582a3d26df18a6df16c" />
               <section title="setManipulatedFrame" ref="classQGLViewer.html#ac6964ec1ebb2f42464313e0c43e767a3" />
-              <section title="setMouseBinding" ref="classQGLViewer.html#a98e3c0b956c3fea7dc804e7a7a7dd295" />
-              <section title="setMouseBinding" ref="classQGLViewer.html#af60ec98df1af2309ef1d16644e9791ef" />
-              <section title="setMouseBinding" ref="classQGLViewer.html#a85a2e51796cd902ecc2bdc9ae143e4d5" />
               <section title="setMouseBinding" ref="classQGLViewer.html#a837a7cd6b3fa87bff0f1ae85f79fc7ce" />
-              <section title="setMouseBindingDescription" ref="classQGLViewer.html#ae6952d2191d9e47e295fb53248d47702" />
+              <section title="setMouseBinding" ref="classQGLViewer.html#a85a2e51796cd902ecc2bdc9ae143e4d5" />
+              <section title="setMouseBinding" ref="classQGLViewer.html#af60ec98df1af2309ef1d16644e9791ef" />
+              <section title="setMouseBinding" ref="classQGLViewer.html#a98e3c0b956c3fea7dc804e7a7a7dd295" />
               <section title="setMouseBindingDescription" ref="classQGLViewer.html#a5abc54d8039991ecc1f880fa0c0c4d2d" />
+              <section title="setMouseBindingDescription" ref="classQGLViewer.html#ae6952d2191d9e47e295fb53248d47702" />
               <section title="setMouseGrabber" ref="classQGLViewer.html#a993285ef8a16ccbdc5d57a1264212712" />
               <section title="setMouseGrabberIsEnabled" ref="classQGLViewer.html#a3f0b956f948f469c095ff3c2c1b73494" />
               <section title="setMouseTracking" ref="classQGLViewer.html#acf0a4ee197fe91b8c07dd74cad1aafaa" />
@@ -632,8 +632,8 @@
               <section title="setStateFileName" ref="classQGLViewer.html#a68737cce3d7301701bca6e4270a5a34e" />
               <section title="setStereoDisplay" ref="classQGLViewer.html#afe362ba5c3851a93f23fb833b2479f08" />
               <section title="setTextIsEnabled" ref="classQGLViewer.html#a73d76caa402acd217e504d0bcd13e421" />
-              <section title="setWheelBinding" ref="classQGLViewer.html#a277f432be05de69ae2df05eac8951ad2" />
               <section title="setWheelBinding" ref="classQGLViewer.html#ac418dcff525e4236ebd4e8324fb725b1" />
+              <section title="setWheelBinding" ref="classQGLViewer.html#a277f432be05de69ae2df05eac8951ad2" />
               <section title="shortcut" ref="classQGLViewer.html#aff56d5f1e0d5b7f8aebb6fdc2056f0f1" />
               <section title="showEntireScene" ref="classQGLViewer.html#ada8dd7d2346ebf46ed1f9822a8418df2" />
               <section title="sizeHint" ref="classQGLViewer.html#aaf1fd2bea727434584f366a12c444ee9" />
@@ -721,7 +721,7 @@
               <section title="x" ref="functions_x.html" />
               <section title="y" ref="functions_y.html" />
               <section title="z" ref="functions_z.html" />
-              <section title="~" ref="functions_0x7e.html" />
+              <section title="~" ref="functions_~.html" />
             </section>
             <section title="Functions" ref="functions_func.html">
               <section title="a" ref="functions_func.html" />
@@ -747,7 +747,7 @@
               <section title="v" ref="functions_func_v.html" />
               <section title="w" ref="functions_func_w.html" />
               <section title="z" ref="functions_func_z.html" />
-              <section title="~" ref="functions_func_0x7e.html" />
+              <section title="~" ref="functions_func_~.html" />
             </section>
             <section title="Variables" ref="functions_vars.html" />
             <section title="Enumerations" ref="functions_enum.html" />
@@ -767,19 +767,6 @@
       <keyword name="operator&lt;&lt;" id="vec.cpp::operator&lt;&lt;" ref="vec_8cpp.html#a98d7f46347cea38a86d453c601238891" />
       <keyword name="operator&lt;&lt;" id="vec.h::operator&lt;&lt;" ref="vec_8h.html#a16d5f2f021103b05006b0c58fbd48796" />
       <keyword name="QGLViewer" id="QGLViewer" ref="classQGLViewer.html" />
-      <keyword name="viewerInitialized" id="QGLViewer::viewerInitialized" ref="classQGLViewer.html#a252b68caec768d882a3fa78ecd1499db" />
-      <keyword name="drawNeeded" id="QGLViewer::drawNeeded" ref="classQGLViewer.html#a7a712ca70a0b1c22af51363b786fc86e" />
-      <keyword name="drawFinished" id="QGLViewer::drawFinished" ref="classQGLViewer.html#afc74e28548768da157f2fe75bced2803" />
-      <keyword name="animateNeeded" id="QGLViewer::animateNeeded" ref="classQGLViewer.html#a841503c97db5a51e33f8a7e56d4ca006" />
-      <keyword name="helpRequired" id="QGLViewer::helpRequired" ref="classQGLViewer.html#a64f461121859dc0c19e7af2d413935e0" />
-      <keyword name="axisIsDrawnChanged" id="QGLViewer::axisIsDrawnChanged" ref="classQGLViewer.html#a541cdbec67d0c5895cd6c77c01b0f89e" />
-      <keyword name="gridIsDrawnChanged" id="QGLViewer::gridIsDrawnChanged" ref="classQGLViewer.html#a02d191cc46db491d9807266fe62b6178" />
-      <keyword name="FPSIsDisplayedChanged" id="QGLViewer::FPSIsDisplayedChanged" ref="classQGLViewer.html#a4b005fb3bda4582ce4ab7aeda6692699" />
-      <keyword name="textIsEnabledChanged" id="QGLViewer::textIsEnabledChanged" ref="classQGLViewer.html#ac0b30c0de291a24af638e8c1d6171943" />
-      <keyword name="cameraIsEditedChanged" id="QGLViewer::cameraIsEditedChanged" ref="classQGLViewer.html#a38968d2f050efa14869c2e4de416b7b4" />
-      <keyword name="stereoChanged" id="QGLViewer::stereoChanged" ref="classQGLViewer.html#a9d7df8ab7c351e32da3c72b19c4585c0" />
-      <keyword name="pointSelected" id="QGLViewer::pointSelected" ref="classQGLViewer.html#ab78f96913c9aede4854b0efccf53f983" />
-      <keyword name="mouseGrabberChanged" id="QGLViewer::mouseGrabberChanged" ref="classQGLViewer.html#a959ca6df1731d57aa692af99abcd28d1" />
       <keyword name="QGLViewer" id="QGLViewer::QGLViewer" ref="classQGLViewer.html#ad423b9ea16b28f627c3197deacf44fac" />
       <keyword name="QGLViewer" id="QGLViewer::QGLViewer" ref="classQGLViewer.html#a605f8644f21dbda2218108bf3f0ca281" />
       <keyword name="QGLViewer" id="QGLViewer::QGLViewer" ref="classQGLViewer.html#a4724b62429d2ecd9049bc41a562901b6" />
@@ -871,6 +858,19 @@
       <keyword name="stopAnimation" id="QGLViewer::stopAnimation" ref="classQGLViewer.html#a84c1367b486680bcf22987540e217cfb" />
       <keyword name="animate" id="QGLViewer::animate" ref="classQGLViewer.html#a64465ac69c7fe9f4f8519a57501c76c2" />
       <keyword name="toggleAnimation" id="QGLViewer::toggleAnimation" ref="classQGLViewer.html#a67be4f5d4065852e7f46a2fc6197c070" />
+      <keyword name="viewerInitialized" id="QGLViewer::viewerInitialized" ref="classQGLViewer.html#a252b68caec768d882a3fa78ecd1499db" />
+      <keyword name="drawNeeded" id="QGLViewer::drawNeeded" ref="classQGLViewer.html#a7a712ca70a0b1c22af51363b786fc86e" />
+      <keyword name="drawFinished" id="QGLViewer::drawFinished" ref="classQGLViewer.html#afc74e28548768da157f2fe75bced2803" />
+      <keyword name="animateNeeded" id="QGLViewer::animateNeeded" ref="classQGLViewer.html#a841503c97db5a51e33f8a7e56d4ca006" />
+      <keyword name="helpRequired" id="QGLViewer::helpRequired" ref="classQGLViewer.html#a64f461121859dc0c19e7af2d413935e0" />
+      <keyword name="axisIsDrawnChanged" id="QGLViewer::axisIsDrawnChanged" ref="classQGLViewer.html#a541cdbec67d0c5895cd6c77c01b0f89e" />
+      <keyword name="gridIsDrawnChanged" id="QGLViewer::gridIsDrawnChanged" ref="classQGLViewer.html#a02d191cc46db491d9807266fe62b6178" />
+      <keyword name="FPSIsDisplayedChanged" id="QGLViewer::FPSIsDisplayedChanged" ref="classQGLViewer.html#a4b005fb3bda4582ce4ab7aeda6692699" />
+      <keyword name="textIsEnabledChanged" id="QGLViewer::textIsEnabledChanged" ref="classQGLViewer.html#ac0b30c0de291a24af638e8c1d6171943" />
+      <keyword name="cameraIsEditedChanged" id="QGLViewer::cameraIsEditedChanged" ref="classQGLViewer.html#a38968d2f050efa14869c2e4de416b7b4" />
+      <keyword name="stereoChanged" id="QGLViewer::stereoChanged" ref="classQGLViewer.html#a9d7df8ab7c351e32da3c72b19c4585c0" />
+      <keyword name="pointSelected" id="QGLViewer::pointSelected" ref="classQGLViewer.html#ab78f96913c9aede4854b0efccf53f983" />
+      <keyword name="mouseGrabberChanged" id="QGLViewer::mouseGrabberChanged" ref="classQGLViewer.html#a959ca6df1731d57aa692af99abcd28d1" />
       <keyword name="helpString" id="QGLViewer::helpString" ref="classQGLViewer.html#a9ae595c3d67bebe790d2bcc1e2ecbabc" />
       <keyword name="mouseString" id="QGLViewer::mouseString" ref="classQGLViewer.html#a016397283fdd1b87f9f1cd3f54c62df2" />
       <keyword name="keyboardString" id="QGLViewer::keyboardString" ref="classQGLViewer.html#a204b57736a39c0d1dcb19f5dcb38d3aa" />
@@ -1094,10 +1094,10 @@
       <keyword name="worldCoordinatesOf" id="qglviewer::Camera::worldCoordinatesOf" ref="classqglviewer_1_1Camera.html#a65ad26c443eb5602762349038786e9b4" />
       <keyword name="getCameraCoordinatesOf" id="qglviewer::Camera::getCameraCoordinatesOf" ref="classqglviewer_1_1Camera.html#a72df4e1a9394de9fd1cbf6d5c9def471" />
       <keyword name="getWorldCoordinatesOf" id="qglviewer::Camera::getWorldCoordinatesOf" ref="classqglviewer_1_1Camera.html#a69657ca414da99ea8e07600df3bec5ba" />
-      <keyword name="projectedCoordinatesOf" id="qglviewer::Camera::projectedCoordinatesOf" ref="classqglviewer_1_1Camera.html#aa4326f1811f45a3e8b505b85a53a172c" />
-      <keyword name="unprojectedCoordinatesOf" id="qglviewer::Camera::unprojectedCoordinatesOf" ref="classqglviewer_1_1Camera.html#ab5171f000d0fa2a69299b0b6ffa1192f" />
-      <keyword name="getProjectedCoordinatesOf" id="qglviewer::Camera::getProjectedCoordinatesOf" ref="classqglviewer_1_1Camera.html#a93c1e776b8dddc5f841281d592aa6ac1" />
-      <keyword name="getUnprojectedCoordinatesOf" id="qglviewer::Camera::getUnprojectedCoordinatesOf" ref="classqglviewer_1_1Camera.html#a26261f2b0fdcb640c794c04b31b6a8e9" />
+      <keyword name="projectedCoordinatesOf" id="qglviewer::Camera::projectedCoordinatesOf" ref="classqglviewer_1_1Camera.html#acac8dc20579bea1f9d6af1173d7bf24b" />
+      <keyword name="unprojectedCoordinatesOf" id="qglviewer::Camera::unprojectedCoordinatesOf" ref="classqglviewer_1_1Camera.html#a9a1ef53a134fedb324716f4fd5f3c354" />
+      <keyword name="getProjectedCoordinatesOf" id="qglviewer::Camera::getProjectedCoordinatesOf" ref="classqglviewer_1_1Camera.html#a22178e1e9015d8c4dfc0f75b8b70465d" />
+      <keyword name="getUnprojectedCoordinatesOf" id="qglviewer::Camera::getUnprojectedCoordinatesOf" ref="classqglviewer_1_1Camera.html#ade89a30e93f8da458303eb6b176f2378" />
       <keyword name="convertClickToLine" id="qglviewer::Camera::convertClickToLine" ref="classqglviewer_1_1Camera.html#a2692e7a7eca3e9aefe19b61edd294111" />
       <keyword name="pointUnderPixel" id="qglviewer::Camera::pointUnderPixel" ref="classqglviewer_1_1Camera.html#ac41c6ea30aedce51e816c2a8866dbf99" />
       <keyword name="flySpeed" id="qglviewer::Camera::flySpeed" ref="classqglviewer_1_1Camera.html#a1b307b753045bb57bc1c643fa843739c" />
@@ -1224,7 +1224,7 @@
       <keyword name="qglviewer::KeyFrameInterpolator" id="qglviewer::KeyFrameInterpolator" ref="classqglviewer_1_1KeyFrameInterpolator.html" />
       <keyword name="interpolated" id="qglviewer::KeyFrameInterpolator::interpolated" ref="classqglviewer_1_1KeyFrameInterpolator.html#ab55c2a4f1732b90057fae4b6037399de" />
       <keyword name="endReached" id="qglviewer::KeyFrameInterpolator::endReached" ref="classqglviewer_1_1KeyFrameInterpolator.html#ab4010a17bf77b9940b120ee8ed9a0271" />
-      <keyword name="KeyFrameInterpolator" id="qglviewer::KeyFrameInterpolator::KeyFrameInterpolator" ref="classqglviewer_1_1KeyFrameInterpolator.html#a2a78bc183af3ac92802cbe605e2a878e" />
+      <keyword name="KeyFrameInterpolator" id="qglviewer::KeyFrameInterpolator::KeyFrameInterpolator" ref="classqglviewer_1_1KeyFrameInterpolator.html#a072f20f0cc0eeab8aeca7bb6df475063" />
       <keyword name="~KeyFrameInterpolator" id="qglviewer::KeyFrameInterpolator::~KeyFrameInterpolator" ref="classqglviewer_1_1KeyFrameInterpolator.html#a110b875f9265a30f7a520a3603362f95" />
       <keyword name="addKeyFrame" id="qglviewer::KeyFrameInterpolator::addKeyFrame" ref="classqglviewer_1_1KeyFrameInterpolator.html#a44ac54529e675a2157067c9d205d9622" />
       <keyword name="addKeyFrame" id="qglviewer::KeyFrameInterpolator::addKeyFrame" ref="classqglviewer_1_1KeyFrameInterpolator.html#ad20780dd1eef86ef712cbeee0a69238a" />
@@ -1395,6 +1395,7 @@
       <keyword name="spin" id="qglviewer::ManipulatedCameraFrame::spin" ref="classqglviewer_1_1ManipulatedCameraFrame.html#af87828117d0582d0031f563933f97bfd" />
       <keyword name="domElement" id="qglviewer::ManipulatedCameraFrame::domElement" ref="classqglviewer_1_1ManipulatedCameraFrame.html#a1aa0ee6f18bae0d4638705905cd37a51" />
       <keyword name="initFromDOMElement" id="qglviewer::ManipulatedCameraFrame::initFromDOMElement" ref="classqglviewer_1_1ManipulatedCameraFrame.html#acd13d2ddeca530cb9f26ead47f7d25d3" />
+      <keyword name="initFromDOMElement" id="qglviewer::ManipulatedFrame::initFromDOMElement" ref="classqglviewer_1_1ManipulatedFrame.html#acd13d2ddeca530cb9f26ead47f7d25d3" />
       <keyword name="setRotationSensitivity" id="qglviewer::ManipulatedFrame::setRotationSensitivity" ref="classqglviewer_1_1ManipulatedFrame.html#ac4124167e4ec2a468c5bfe15ae2235ef" />
       <keyword name="setTranslationSensitivity" id="qglviewer::ManipulatedFrame::setTranslationSensitivity" ref="classqglviewer_1_1ManipulatedFrame.html#ae5939728e6d9883ac4854c29cf380a20" />
       <keyword name="setSpinningSensitivity" id="qglviewer::ManipulatedFrame::setSpinningSensitivity" ref="classqglviewer_1_1ManipulatedFrame.html#a96662e9b865bc8b689a5a49e6fc2ab02" />
@@ -1403,7 +1404,6 @@
       <keyword name="setSpinningQuaternion" id="qglviewer::ManipulatedFrame::setSpinningQuaternion" ref="classqglviewer_1_1ManipulatedFrame.html#aaa23ed0375ee472156f439eaee070ec9" />
       <keyword name="startSpinning" id="qglviewer::ManipulatedFrame::startSpinning" ref="classqglviewer_1_1ManipulatedFrame.html#a9942b6eab3fb197805f7af7e0edfdccf" />
       <keyword name="stopSpinning" id="qglviewer::ManipulatedFrame::stopSpinning" ref="classqglviewer_1_1ManipulatedFrame.html#a9dc6e4b2c4c4a3ae195dfc39bb2ce8ac" />
-      <keyword name="initFromDOMElement" id="qglviewer::ManipulatedFrame::initFromDOMElement" ref="classqglviewer_1_1ManipulatedFrame.html#acd13d2ddeca530cb9f26ead47f7d25d3" />
       <keyword name="initFromDOMElement" id="qglviewer::Frame::initFromDOMElement" ref="classqglviewer_1_1Frame.html#acd13d2ddeca530cb9f26ead47f7d25d3" />
       <keyword name="manipulated" id="qglviewer::ManipulatedFrame::manipulated" ref="classqglviewer_1_1ManipulatedFrame.html#a841d6d550acbe6e9103c32ac3b75c0c2" />
       <keyword name="spun" id="qglviewer::ManipulatedFrame::spun" ref="classqglviewer_1_1ManipulatedFrame.html#a8e3a52ff9f948f42269cab711bb92b5c" />
@@ -1767,7 +1767,7 @@
       <file>functions_x.html</file>
       <file>functions_y.html</file>
       <file>functions_z.html</file>
-      <file>functions_0x7e.html</file>
+      <file>functions_~.html</file>
       <file>functions_func.html</file>
       <file>functions_func_b.html</file>
       <file>functions_func_c.html</file>
@@ -1791,7 +1791,7 @@
       <file>functions_func_v.html</file>
       <file>functions_func_w.html</file>
       <file>functions_func_z.html</file>
-      <file>functions_func_0x7e.html</file>
+      <file>functions_func_~.html</file>
       <file>functions_vars.html</file>
       <file>functions_vars.html</file>
       <file>functions_vars.html</file>
