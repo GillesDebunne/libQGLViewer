@@ -217,7 +217,7 @@ macx|darwin-g++ {
 	include.files *= qglviewer.icns
 
     # Or whatever exists in /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
-    #QMAKE_MAC_SDK = macosx10.13
+    #QMAKE_MAC_SDK = macosx10.15
 
 	lib_bundle {
 		FRAMEWORK_HEADERS.version = Versions
