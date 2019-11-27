@@ -20,14 +20,12 @@ namespace qglviewer {
    Frame::coordinatesOf() and Frame::transformOf().
 
         You can apply the Quaternion \c q rotation to the OpenGL matrices using:
-        \code
-        glMultMatrixd(q.matrix());
-        // equvalent to glRotate(q.angle()*180.0/M_PI, q.axis().x, q.axis().y,
-   q.axis().z); \endcode
+        \code glMultMatrixd(q.matrix()); 
+        // equivalent to glRotate(q.angle()*180.0/M_PI, q.axis().x, q.axis().y, q.axis().z); \endcode
 
         Quaternion is part of the \c qglviewer namespace, specify \c
-   qglviewer::Quaternion or use the qglviewer namespace: \code using namespace
-   qglviewer; \endcode
+   qglviewer::Quaternion or use the qglviewer namespace: 
+  \code using namespace qglviewer; \endcode
 
         <h3>Internal representation</h3>
 
