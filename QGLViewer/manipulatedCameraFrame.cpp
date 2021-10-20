@@ -397,7 +397,11 @@ void ManipulatedCameraFrame::wheelEvent(QWheelEvent *const event,
   case QGLViewer::MOVE_BACKWARD:
     //#CONNECTION# mouseMoveEvent() MOVE_FORWARD case
     translate(
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
         inverseTransformOf(Vec(0.0, 0.0, 0.2 * flySpeed() * event->delta())));
+#else
+        inverseTransformOf(Vec(0.0, 0.0, 0.2 * flySpeed() * event->angleDelta().y())));
+#endif
     Q_EMIT manipulated();
     break;
   default:

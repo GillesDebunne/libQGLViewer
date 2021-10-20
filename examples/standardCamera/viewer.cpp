@@ -3,6 +3,10 @@
 
 #include <QKeyEvent>
 
+#if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
+#define MidButton MiddleButton
+#endif
+
 using namespace std;
 using namespace qglviewer;
 
@@ -82,7 +86,11 @@ void Viewer::wheelEvent(QWheelEvent *e) {
   if ((camera()->type() == Camera::ORTHOGRAPHIC) &&
       (((StandardCamera *)camera())->isStandard()) &&
       (e->modifiers() & Qt::ShiftModifier)) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     ((StandardCamera *)camera())->changeOrthoFrustumSize(e->delta());
+#else
+    ((StandardCamera *)camera())->changeOrthoFrustumSize(e->angleDelta().y());
+#endif
     Q_EMIT cameraChanged();
     update();
   } else

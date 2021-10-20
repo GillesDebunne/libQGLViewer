@@ -51,7 +51,11 @@ Then calls setSnapshotFormat() with the selected one (unless the user cancels).
 Returns \c false if the user presses the Cancel button and \c true otherwise. */
 bool QGLViewer::openSnapshotFormatDialog() {
   bool ok = false;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
   QStringList list = formats.split(";;", QString::SkipEmptyParts);
+#else
+  QStringList list = formats.split(";;", Qt::SkipEmptyParts);
+#endif
   int current = list.indexOf(FDFormatString[snapshotFormat()]);
   QString format =
       QInputDialog::getItem(this, "Snapshot format", "Select a snapshot format",
@@ -547,8 +551,7 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite) {
   if ((automatic) && (snapshotCounter() >= 0)) {
     // In automatic mode, names have a number appended
     const QString baseName = fileInfo.baseName();
-    QString count;
-    count.sprintf("%.04d", snapshotCounter_++);
+    QString count = QString("%1").arg(snapshotCounter_++, 4, 10, QChar('0'));
     QString suffix;
     suffix = fileInfo.suffix();
     if (suffix.isEmpty())
@@ -558,7 +561,7 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite) {
 
     if (!overwrite)
       while (fileInfo.exists()) {
-        count.sprintf("%.04d", snapshotCounter_++);
+        count = QString("%1").arg(snapshotCounter_++, 4, 10, QChar('0'));
         fileInfo.setFile(fileInfo.absolutePath() + '/' + baseName + '-' +
                          count + '.' + fileInfo.suffix());
       }

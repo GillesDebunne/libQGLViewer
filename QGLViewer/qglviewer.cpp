@@ -8,7 +8,9 @@
 #include <QDateTime>
 #include <QDir>
 #include <QFileInfo>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QGLContext>
+#endif
 #include <QImage>
 #include <QMessageBox>
 #include <QMouseEvent>
@@ -19,6 +21,11 @@
 #include <QTimer>
 #include <QUrl>
 #include <QtAlgorithms>
+#include <QPainter>
+
+#if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
+#define MidButton MiddleButton
+#endif
 
 using namespace std;
 using namespace qglviewer;
@@ -142,6 +149,9 @@ QGLViewer::QGLViewer(QWidget *parent, Qt::WindowFlags flags)
 }
 
 #ifndef DOXYGEN
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+
 /*! These contructors are deprecated since version 2.7.0, since they are not
  * supported by QOpenGlWidget */
 
@@ -188,6 +198,7 @@ QGLViewer::QGLViewer(const QGLFormat &format, QWidget *parent,
            "contructor instead.");
   defaultConstructor();
 }
+#endif // QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #endif // DOXYGEN
 
 /*! Virtual destructor.
@@ -1976,7 +1987,7 @@ QString QGLViewer::cameraPathKeysString() const {
                                                   endi = pathIndex_.end();
        i != endi; ++i)
     keys.push_back(i.key());
-  qSort(keys);
+  std::sort(keys.begin(), keys.end());
 
   QVector<Qt::Key>::const_iterator it = keys.begin(), end = keys.end();
   QString res = keyString(*it);
