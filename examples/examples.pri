@@ -1,5 +1,9 @@
 QT *= xml opengl widgets gui
 
+equals (QT_MAJOR_VERSION, 6) {
+	QT *= gui widgets openglwidgets
+}
+
 CONFIG += qt opengl warn_on thread rtti console embed_manifest_exe no_keywords
 
 # Set path to include and lib files (see doc/compilation.html for details):

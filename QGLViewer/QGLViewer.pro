@@ -47,6 +47,9 @@ QT *= xml opengl
 equals (QT_MAJOR_VERSION, 5) {
 	QT *= gui widgets
 }
+equals (QT_MAJOR_VERSION, 6) {
+	QT *= gui widgets openglwidgets
+}
 
 !isEmpty( QGLVIEWER_STATIC ) {
   CONFIG *= staticlib
