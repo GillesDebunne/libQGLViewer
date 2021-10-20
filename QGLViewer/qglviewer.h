@@ -1411,7 +1411,7 @@ private:
         return modifiers < cbp.modifiers;
       if (button != cbp.button)
         return button < cbp.button;
-      return doubleClick != cbp.doubleClick;
+      return doubleClick < cbp.doubleClick;
     }
   };
 #endif
