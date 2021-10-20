@@ -8,7 +8,7 @@
 #include <QGL>
 #endif
 #include <QMap>
-#include <QTime>
+#include <QElapsedTimer>
 
 class QTabWidget;
 
@@ -1297,7 +1297,7 @@ private:
   int animationTimerId_;
 
   // F P S    d i s p l a y
-  QTime fpsTime_;
+  QElapsedTimer fpsTime_;
   unsigned int fpsCounter_;
   QString fpsString_;
   qreal f_p_s_;

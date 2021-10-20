@@ -7,7 +7,7 @@
 
 #include <QDateTime>
 #include <QString>
-#include <QTimer>
+#include <QElapsedTimer>
 
 namespace qglviewer {
 /*! \brief A ManipulatedFrame is a Frame that can be rotated and translated
@@ -333,7 +333,7 @@ private:
   qreal zoomSensitivity_;
 
   // Mouse speed and spinning
-  QTime last_move_time;
+  QElapsedTimer last_move_time;
   qreal mouseSpeed_;
   int delay_;
   bool isSpinning_;
