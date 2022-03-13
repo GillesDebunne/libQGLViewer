@@ -83,7 +83,7 @@ unix {
 
 macx|darwin-g++ {
     # Or whatever exists in /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
-    QMAKE_MAC_SDK = macosx10.15
+    # QMAKE_MAC_SDK = macosx10.15
 }
 
 win32 {

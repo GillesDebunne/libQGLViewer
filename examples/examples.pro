@@ -18,10 +18,11 @@ SUBDIRS       = \
     mouseGrabber \
     multiSelect \
     multiView \
-    overpainting \
     screenCoordSystem \
     select \
     simpleViewer \
-    standardCamera \
-    stereoViewer
+    standardCamera
 
+!equals (QT_MAJOR_VERSION, 6) {
+    SUBDIRS *= overpainting stereoViewer
+}

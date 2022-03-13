@@ -1,6 +1,8 @@
 #include "viewer.h"
 
-#include <QGL>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#  include <QGL>
+#endif
 #include <QPainter>
 
 using namespace std;
