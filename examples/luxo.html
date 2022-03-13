@@ -106,6 +106,10 @@ private:
 
 #include &lt;QGLViewer/manipulatedCameraFrame.h&gt;
 
+#if QT_VERSION &gt; QT_VERSION_CHECK(6, 0, 0)
+#define MidButton MiddleButton
+#endif
+
 using namespace qglviewer;
 using namespace std;
 

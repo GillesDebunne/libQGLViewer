@@ -93,7 +93,9 @@ int main(int argc, char **argv) {
 <pre>
 #include "viewer.h"
 
-#include &lt;QGL&gt;
+#if QT_VERSION &lt; QT_VERSION_CHECK(6, 0, 0)
+#  include &lt;QGL&gt;
+#endif
 #include &lt;QPainter&gt;
 
 using namespace std;
