@@ -1,6 +1,6 @@
 %define version_major 2
-%define version_minor 7
-%define version_revision 2
+%define version_minor 8
+%define version_revision 0
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -154,6 +154,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Sun Mar 13 2022 Gilles Debunne <contact@libQGLViewer.com> 2.8.0
+- Updates for Qt6 compatibility.
+
 * Fri Nov 17 2019 Gilles Debunne <contact@libQGLViewer.com> 2.7.2
 - Update include.
 
