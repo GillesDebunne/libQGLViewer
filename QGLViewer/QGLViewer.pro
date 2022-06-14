@@ -160,6 +160,9 @@ unix {
 			equals (QT_MAJOR_VERSION, 5) {
 				TARGET = $$join(TARGET,,,-qt5)
 			}
+			equals (QT_MAJOR_VERSION, 6) {
+				TARGET = $$join(TARGET,,,-qt6)
+			}
 		}
 	}
 
