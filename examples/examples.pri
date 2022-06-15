@@ -63,6 +63,9 @@ unix {
                 equals (QT_MAJOR_VERSION, 5) {
                     LIB_NAME = QGLViewer-qt5
                 }
+                equals (QT_MAJOR_VERSION, 6) {
+	            LIB_NAME = QGLViewer-qt6
+                }
             }
 
 			isEmpty(QMAKE_LFLAGS_RPATH) {
