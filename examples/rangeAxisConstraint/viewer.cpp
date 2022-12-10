@@ -1,5 +1,6 @@
 #include "viewer.h"
 #include "rangeAxisConstraint.h"
+#include "manipulatedFrame.h"
 
 using namespace std;
 using namespace qglviewer;
