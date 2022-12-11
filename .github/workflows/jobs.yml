@@ -16,7 +16,7 @@ jobs:
       - name: Update OS
         run: sudo apt-get update
       - name: Install apt-get dependencies
-        run: sudo apt-get install -y build-essential qtbase5-dev
+        run: sudo apt-get install -y build-essential qtbase5-dev libglu1-mesa-dev
       - name: Run job
         run: |
           mkdir build
