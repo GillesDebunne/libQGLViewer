@@ -1,7 +1,7 @@
 prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
-includedir=@includedir@/libQGLViewer
+includedir=@includedir@
 
 Name: @PACKAGE_NAME@
 Description: libQGLViewer is an open source C++ library based on Qt that eases the creation of OpenGL 3D viewers.
