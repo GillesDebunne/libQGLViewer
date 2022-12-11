@@ -1,5 +1,10 @@
-project(HelloWorld)
+project(libQGLViewer)
 cmake_minimum_required(VERSION 3.0)
+
+# Set version.
+set(QGLViewer_MAJOR_VERSION 2)
+set(QGLViewer_MINOR_VERSION 8)
+set(QGLViewer_PATCH_VERSION 0)
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -40,7 +45,7 @@ set(QGLViewer_SRC
     "${PROJECT_SOURCE_DIR}/QGLViewer/quaternion.cpp"
     "${PROJECT_SOURCE_DIR}/QGLViewer/saveSnapshot.cpp"
     "${PROJECT_SOURCE_DIR}/QGLViewer/vec.cpp")
-add_library(QGLViewer ${QGLViewer_SRC})
+add_library(QGLViewer SHARED ${QGLViewer_SRC})
 target_include_directories(QGLViewer PRIVATE Qt5::Core Qt5::Widgets Qt5::Xml Qt5::OpenGL)
 target_link_libraries(QGLViewer Qt5::Core Qt5::Widgets Qt5::Xml Qt5::OpenGL)
 
@@ -281,3 +286,16 @@ install(FILES "${PROJECT_SOURCE_DIR}/QGLViewer/quaternion.h"
         DESTINATION "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
 install(FILES "${PROJECT_SOURCE_DIR}/QGLViewer/vec.h"
         DESTINATION "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
+
+# Create pkg-config file.
+set(prefix "${CMAKE_INSTALL_PREFIX}")
+set(exec_prefix "${CMAKE_INSTALL_PREFIX}")
+set(libdir "${CMAKE_INSTALL_FULL_LIBDIR}")
+set(includedir "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
+set(PACKAGE_NAME "${PROJECT_NAME}")
+set(QGLViewer_VERSION "${QGLViewer_MAJOR_VERSION}.${QGLViewer_MINOR_VERSION}.${QGLViewer_PATCH_VERSION}")
+set(PACKAGE_VERSION "${QGLViewer_VERSION}")
+set(PACKAGE_URL "https://github.com/GillesDebunne/libQGLViewer")
+configure_file(libQGLViewer.pc.in "${CMAKE_BINARY_DIR}/libQGLViewer.pc" @ONLY)
+install(FILES "${CMAKE_BINARY_DIR}/libQGLViewer.pc"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
