@@ -251,3 +251,9 @@ add_executable(stereoViewer ${stereoViewer_SRC})
 target_include_directories(stereoViewer PRIVATE QGLViewer Qt5::Core Qt5::Widgets Qt5::Xml Qt5::OpenGL OpenGL::GL OpenGL::GLU)
 target_link_libraries(stereoViewer QGLViewer Qt5::Core Qt5::Widgets Qt5::Xml Qt5::OpenGL OpenGL::GL OpenGL::GLU)
 
+# Install.
+include(GNUInstallDirs)
+install(TARGETS QGLViewer
+        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
