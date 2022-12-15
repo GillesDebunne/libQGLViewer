@@ -122,12 +122,24 @@ unix {
 		PREFIX_=$${PREFIX}
 	}
 	isEmpty( LIB_DIR ) {
-		LIB_DIR_ = $${PREFIX_}/lib
+		macx|darwin-g++ {
+			LIB_DIR_ = /Library/Frameworks
+		} else {
+			LIB_DIR_ = $${PREFIX_}/lib
+		}
 	} else {
 		LIB_DIR_ = $${LIB_DIR}
 	}
 	isEmpty( INCLUDE_DIR ) {
-		INCLUDE_DIR_ = $${PREFIX_}/include
+		macx|darwin-g++ {
+			isEmpty( PREFIX ) {
+				INCLUDE_DIR_ = $${PWD}/Library/Developer/Headers
+			} else {
+				INCLUDE_DIR_ = $${PREFIX}/Headers
+			}
+		} else {
+			INCLUDE_DIR_ = $${PREFIX_}/include
+		}
 	} else {
 		INCLUDE_DIR_ = $${INCLUDE_DIR}
 	}
