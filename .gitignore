@@ -8,6 +8,12 @@ Makefile
 .qglviewer.xml
 QGLViewer/libQGLViewer*.prl
 QGLViewer/libQGLViewer*.so*
+QGLViewer/QGLViewer*.dll
+QGLViewer/QGLViewer*.exp
+QGLViewer/QGLViewer*.ilk
+QGLViewer/QGLViewer*.lib
+QGLViewer/QGLViewer*.pdb
+QGLViewer/QGLViewer*.prl
 designerPlugin/libqglviewerplugin.dylib
 *.pro.user
 **/.qmake.stash
