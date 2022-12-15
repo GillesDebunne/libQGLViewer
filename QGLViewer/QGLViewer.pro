@@ -222,6 +222,13 @@ unix {
 
 	# "make install" configuration options
 	INSTALLS *= target include documentation docImages docRefManual
+
+	# "make uninstall" for all targets
+	target.uninstall = @echo "uninstall"
+	include.uninstall = @echo "uninstall"  
+	documentation.uninstall = @echo "uninstall"  
+	docImages.uninstall = @echo "uninstall"  
+	docRefManual.uninstall = @echo "uninstall"  
 }
 
 
