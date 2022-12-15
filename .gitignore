@@ -6,7 +6,8 @@ Makefile
 /doc/refManual/
 /examples/*/ui_*.h
 .qglviewer.xml
-QGLViewer/libQGLViewer.prl
+QGLViewer/libQGLViewer*.prl
+QGLViewer/libQGLViewer*.so*
 designerPlugin/libqglviewerplugin.dylib
 *.pro.user
 **/.qmake.stash
