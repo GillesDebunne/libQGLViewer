@@ -19,7 +19,6 @@ SUBDIRS       = \
     multiSelect \
     multiView \
     overpainting \
-    rangeAxisConstraint \
     screenCoordSystem \
     select \
     simpleViewer \

@@ -93,13 +93,14 @@ and can hence be used in place of Vec. See also operator const qreal*() .*/
   // ! Copy constructor
   // Vec(const Vec& v) : x(v.x), y(v.y), z(v.z) {}
 
-  /*! Equal operator. */
+  /*! Equal operator.
   Vec &operator=(const Vec &v) {
     x = v.x;
     y = v.y;
     z = v.z;
     return *this;
   }
+  */
 
   /*! Set the current value. May be faster than using operator=() with a
    * temporary Vec(x,y,z). */

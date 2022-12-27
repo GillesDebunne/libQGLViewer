@@ -3,7 +3,7 @@
 *.app/
 Makefile
 /doc/refManual/
-/examples/*/ui_*.h
+/examples/**/ui_*.h
 .qglviewer.xml
 QGLViewer/libQGLViewer.prl
 designerPlugin/libqglviewerplugin.dylib
@@ -11,9 +11,4 @@ designerPlugin/libqglviewerplugin.dylib
 **/.qmake.stash
 **/.qmake.cache
 QGLViewer/ui_*.h
-examples/contribs/agora/Viewer/ui_agoraWindow.h
-examples/contribs/agora/Viewer/ui_computerPlayerInterface.h
-examples/contribs/blobWar/Viewer/ui_blobWarWindow.h
-examples/contribs/blobWar/Viewer/ui_computerPlayerInterface.h
-examples/contribs/dvonn/ui_dvonnwindow.h
 QGLViewer/QGLViewer.framework/

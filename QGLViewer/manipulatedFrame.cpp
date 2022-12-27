@@ -249,8 +249,13 @@ int ManipulatedFrame::mouseOriginalDirection(const QMouseEvent *const e) {
 
 qreal ManipulatedFrame::deltaWithPrevPos(QMouseEvent *const event,
                                          Camera *const camera) const {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
   qreal dx = qreal(event->x() - prevPos_.x()) / camera->screenWidth();
   qreal dy = qreal(event->y() - prevPos_.y()) / camera->screenHeight();
+#else
+  qreal dx = qreal(event->position().x() - prevPos_.x()) / camera->screenWidth();
+  qreal dy = qreal(event->position().y() - prevPos_.y()) / camera->screenHeight();
+#endif
 
   qreal value = fabs(dx) > fabs(dy) ? dx : dy;
   return value * zoomSensitivity();
@@ -349,7 +354,11 @@ void ManipulatedFrame::mouseMoveEvent(QMouseEvent *const event,
 
     const qreal prev_angle =
         atan2(prevPos_.y() - trans[1], prevPos_.x() - trans[0]);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     const qreal angle = atan2(event->y() - trans[1], event->x() - trans[0]);
+#else
+    const qreal angle = atan2(event->position().y() - trans[1], event->position().x() - trans[0]);
+#endif
 
     const Vec axis =
         transformOf(camera->frame()->inverseTransformOf(Vec(0.0, 0.0, -1.0)));
@@ -366,9 +375,17 @@ void ManipulatedFrame::mouseMoveEvent(QMouseEvent *const event,
     Vec trans;
     int dir = mouseOriginalDirection(event);
     if (dir == 1)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
       trans.setValue(event->x() - prevPos_.x(), 0.0, 0.0);
+#else
+      trans.setValue(event->position().x() - prevPos_.x(), 0.0, 0.0);
+#endif
     else if (dir == -1)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
       trans.setValue(0.0, prevPos_.y() - event->y(), 0.0);
+#else
+      trans.setValue(0.0, prevPos_.y() - event->position().y(), 0.0);
+#endif
 
     switch (camera->type()) {
     case Camera::PERSPECTIVE:
@@ -397,8 +414,13 @@ void ManipulatedFrame::mouseMoveEvent(QMouseEvent *const event,
 
   case QGLViewer::ROTATE: {
     Vec trans = camera->projectedCoordinatesOf(position());
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     Quaternion rot = deformedBallQuaternion(event->x(), event->y(), trans[0],
                                             trans[1], camera);
+#else
+    Quaternion rot = deformedBallQuaternion(event->position().x(), event->position().y(),
+                                            trans[0], trans[1], camera);
+#endif
     trans = Vec(-rot[0], -rot[1], -rot[2]);
     trans = camera->frame()->orientation().rotate(trans);
     trans = transformOf(trans);
