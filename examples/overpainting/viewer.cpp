@@ -12,7 +12,14 @@ using namespace std;
 #endif
 
 Viewer::Viewer(QWidget *parent)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     : QGLViewer(QGLFormat(QGL::SampleBuffers), parent) {
+#else
+    : QGLViewer(parent) {
+  QSurfaceFormat format;
+  format.setSamples(2);
+  setFormat(format);
+#endif
   setAttribute(Qt::WA_NoSystemBackground);
 }
 
@@ -23,7 +30,7 @@ void Viewer::drawOverpaint(QPainter *painter) {
   radialGrad.setColorAt(0, QColor(255, 255, 255, 100));
   radialGrad.setColorAt(1, QColor(200, 200, 0, 100));
   painter->setBrush(QBrush(radialGrad));
-  painter->drawRoundRect(-100, -100, 200, 200);
+  painter->drawRoundedRect(-100, -100, 200, 200, 25, 25);
   painter->restore();
 }
 

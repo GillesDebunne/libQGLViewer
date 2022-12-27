@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
   // Make the viewer window visible on screen.
   viewer.show();
 
-  viewer->setWindowTitle("rangeAxisConstraint");
+  viewer.setWindowTitle("rangeAxisConstraint");
 
   // Run main loop.
   return application.exec();
