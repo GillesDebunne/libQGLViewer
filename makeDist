@@ -160,6 +160,11 @@ START="QHP_NAMESPACE          = com.libqglviewer."
 FILE="doc/Doxyfile"
 checkVersion
 
+VERSION="$version)"
+START="project(libQGLViewer LANGUAGES CXX VERSION "
+FILE="CmakeLists.txt"
+checkVersion
+
 ##################################################################
 ############          Checking file integrity         ############
 ##################################################################

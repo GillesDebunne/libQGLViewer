@@ -13,5 +13,3 @@ Makefile
 **/.qmake.stash
 **/.qmake.cache
 build
-Build
-BUILD
