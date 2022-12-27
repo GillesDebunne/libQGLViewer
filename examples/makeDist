@@ -6,7 +6,6 @@ QGLVIEWER_HOME_DIR=$(cat /tmp/QGLViewerRootDir)
 OUTPUT_DIR="../doc/examples"
 VERSION=`grep -a "^version=" $QGLVIEWER_HOME_DIR/makeDist | sed s/"version=\"\(.*\)\""/"\1"/`
 
-EXAMPLES_SKIPPED_DIRS=$(grep "^EXAMPLES_SKIPPED_DIRS=" $QGLVIEWER_HOME_DIR/makeDist | head -1 | cut -d'=' -f2 | sed s%"\""%%g | sed s%"examples/"%%g)
 BASIC_EXAMPLE_DIRS="simpleViewer manipulatedFrame select keyboardAndMouse"
 
 tmp="/tmp"
@@ -94,13 +93,10 @@ for name in `ls -1`
 do
   test -d $name || continue
 
-  for skip in $EXAMPLES_SKIPPED_DIRS
-  do
-    if [ $name == $skip ]
-    then
-      continue 2
-    fi
-  done
+  if [ $name == "contribs" ]
+  then
+    continue 2
+  fi
 
   isBasic=0
   for basic in $BASIC_EXAMPLE_DIRS

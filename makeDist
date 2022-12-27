@@ -308,18 +308,15 @@ makeDist
 
 cd - > /dev/null
 
-EXAMPLES_SKIPPED_DIRS="examples/contribs examples/rangeAxisConstraint"
 for dir in $(ls -d examples/* examples/contribs/*)
 do
   test -d $dir || continue
 
-  for r in $EXAMPLES_SKIPPED_DIRS
-  do
-    if [ $dir == $r ]
-    then
-      continue 2
-    fi
-  done
+  if [ $dir == "examples/contribs" ]
+  then
+    continue 2
+  fi
+
   DIR="$dir"
   makeDistExample
 done
