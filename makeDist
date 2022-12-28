@@ -528,9 +528,9 @@ do
 done
 
 # Creating assistant qch file
-awk '/<section title="Files"/ { skip=1 } /<\/toc>/ { print"      </section>"; skip=0 } { if (skip==0) print }' index.qhp > index.filtered.qhp
-awk '/<section title="libQGLViewer Version $version" ref="/ { print"      <section title=\"libQGLViewer Version $version\">"; next; } {print;}' index.filtered.qhp > index.qhp
-qhelpgenerator index.qhp -o ../libQGLViewer-$version.qch > /dev/null
+#awk '/<section title="Files"/ { skip=1 } /<\/toc>/ { print"      </section>"; skip=0 } { if (skip==0) print }' index.qhp > index.filtered.qhp
+#awk '/<section title="libQGLViewer Version $version" ref="/ { print"      <section title=\"libQGLViewer Version $version\">"; next; } {print;}' index.filtered.qhp > index.qhp
+#qhelpgenerator index.qhp -o ../libQGLViewer-$version.qch > /dev/null
 #rm index.qhp index.filtered.qhp
 
 cd - > /dev/null
@@ -542,7 +542,8 @@ cd - > /dev/null
 #rm cwExtractor
 
 echo
-echo ">> All files set in $tmpDir"
+echo
+echo ">> Done, all files set in $tmpDir"
 echo "Copy $tmpDir in gh-pages branches and push to update site"
 cd $tmpDir
 
