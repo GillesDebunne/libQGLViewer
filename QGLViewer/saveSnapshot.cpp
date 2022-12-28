@@ -18,6 +18,7 @@
 #include <qmap.h>
 #include <qmessagebox.h>
 #include <qprogressdialog.h>
+#include <qscreen.h>
 
 using namespace std;
 
@@ -302,12 +303,15 @@ public:
 // Returns false in case of problem.
 bool QGLViewer::saveImageSnapshot(const QString &fileName) {
   static ImageInterface *imageInterface = nullptr;
+  qreal devicePixelRatio = screen()->devicePixelRatio();
+  qreal dipWidth = devicePixelRatio * width();
+  qreal dipHeight = devicePixelRatio * height();
 
   if (!imageInterface)
     imageInterface = new ImageInterface(this);
 
-  imageInterface->imgWidth->setValue(width());
-  imageInterface->imgHeight->setValue(height());
+  imageInterface->imgWidth->setValue(dipWidth);
+  imageInterface->imgHeight->setValue(dipHeight);
 
   imageInterface->imgQuality->setValue(snapshotQuality());
 
@@ -327,12 +331,10 @@ bool QGLViewer::saveImageSnapshot(const QString &fileName) {
                   imageInterface->imgHeight->value());
 
   qreal oversampling = imageInterface->oversampling->value();
-  QSize subSize(int(this->width() / oversampling),
-                int(this->height() / oversampling));
+  QSize subSize(int(dipWidth / oversampling), int(dipHeight / oversampling));
 
-  qreal aspectRatio = width() / static_cast<qreal>(height());
-  qreal newAspectRatio =
-      finalSize.width() / static_cast<qreal>(finalSize.height());
+  qreal aspectRatio = dipWidth / static_cast<qreal>(dipHeight);
+  qreal newAspectRatio = finalSize.width() / static_cast<qreal>(finalSize.height());
 
   qreal zNear = camera()->zNear();
   qreal zFar = camera()->zFar();
@@ -395,18 +397,18 @@ bool QGLViewer::saveImageSnapshot(const QString &fileName) {
   qreal tileXMin, tileWidth, tileYMin, tileHeight;
   if ((expand && (newAspectRatio > aspectRatio)) ||
       (!expand && (newAspectRatio < aspectRatio))) {
-    qreal tileTotalWidth = newAspectRatio * height();
-    tileXMin = (width() - tileTotalWidth) / 2.0;
+    qreal tileTotalWidth = newAspectRatio * dipHeight;
+    tileXMin = (dipWidth - tileTotalWidth) / 2.0;
     tileWidth = tileTotalWidth * scaleX;
     tileYMin = 0.0;
-    tileHeight = height() * scaleY;
+    tileHeight = dipHeight * scaleY;
     tileRegion_->textScale = 1.0 / scaleY;
   } else {
-    qreal tileTotalHeight = width() / newAspectRatio;
-    tileYMin = (height() - tileTotalHeight) / 2.0;
+    qreal tileTotalHeight = dipWidth / newAspectRatio;
+    tileYMin = (dipHeight - tileTotalHeight) / 2.0;
     tileHeight = tileTotalHeight * scaleY;
     tileXMin = 0.0;
-    tileWidth = width() * scaleX;
+    tileWidth = dipWidth * scaleX;
     tileRegion_->textScale = 1.0 / scaleX;
   }
 
@@ -576,7 +578,7 @@ void QGLViewer::saveSnapshot(bool automatic, bool overwrite) {
                                     snapshotFormat()) <= 0);
   else
 #endif
-      if (automatic) {
+  if (automatic) {
     QImage snapshot = frameBufferSnapshot();
     saveOK = snapshot.save(fileInfo.filePath(),
                            snapshotFormat().toLatin1().constData(),
