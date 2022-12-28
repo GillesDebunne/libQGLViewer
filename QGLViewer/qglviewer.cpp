@@ -2199,7 +2199,7 @@ void QGLViewer::help() {
                 "Copyright 2002-%2 Gilles Debunne<br>"
                 "<code>%3</code>")
                  .arg(QGLViewerVersionString())
-                 .arg("2014")
+                 .arg("2023")
                  .arg("http://www.libqglviewer.com") +
              QString("</center>");
       break;
