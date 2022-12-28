@@ -1847,7 +1847,7 @@ href="../mouse.html">mouse page</a> for details on mouse bindings.
 See also helpString() and keyboardString(). */
 QString QGLViewer::mouseString() const {
   QString text(
-      "<center><table border=\"1\" cellspacing=\"0\" cellpadding=\"4\">\n");
+      "<font color=\"black\"><center><table border=\"0\" cellspacing=\"0\" cellpadding=\"4\">\n");
   const QString trtd("<tr><td>");
   const QString tdtr("</td></tr>\n");
   const QString tdtd("</td><td>");
@@ -1955,7 +1955,7 @@ QString QGLViewer::mouseString() const {
     text += tableLine(formatClickActionPrivate(it2.key()), it2.value());
   }
 
-  text += "</table></center>";
+  text += "</table></center></font>";
 
   return text;
 }
@@ -2055,7 +2055,7 @@ href="../keyboard.html">keyboard page</a> for details on key customization.
 See also helpString() and mouseString(). */
 QString QGLViewer::keyboardString() const {
   QString text(
-      "<center><table border=\"1\" cellspacing=\"0\" cellpadding=\"4\">\n");
+      "<font color=\"black\"><center><table border=\"0\" cellspacing=\"0\" cellpadding=\"4\">\n");
   text += QString("<tr bgcolor=\"#aaaacc\"><th align=\"center\">%1</th><th "
                   "align=\"center\">%2</th></tr>\n")
               .arg(QGLViewer::tr("Key(s)",
@@ -2125,7 +2125,7 @@ QString QGLViewer::keyboardString() const {
             QGLViewer::tr("Fx", "Generic function key (F1..F12)") + "</i>",
         QGLViewer::tr("Deletes path (or saved position)"));
   }
-  text += "</table></center>";
+  text += "</table></center></font>";
 
   return text;
 }
