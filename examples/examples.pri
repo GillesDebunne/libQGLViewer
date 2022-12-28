@@ -64,7 +64,7 @@ unix {
                     LIB_NAME = QGLViewer-qt5
                 }
                 equals (QT_MAJOR_VERSION, 6) {
-	            LIB_NAME = QGLViewer-qt6
+                    LIB_NAME = QGLViewer-qt6
                 }
             }
 

@@ -235,7 +235,11 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent *const event,
   }
 
   case QGLViewer::MOVE_FORWARD: {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     Quaternion rot = pitchYawQuaternion(event->x(), event->y(), camera);
+#else
+    Quaternion rot = pitchYawQuaternion(event->position().x(), event->position().y(), camera);
+#endif
     rotate(rot);
     //#CONNECTION# wheelEvent MOVE_FORWARD case
     // actual translation is made in flyUpdate().
@@ -244,7 +248,11 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent *const event,
   }
 
   case QGLViewer::MOVE_BACKWARD: {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     Quaternion rot = pitchYawQuaternion(event->x(), event->y(), camera);
+#else
+    Quaternion rot = pitchYawQuaternion(event->position().x(), event->position().y(), camera);
+#endif
     rotate(rot);
     // actual translation is made in flyUpdate().
     // translate(inverseTransformOf(Vec(0.0, 0.0, flySpeed())));
@@ -252,10 +260,18 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent *const event,
   }
 
   case QGLViewer::DRIVE: {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     Quaternion rot = turnQuaternion(event->x(), camera);
+#else
+    Quaternion rot = turnQuaternion(event->position().x(), camera);
+#endif
     rotate(rot);
     // actual translation is made in flyUpdate().
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     driveSpeed_ = 0.01 * (event->y() - pressPos_.y());
+#else
+    driveSpeed_ = 0.01 * (event->position().y() - pressPos_.y());
+#endif
     break;
   }
 
@@ -265,7 +281,11 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent *const event,
   }
 
   case QGLViewer::LOOK_AROUND: {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     Quaternion rot = pitchYawQuaternion(event->x(), event->y(), camera);
+#else
+    Quaternion rot = pitchYawQuaternion(event->position().x(), event->position().y(), camera);
+#endif
     rotate(rot);
     break;
   }
@@ -275,18 +295,28 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent *const event,
     if (rotatesAroundUpVector_) {
       // Multiply by 2.0 to get on average about the same speed as with the
       // deformed ball
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
       qreal dx = 2.0 * rotationSensitivity() * (prevPos_.x() - event->x()) /
                  camera->screenWidth();
       qreal dy = 2.0 * rotationSensitivity() * (prevPos_.y() - event->y()) /
                  camera->screenHeight();
+#else
+      qreal dx = 2.0 * rotationSensitivity() * (prevPos_.x() - event->position().x()) /
+                 camera->screenWidth();
+      qreal dy = 2.0 * rotationSensitivity() * (prevPos_.y() - event->position().y()) /
+                 camera->screenHeight();
+#endif
       if (constrainedRotationIsReversed_)
         dx = -dx;
       Vec verticalAxis = transformOf(sceneUpVector_);
       rot = Quaternion(verticalAxis, dx) * Quaternion(Vec(1.0, 0.0, 0.0), dy);
     } else {
       Vec trans = camera->projectedCoordinatesOf(pivotPoint());
-      rot = deformedBallQuaternion(event->x(), event->y(), trans[0], trans[1],
-                                   camera);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+      rot = deformedBallQuaternion(event->x(), event->y(), trans[0], trans[1], camera);
+#else
+      rot = deformedBallQuaternion(event->position().x(), event->position().y(), trans[0], trans[1], camera);
+#endif
     }
     //#CONNECTION# These two methods should go together (spinning detection and
     // activation)
@@ -299,8 +329,13 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent *const event,
   case QGLViewer::SCREEN_ROTATE: {
     Vec trans = camera->projectedCoordinatesOf(pivotPoint());
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     const qreal angle = atan2(event->y() - trans[1], event->x() - trans[0]) -
                         atan2(prevPos_.y() - trans[1], prevPos_.x() - trans[0]);
+#else
+    const qreal angle = atan2(event->position().y() - trans[1], event->position().x() - trans[0]) -
+                        atan2(prevPos_.y() - trans[1], prevPos_.x() - trans[0]);
+#endif
 
     Quaternion rot(Vec(0.0, 0.0, 1.0), angle);
     //#CONNECTION# These two methods should go together (spinning detection and
@@ -313,8 +348,11 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent *const event,
   }
 
   case QGLViewer::ROLL: {
-    const qreal angle =
-        M_PI * (event->x() - prevPos_.x()) / camera->screenWidth();
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    const qreal angle = M_PI * (event->x() - prevPos_.x()) / camera->screenWidth();
+#else
+    const qreal angle = M_PI * (event->position().x() - prevPos_.x()) / camera->screenWidth();
+#endif
     Quaternion rot(Vec(0.0, 0.0, 1.0), angle);
     rotate(rot);
     setSpinningQuaternion(rot);
@@ -326,9 +364,17 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent *const event,
     Vec trans;
     int dir = mouseOriginalDirection(event);
     if (dir == 1)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
       trans.setValue(prevPos_.x() - event->x(), 0.0, 0.0);
+#else
+      trans.setValue(prevPos_.x() - event->position().x(), 0.0, 0.0);
+#endif
     else if (dir == -1)
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
       trans.setValue(0.0, event->y() - prevPos_.y(), 0.0);
+#else
+      trans.setValue(0.0, event->position().y() - prevPos_.y(), 0.0);
+#endif
 
     switch (camera->type()) {
     case Camera::PERSPECTIVE:

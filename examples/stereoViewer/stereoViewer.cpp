@@ -1,16 +1,26 @@
 #include "stereoViewer.h"
 #include <math.h>
 #include <qapplication.h>
-#include <QSurfaceFormat>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#  include <QGLFormat>
+#else
+#  include <QSurfaceFormat>
+#endif
 
 using namespace std;
 
-void Viewer::init() {
-  restoreStateFromFile();
-
+Viewer::Viewer(QWidget *parent) : QGLViewer(parent) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+  QGLFormat format;
+#else
   QSurfaceFormat format;
+#endif
   format.setStereo(true);
   setFormat(format);
+}
+
+void Viewer::init() {
+  restoreStateFromFile();
 
   // Activate the stereo display. Press 'S' to toggle.
   setStereoDisplay(true);
