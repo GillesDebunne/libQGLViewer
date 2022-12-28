@@ -974,9 +974,9 @@ void Camera::interpolateTo(const Frame &fr, qreal duration) {
 Vec Camera::pointUnderPixel(const QPoint &pixel, bool &found) const {
   float depth;
   // Qt uses upper corner for its origin while GL uses the lower corner.
-  glReadPixels(pixel.x(), screenHeight() - 1 - pixel.y(), 1, 1,
-               GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
-  found = static_cast<double>(depth)< 1.0;
+  glReadPixels(pixel.x() * devicePixelRatio_, devicePixelRatio_ * (screenHeight() - pixel.y()) - 1,
+    1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+  found = static_cast<double>(depth) < 1.0;
   Vec point(pixel.x(), pixel.y(), static_cast<double>(depth));
   point = unprojectedCoordinatesOf(point);
   return point;

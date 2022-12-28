@@ -51,7 +51,7 @@ void Viewer::postSelection(const QPoint &point) {
   // Find the selectedPoint coordinates, using camera()->pointUnderPixel().
   bool found;
   selectedPoint = camera()->pointUnderPixel(point, found);
-  selectedPoint -= 0.01f * dir; // Small offset to make point clearly visible.
+  selectedPoint -= 0.02f * dir; // Small offset to make point clearly visible.
   // Note that "found" is different from (selectedObjectId()>=0) because of the
   // size of the select region.
 
