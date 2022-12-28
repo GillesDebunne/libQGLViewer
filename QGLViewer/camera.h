@@ -184,6 +184,16 @@ public:
   QGLViewer's window dimensions when the Camera is attached to a QGLViewer. See
   also QOpenGLWidget::height() */
   int screenHeight() const { return screenHeight_; }
+
+  /*! Returns the pixel ratio (physical to device independent pixel ratio) of the 
+  Camera screen.
+
+  Set using setDevicePixelRatio(). Defaults to 1.0. 
+
+  This value is automatically fitted to the QGLViewer's screen pixel ratio when the
+  Camera is attached to a QGLViewer. See also QWindow::devicePixelRatio() */
+  qreal devicePixelRatio() const { return devicePixelRatio_; }
+
   void getViewport(GLint viewport[4]) const;
   qreal pixelGLRatio(const Vec &position) const;
 
@@ -267,6 +277,8 @@ public Q_SLOTS:
   }
 
   void setScreenWidthAndHeight(int width, int height);
+  void setDevicePixelRatio(qreal ratio);
+
   /*! Sets the zNearCoefficient() value. */
   void setZNearCoefficient(qreal coef) {
     zNearCoef_ = coef;
@@ -514,6 +526,7 @@ private:
   qreal zNearCoef_;
   qreal zClippingCoef_;
   qreal orthoCoef_;
+  qreal devicePixelRatio_;
   Type type_;                            // PERSPECTIVE or ORTHOGRAPHIC
   mutable GLdouble modelViewMatrix_[16]; // Buffered model view matrix.
   mutable bool modelViewMatrixIsUpToDate_;

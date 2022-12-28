@@ -49,6 +49,9 @@ Camera::Camera()
   setPhysicalScreenWidth(0.5);
   // focusDistance is set from setFieldOfView()
 
+  // Default value
+  setDevicePixelRatio(1.0);
+
   // #CONNECTION# Camera copy constructor
   for (unsigned short j = 0; j < 16; ++j) {
     modelViewMatrix_[j] = ((j % 5 == 0) ? 1.0 : 0.0);
@@ -146,6 +149,15 @@ void Camera::setScreenWidthAndHeight(int width, int height) {
   screenWidth_ = width > 0 ? width : 1;
   screenHeight_ = height > 0 ? height : 1;
   projectionMatrixIsUpToDate_ = false;
+}
+
+/*! Sets the screen's pixel ratio.
+
+See QScreen::devicePixelRatio() for a definition.
+Automatically set by the associated QGLViewer.
+*/
+void Camera::setDevicePixelRatio(qreal ratio) {
+  devicePixelRatio_ = ratio;
 }
 
 /*! Returns the near clipping plane distance used by the Camera projection

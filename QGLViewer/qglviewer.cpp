@@ -654,21 +654,24 @@ void QGLViewer::setCamera(Camera *const camera) {
   if (!camera)
     return;
 
-  camera->setSceneRadius(sceneRadius());
-  camera->setSceneCenter(sceneCenter());
-  camera->setScreenWidthAndHeight(width(), height());
-
   // Disconnect current camera from this viewer.
   disconnect(this->camera()->frame(), SIGNAL(manipulated()), this,
              SLOT(update()));
   disconnect(this->camera()->frame(), SIGNAL(spun()), this, SLOT(update()));
+  disconnect(screen(), SIGNAL(physicalDotsPerInchChanged(qreal)), this->camera(), SLOT(setDevicePixelRatio(qreal)));
+  connectAllCameraKFIInterpolatedSignals(false);
+
+  camera_ = camera;
+
+  camera->setSceneRadius(sceneRadius());
+  camera->setSceneCenter(sceneCenter());
+  camera->setScreenWidthAndHeight(width(), height());
+  camera->setDevicePixelRatio(screen()->devicePixelRatio());
 
   // Connect camera frame to this viewer.
   connect(camera->frame(), SIGNAL(manipulated()), SLOT(update()));
   connect(camera->frame(), SIGNAL(spun()), SLOT(update()));
-
-  connectAllCameraKFIInterpolatedSignals(false);
-  camera_ = camera;
+  connect(screen(), SIGNAL(physicalDotsPerInchChanged(qreal)), camera, SLOT(setDevicePixelRatio(qreal)));
   connectAllCameraKFIInterpolatedSignals();
 
   previousCameraZClippingCoefficient_ = this->camera()->zClippingCoefficient();
