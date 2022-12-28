@@ -542,20 +542,13 @@ cd - > /dev/null
 #rm cwExtractor
 
 echo
-echo
-echo ">> Done, all files set in $tmpDir"
-echo "Copy $tmpDir in gh-pages branches and push to update site"
-cd $tmpDir
-
-
-
-
 
 
 ############################################################
 ############            Packages                ############
 ############################################################
-echo -n "Packaging   : "
+echo -n "Packaging  :"
+cd $tmpDir
 
 export LC_ALL="C"
 export LANGUAGE="C"
@@ -606,3 +599,11 @@ cd ..
 zip -qr $libNameVersion.zip $libNameVersion
 
 echo
+echo
+echo "> Done, all files set in $tmpDir"
+echo "> Update website with these lines:"
+echo
+echo "git switch gh-pages"
+echo "\\cp -rf ${tmpDir}/doc/* ."
+echo "cp /tmp/$libNameVersion.tar.gz /tmp/$libNameVersion.zip src"
+
