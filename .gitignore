@@ -12,3 +12,6 @@ designerPlugin/libqglviewerplugin.dylib
 **/.qmake.cache
 QGLViewer/ui_*.h
 QGLViewer/QGLViewer.framework/
+build
+Build
+BUILD

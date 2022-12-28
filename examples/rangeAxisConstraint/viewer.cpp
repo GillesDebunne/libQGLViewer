@@ -1,5 +1,6 @@
 #include "viewer.h"
 #include "rangeAxisConstraint.h"
+#include "manipulatedFrame.h"
 
 #include <QGLViewer/manipulatedFrame.h>
 
