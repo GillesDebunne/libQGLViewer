@@ -1,5 +1,5 @@
 %define version_major 2
-%define version_minor 8
+%define version_minor 9
 %define version_revision 0
 
 Name:		libQGLViewer
@@ -154,6 +154,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Sat Dec 31 2022 Gilles Debunne <contact@libQGLViewer.com> 2.9.0
+- CMake compilation, Qt6 fixes, high dpi fixes.
+
 * Sun Mar 13 2022 Gilles Debunne <contact@libQGLViewer.com> 2.8.0
 - Updates for Qt6 compatibility.
 

@@ -32,6 +32,20 @@
 
   <h1>Change Log</h1>
 
+  <h2>Sat 31st 2022 - 2.9.0</h2>
+  <b>Changes in the API</b>
+  <ul>
+    <li>New <code>Camera::devicePixelRatio</code> property, to support high DPI screens.</li>
+  </ul>
+  <b>Bug fixes or improvements</b>
+  <ul>
+    <li>Added <code>CMake</code> configuration and GitHub build action (thanks Franck).</li>
+    <li>Set <code>/Library/Frameworks</code> as default install directory on MacOS (thanks Alessandro).</li>
+    <li>Fix Qt6 compilation on Linux (thanks Pierre).</li>
+    <li>Fix set revolve around point from pixel selection (thanks Björn).</li>
+    <li>Fix <code>Camera::pointUnderPixel()</code> for high DPI screens (thanks Bertrand).</li>
+  </ul>
+
   <h2>Mar 13th 2022 - 2.8.0</h2>
   <b>Bug fixes or improvements</b>
   <ul>
