@@ -49,6 +49,9 @@
 #include &lt;QGLViewer/qglviewer.h&gt;
 
 class Viewer : public QGLViewer {
+public:
+  Viewer(QWidget *parent = NULL);
+
 protected:
   virtual void draw();
   virtual void init();
@@ -62,16 +65,26 @@ protected:
 #include "stereoViewer.h"
 #include &lt;math.h&gt;
 #include &lt;qapplication.h&gt;
-#include &lt;QSurfaceFormat&gt;
+#if QT_VERSION &lt; QT_VERSION_CHECK(6, 0, 0)
+#  include &lt;QGLFormat&gt;
+#else
+#  include &lt;QSurfaceFormat&gt;
+#endif
 
 using namespace std;
 
-void Viewer::init() {
-  restoreStateFromFile();
-
+Viewer::Viewer(QWidget *parent) : QGLViewer(parent) {
+#if QT_VERSION &lt; QT_VERSION_CHECK(6, 0, 0)
+  QGLFormat format;
+#else
   QSurfaceFormat format;
+#endif
   format.setStereo(true);
   setFormat(format);
+}
+
+void Viewer::init() {
+  restoreStateFromFile();
 
   // Activate the stereo display. Press 'S' to toggle.
   setStereoDisplay(true);
@@ -127,11 +140,6 @@ void Viewer::draw() {
 
 int main(int argc, char **argv) {
   QApplication application(argc, argv);
-
-  // Set the default OpenGL format with stereo capabilities.
-  QGLFormat format;
-  format.setStereo(true);
-  QGLFormat::setDefaultFormat(format);
 
   Viewer viewer;
 
