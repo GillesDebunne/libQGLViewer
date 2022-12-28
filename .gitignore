@@ -1,3 +1,4 @@
+.DS_Store
 .obj/
 .moc/
 Makefile
@@ -8,6 +9,14 @@ Makefile
 /QGLViewer/libQGLViewer.prl
 /QGLViewer/QGLViewer.framework/
 /QGLViewer/ui_*.h
+/QGLViewer/libQGLViewer*.so*
+/QGLViewer/QGLViewer*.dll
+/QGLViewer/QGLViewer*.exp
+/QGLViewer/QGLViewer*.ilk
+/QGLViewer/QGLViewer*.lib
+/QGLViewer/QGLViewer*.pdb
+/QGLViewer/QGLViewer*.prl
+/QGLViewer/Library/Developer/*
 /designerPlugin/libqglviewerplugin.dylib
 *.pro.user
 **/.qmake.stash
