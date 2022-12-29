@@ -15,6 +15,7 @@
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QPushButton>
+#include <QScreen>
 #include <QTabWidget>
 #include <QTextEdit>
 #include <QTextStream>

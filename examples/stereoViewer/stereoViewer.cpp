@@ -1,20 +1,12 @@
 #include "stereoViewer.h"
 #include <math.h>
 #include <qapplication.h>
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#  include <QGLFormat>
-#else
-#  include <QSurfaceFormat>
-#endif
+#include <QSurfaceFormat>
 
 using namespace std;
 
 Viewer::Viewer(QWidget *parent) : QGLViewer(parent) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-  QGLFormat format;
-#else
   QSurfaceFormat format;
-#endif
   format.setStereo(true);
   setFormat(format);
 }
