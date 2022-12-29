@@ -14,6 +14,7 @@
 #include <QImage>
 #include <QMessageBox>
 #include <QMouseEvent>
+#include <QPainter>
 #include <QPushButton>
 #include <QScreen>
 #include <QTabWidget>
@@ -22,10 +23,9 @@
 #include <QTimer>
 #include <QUrl>
 #include <QtAlgorithms>
-#include <QPainter>
 
-#if QT_VERSION > QT_VERSION_CHECK(6, 0, 0)
-#define MidButton MiddleButton
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+# define MidButton MiddleButton
 #endif
 
 using namespace std;
@@ -497,11 +497,11 @@ void QGLViewer::setDefaultShortcuts() {
   setShortcut(DRAW_AXIS, Qt::Key_A);
   setShortcut(DRAW_GRID, Qt::Key_G);
   setShortcut(DISPLAY_FPS, Qt::Key_F);
-  setShortcut(ENABLE_TEXT, Qt::SHIFT + Qt::Key_Question);
+  setShortcut(ENABLE_TEXT, Qt::SHIFT | Qt::Key_Question);
   setShortcut(EXIT_VIEWER, Qt::Key_Escape);
-  setShortcut(SAVE_SCREENSHOT, Qt::CTRL + Qt::Key_S);
+  setShortcut(SAVE_SCREENSHOT, Qt::CTRL | Qt::Key_S);
   setShortcut(CAMERA_MODE, Qt::Key_Space);
-  setShortcut(FULL_SCREEN, Qt::ALT + Qt::Key_Return);
+  setShortcut(FULL_SCREEN, Qt::ALT | Qt::Key_Return);
   setShortcut(STEREO, Qt::Key_S);
   setShortcut(ANIMATION, Qt::Key_Return);
   setShortcut(HELP, Qt::Key_H);
@@ -512,7 +512,7 @@ void QGLViewer::setDefaultShortcuts() {
   setShortcut(MOVE_CAMERA_DOWN, Qt::Key_Down);
   setShortcut(INCREASE_FLYSPEED, Qt::Key_Plus);
   setShortcut(DECREASE_FLYSPEED, Qt::Key_Minus);
-  setShortcut(SNAPSHOT_TO_CLIPBOARD, Qt::CTRL + Qt::Key_C);
+  setShortcut(SNAPSHOT_TO_CLIPBOARD, Qt::CTRL | Qt::Key_C);
 
   keyboardActionDescription_[DISPLAY_FPS] =
       tr("Toggles the display of the FPS", "DISPLAY_FPS action description");
@@ -1696,16 +1696,12 @@ QString QGLViewer::clickActionString(QGLViewer::ClickAction ca) {
 }
 
 static QString keyString(unsigned int key) {
-#if QT_VERSION >= 0x040100
   return QKeySequence(int(key)).toString(QKeySequence::NativeText);
-#else
-  return QString(QKeySequence(key));
-#endif
 }
 
 QString QGLViewer::formatClickActionPrivate(ClickBindingPrivate cbp) {
   bool buttonsBefore = cbp.buttonsBefore != Qt::NoButton;
-  QString keyModifierString = keyString(cbp.modifiers + cbp.key);
+  QString keyModifierString = keyString(cbp.modifiers | cbp.key);
   if (!keyModifierString.isEmpty()) {
 #ifdef Q_OS_MAC
     // modifiers never has a '+' sign. Add one space to clearly separate
@@ -1967,9 +1963,9 @@ the help() window \c Keyboard tab.
 The \p key definition is given as an \c int using Qt enumerated values. Set an
 empty \p description to remove a shortcut description: \code
 setKeyDescription(Qt::Key_W, "Toggles wireframe display");
-setKeyDescription(Qt::CTRL+Qt::Key_L, "Loads a new scene");
+setKeyDescription(Qt::CTRL | Qt::Key_L, "Loads a new scene");
 // Removes a description
-setKeyDescription(Qt::CTRL+Qt::Key_C, "");
+setKeyDescription(Qt::CTRL | Qt::Key_C, "");
 \endcode
 
 See the <a href="../examples/keyboardAndMouse.html">keyboardAndMouse example</a>
@@ -2258,10 +2254,8 @@ void QGLViewer::keyPressEvent(QKeyEvent *e) {
 
   const Qt::KeyboardModifiers modifiers = e->modifiers();
 
-  QMap<KeyboardAction, unsigned int>::ConstIterator it = keyboardBinding_
-                                                             .begin(),
-                                                    end =
-                                                        keyboardBinding_.end();
+  QMap<KeyboardAction, unsigned int>::ConstIterator it = keyboardBinding_.begin(),
+                                                   end = keyboardBinding_.end();
   const unsigned int target = key | modifiers;
   while ((it != end) && (it.value() != target))
     ++it;
@@ -2432,7 +2426,7 @@ Here are some examples:
 setShortcut(EXIT_VIEWER, Qt::Key_Q);
 
 // Alt+M toggles camera mode
-setShortcut(CAMERA_MODE, Qt::ALT + Qt::Key_M);
+setShortcut(CAMERA_MODE, Qt::ALT | Qt::Key_M);
 
 // The DISPLAY_FPS action is disabled
 setShortcut(DISPLAY_FPS, 0);
@@ -2449,7 +2443,7 @@ void QGLViewer::setShortcut(KeyboardAction action, unsigned int key) {
 QGLViewer::KeyboardAction.
 
 Result is an \c unsigned \c int defined using Qt enumerated values, as in \c
-Qt::Key_Q or \c Qt::CTRL + Qt::Key_X. Use Qt::MODIFIER_MASK to separate the key
+Qt::Key_Q or \c Qt::CTRL | Qt::Key_X. Use Qt::MODIFIER_MASK to separate the key
 from the state keys. Returns \c 0 if the KeyboardAction is disabled (not
 binded). Set using setShortcut().
 

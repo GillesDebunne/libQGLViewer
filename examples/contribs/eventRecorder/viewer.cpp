@@ -35,7 +35,7 @@ void Viewer::init() {
   restoreStateFromFile();
 
   setKeyDescription(Qt::Key_R, "Starts/stops recording scenario.");
-  setKeyDescription(Qt::SHIFT + Qt::Key_R, "Replay recorded scenario.");
+  setKeyDescription(Qt::SHIFT | Qt::Key_R, "Replay recorded scenario.");
 
   help();
 }

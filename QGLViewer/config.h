@@ -8,11 +8,6 @@
 
 #define QGLVIEWER_VERSION 0x020900
 
-// Needed for Qt < 4 (?)
-#ifndef QT_CLEAN_NAMESPACE
-#define QT_CLEAN_NAMESPACE
-#endif
-
 // Get QT_VERSION and other Qt flags
 #include <qglobal.h>
 
@@ -23,34 +18,31 @@ Error : libQGLViewer requires a minimum Qt version of 5.4 Error
 
 // Win 32 DLL export macros
 #ifdef Q_OS_WIN32
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
-#ifndef QGLVIEWER_STATIC
-#ifdef CREATE_QGLVIEWER_DLL
-#if QT_VERSION >= 0x040500
-#define QGLVIEWER_EXPORT Q_DECL_EXPORT
-#else
-#define QGLVIEWER_EXPORT __declspec(dllexport)
-#endif
-#else
-#if QT_VERSION >= 0x040500
-#define QGLVIEWER_EXPORT Q_DECL_IMPORT
-#else
-#define QGLVIEWER_EXPORT __declspec(dllimport)
-#endif
-#endif
-#endif
-#ifndef __MINGW32__
-#pragma warning(disable : 4251) // DLL interface, needed with Visual 6
-#pragma warning(disable : 4786) // identifier truncated to 255 in browser
+# ifndef M_PI
+#  define M_PI 3.14159265358979323846
+# endif // M_PI
+# ifndef QGLVIEWER_STATIC
+#  ifdef CREATE_QGLVIEWER_DLL
+#   define QGLVIEWER_EXPORT Q_DECL_EXPORT
+#  else
+#   define QGLVIEWER_EXPORT Q_DECL_IMPORT
+#  endif
+# endif // QGLVIEWER_STATIC
+
+# ifndef __MINGW32__
+# pragma warning(disable : 4251) // DLL interface, needed with Visual 6
+# pragma warning(disable : 4786) // identifier truncated to 255 in browser
                                 // information (Visual 6).
-#endif
+# endif
 #endif // Q_OS_WIN32
 
 // For other architectures, this macro is empty
 #ifndef QGLVIEWER_EXPORT
 #define QGLVIEWER_EXPORT
+#endif
+
+#ifdef Q_OS_MAC
+# define GL_SILENCE_DEPRECATION
 #endif
 
 // OpenGL includes - Included here and hence shared by all the files that need
@@ -59,9 +51,9 @@ Error : libQGLViewer requires a minimum Qt version of 5.4 Error
 
 // GLU was removed from Qt in version 4.8
 #ifdef Q_OS_MAC
-#include <OpenGL/glu.h>
+# include <OpenGL/glu.h>
 #else
-#include <GL/glu.h>
+# include <GL/glu.h>
 #endif
 
 // Container classes interfaces changed a lot in Qt.

@@ -1,8 +1,11 @@
-#ifdef WIN32
+#include <qglobal.h>
+
+#ifdef Q_OS_WIN32
 # include <windows.h>
 #endif
 
-#ifdef __APPLE__
+#ifdef Q_OS_MAC
+# define GL_SILENCE_DEPRECATION
 # include <OpenGL/gl.h>
 #else
 # include <GL/gl.h>

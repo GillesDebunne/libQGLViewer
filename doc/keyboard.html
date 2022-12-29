@@ -164,7 +164,7 @@ void Viewer::init()
   setShortcut(EXIT_VIEWER, Qt::Key_Q);
 
   // Alt+M toggles camera mode
-  setShortcut(CAMERA_MODE, Qt::ALT+Qt::Key_M);
+  setShortcut(CAMERA_MODE, Qt::ALT | Qt::Key_M);
   
   // The DISPLAY_FPS action is disabled
   setShortcut(DISPLAY_FPS, 0);

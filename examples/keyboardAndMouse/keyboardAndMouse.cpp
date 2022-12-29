@@ -43,10 +43,10 @@ void Viewer::init() {
   /////////////////////////////////////////////////////
 
   // Define 'Control+Q' as the new exit shortcut (default was 'Escape')
-  setShortcut(EXIT_VIEWER, Qt::CTRL + Qt::Key_Q);
+  setShortcut(EXIT_VIEWER, Qt::CTRL | Qt::Key_Q);
 
   // Set 'Control+F' as the FPS toggle state key.
-  setShortcut(DISPLAY_FPS, Qt::CTRL + Qt::Key_F);
+  setShortcut(DISPLAY_FPS, Qt::CTRL | Qt::Key_F);
 
   // Disable draw grid toggle shortcut (default was 'G')
   setShortcut(DRAW_GRID, 0);
