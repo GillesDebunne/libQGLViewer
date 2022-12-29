@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QtHelpProject version="1.0">
-<namespace>com.libqglviewer.2.9.0</namespace>
+<namespace>com.libqglviewer.2.9.1</namespace>
 <virtualFolder>doc</virtualFolder>
 <filterSection>
 <filterAttribute>doxygen</filterAttribute>
 <toc>
-<section title="libQGLViewer Version 2.9.0" ref="index.html">
+<section title="libQGLViewer Version 2.9.1" ref="index.html">
 <section title="Namespaces" ref="namespaces.html">
 <section title="Namespace List" ref="namespaces.html">
 <section title="qglviewer" ref="namespaceqglviewer.html">
@@ -1299,7 +1299,6 @@
 <section title="config.h" ref="config_8h.html">
 <section title="QGLVIEWER_EXPORT" ref="config_8h.html#a26c8f95aa8f060675f2500a3aac614e3"/>
 <section title="QGLVIEWER_VERSION" ref="config_8h.html#a31753aa03177ca4c55bb1054ceb23107"/>
-<section title="QT_CLEAN_NAMESPACE" ref="config_8h.html#a1e9c4d889526b73d9f4d5c688ae88c07"/>
 </section>
 <section title="constraint.cpp" ref="constraint_8cpp.html"/>
 <section title="constraint.h" ref="constraint_8h.html">
@@ -2597,7 +2596,6 @@
 <keyword name="operator&lt;&lt;(std::ostream &amp;o, const qglviewer::Vec &amp;)" id="vec.h::operator&lt;&lt;_aae584029baa15eb63fe2c8a859eb01ea" ref="vec_8h.html#aae584029baa15eb63fe2c8a859eb01ea"/>
 <keyword name="QGLVIEWER_EXPORT" id="config.h::QGLVIEWER_EXPORT_a26c8f95aa8f060675f2500a3aac614e3" ref="config_8h.html#a26c8f95aa8f060675f2500a3aac614e3"/>
 <keyword name="QGLVIEWER_VERSION" id="config.h::QGLVIEWER_VERSION_a31753aa03177ca4c55bb1054ceb23107" ref="config_8h.html#a31753aa03177ca4c55bb1054ceb23107"/>
-<keyword name="QT_CLEAN_NAMESPACE" id="config.h::QT_CLEAN_NAMESPACE_a1e9c4d889526b73d9f4d5c688ae88c07" ref="config_8h.html#a1e9c4d889526b73d9f4d5c688ae88c07"/>
 </keywords>
 <files>
 <file>annotated.html</file>
