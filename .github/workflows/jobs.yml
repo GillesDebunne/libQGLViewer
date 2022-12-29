@@ -1,7 +1,20 @@
 name: libQGLViewer
 on: [push, pull_request]
 jobs:
-  build:
+  buildQt5:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: sudo apt-get install -y build-essential qtbase5-dev libglu1-mesa-dev
+      - name: Build all
+        run: |
+          mkdir build
+          cd build
+          cmake ..
+          make all
+  buildQt6:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
