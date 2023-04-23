@@ -1069,7 +1069,8 @@ public:
     ROLL,
     DRIVE,
     SCREEN_TRANSLATE,
-    ZOOM_ON_REGION
+    ZOOM_ON_REGION,
+    ORBIT
   };
 
 #ifndef DOXYGEN

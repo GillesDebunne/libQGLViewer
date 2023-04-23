@@ -303,7 +303,12 @@ public:
 // Returns false in case of problem.
 bool QGLViewer::saveImageSnapshot(const QString &fileName) {
   static ImageInterface *imageInterface = nullptr;
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+  qreal devicePixelRatio = this->devicePixelRatio();
+#else
   qreal devicePixelRatio = screen()->devicePixelRatio();
+#endif
   qreal dipWidth = devicePixelRatio * width();
   qreal dipHeight = devicePixelRatio * height();
 
