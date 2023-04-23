@@ -659,7 +659,9 @@ void QGLViewer::setCamera(Camera *const camera) {
   disconnect(this->camera()->frame(), SIGNAL(manipulated()), this,
              SLOT(update()));
   disconnect(this->camera()->frame(), SIGNAL(spun()), this, SLOT(update()));
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
   disconnect(screen(), SIGNAL(physicalDotsPerInchChanged(qreal)), this->camera(), SLOT(setDevicePixelRatio(qreal)));
+#endif
   connectAllCameraKFIInterpolatedSignals(false);
 
   camera_ = camera;
@@ -667,12 +669,18 @@ void QGLViewer::setCamera(Camera *const camera) {
   camera->setSceneRadius(sceneRadius());
   camera->setSceneCenter(sceneCenter());
   camera->setScreenWidthAndHeight(width(), height());
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+  camera->setDevicePixelRatio(this->devicePixelRatio());
+#else
   camera->setDevicePixelRatio(screen()->devicePixelRatio());
+#endif
 
   // Connect camera frame to this viewer.
   connect(camera->frame(), SIGNAL(manipulated()), SLOT(update()));
   connect(camera->frame(), SIGNAL(spun()), SLOT(update()));
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
   connect(screen(), SIGNAL(physicalDotsPerInchChanged(qreal)), camera, SLOT(setDevicePixelRatio(qreal)));
+#endif
   connectAllCameraKFIInterpolatedSignals();
 
   previousCameraZClippingCoefficient_ = this->camera()->zClippingCoefficient();
@@ -1660,6 +1668,8 @@ QString QGLViewer::mouseActionString(QGLViewer::MouseAction ma) {
                          "SCREEN_TRANSLATE mouse action");
   case QGLViewer::ZOOM_ON_REGION:
     return QGLViewer::tr("Zooms on region for", "ZOOM_ON_REGION mouse action");
+  case QGLViewer::ORBIT:
+    return QGLViewer::tr("Orbits", "ORBIT mouse action");
   }
   return QString();
 }
@@ -2791,7 +2801,7 @@ void QGLViewer::setMouseBinding(Qt::Key key, Qt::KeyboardModifiers modifiers,
                                 MouseAction action, bool withConstraint) {
   if ((handler == FRAME) &&
       ((action == MOVE_FORWARD) || (action == MOVE_BACKWARD) ||
-       (action == ROLL) || (action == LOOK_AROUND) ||
+       (action == ROLL) || (action == LOOK_AROUND) || (action == ORBIT) ||
        (action == ZOOM_ON_REGION))) {
     qWarning("Cannot bind %s to FRAME",
              mouseActionString(action).toLatin1().constData());
@@ -3332,6 +3342,7 @@ void QGLViewer::toggleCameraMode() {
     setMouseBinding(modifiers, Qt::RightButton, CAMERA, MOVE_BACKWARD);
 
     setMouseBinding(Qt::Key_R, modifiers, Qt::LeftButton, CAMERA, ROLL);
+    setMouseBinding(Qt::Key_R, modifiers, Qt::LeftButton, CAMERA, ORBIT);
 
     setMouseBinding(Qt::NoModifier, Qt::LeftButton, NO_CLICK_ACTION, true);
     setMouseBinding(Qt::NoModifier, Qt::MidButton, NO_CLICK_ACTION, true);

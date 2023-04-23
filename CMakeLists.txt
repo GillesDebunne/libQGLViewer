@@ -22,9 +22,9 @@ if (Qt6_FOUND)
     message("Building with Qt6")
     set(QtLibs Qt::Core Qt::Widgets Qt::Xml Qt::OpenGL Qt::OpenGLWidgets)
 else()
-    find_package(Qt5 5.15 REQUIRED COMPONENTS Core Widgets Xml OpenGL)
+    find_package(Qt5 5 REQUIRED COMPONENTS Core Widgets Xml OpenGL)
     message("Building with Qt5")
-    set(QtLibs Qt::Core Qt::Widgets Qt::Xml Qt::OpenGL)
+    set(QtLibs Qt5::Core Qt5::Widgets Qt5::Xml Qt5::OpenGL)
 endif()
 
 

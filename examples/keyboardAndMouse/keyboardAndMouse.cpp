@@ -72,6 +72,7 @@ void Viewer::init() {
                   SELECT);
   setWheelBinding(Qt::AltModifier, CAMERA, MOVE_FORWARD);
   setMouseBinding(Qt::AltModifier, Qt::LeftButton, CAMERA, TRANSLATE);
+  setMouseBinding(Qt::LeftButton, CAMERA, ORBIT);
 
   // Add custom mouse bindings description (see mousePressEvent())
   setMouseBindingDescription(Qt::NoModifier, Qt::RightButton,

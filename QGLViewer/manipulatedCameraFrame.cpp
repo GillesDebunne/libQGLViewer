@@ -398,10 +398,45 @@ void ManipulatedCameraFrame::mouseMoveEvent(QMouseEvent *const event,
   case QGLViewer::ZOOM_ON_REGION:
   case QGLViewer::NO_MOUSE_ACTION:
     break;
+
+  case QGLViewer::ORBIT:
+  {
+    qreal dx, dy;
+    // Orbiting features by rotation of camera about the Pivot
+    // remaining parallel to the XY plane (no roll possible):
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+      dx = 2.0 * rotationSensitivity() * (event->x() - prevPos_.x());
+      dy = 2.0 * rotationSensitivity() * (event->y() - prevPos_.y());
+#else
+      dx = 2.0 * rotationSensitivity() * (event->position().x() - prevPos_.x());
+      dy = 2.0 * rotationSensitivity() * (event->position().y() - prevPos_.y());
+#endif
+    // orientation
+    double R [3][3];
+    orientation().getRotationMatrix(R);
+    double betta = atan2(R[1][0], R[0][0]);
+    const Quaternion rotZ1(Vec(0.0, 0.0, 1.0), betta - dx / camera->screenWidth());
+    const Quaternion rotX(Vec(1.0, 0.0, 0.0), -dy / camera->screenHeight());
+    const Quaternion rotZ2(Vec(0.0, 0.0, 1.0), -betta);
+    Quaternion rot = rotZ1*rotX*rotZ2;
+    Quaternion ori = rot*orientation();
+    setOrientation(ori);
+    // position:
+    qglviewer::Vec p = position();
+    qglviewer::Vec pivot = pivotPoint();
+    rot.inverse();
+    p = pivot + rot*(p-pivot);
+    setPosition(p);
+    break;
+  }
   }
 
   if (action_ != QGLViewer::NO_MOUSE_ACTION) {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     prevPos_ = event->pos();
+#else
+    prevPos_ = event->position();
+#endif
     if (action_ != QGLViewer::ZOOM_ON_REGION)
       // ZOOM_ON_REGION should not emit manipulated().
       // prevPos_ is used to draw rectangle feedback.
