@@ -6,7 +6,9 @@
 
 namespace vrender
 {
+  class Vector2;
   class Vector3;
+  std::ostream& operator<< (std::ostream&,const Vector2&);
 
   class Vector2
 	{
