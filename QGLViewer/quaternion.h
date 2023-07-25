@@ -167,8 +167,8 @@ public:
           \note For efficiency reasons, the resulting Quaternion is not
      normalized. You may normalize() it after each application in case of
      numerical drift. */
-  Quaternion &operator*=(const Quaternion &q) {
-    *this = (*this) * q;
+  Quaternion &operator*=(const Quaternion &a) {
+    *this = (*this) * a;
     return *this;
   }
 
