@@ -43,7 +43,7 @@ double operator*(const NVector3 &u,const Vector3  &v)
   return u[0]*v[0] + u[1]*v[1] + u[2]*v[2];
 }
 
-double vrender::operator*(const Vector3  &u,const NVector3 &v)
+double operator*(const Vector3  &u,const NVector3 &v)
 {
   return u[0]*v[0] + u[1]*v[1] + u[2]*v[2];
 }
