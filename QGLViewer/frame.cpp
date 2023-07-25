@@ -1044,7 +1044,7 @@ void Frame::alignWithFrame(const Frame *const frame, bool move,
 
     if (max >= threshold) {
       axis = cross(directions[0][index[0]], dir);
-      qreal angle = asin(axis.norm());
+      angle = asin(axis.norm());
       if (directions[0][index[0]] * dir >= 0.0)
         angle = -angle;
       rotate(rotation().inverse() * Quaternion(axis, angle) * orientation());
