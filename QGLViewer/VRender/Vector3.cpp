@@ -78,7 +78,7 @@ Vector3& Vector3::operator-= (const NVector3& u)
 
 // -----------------------------------------------------------------------------
 //! Left multiplication by a real value
-Vector3 vrender::operator* (double r,const Vector3& u)
+Vector3 operator* (double r,const Vector3& u)
 {
   return ( Vector3(r*u[0], r*u[1], r*u[2]) );
 }
