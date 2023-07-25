@@ -107,7 +107,7 @@ class BSPNode
 		void Classify(Segment *, Segment * &, Segment * &);
 		int  Classify(Point *);
 
-		void initEquation(const Polygone *P,double & a, double & b, double & cc, double & dd);
+		void initEquation(const Polygone *P,double & a, double & bb, double & cc, double & dd);
 };
 
 BSPTree::BSPTree()
@@ -539,7 +539,7 @@ BSPNode::BSPNode(Polygone *P)
   fils_plus  = nullptr;
 }
 
-void BSPNode::initEquation(const Polygone *P,double & a, double & b, double & cc, double & dd)
+void BSPNode::initEquation(const Polygone *P,double & a, double & bb, double & cc, double & dd)
 {
 	Vector3 n(0.,0.,0.);
         unsigned int j = 0;
@@ -594,7 +594,7 @@ void BSPNode::initEquation(const Polygone *P,double & a, double & b, double & cc
 	dd = n*P->vertex(0);
 
 	a = n[0];
-	b = n[1];
+	bb = n[1];
 	cc = n[2];
 }
 
