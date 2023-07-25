@@ -47,7 +47,7 @@ Vector2::Vector2 (const Vector3& u)
 
 // -----------------------------------------------------------------------------
 //! Inverse
-Vector2 vrender::operator- (const Vector2& u)
+Vector2 operator- (const Vector2& u)
 {
   return Vector2(-u[0], -u[1]) ;
 }
