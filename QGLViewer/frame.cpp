@@ -1035,7 +1035,7 @@ void Frame::alignWithFrame(const Frame *const frame, bool move,
 
     qreal max = 0.0;
     for (unsigned short i = 0; i < 3; ++i) {
-      qreal proj = fabs(directions[0][i] * dir);
+      proj = fabs(directions[0][i] * dir);
       if (proj > max) {
         index[0] = i;
         max = proj;
