@@ -108,7 +108,7 @@ double Vector3::infNorm() const
 
 // -----------------------------------------------------------------------------
 //! Out stream override: prints the 3 vector components
-std::ostream& vrender::operator<< (std::ostream& out,const Vector3& u)
+std::ostream& operator<< (std::ostream& out,const Vector3& u)
 {
   out << u[0] << " " << u[1] << " " << u[2];
   return ( out );
