@@ -99,7 +99,10 @@ namespace vrender
       Vector2 operator/ (double v) { return Vector2(_xyz[0]/v,_xyz[1]/v); }
       Vector2 operator* (double v) { return Vector2(_xyz[0]*v,_xyz[1]*v); }
 
-      friend Vector2 operator* (double,const Vector2&);
+      friend Vector2 operator* (double r, const Vector2& u)
+      {
+        return Vector2(r*u[0], r*u[1]) ;
+      };
       //@}
 
       // ---------------------------------------------------------------------------
@@ -112,7 +115,11 @@ namespace vrender
       // ---------------------------------------------------------------------------
       //! @name Stream overrides
       //@{
-      friend std::ostream& operator<< (std::ostream&,const Vector2&);
+      friend std::ostream& operator<< (std::ostream& out, const Vector2& u)
+      {
+        out << u[0] << " " << u[1] ;
+        return ( out );
+      };
       //@}
 
       double  operator[] (int i) const
