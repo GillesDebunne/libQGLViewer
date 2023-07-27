@@ -337,15 +337,15 @@ void KeyFrameInterpolator::drawPath(int mask, int nbFrames, qreal scale) {
 
       while (kf_[2]) {
         Vec diff = kf_[2]->position() - kf_[1]->position();
-        Vec v1 = 3.0 * diff - 2.0 * kf_[1]->tgP() - kf_[2]->tgP();
-        Vec v2 = -2.0 * diff + kf_[1]->tgP() + kf_[2]->tgP();
+        Vec u1 = 3.0 * diff - 2.0 * kf_[1]->tgP() - kf_[2]->tgP();
+        Vec u2 = -2.0 * diff + kf_[1]->tgP() + kf_[2]->tgP();
 
         // cout << kf_[0]->time() << " , " << kf_[1]->time() << " , " <<
         // kf_[2]->time() << " , " << kf_[3]->time() << endl;
         for (int step = 0; step < nbSteps; ++step) {
           qreal alpha = step / static_cast<qreal>(nbSteps);
           fr.setPosition(kf_[1]->position() +
-                         alpha * (kf_[1]->tgP() + alpha * (v1 + alpha * v2)));
+                         alpha * (kf_[1]->tgP() + alpha * (u1 + alpha * u2)));
           fr.setOrientation(Quaternion::squad(kf_[1]->orientation(),
                                               kf_[1]->tgQ(), kf_[2]->tgQ(),
                                               kf_[2]->orientation(), alpha));

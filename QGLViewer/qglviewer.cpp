@@ -1894,7 +1894,7 @@ QString QGLViewer::mouseString() const {
     ClickBindingPrivate cbp(itmb.key().modifiers, itmb.key().button, false,
                             Qt::NoButton, itmb.key().key);
 
-    QString text = mouseActionString(itmb.value().action);
+    text = mouseActionString(itmb.value().action);
 
     if (!text.isNull()) {
       switch (itmb.value().handler) {
@@ -1918,7 +1918,7 @@ QString QGLViewer::mouseString() const {
     ClickBindingPrivate cbp(itw.key().modifiers, Qt::NoButton, false,
                             Qt::NoButton, itw.key().key);
 
-    QString text = mouseActionString(itw.value().action);
+    text = mouseActionString(itw.value().action);
 
     if (!text.isNull()) {
       switch (itw.value().handler) {

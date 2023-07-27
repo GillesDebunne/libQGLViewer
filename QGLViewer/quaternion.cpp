@@ -224,8 +224,8 @@ QDomElement Quaternion::domElement(const QString &name,
 
  See also the Quaternion(const QDomElement&) constructor. */
 void Quaternion::initFromDOMElement(const QDomElement &element) {
-  Quaternion q(element);
-  *this = q;
+  Quaternion a(element);
+  *this = a;
 }
 
 /*! Constructs a Quaternion from a \c QDomElement representing an XML code of

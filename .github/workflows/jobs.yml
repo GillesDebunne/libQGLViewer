@@ -12,7 +12,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake ..
+          cmake -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wshadow -Wpointer-arith -Werror -Wno-error=deprecated-declarations" ..
           make all
   buildQt6:
     runs-on: ubuntu-latest
@@ -25,5 +25,5 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake ..
+          cmake -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wshadow -Wpointer-arith -Werror -Wno-error=deprecated-declarations" ..
           make all
