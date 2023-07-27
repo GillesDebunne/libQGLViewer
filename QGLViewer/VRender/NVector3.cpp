@@ -18,7 +18,7 @@ NVector3::NVector3()
 
 // -----------------------------------------------------------------------------
 //! Copy constructor
-NVector3::NVector3(const NVector3& u)
+NVector3::NVector3(const NVector3& u) : Vector3(u)
 {
   _n[0] = u._n[0] ;
   _n[1] = u._n[1] ;
