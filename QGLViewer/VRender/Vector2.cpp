@@ -46,14 +46,6 @@ Vector2::Vector2 (const Vector3& u)
 }
 
 // -----------------------------------------------------------------------------
-//! Inverse
-Vector2 operator- (const Vector2& u)
-{
-  return Vector2(-u[0], -u[1]) ;
-}
-
-
-// -----------------------------------------------------------------------------
 //! Left multiplication by a real value
 Vector2 operator* (double r,const Vector2& u)
 {
