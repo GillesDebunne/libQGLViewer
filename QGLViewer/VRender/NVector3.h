@@ -4,11 +4,11 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "Vector3.h"
+
 namespace vrender
 {
-  class Vector3;
-
-  class NVector3
+  class NVector3: public Vector3
   {
   public:
     NVector3();
@@ -35,15 +35,15 @@ namespace vrender
       inline friend bool operator!=(const NVector3 &u,const NVector3 &v) {return !(u == v);}
     */
 
-    inline friend NVector3 operator-(const NVector3 &u) { return NVector3(-u[0],-u[1],-u[2],false); }
+    //inline friend NVector3 operator-(const NVector3 &u) { return NVector3(-u[0],-u[1],-u[2],false); }
     //inline friend Vector3 operator+(const NVector3 &u,const Vector3  &v);
     //inline friend Vector3 operator+(const Vector3  &u,const NVector3 &v);
     //inline friend Vector3 operator+(const NVector3 &u,const NVector3 &v);
     //inline friend Vector3 operator-(const NVector3 &u,const Vector3  &v);
     //inline friend Vector3 operator-(const Vector3  &u,const NVector3 &v);
     //inline friend Vector3 operator-(const NVector3 &u,const NVector3 &v);
-    friend double operator*(const NVector3 &u,const Vector3  &v);
-    friend double operator*(const Vector3  &u,const NVector3 &v);
+    //friend double operator*(const NVector3 &u,const Vector3  &v);
+    //friend double operator*(const Vector3  &u,const NVector3 &v);
     //inline friend double operator*(const NVector3 &u,const NVector3 &v);
     //inline friend Vector3 operator*(double r,const NVector3 &u);
     //inline friend Vector3 operator/(const NVector3 &u,double r);
@@ -58,8 +58,7 @@ namespace vrender
 
     double operator[](int i) const
     {
-      if((i < 0)||(i > 2))
-	throw std::runtime_error("Out of bounds in NVector3::operator[]") ;
+      if((i < 0)||(i > 2)) throw std::runtime_error("Out of bounds in NVector3::operator[]") ;
 
       return _n[i];
     }

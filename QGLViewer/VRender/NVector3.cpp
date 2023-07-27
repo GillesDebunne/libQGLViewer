@@ -1,5 +1,4 @@
 #include "NVector3.h"
-#include "Vector3.h"
 
 using namespace vrender;
 
@@ -38,6 +37,8 @@ Vector3 operator-(const NVector3 &u,const NVector3 &v)
   return Vector3(u[0]-v[0],u[1]-v[1],u[2]-v[2]);
 }
 */
+
+/*
 double operator*(const NVector3 &u,const Vector3  &v)
 {
   return u[0]*v[0] + u[1]*v[1] + u[2]*v[2];
@@ -47,6 +48,8 @@ double operator*(const Vector3  &u,const NVector3 &v)
 {
   return u[0]*v[0] + u[1]*v[1] + u[2]*v[2];
 }
+*/
+
 /*
 double operator*(const NVector3 &u,const NVector3 &v)
 {
