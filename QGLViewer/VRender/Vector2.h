@@ -38,6 +38,16 @@ namespace vrender
       //@}
 
       // ---------------------------------------------------------------------------
+      //! @name Metrics
+      //@{
+      double norm       () const;
+      double squareNorm () const;
+      double infNorm    () const; /// Should be used for most comparisons, for efficiency reasons.
+      //@}
+
+      // Note: all operators must be implemented in the header.
+
+      // ---------------------------------------------------------------------------
       //! @name Assignment
       //@{
       inline Vector2& operator= (const Vector2& u)  { _xyz[0] = u._xyz[0]; _xyz[1] = u._xyz[1]; return *this; }
@@ -105,13 +115,6 @@ namespace vrender
       };
       //@}
 
-      // ---------------------------------------------------------------------------
-      //! @name Metrics
-      //@{
-      double norm       () const;
-      double squareNorm () const;
-      double infNorm    () const; /// Should be used for most comparisons, for efficiency reasons.
-      //@}
       // ---------------------------------------------------------------------------
       //! @name Stream overrides
       //@{

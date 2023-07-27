@@ -20,10 +20,15 @@ namespace vrender
 
     NVector3(const Vector3 &u,bool normalization=true);
 
+    inline double norm() const {return 1.0;}
+    inline double squareNorm() const {return 1.0;}
+
     inline double x() const {return _n[0];}
     inline double y() const {return _n[1];}
     inline double z() const {return _n[2];}
     void setXYZ(double x,double y,double z,bool normalization=true);
+
+    // Note: all operators must be implemented in the header.
 
     NVector3& operator=(const NVector3& u)
     {
@@ -35,10 +40,6 @@ namespace vrender
       }
       return *this;
     };
-
-
-    inline double norm() const {return 1.0;}
-    inline double squareNorm() const {return 1.0;}
 
     friend std::ostream& operator<<(std::ostream &out,const NVector3 &u)
     {

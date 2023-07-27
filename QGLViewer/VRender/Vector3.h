@@ -42,6 +42,18 @@ namespace vrender
       //@}
 
       // ---------------------------------------------------------------------------
+      //! @name Metrics
+      //@{
+      double norm       () const;
+      double squareNorm () const;
+      double infNorm    () const; /// Should be used for most comparisons, for efficiency reasons.
+      static Vector3 mini(const Vector3&,const Vector3&) ;
+      static Vector3 maxi(const Vector3&,const Vector3&) ;
+      //@}
+
+      // Note: all operators must be implemented in the header.
+
+      // ---------------------------------------------------------------------------
       //! @name Assignment
       //@{
       inline Vector3& operator= (const Vector3& u)  { _xyz[0] = u._xyz[0]; _xyz[1] = u._xyz[1]; _xyz[2] = u._xyz[2]; return *this; }
@@ -76,9 +88,6 @@ namespace vrender
       inline Vector3& operator*= (double f) { _xyz[0] *= f; _xyz[1] *= f; _xyz[2] *= f; return *this;}
       inline Vector3& operator/= (double f) { _xyz[0] /= f; _xyz[1] /= f; _xyz[2] /= f; return *this;}
 
-      static Vector3 mini(const Vector3&,const Vector3&) ;
-      static Vector3 maxi(const Vector3&,const Vector3&) ;
-
       friend Vector3 operator- (const Vector3& u) { return Vector3(-u[0], -u[1], -u[2]); }
 
       inline Vector3 operator+(const Vector3& u) const
@@ -111,13 +120,6 @@ namespace vrender
       };
       //@}
 
-      // ---------------------------------------------------------------------------
-      //! @name Metrics
-      //@{
-      double norm       () const;
-      double squareNorm () const;
-      double infNorm    () const; /// Should be used for most comparisons, for efficiency reasons.
-      //@}
       // ---------------------------------------------------------------------------
       //! @name Stream overrides
       //@{
