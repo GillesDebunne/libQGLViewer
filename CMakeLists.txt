@@ -125,6 +125,7 @@ target_link_libraries(QGLViewer
 )
 
 if(WIN32)
+  # ignore minwindef.h to use std::min/max
   add_compile_definitions(NOMINMAX)
   target_compile_options(QGLViewer PRIVATE "-DCREATE_QGLVIEWER_DLL")
   # remove warnings about deprecation (CRT,etc)
