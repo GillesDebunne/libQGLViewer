@@ -27,40 +27,116 @@ else()
     set(QtLibs Qt::Core Qt::Widgets Qt::Xml Qt::OpenGL)
 endif()
 
-
 find_package(OpenGL REQUIRED)
 
-# QGLViewer target.
-set(QGLViewer_SRC
-    "${PROJECT_SOURCE_DIR}/QGLViewer/VRender/BackFaceCullingOptimizer.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/VRender/BSPSortMethod.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/VRender/EPSExporter.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/VRender/Exporter.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/VRender/FIGExporter.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/VRender/gpc.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/VRender/NVector3.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/VRender/ParserGL.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/VRender/Primitive.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/VRender/PrimitivePositioning.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/VRender/TopologicalSortMethod.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/VRender/Vector2.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/VRender/Vector3.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/VRender/VisibilityOptimizer.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/VRender/VRender.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/camera.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/constraint.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/frame.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/keyFrameInterpolator.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/manipulatedCameraFrame.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/manipulatedFrame.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/mouseGrabber.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/qglviewer.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/quaternion.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/saveSnapshot.cpp"
-    "${PROJECT_SOURCE_DIR}/QGLViewer/vec.cpp")
-add_library(QGLViewer SHARED ${QGLViewer_SRC})
-target_include_directories(QGLViewer INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(QGLViewer PRIVATE ${QtLibs} OpenGL::GL OpenGL::GLU)
+include_directories(
+  "${PROJECT_SOURCE_DIR}/QGLViewer/"
+  ${Qt5Core_INCLUDE_DIRS}
+  ${Qt5Widgets_INCLUDE_DIRS}
+  ${Qt5Xml_INCLUDE_DIRS}
+  ${Qt5OpenGL_INCLUDE_DIRS}
+)
+
+set(MOC_HEADER_FILES
+    QGLViewer/camera.h
+    QGLViewer/frame.h
+    QGLViewer/keyFrameInterpolator.h
+    QGLViewer/manipulatedCameraFrame.h
+    QGLViewer/manipulatedFrame.h
+    QGLViewer/qglviewer.h
+    )
+# These header files don't need to be processed by the moc.
+set(HEADER_FILES
+    QGLViewer/VRender/AxisAlignedBox.h
+    QGLViewer/VRender/Exporter.h
+    QGLViewer/VRender/NVector3.h
+    QGLViewer/VRender/Optimizer.h
+    QGLViewer/VRender/ParserGL.h
+    QGLViewer/VRender/Primitive.h
+    QGLViewer/VRender/PrimitivePositioning.h
+    QGLViewer/VRender/SortMethod.h
+    QGLViewer/VRender/Types.h
+    QGLViewer/VRender/VRender.h
+    QGLViewer/VRender/Vector2.h
+    QGLViewer/VRender/Vector3.h
+    QGLViewer/VRender/gpc.h
+    QGLViewer/config.h
+    QGLViewer/constraint.h
+    QGLViewer/domUtils.h
+    QGLViewer/mouseGrabber.h
+    QGLViewer/quaternion.h
+    QGLViewer/vec.h
+    )
+set(SOURCE_FILES
+    QGLViewer/VRender/BSPSortMethod.cpp
+    QGLViewer/VRender/BackFaceCullingOptimizer.cpp
+    QGLViewer/VRender/EPSExporter.cpp
+    QGLViewer/VRender/Exporter.cpp
+    QGLViewer/VRender/FIGExporter.cpp
+    QGLViewer/VRender/NVector3.cpp
+    QGLViewer/VRender/ParserGL.cpp
+    QGLViewer/VRender/Primitive.cpp
+    QGLViewer/VRender/PrimitivePositioning.cpp
+    QGLViewer/VRender/TopologicalSortMethod.cpp
+    QGLViewer/VRender/VRender.cpp
+    QGLViewer/VRender/Vector2.cpp
+    QGLViewer/VRender/Vector3.cpp
+    QGLViewer/VRender/VisibilityOptimizer.cpp
+    QGLViewer/VRender/gpc.cpp
+    QGLViewer/camera.cpp
+    QGLViewer/constraint.cpp
+    QGLViewer/frame.cpp
+    QGLViewer/keyFrameInterpolator.cpp
+    QGLViewer/manipulatedCameraFrame.cpp
+    QGLViewer/manipulatedFrame.cpp
+    QGLViewer/mouseGrabber.cpp
+    QGLViewer/qglviewer.cpp
+    QGLViewer/quaternion.cpp
+    QGLViewer/saveSnapshot.cpp
+    QGLViewer/vec.cpp
+    )
+set(UI_FILES
+    QGLViewer/ImageInterface.ui
+    QGLViewer/VRenderInterface.ui
+    )
+
+qt5_wrap_cpp(MOC_FILES ${MOC_HEADER_FILES})
+qt5_wrap_ui(FORM_FILES ${UI_FILES})
+
+add_library(QGLViewer SHARED ${HEADER_FILES} ${MOC_FILES} ${FORM_FILES} ${SOURCE_FILES})
+
+# WIN32 and UNIX/LINUX use different names for the OpenGL lib
+if (WIN32)
+  set(OPENGL_LIB OpenGL32)
+else()
+  set(OPENGL_LIB OpenGL)
+endif()
+
+target_link_libraries(QGLViewer 
+	                  PUBLIC 
+					  Qt5::Core 
+					  Qt5::Widgets 
+					  Qt5::OpenGL 
+					  Qt5::Xml 
+					  ${GLUT_LIBRARY}
+					  ${OPENGL_LIB}
+					  OpenGL::GLU
+)
+
+if(WIN32)
+  add_compile_definitions(NOMINMAX)
+  target_compile_options(QGLViewer PRIVATE "-DCREATE_QGLVIEWER_DLL")
+  # remove warnings about deprecation (CRT,etc)
+  target_compile_options(QGLViewer PRIVATE "/wd4996")
+endif()
+
+add_custom_command(
+  TARGET QGLViewer
+  POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy
+    "$<TARGET_FILE:QGLViewer>"
+    "${CMAKE_BINARY_DIR}"
+)
 
 # Example: animation.
 set(animation_SRC
