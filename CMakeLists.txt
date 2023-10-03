@@ -22,11 +22,11 @@ if (Qt6_FOUND)
     message("Qt6 found!")
     set(QtLibs Qt::Core Qt::Widgets Qt::Xml Qt::OpenGL Qt::OpenGLWidgets)
 else()
-	find_package(Qt5 REQUIRED COMPONENTS Core Widgets Xml OpenGL)
-	if(Qt5_FOUND)
-		message("Qt5 found! Preferring Qt5 for now.")
-		set(QtLibs Qt::Core Qt::Widgets Qt::Xml Qt::OpenGL)
-	endif()
+  find_package(Qt5 REQUIRED COMPONENTS Core Widgets Xml OpenGL)
+  if(Qt5_FOUND)
+    message("Qt5 found! Preferring Qt5 for now.")
+    set(QtLibs Qt::Core Qt::Widgets Qt::Xml Qt::OpenGL)
+  endif()
 endif()
 
 find_package(OpenGL REQUIRED)
@@ -108,10 +108,10 @@ else()
 endif()
 
 target_link_libraries(QGLViewer 
-	                  PUBLIC 
-					  ${QtLibs} 
-					  ${OPENGL_LIB}
-					  OpenGL::GLU
+                      PUBLIC
+                      ${QtLibs}
+                      ${OPENGL_LIB}
+                      OpenGL::GLU
 )
 
 if(WIN32)
