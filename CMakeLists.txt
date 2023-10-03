@@ -17,25 +17,22 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
 # This will find the Qt files.
-#find_package(Qt6 COMPONENTS Core Widgets Xml OpenGL OpenGLWidgets)
-#if (Qt6_FOUND)
-#    message("Qt6 found!")
-#    set(QtLibs Qt::Core Qt::Widgets Qt::Xml Qt::OpenGL Qt::OpenGLWidgets)
-#endif()
-find_package(Qt5 REQUIRED COMPONENTS Core Widgets Xml OpenGL)
-if(Qt5_FOUND)
-    message("Qt5 found! Preferring Qt5 for now.")
-    set(QtLibs Qt::Core Qt::Widgets Qt::Xml Qt::OpenGL)
+find_package(Qt6 COMPONENTS Core Widgets Xml OpenGL OpenGLWidgets)
+if (Qt6_FOUND)
+    message("Qt6 found!")
+    set(QtLibs Qt::Core Qt::Widgets Qt::Xml Qt::OpenGL Qt::OpenGLWidgets)
+else()
+	find_package(Qt5 REQUIRED COMPONENTS Core Widgets Xml OpenGL)
+	if(Qt5_FOUND)
+		message("Qt5 found! Preferring Qt5 for now.")
+		set(QtLibs Qt::Core Qt::Widgets Qt::Xml Qt::OpenGL)
+	endif()
 endif()
 
 find_package(OpenGL REQUIRED)
 
 include_directories(
   "${PROJECT_SOURCE_DIR}/QGLViewer/"
-  ${Qt5Core_INCLUDE_DIRS}
-  ${Qt5Widgets_INCLUDE_DIRS}
-  ${Qt5Xml_INCLUDE_DIRS}
-  ${Qt5OpenGL_INCLUDE_DIRS}
 )
 
 set(MOC_HEADER_FILES
@@ -101,9 +98,6 @@ set(UI_FILES
     QGLViewer/VRenderInterface.ui
     )
 
-#qt5_wrap_cpp(MOC_FILES ${MOC_HEADER_FILES})
-#qt5_wrap_ui(FORM_FILES ${UI_FILES})
-
 add_library(QGLViewer SHARED ${HEADER_FILES} ${MOC_FILES} ${FORM_FILES} ${SOURCE_FILES})
 
 # WIN32 and UNIX/LINUX use different names for the OpenGL lib
@@ -115,11 +109,7 @@ endif()
 
 target_link_libraries(QGLViewer 
 	                  PUBLIC 
-					  Qt5::Core 
-					  Qt5::Widgets 
-					  Qt5::OpenGL 
-					  Qt5::Xml 
-					  ${GLUT_LIBRARY}
+					  ${QtLibs} 
 					  ${OPENGL_LIB}
 					  OpenGL::GLU
 )
