@@ -100,17 +100,10 @@ set(UI_FILES
 
 add_library(QGLViewer SHARED ${HEADER_FILES} ${MOC_FILES} ${FORM_FILES} ${SOURCE_FILES})
 
-# WIN32 and UNIX/LINUX use different names for the OpenGL lib
-if (WIN32)
-  set(OPENGL_LIB OpenGL32)
-else()
-  set(OPENGL_LIB OpenGL)
-endif()
-
 target_link_libraries(QGLViewer 
                       PUBLIC
                       ${QtLibs}
-                      ${OPENGL_LIB}
+                      OpenGL::GL
                       OpenGL::GLU
 )
 
