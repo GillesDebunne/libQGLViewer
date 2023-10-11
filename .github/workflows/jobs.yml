@@ -1,29 +1,45 @@
 name: libQGLViewer
-on: [push, pull_request]
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
 jobs:
-  buildQt5:
-    runs-on: ubuntu-latest
+  build:
+    strategy:
+      matrix:
+        include:
+          - runner: 'ubuntu-latest'
+            qtVersion: '6.2.2'
+          - runner: 'ubuntu-latest'
+            qtVersion: '5.15.2'
+#          - runner: 'macOS-11'
+#            qtVersion: '6.2.2'
+          - runner: 'windows-2019'
+            qtVersion: '6.2.2'
+            qtArch: 'win64_msvc2019_64'
+          - runner: 'windows-2019'
+            qtVersion: '5.15.2'
+            qtArch: 'win64_msvc2019_64'
+    runs-on: ${{ matrix.runner }}
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - name: Install dependencies
-        run: sudo apt-get install -y build-essential qtbase5-dev libglu1-mesa-dev
-      - name: Build all
+      - uses: actions/checkout@v3
+      
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: ${{ matrix.qtVersion }}
+          arch: ${{ matrix.qtArch }}
+          cache: true
+          
+      - name: Install GLU
+        if: startsWith(matrix.runner, 'ubuntu')
+        run: sudo apt-get install -y libglu1-mesa-dev          
+
+      - name: Build QGLViewer
         run: |
-          mkdir build
-          cd build
-          cmake ..
-          make all
-  buildQt6:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - name: Install dependencies
-        run: sudo apt-get install -y build-essential qt6-base-dev libglu1-mesa-dev
-      - name: Build all
-        run: |
-          mkdir build
-          cd build
-          cmake ..
-          make all
+           mkdir build
+           cmake -B build -S .
+           cmake --build build --config Release
