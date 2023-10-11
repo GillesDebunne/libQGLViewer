@@ -67,6 +67,10 @@ if(MSVC)
     target_compile_definitions(QGLViewer PRIVATE NOMINMAX)
 endif()
 
+if(WIN32)
+    target_compile_definitions(QGLViewer PRIVATE CREATE_QGLVIEWER_DLL)
+endif()
+
 # Example: animation.
 set(animation_SRC
     "${PROJECT_SOURCE_DIR}/examples/animation/animation.cpp"
