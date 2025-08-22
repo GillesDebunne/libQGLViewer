@@ -15,7 +15,7 @@ Name libQGLViewer
 !define REGKEY "SOFTWARE\$(^Name)"
 !define VERSION 3.0.0
 !define COMPANY "Gilles Debunne"
-!define URL http://www.libqglviewer.com/
+!define URL https://gillesdebunne.github.io/libQGLViewer
 
 # MUI defines
 !define MUI_ICON doc\images\qglviewer128.ico

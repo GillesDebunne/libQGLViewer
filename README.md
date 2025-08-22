@@ -8,4 +8,4 @@ Based on the Qt toolkit, it compiles on any architecture (Unix-Linux, Mac, Windo
 
 libQGLViewer is freely available under the terms of the GNU-LGPL license.
 
-http://www.libqglviewer.com
+https://gillesdebunne.github.io/libQGLViewer

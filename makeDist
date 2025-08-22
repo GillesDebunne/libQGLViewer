@@ -3,7 +3,7 @@
 libName="libQGLViewer"
 version="3.0.0"
 
-WebURL="http://www.libqglviewer.com"
+WebURL="https://gillesdebunne.github.io/libQGLViewer"
 
 version_major=`echo $version | cut -d"." -f1`
 version_minor=`echo $version | cut -d"." -f2`
