@@ -1,6 +1,6 @@
-%define version_major 2
-%define version_minor 9
-%define version_revision 1
+%define version_major 3
+%define version_minor 0
+%define version_revision 0
 
 Name:		libQGLViewer
 Version:	%{version_major}.%{version_minor}.%{version_revision}
@@ -153,6 +153,9 @@ rm -rf $RPM_BUILD_ROOT
 %{docDir}/examples/*/*
 
 %changelog
+* Thu Aug 21 2025 Gilles Debunne <contact@libQGLViewer.com> 3.0.0
+- Change license to LGPL v3.
+
 * Sat Dec 31 2022 Gilles Debunne <contact@libQGLViewer.com> 2.9.1
 - Qt5 compilation error fix.
 

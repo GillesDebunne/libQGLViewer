@@ -6,7 +6,7 @@
 #ifndef QGLVIEWER_CONFIG_H
 #define QGLVIEWER_CONFIG_H
 
-#define QGLVIEWER_VERSION 0x020901
+#define QGLVIEWER_VERSION 0x030000
 
 // Get QT_VERSION and other Qt flags
 #include <qglobal.h>
