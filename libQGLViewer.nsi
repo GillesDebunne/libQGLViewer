@@ -47,7 +47,7 @@ Var LibInstall
 
 # Installer pages
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE LICENCE
+!insertmacro MUI_PAGE_LICENSE LICENSE
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_STARTMENU Application $StartMenuGroup
@@ -73,7 +73,7 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} CompanyName "${COMPANY}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} CompanyWebsite "${URL}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} FileVersion "${VERSION}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} FileDescription "${NAME} installer for version ${VERSION}"
-VIAddVersionKey /LANG=${LANG_ENGLISH} LegalCopyright "GPL"
+VIAddVersionKey /LANG=${LANG_ENGLISH} LegalCopyright "LGPL"
 InstallDirRegKey HKLM "${REGKEY}" Path
 ShowUninstDetails show
 

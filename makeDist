@@ -233,7 +233,7 @@ test -d $tmpDir || mkdir -p $tmpDir
 # ----------------------------------------------
 
 
-SOURCES="CHANGELOG INSTALL README LICENCE GPL_EXCEPTION gpl-header libQGLViewer.pro"
+SOURCES="CHANGELOG INSTALL README LICENSE gpl-header libQGLViewer.pro"
 if [[ $DOS2UNIX ]]
 then
 	$DOS2UNIX $SOURCES &> /tmp/error
@@ -361,7 +361,7 @@ cd $tmpDir
 ########### Filter root files
 export LC_TIME="en"
 date=`date "+%B %-d, %Y"`
-for f in "gpl-header" "CHANGELOG" "INSTALL" "LICENCE" "README" "GPL_EXCEPTION" "libQGLViewer.pro"
+for f in "gpl-header" "CHANGELOG" "INSTALL" "LICENSE" "README" "libQGLViewer.pro"
 do
   sed s:"#VERSION#":"$version":g $f | sed s%"#WEBURL#"%"$WebURL"%g | sed s:"#DATE#":"$date":g > $f.filtered
   mv $f.filtered $f
@@ -565,9 +565,8 @@ echo -n " zip"
 
 mv CHANGELOG changeLog.txt
 mv INSTALL install.txt
-mv LICENCE licence.txt
+mv LICENSE license.txt
 mv README readMe.txt
-mv GPL_EXCEPTION GPL_exception.txt
 
 function addNamespace()
 {

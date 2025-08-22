@@ -7,12 +7,11 @@ Version:	%{version_major}.%{version_minor}.%{version_revision}
 Release:	1	
 
 Summary:	Qt based OpenGL generic 3D viewer library.
-License:	GPL
+License:	LGPL
 Group:		Development/C++
 Source:		%{name}-%{version}.tar.gz
 URL:		http://www.libqglviewer.com
 Buildroot:      %{_tmppath}/%{name}-%{version}-buildroot
-Vendor:		Alma
 Requires: 	libqt >= 4.0.0
 
 %description
@@ -92,7 +91,7 @@ ln -s libQGLViewer.so.%{version} $RPM_BUILD_ROOT%{libDir}/libQGLViewer.so
 # %{__install} doc/man/man3/QGLViewer.3 $RPM_BUILD_ROOT%{_mandir}/man3/
 # %{__install} doc/man/man3/qglviewer_* $RPM_BUILD_ROOT%{_mandir}/man3/
 %{__install} --mode=644 doc/*.html doc/*.css $RPM_BUILD_ROOT%{docDir}
-%{__install} --mode=644 INSTALL README LICENCE CHANGELOG $RPM_BUILD_ROOT%{docDir}
+%{__install} --mode=644 INSTALL README LICENSE CHANGELOG $RPM_BUILD_ROOT%{docDir}
 %{__install} --mode=644 doc/refManual/* $RPM_BUILD_ROOT%{docDir}/refManual
 %{__install} --mode=644 doc/images/* $RPM_BUILD_ROOT%{docDir}/images
 # %{__install} --mode=644 doc/examples/*.html $RPM_BUILD_ROOT%{docDir}/examples
@@ -142,7 +141,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc %{docDir}/*.html
 %doc %{docDir}/*.css
 %doc %{docDir}/README
-%doc %{docDir}/LICENCE
+%doc %{docDir}/LICENSE
 %doc %{docDir}/INSTALL
 %doc %{docDir}/CHANGELOG
 %docdir %{docDir}/refManual
